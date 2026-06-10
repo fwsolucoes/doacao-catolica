@@ -1,15 +1,9 @@
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsUpDown,
-  Eye,
-  MoreHorizontal,
-} from "lucide-react";
+import { ChevronsUpDown, Eye } from "lucide-react";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Pagination } from "~/client/components/ui/pagination";
 import { Table } from "~/client/components/ui/table";
-import { cn } from "~/lib/utils";
 
 type BadgeVariant = "success" | "danger" | "warning" | "info";
 
@@ -52,54 +46,6 @@ const campaigns: Campaign[] = [
 const TOTAL_PAGES = 12;
 const CURRENT_PAGE = 1;
 const VISIBLE_PAGES = [1, 2, 3, 4];
-
-function Pagination() {
-  return (
-    <div className="flex items-center justify-between border-t border-(--border) pt-5">
-      <p className="flex-1 text-sm text-(--text-muted)">
-        Exibindo {CURRENT_PAGE} de {TOTAL_PAGES} páginas
-      </p>
-      <div className="flex items-center gap-1">
-        <button
-          aria-label="Página anterior"
-          className="flex size-7 items-center justify-center rounded text-(--text-muted) hover:bg-(--card-foreground-secondary)"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        {VISIBLE_PAGES.map((page) => (
-          <button
-            key={page}
-            aria-label={`Página ${page}`}
-            aria-current={page === CURRENT_PAGE ? "page" : undefined}
-            className={cn(
-              "flex size-7 items-center justify-center rounded text-sm font-semibold",
-              page === CURRENT_PAGE
-                ? "bg-[rgb(var(--spotlight-primary))] text-white"
-                : "text-(--text-muted) hover:bg-(--card-foreground-secondary)"
-            )}
-          >
-            {page}
-          </button>
-        ))}
-        <span className="flex size-7 items-center justify-center text-(--text-muted)">
-          <MoreHorizontal size={16} />
-        </span>
-        <button
-          aria-label={`Página ${TOTAL_PAGES}`}
-          className="flex size-7 items-center justify-center rounded text-sm font-semibold text-(--text-muted) hover:bg-(--card-foreground-secondary)"
-        >
-          {TOTAL_PAGES}
-        </button>
-        <button
-          aria-label="Próxima página"
-          className="flex size-7 items-center justify-center rounded text-(--text-muted) hover:bg-(--card-foreground-secondary)"
-        >
-          <ChevronRight size={16} />
-        </button>
-      </div>
-    </div>
-  );
-}
 
 export default function TestPage() {
   return (
@@ -158,7 +104,34 @@ export default function TestPage() {
             ))}
           </Table.Body>
         </Table.Root>
-        <Pagination />
+        <Card.Footer className="justify-between">
+          <p className="flex-1 text-sm text-(--text-muted)">
+            Exibindo {CURRENT_PAGE} de {TOTAL_PAGES} páginas
+          </p>
+          <Pagination.Root>
+            <Pagination.Content>
+              <Pagination.Item>
+                <Pagination.Previous href="#" />
+              </Pagination.Item>
+              {VISIBLE_PAGES.map((page) => (
+                <Pagination.Item key={page}>
+                  <Pagination.Link href="#" isActive={page === CURRENT_PAGE}>
+                    {page}
+                  </Pagination.Link>
+                </Pagination.Item>
+              ))}
+              <Pagination.Item>
+                <Pagination.Ellipsis />
+              </Pagination.Item>
+              <Pagination.Item>
+                <Pagination.Link href="#">{TOTAL_PAGES}</Pagination.Link>
+              </Pagination.Item>
+              <Pagination.Item>
+                <Pagination.Next href="#" />
+              </Pagination.Item>
+            </Pagination.Content>
+          </Pagination.Root>
+        </Card.Footer>
       </Card.Root>
     </div>
   );
