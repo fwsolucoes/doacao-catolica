@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 
 function Root({ className, ...props }: ComponentProps<"table">) {
   return (
-    <div className="relative w-full overflow-hidden rounded-md">
+    <div className="relative w-full overflow-x-auto rounded-md">
       <table
         className={cn(
           "w-full border-separate border-spacing-0 text-sm",

@@ -54,12 +54,7 @@ export default function TestPage() {
         <Table.Root>
           <Table.Header>
             <Table.Row>
-              <Table.Head>
-                <div className="flex items-center gap-1">
-                  Nome
-                  <ChevronsUpDown size={14} className="text-(--text-muted)" />
-                </div>
-              </Table.Head>
+              <Table.Head>Nome</Table.Head>
               <Table.Head className="w-[150px]">Status</Table.Head>
               <Table.Head className="w-[230px]">Tipo</Table.Head>
               <Table.Head className="w-[200px]">Início da campanha</Table.Head>
