@@ -11,7 +11,7 @@ type CampaignConstructorProps = {
   totalGoal: string | null;
   startDate: string | null;
   endDate: string | null;
-  currentRevenue?: string | null;
+  currentRevenue: string | null;
   status: boolean;
   published: boolean;
   phone: string | null;
@@ -42,7 +42,7 @@ class Campaign {
   totalGoal: string | null;
   startDate: string | null;
   endDate: string | null;
-  currentRevenue?: string | null;
+  currentRevenue: string | null;
   status: boolean;
   published: boolean;
   phone: string | null;
