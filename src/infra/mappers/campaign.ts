@@ -19,6 +19,7 @@ class CampaignMapper {
       slug: externalCampaign.slug,
       startDate: externalCampaign.start_date,
       endDate: externalCampaign.end_date,
+      currentRevenue: externalCampaign.current_revenue ?? null,
       status: externalCampaign.status,
       totalGoal: externalCampaign.total_goal,
       type: externalCampaign.type,

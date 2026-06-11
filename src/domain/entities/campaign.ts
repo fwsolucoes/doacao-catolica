@@ -11,6 +11,7 @@ type CampaignConstructorProps = {
   totalGoal: string | null;
   startDate: string | null;
   endDate: string | null;
+  currentRevenue?: string | null;
   status: boolean;
   published: boolean;
   phone: string | null;
@@ -41,6 +42,7 @@ class Campaign {
   totalGoal: string | null;
   startDate: string | null;
   endDate: string | null;
+  currentRevenue?: string | null;
   status: boolean;
   published: boolean;
   phone: string | null;
@@ -68,6 +70,7 @@ class Campaign {
     this.totalGoal = props.totalGoal;
     this.startDate = props.startDate;
     this.endDate = props.endDate;
+    this.currentRevenue = props.currentRevenue;
     this.status = props.status;
     this.published = props.published;
     this.phone = props.phone;
@@ -101,6 +104,7 @@ class Campaign {
       totalGoal: this.totalGoal,
       startDate: formatDate(this.startDate),
       endDate: formatDate(this.endDate),
+      currentRevenue: this.currentRevenue ?? null,
       status: this.status,
       published: this.published,
       phone: this.phone,
