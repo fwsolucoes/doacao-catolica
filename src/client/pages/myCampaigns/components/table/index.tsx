@@ -1,5 +1,5 @@
 import { Eye } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -101,8 +101,9 @@ function TableCard() {
                   <Button
                     variant="outline"
                     className="h-8 min-h-0 w-auto rounded-md px-4 py-0 text-xs text-[rgb(var(--spotlight-primary))]"
+                    asChild
                   >
-                    Gerenciar
+                    <Link to={`/campaign/${campaign.id}/home`}>Gerenciar</Link>
                   </Button>
                   <Button
                     variant="ghost"
