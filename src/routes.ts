@@ -26,6 +26,10 @@ export default [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
   ]),
 
+  route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
+    route("home", "./main/routes/route.campaign.home.tsx"),
+  ]),
+
   route("treatment/:treatmentId", "./main/routes/layout.treatmentLayout.tsx", [
     route("home", "./main/routes/route.treatment.home.tsx"),
     route("medications", "./main/routes/route.medications.tsx"),
