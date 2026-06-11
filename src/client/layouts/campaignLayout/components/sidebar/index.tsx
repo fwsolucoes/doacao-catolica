@@ -106,12 +106,12 @@ function Sidebar() {
   const { LIGHT_LOGO } = useRoot().environmentVariables;
 
   return (
-    <nav className="flex h-screen w-68 shrink-0 flex-col bg-[#0f172a] pb-4">
+    <nav className="fixed left-0 top-0 flex h-screen w-68 flex-col bg-[#0f172a] pb-4 z-40">
       <div className="flex h-16 shrink-0 items-center px-5">
         <img src={LIGHT_LOGO} alt="Sancton" className="h-8 w-auto shrink-0" />
       </div>
 
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto pt-2">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto pt-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
         {sections.map((section) => (
           <div key={section.title || "__root__"} className="flex flex-col gap-1">
             {section.title ? (
