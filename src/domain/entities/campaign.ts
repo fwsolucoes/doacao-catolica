@@ -1,3 +1,5 @@
+import { formatDate } from "~/lib/formatDate";
+
 type CampaignConstructorProps = {
   id: string;
   accountId: number;
@@ -97,8 +99,8 @@ class Campaign {
       noEndDate: this.noEndDate,
       monthlyGoal: this.monthlyGoal,
       totalGoal: this.totalGoal,
-      startDate: this.startDate,
-      endDate: this.endDate,
+      startDate: formatDate(this.startDate),
+      endDate: formatDate(this.endDate),
       status: this.status,
       published: this.published,
       phone: this.phone,
