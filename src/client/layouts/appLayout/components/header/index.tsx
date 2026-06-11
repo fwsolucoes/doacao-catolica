@@ -18,7 +18,7 @@ function Header() {
   const { theme, toggle } = useTheme();
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-(--border) bg-(--card) px-8">
+    <header className="fixed w-full flex h-16 items-center justify-between border-b border-(--border) bg-(--card) px-8">
       <div className="flex w-64 shrink-0 items-center gap-6 pr-4">
         <img src={LIGHT_LOGO} alt="Sancton" className="h-8 w-auto shrink-0" />
         <span className="h-5 flex-1 min-w-px" aria-hidden="true" />
