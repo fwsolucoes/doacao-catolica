@@ -32,8 +32,8 @@ function Link({ className, isActive, ...props }: LinkProps) {
       className={cn(
         "flex size-7 items-center justify-center rounded text-sm font-semibold",
         isActive
-          ? "bg-[rgb(var(--spotlight-primary))] text-white"
-          : "text-(--text-muted) hover:bg-(--card-foreground-secondary)",
+          ? "bg-(--primary) text-(--primary-foreground)"
+          : "text-(--muted-foreground) hover:bg-(--muted)",
         className
       )}
       {...props}
@@ -46,7 +46,7 @@ function Previous({ className, ...props }: ComponentProps<"a">) {
     <a
       aria-label="Página anterior"
       className={cn(
-        "flex size-7 items-center justify-center rounded text-(--text-muted) hover:bg-(--card-foreground-secondary)",
+        "flex size-7 items-center justify-center rounded text-(--muted-foreground) hover:bg-(--muted)",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ function Next({ className, ...props }: ComponentProps<"a">) {
     <a
       aria-label="Próxima página"
       className={cn(
-        "flex size-7 items-center justify-center rounded text-(--text-muted) hover:bg-(--card-foreground-secondary)",
+        "flex size-7 items-center justify-center rounded text-(--muted-foreground) hover:bg-(--muted)",
         className
       )}
       {...props}
@@ -76,7 +76,7 @@ function Ellipsis({ className, ...props }: ComponentProps<"span">) {
     <span
       aria-hidden
       className={cn(
-        "flex size-7 items-center justify-center text-(--text-muted)",
+        "flex size-7 items-center justify-center text-(--muted-foreground)",
         className
       )}
       {...props}

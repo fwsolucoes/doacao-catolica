@@ -12,99 +12,181 @@
   textarea,
   button {
     line-height: 100%;
-    font-family: "Open Sans", sans-serif;
+    font-family: var(--font-sans);
     font-optical-sizing: auto;
   }
 
   :root {
-    --white: #ffffff;
+    /* shadcn standard */
+    --background: oklch(1.0000 0 0);
+    --foreground: oklch(0 0 0);
+    --card: oklch(1.0000 0 0);
+    --card-foreground: oklch(0 0 0);
+    --popover: oklch(1.0000 0 0);
+    --popover-foreground: oklch(0 0 0);
+    --primary: oklch(0 0 0);
+    --primary-foreground: oklch(1.0000 0 0);
+    --secondary: oklch(0.9672 0 0);
+    --secondary-foreground: oklch(0 0 0);
+    --muted: oklch(0.9219 0 0);
+    --muted-foreground: oklch(0.5103 0 0);
+    --accent: oklch(0.8452 0 0);
+    --accent-foreground: oklch(0 0 0);
+    --destructive: oklch(0 0 0);
+    --destructive-foreground: oklch(1.0000 0 0);
+    --border: oklch(0 0 0);
+    --input: oklch(1.0000 0 0);
+    --ring: oklch(0 0 0);
+    --chart-1: oklch(0 0 0);
+    --chart-2: oklch(0.3211 0 0);
+    --chart-3: oklch(0.5103 0 0);
+    --chart-4: oklch(0.6830 0 0);
+    --chart-5: oklch(0.8452 0 0);
+    --sidebar: oklch(1.0000 0 0);
+    --sidebar-foreground: oklch(0 0 0);
+    --sidebar-primary: oklch(0 0 0);
+    --sidebar-primary-foreground: oklch(1.0000 0 0);
+    --sidebar-accent: oklch(0.9672 0 0);
+    --sidebar-accent-foreground: oklch(0 0 0);
+    --sidebar-border: oklch(0 0 0);
+    --sidebar-ring: oklch(0 0 0);
+    --font-sans: Architects Daughter, cursive;
+    --font-serif: Architects Daughter, cursive;
+    --font-mono: monospace;
+    --radius: 0rem;
+    --shadow-x: 4px;
+    --shadow-y: 4px;
+    --shadow-blur: 0px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 1;
+    --shadow-color: #000000;
+    --shadow-2xs: 4px 4px 0px 0px hsl(0 0% 0% / 0.50);
+    --shadow-xs: 4px 4px 0px 0px hsl(0 0% 0% / 0.50);
+    --shadow-sm: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 1px 2px -1px hsl(0 0% 0% / 1.00);
+    --shadow: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 1px 2px -1px hsl(0 0% 0% / 1.00);
+    --shadow-md: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 2px 4px -1px hsl(0 0% 0% / 1.00);
+    --shadow-lg: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 4px 6px -1px hsl(0 0% 0% / 1.00);
+    --shadow-xl: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 8px 10px -1px hsl(0 0% 0% / 1.00);
+    --shadow-2xl: 4px 4px 0px 0px hsl(0 0% 0% / 2.50);
+    --tracking-normal: 0.02em;
+    --spacing: 0.25rem;
 
-    /* background */
-    --background: #f4f4f5;
-    --background-foreground: #ffffff;
-
-    /* modal, drawer, popover... */
-    --card: #ffffff;
-    --card-foreground-primary: #f4f4f5;
-    --card-foreground-secondary: #f1f5f9;
-    --card-foreground-third: #e2e8f0;
-
-    /* skeleton */
-    --skeleton: #f8fafc;
-    --skeleton-foreground: #f1f5f9;
-
-    /* text */
-    --text-heading: #18181b;
-    --text-body: #52525b;
-    --text-muted: #a1a1aa;
-
-    /* border */
-    --border: #e2e8f0;
+    /* aliases — mantêm compatibilidade com código existente fora dos componentes UI */
+    --white: oklch(1 0 0);
+    --background-foreground: var(--card);
+    --card-foreground-primary: var(--secondary);
+    --card-foreground-secondary: var(--muted);
+    --card-foreground-third: var(--accent);
+    --text-heading: var(--foreground);
+    --text-body: var(--foreground);
+    --text-muted: var(--muted-foreground);
+    --skeleton: var(--muted);
+    --skeleton-foreground: var(--secondary);
 
     /* tooltip */
     --tooltip-text: #f1f5f9;
     --tooltip-background: #0f172a;
 
-    /* spotlight */
-    --spotlight-primary: 2, 167, 105; /* #02A769 */
-    --spotlight-secondary: 248, 250, 252; /* #f8fafc */
-    --spotlight-success: 16, 185, 129; /* #10b981 */
-    --spotlight-danger: 244, 63, 94; /* #f43f5e */
-    --spotlight-info: 14, 165, 233; /* #0ea5e9 */
-    --spotlight-accent: 234, 179, 8; /* #EAB308 */
-    --spotlight-warning: 249, 115, 22; /* #f97316 */
+    /* spotlight — RGB para uso com rgba() */
+    --spotlight-primary: 2, 167, 105;
+    --spotlight-secondary: 248, 250, 252;
+    --spotlight-success: 16, 185, 129;
+    --spotlight-danger: 244, 63, 94;
+    --spotlight-info: 14, 165, 233;
+    --spotlight-accent: 234, 179, 8;
+    --spotlight-warning: 249, 115, 22;
 
     /* toast */
-    --toast-success: 16, 185, 129; /* #10B981 */
-    --toast-danger: 225, 29, 72; /* #E11D48 */
-    --toast-info: 14, 165, 233; /* #0EA5E9 */
-    --toast-warning: 251, 146, 60; /* #FB923C */
+    --toast-success: 16, 185, 129;
+    --toast-danger: 225, 29, 72;
+    --toast-info: 14, 165, 233;
+    --toast-warning: 251, 146, 60;
   }
 }
 
 .dark {
-    /* background */
-    --background: #0f172a;
-    --background-foreground: #1e293b;
+  /* shadcn standard */
+  --background: oklch(0.1448 0 0);
+  --foreground: oklch(0.9702 0 0);
+  --card: oklch(0.1822 0 0);
+  --card-foreground: oklch(0.9702 0 0);
+  --popover: oklch(0.1822 0 0);
+  --popover-foreground: oklch(0.9702 0 0);
+  --primary: oklch(0.9702 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.2686 0 0);
+  --secondary-foreground: oklch(0.9702 0 0);
+  --muted: oklch(0.3211 0 0);
+  --muted-foreground: oklch(0.7155 0 0);
+  --accent: oklch(0.3715 0 0);
+  --accent-foreground: oklch(0.9702 0 0);
+  --destructive: oklch(0.9702 0 0);
+  --destructive-foreground: oklch(0 0 0);
+  --border: oklch(0.9702 0 0);
+  --input: oklch(0.2178 0 0);
+  --ring: oklch(0.9702 0 0);
+  --chart-1: oklch(1.0000 0 0);
+  --chart-2: oklch(0.8452 0 0);
+  --chart-3: oklch(0.6830 0 0);
+  --chart-4: oklch(0.5103 0 0);
+  --chart-5: oklch(0.3211 0 0);
+  --sidebar: oklch(0.1448 0 0);
+  --sidebar-foreground: oklch(0.9702 0 0);
+  --sidebar-primary: oklch(0.9702 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.2686 0 0);
+  --sidebar-accent-foreground: oklch(0.9702 0 0);
+  --sidebar-border: oklch(0.9702 0 0);
+  --sidebar-ring: oklch(0.9702 0 0);
+  --font-sans: Architects Daughter, cursive;
+  --font-serif: Architects Daughter, cursive;
+  --font-mono: monospace;
+  --radius: 0rem;
+  --shadow-x: 4px;
+  --shadow-y: 4px;
+  --shadow-blur: 0px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 1;
+  --shadow-color: #f5f5f5;
+  --shadow-2xs: 4px 4px 0px 0px hsl(0 0% 96.0784% / 0.50);
+  --shadow-xs: 4px 4px 0px 0px hsl(0 0% 96.0784% / 0.50);
+  --shadow-sm: 4px 4px 0px 0px hsl(0 0% 96.0784% / 1.00), 4px 1px 2px -1px hsl(0 0% 96.0784% / 1.00);
+  --shadow: 4px 4px 0px 0px hsl(0 0% 96.0784% / 1.00), 4px 1px 2px -1px hsl(0 0% 96.0784% / 1.00);
+  --shadow-md: 4px 4px 0px 0px hsl(0 0% 96.0784% / 1.00), 4px 2px 4px -1px hsl(0 0% 96.0784% / 1.00);
+  --shadow-lg: 4px 4px 0px 0px hsl(0 0% 96.0784% / 1.00), 4px 4px 6px -1px hsl(0 0% 96.0784% / 1.00);
+  --shadow-xl: 4px 4px 0px 0px hsl(0 0% 96.0784% / 1.00), 4px 8px 10px -1px hsl(0 0% 96.0784% / 1.00);
+  --shadow-2xl: 4px 4px 0px 0px hsl(0 0% 96.0784% / 2.50);
 
-    /* modal, drawer, popover... */
-    --card: #1e293b;
-    --card-foreground-primary: #293548;
-    --card-foreground-secondary: #334155;
-    --card-foreground-third: #475569;
+  /* aliases — mantêm compatibilidade com código existente fora dos componentes UI */
+  --white: oklch(1 0 0);
+  --background-foreground: var(--card);
+  --card-foreground-primary: var(--secondary);
+  --card-foreground-secondary: var(--muted);
+  --card-foreground-third: var(--accent);
+  --input-background: 41, 53, 72;
+  --text-heading: var(--foreground);
+  --text-body: var(--foreground);
+  --text-muted: var(--muted-foreground);
+  --skeleton: var(--muted);
+  --skeleton-foreground: var(--secondary);
 
-    /* input, select, textarea, button (outline), icon button (outline) */
-    --input-background: 41, 53, 72; /* #293548 */
+  /* tooltip */
+  --tooltip-text: #f1f5f9;
+  --tooltip-background: #334155;
 
-    /* skeleton */
-    --skeleton: #293548;
-    --skeleton-foreground: #293548;
+  /* spotlight */
+  --spotlight-primary: 17, 109, 220;
+  --spotlight-secondary: 41, 53, 72;
+  --spotlight-success: 16, 185, 129;
+  --spotlight-danger: 244, 63, 94;
+  --spotlight-info: 14, 165, 233;
+  --spotlight-warning: 249, 115, 22;
 
-    /* text */
-    --text-heading: #f8fafc;
-    --text-body: #cbd5e1;
-    --text-muted: #64748b;
-
-    /* border */
-    --border: #334155;
-
-    /* tooltip */
-    --tooltip-text: #f1f5f9;
-    --tooltip-background: #334155;
-
-    /* spotlight */
-    --spotlight-primary: 17, 109, 220; /* #116ddc */
-    --spotlight-secondary: 41, 53, 72; /* #293548 */
-    --spotlight-success: 16, 185, 129; /* #10b981 */
-    --spotlight-danger: 244, 63, 94; /* #f43f5e */
-    --spotlight-info: 14, 165, 233; /* #0ea5e9 */
-    --spotlight-warning: 249, 115, 22; /* #f97316 */
-
-    /* toast */
-    --toast-success: 16, 185, 129; /* #10B981 */
-    --toast-danger: 225, 29, 72; /* #E11D48 */
-    --toast-info: 14, 165, 233; /* #0EA5E9 */
-    --toast-warning: 251, 146, 60; /* #FB923C */
+  /* toast */
+  --toast-success: 16, 185, 129;
+  --toast-danger: 225, 29, 72;
+  --toast-info: 14, 165, 233;
+  --toast-warning: 251, 146, 60;
 }
 
 @keyframes theme-icon-in {
@@ -133,15 +215,15 @@
   padding-right: 2.25rem;
 }
 
-/* FormField: estado de erro — borda e ícone ficam vermelhos; ring vermelho ao focar */
+/* FormField: estado de erro */
 [data-invalid] [data-slot="input-addon"] {
-  color: rgb(var(--spotlight-danger));
+  color: var(--destructive);
 }
 
 [data-invalid] [data-slot="input-group-input"] {
-  border-color: rgb(var(--spotlight-danger));
+  border-color: var(--destructive);
 }
 
 [data-invalid] [data-slot="input-group-input"]:focus-visible {
-  --tw-ring-color: rgb(var(--spotlight-danger));
+  --tw-ring-color: var(--destructive);
 }

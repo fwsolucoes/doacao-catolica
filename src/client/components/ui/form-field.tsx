@@ -47,7 +47,7 @@ function FormField({
       >
         <Label htmlFor={name} className="inline-flex items-baseline gap-0.5">
           {required && (
-            <span className="text-[rgb(var(--spotlight-danger))]">*</span>
+            <span className="text-(--destructive)">*</span>
           )}
           {label}
         </Label>
@@ -55,7 +55,7 @@ function FormField({
         {children}
 
         {hasError && (
-          <p className="text-xs font-medium text-[rgb(var(--spotlight-danger))]">
+          <p className="text-xs font-medium text-(--destructive)">
             {error}
           </p>
         )}

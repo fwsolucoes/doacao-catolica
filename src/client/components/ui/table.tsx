@@ -18,7 +18,7 @@ function Root({ className, ...props }: ComponentProps<"table">) {
 function Header({ className, ...props }: ComponentProps<"thead">) {
   return (
     <thead
-      className={cn("bg-(--card-foreground-secondary)", className)}
+      className={cn("bg-(--muted)", className)}
       {...props}
     />
   );
@@ -29,8 +29,8 @@ function Body({ className, ...props }: ComponentProps<"tbody">) {
     <tbody
       className={cn(
         "before:content-[''] before:table-row before:h-3",
-        "[&>tr]:h-16 [&>tr:nth-child(odd)]:bg-(--card-foreground-primary)",
-        "[&>tr:nth-child(n):hover]:bg-(--card-foreground-secondary)",
+        "[&>tr]:h-16 [&>tr:nth-child(odd)]:bg-(--secondary)",
+        "[&>tr:nth-child(n):hover]:bg-(--muted)",
         className,
       )}
       {...props}
@@ -46,7 +46,7 @@ function Head({ className, ...props }: ComponentProps<"th">) {
   return (
     <th
       className={cn(
-        "h-11 px-4 text-left align-middle font-semibold text-sm text-(--text-heading) whitespace-nowrap first:rounded-l-md last:rounded-r-md",
+        "h-11 px-4 text-left align-middle font-semibold text-sm text-(--foreground) whitespace-nowrap first:rounded-l-md last:rounded-r-md",
         className,
       )}
       {...props}
@@ -58,7 +58,7 @@ function Cell({ className, ...props }: ComponentProps<"td">) {
   return (
     <td
       className={cn(
-        "px-4 align-middle text-sm text-(--text-body) whitespace-nowrap first:rounded-l-md last:rounded-r-md",
+        "px-4 align-middle text-sm text-(--foreground) whitespace-nowrap first:rounded-l-md last:rounded-r-md",
         className,
       )}
       {...props}

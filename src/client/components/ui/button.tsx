@@ -13,12 +13,12 @@ const button = tv({
   variants: {
     variant: {
       default:
-        "bg-[rgb(var(--spotlight-primary))] text-white hover:brightness-95",
+        "bg-(--primary) text-(--primary-foreground) hover:brightness-95",
       outline:
-        "border border-(--border) bg-transparent text-(--text-body) hover:brightness-95",
-      ghost: "bg-transparent text-(--text-body) hover:brightness-95",
+        "border border-(--border) bg-transparent text-(--foreground) hover:brightness-95",
+      ghost: "bg-transparent text-(--foreground) hover:brightness-95",
       danger:
-        "bg-[rgb(var(--spotlight-danger))] text-white hover:brightness-95",
+        "bg-(--destructive) text-(--destructive-foreground) hover:brightness-95",
     },
     size: {
       default: "rounded-md min-h-11 px-4 py-2 w-full",

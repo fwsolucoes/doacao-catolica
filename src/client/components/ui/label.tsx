@@ -9,7 +9,7 @@ function Label({
   return (
     <label
       className={cn(
-        "text-sm font-medium leading-none select-none text-(--text-body)",
+        "text-sm font-medium leading-none select-none text-(--foreground)",
         className
       )}
       {...props}
