@@ -1,3 +1,4 @@
+import { ChevronsUpDown } from "lucide-react";
 import {
   BarChart,
   BarChart2,
@@ -16,9 +17,21 @@ import {
   Users,
   Users2,
 } from "lucide-react";
-import { NavLink, useParams } from "react-router";
+import { NavLink, useMatch, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { cn } from "~/lib/utils";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarTrigger,
+} from "~/client/components/ui/sidebar";
 
 type NavItem = {
   icon: React.ElementType;
@@ -73,85 +86,117 @@ const sections: NavSection[] = [
   },
 ];
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
 function NavItemRow({
   icon: Icon,
   label,
   path,
   basePath,
 }: NavItem & { basePath: string }) {
-  const inner = (active: boolean) => (
-    <div className="flex items-center gap-2 py-px pr-3">
+  const to = path ? `${basePath}/${path}` : null;
+  const match = useMatch(to ?? "/__no_route__");
+  const isActive = !!match && !!to;
+
+  return (
+    <SidebarMenuItem className="relative">
       <div
         className={cn(
-          "h-7.5 w-0.75 rounded-br rounded-tr shrink-0",
-          active ? "bg-(--primary)" : "bg-transparent",
+          "absolute left-0 top-1/2 -translate-y-1/2 h-7.5 w-1 rounded-r shrink-0",
+          isActive ? "bg-sidebar-primary" : "bg-transparent",
         )}
       />
-      <div
-        className={cn(
-          "flex flex-1 items-center gap-2.5 rounded-lg px-3 h-10",
-          active ? "bg-white/10" : "",
-        )}
-      >
-        <Icon
-          size={18}
-          className={active ? "text-[#f1f5f9]" : "text-[#94a3b8]"}
-        />
-        <span
-          className={cn(
-            "text-sm whitespace-nowrap",
-            active
-              ? "font-semibold text-[#f1f5f9]"
-              : "font-normal text-[#94a3b8]",
-          )}
-        >
-          {label}
-        </span>
-      </div>
-    </div>
+      {to ? (
+        <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
+          <NavLink to={to} end>
+            <Icon size={18} />
+            <span>{label}</span>
+          </NavLink>
+        </SidebarMenuButton>
+      ) : (
+        <SidebarMenuButton tooltip={label} className="cursor-default opacity-60">
+          <Icon size={18} />
+          <span>{label}</span>
+        </SidebarMenuButton>
+      )}
+    </SidebarMenuItem>
   );
-
-  if (path) {
-    return (
-      <NavLink to={`${basePath}/${path}`} end>
-        {({ isActive }) => inner(isActive)}
-      </NavLink>
-    );
-  }
-
-  return inner(false);
 }
 
-function Sidebar() {
+function UserProfile() {
+  const { user } = useRoot();
+  const initials = user ? getInitials(user.name) : "";
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" className="cursor-default">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-[0.7rem] font-extrabold text-sidebar">
+            {initials}
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-semibold text-sidebar-foreground">
+              {user?.name}
+            </span>
+            <span className="truncate text-xs text-sidebar-foreground/60">
+              {user?.email}
+            </span>
+          </div>
+          <ChevronsUpDown
+            size={14}
+            className="ml-auto shrink-0 text-sidebar-foreground/40"
+          />
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
+
+function AppSidebar() {
   const { LIGHT_LOGO } = useRoot().environmentVariables;
   const { campaignId } = useParams<{ campaignId: string }>();
   const basePath = `/campaign/${campaignId}`;
 
   return (
-    <nav className="fixed left-0 top-0 flex h-screen w-68 flex-col pb-4 z-40">
-      <div className="flex h-16 shrink-0 items-center px-5">
-        <img src={LIGHT_LOGO} alt="Sancton" className="h-8 w-auto shrink-0" />
-      </div>
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-4">
+        <img
+          src={LIGHT_LOGO}
+          alt="Logo"
+          className="h-8 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
+        />
+        <SidebarTrigger className="text-sidebar-foreground/60 hover:bg-transparent hover:text-sidebar-foreground" />
+      </SidebarHeader>
 
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto pt-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
+      <SidebarContent>
         {sections.map((section) => (
-          <div
-            key={section.title || "__root__"}
-            className="flex flex-col gap-1"
-          >
+          <SidebarGroup key={section.title || "__root__"}>
             {section.title ? (
-              <span className="px-5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[#94a3b8]/60">
+              <SidebarGroupLabel className="text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/60">
                 {section.title}
-              </span>
+              </SidebarGroupLabel>
             ) : null}
-            {section.items.map((item) => (
-              <NavItemRow key={item.label} {...item} basePath={basePath} />
-            ))}
-          </div>
+            <SidebarMenu>
+              {section.items.map((item) => (
+                <NavItemRow key={item.label} {...item} basePath={basePath} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
         ))}
-      </div>
-    </nav>
+      </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border/30 pb-3">
+        <UserProfile />
+      </SidebarFooter>
+    </Sidebar>
   );
 }
 
-export { Sidebar };
+export { AppSidebar };

@@ -9,7 +9,7 @@ function CampaignBanner() {
   const { campaign } = useLoaderData<CampaignLayoutLoader>();
 
   return (
-    <header className="fixed left-68 right-0 top-0 flex h-14 items-center justify-between border-b border-(--border) bg-(--card) px-7 z-30">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-(--border) bg-(--card) px-7">
       <div className="flex flex-col gap-0.5">
         <p className="text-xl font-semibold leading-6 text-(--text-heading)">
           {campaign.name}

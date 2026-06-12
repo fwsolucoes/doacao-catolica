@@ -1,16 +1,19 @@
 import { Outlet } from "react-router";
+import { SidebarInset, SidebarProvider } from "~/client/components/ui/sidebar";
 import { CampaignBanner } from "./components/campaignBanner";
-import { Sidebar } from "./components/sidebar";
+import { AppSidebar } from "./components/sidebar";
 
 function CampaignLayout() {
   return (
-    <div>
-      <Sidebar />
-      <CampaignBanner />
-      <main className="ml-68 mt-14 p-6">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <CampaignBanner />
+        <main className="p-6">
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
 
