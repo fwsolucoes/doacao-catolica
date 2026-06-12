@@ -28,6 +28,7 @@ export default [
 
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
     route("home", "./main/routes/route.campaign.home.tsx"),
+    route("notifications", "./main/routes/route.campaign.notifications.tsx"),
   ]),
 
   route("treatment/:treatmentId", "./main/routes/layout.treatmentLayout.tsx", [
