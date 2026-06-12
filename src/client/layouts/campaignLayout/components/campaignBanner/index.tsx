@@ -15,7 +15,10 @@ function CampaignBanner() {
           {campaign.name}
         </p>
         <div className="flex items-center gap-2 text-sm">
-          <Badge variant={campaign.status ? "success" : "danger"}>
+          <Badge
+            variant={campaign.status ? "success" : "danger"}
+            className="pb-0.75"
+          >
             {campaign.status ? "Ativo" : "Inativo"}
           </Badge>
           <span className="text-(--border)">•</span>
