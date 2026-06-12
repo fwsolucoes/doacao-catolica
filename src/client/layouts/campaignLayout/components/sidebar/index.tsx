@@ -84,13 +84,13 @@ function NavItemRow({
       <div
         className={cn(
           "h-[30px] w-[3px] rounded-br rounded-tr shrink-0",
-          active ? "bg-[#60a5fa]" : "bg-transparent"
+          active ? "bg-[#60a5fa]" : "bg-transparent",
         )}
       />
       <div
         className={cn(
           "flex flex-1 items-center gap-2.5 rounded-lg px-3 h-10",
-          active ? "bg-white/10" : ""
+          active ? "bg-white/10" : "",
         )}
       >
         <Icon
@@ -100,7 +100,9 @@ function NavItemRow({
         <span
           className={cn(
             "text-sm whitespace-nowrap",
-            active ? "font-semibold text-[#f1f5f9]" : "font-normal text-[#94a3b8]"
+            active
+              ? "font-semibold text-[#f1f5f9]"
+              : "font-normal text-[#94a3b8]",
           )}
         >
           {label}
@@ -133,7 +135,10 @@ function Sidebar() {
 
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto pt-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
         {sections.map((section) => (
-          <div key={section.title || "__root__"} className="flex flex-col gap-1">
+          <div
+            key={section.title || "__root__"}
+            className="flex flex-col gap-1"
+          >
             {section.title ? (
               <span className="px-5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[#94a3b8]/60">
                 {section.title}
