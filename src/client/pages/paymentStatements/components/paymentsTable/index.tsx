@@ -2,12 +2,17 @@ import { Eye, FileDown, FileSymlink, Mail, Plus } from "lucide-react";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Pagination } from "~/client/components/ui/pagination";
 import { Table } from "~/client/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/client/components/ui/tooltip";
+
+const TOTAL_PAGES = 12;
+const CURRENT_PAGE = 1;
+const VISIBLE_PAGES = [1, 2, 3, 4];
 
 type BadgeVariant = "success" | "danger" | "warning" | "info";
 type PaymentTipo = "Recorrente" | "Pontual";
@@ -289,6 +294,35 @@ function PaymentsTable() {
           ))}
         </Table.Body>
       </Table.Root>
+
+      <Card.Footer className="justify-between">
+        <p className="flex-1 text-sm text-(--text-muted)">
+          Exibindo {CURRENT_PAGE} de {TOTAL_PAGES} páginas
+        </p>
+        <Pagination.Root>
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous href="#" />
+            </Pagination.Item>
+            {VISIBLE_PAGES.map((page) => (
+              <Pagination.Item key={page}>
+                <Pagination.Link href="#" isActive={page === CURRENT_PAGE}>
+                  {page}
+                </Pagination.Link>
+              </Pagination.Item>
+            ))}
+            <Pagination.Item>
+              <Pagination.Ellipsis />
+            </Pagination.Item>
+            <Pagination.Item>
+              <Pagination.Link href="#">{TOTAL_PAGES}</Pagination.Link>
+            </Pagination.Item>
+            <Pagination.Item>
+              <Pagination.Next href="#" />
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination.Root>
+      </Card.Footer>
     </Card.Root>
   );
 }
