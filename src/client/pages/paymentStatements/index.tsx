@@ -84,7 +84,7 @@ function PaymentStatementsPage() {
       <h1 className="text-xl font-semibold text-(--text-heading)">
         Extratos de pagamentos
       </h1>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {metrics.map((metric) => (
           <Card.Root key={metric.label} className="gap-3 p-5">
             <Card.MetricHeader
