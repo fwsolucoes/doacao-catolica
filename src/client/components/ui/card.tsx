@@ -8,7 +8,7 @@ function Root({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-6 rounded-lg bg-(--card) p-8 shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)]",
+        "flex flex-col gap-6 rounded-lg border border-(--border) bg-(--card) p-8 shadow-[0_1px_4px_rgba(0,0,0,0.06)]",
         className
       )}
       {...props}

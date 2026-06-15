@@ -30,6 +30,7 @@ export default [
     route("home", "./main/routes/route.campaign.home.tsx"),
     route("notifications", "./main/routes/route.campaign.notifications.tsx"),
     route("payment-statements", "./main/routes/route.campaign.paymentStatements.tsx"),
+    route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
   ]),
 
   route("treatment/:treatmentId", "./main/routes/layout.treatmentLayout.tsx", [

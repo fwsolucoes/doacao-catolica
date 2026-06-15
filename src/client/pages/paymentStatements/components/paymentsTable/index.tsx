@@ -1,4 +1,5 @@
 import { Eye, FileDown, FileSymlink, Mail, Plus } from "lucide-react";
+import { Link, useParams } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import {
@@ -194,6 +195,8 @@ function ActionButton({
 }
 
 function PaymentsTable() {
+  const { campaignId } = useParams<{ campaignId: string }>();
+
   return (
     <Card.Root className="gap-4 p-6">
       <div className="flex justify-end gap-2">
@@ -208,7 +211,11 @@ function PaymentsTable() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Criar recorrência</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to={`/campaign/${campaignId}/create-recurrence`}>
+                Criar recorrência
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Criar pagamento avulso</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
