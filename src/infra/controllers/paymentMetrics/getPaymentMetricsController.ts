@@ -13,7 +13,7 @@ class GetPaymentMetricsController {
     const { campaignId } = route.params;
     if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
 
-    return this.getPaymentMetricsUseCase.execute({
+    return await this.getPaymentMetricsUseCase.execute({
       subAccountId: campaignId,
       token: user.token,
     });
