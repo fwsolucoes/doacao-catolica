@@ -11,6 +11,8 @@ const environmentVariablesSchema = z.object({
   // API configuration
   API_URL: z.string(),
   API_DATABASE: z.string(),
+  API_URL_DONATION: z.string(),
+  API_KEY_DONATION: z.string(),
 
   // Google OAuth configuration
   GOOGLE_CLIENT_ID: z.string(),
