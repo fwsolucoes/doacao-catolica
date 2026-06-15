@@ -9,7 +9,9 @@ import {
   Wifi,
   XCircle,
 } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { PaymentStatementsLoader } from "~/client/types/paymentStatementsLoader";
 import { PaymentsTable } from "./components/paymentsTable";
 
 type MetricColor =
@@ -28,65 +30,27 @@ type MetricCardData = {
   color: MetricColor;
 };
 
-const metrics: MetricCardData[] = [
-  {
-    label: "Total recebido online",
-    value: "R$ 48.320,00",
-    icon: Wifi,
-    color: "teal",
-  },
-  {
-    label: "Total liberado",
-    value: "R$ 31.750,00",
-    icon: CheckCircle2,
-    color: "success",
-  },
-  {
-    label: "Aguardando liberação",
-    value: "R$ 12.480,00",
-    icon: Clock,
-    color: "warning",
-  },
-  {
-    label: "Pendentes",
-    value: "R$ 4.090,00",
-    icon: AlertCircle,
-    color: "info",
-  },
-  {
-    label: "Total recebido offline",
-    value: "R$ 9.600,00",
-    icon: Banknote,
-    color: "primary",
-  },
-  {
-    label: "Em atraso",
-    value: "R$ 2.150,00",
-    icon: AlertTriangle,
-    color: "danger",
-  },
-  {
-    label: "Cancelados",
-    value: "R$ 1.340,00",
-    icon: XCircle,
-    color: "danger",
-  },
-  {
-    label: "Taxas aplicadas",
-    value: "R$ 1.920,00",
-    icon: CirclePercent,
-    color: "accent",
-  },
-];
-
 function PaymentStatementsPage() {
+  const { metrics } = useLoaderData<PaymentStatementsLoader>();
+
+  const metricCards: MetricCardData[] = [
+    { label: "Total recebido online", value: metrics.receivedOnline, icon: Wifi, color: "teal" },
+    { label: "Total liberado", value: metrics.released, icon: CheckCircle2, color: "success" },
+    { label: "Aguardando liberação", value: metrics.awaitingRelease, icon: Clock, color: "warning" },
+    { label: "Pendentes", value: metrics.pending, icon: AlertCircle, color: "info" },
+    { label: "Total recebido offline", value: metrics.receivedOffline, icon: Banknote, color: "primary" },
+    { label: "Em atraso", value: metrics.overdue, icon: AlertTriangle, color: "danger" },
+    { label: "Cancelados", value: metrics.canceled, icon: XCircle, color: "danger" },
+    { label: "Taxas aplicadas", value: metrics.appliedFees, icon: CirclePercent, color: "accent" },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold text-(--text-heading)">
         Extratos de pagamentos
       </h1>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((metric) => (
+        {metricCards.map((metric) => (
           <Card.Root key={metric.label} className="gap-3 p-5">
             <Card.MetricHeader
               label={metric.label}
