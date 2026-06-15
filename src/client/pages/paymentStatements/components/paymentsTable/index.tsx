@@ -1,6 +1,12 @@
 import { Eye, FileDown, FileSymlink, Mail, Plus } from "lucide-react";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/client/components/ui/dropdown-menu";
 import { Card } from "~/client/components/ui/card";
 import { Pagination } from "~/client/components/ui/pagination";
 import { Table } from "~/client/components/ui/table";
@@ -191,13 +197,21 @@ function PaymentsTable() {
   return (
     <Card.Root className="gap-4 p-6">
       <div className="flex justify-end gap-2">
-        <Button
-          variant="outline"
-          className="h-9 min-h-0 w-auto gap-1.5 rounded-md px-4 text-sm"
-        >
-          <Plus size={14} />
-          Adicionar pagamento
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="h-9 min-h-0 w-auto gap-1.5 rounded-md px-4 text-sm"
+            >
+              <Plus size={14} />
+              Adicionar pagamento
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Criar recorrência</DropdownMenuItem>
+            <DropdownMenuItem>Criar pagamento avulso</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           variant="outline"
           className="h-9 min-h-0 w-auto gap-1.5 rounded-md px-4 text-sm"
