@@ -60,3 +60,42 @@ export const Card = { Root, Title, Description };
 ```
 
 Ver `src/client/components/ui/CLAUDE.md` para todas as regras de implementação.
+
+## Clean architecture — camadas
+
+Cada feature segue: `ExternalSchema → GatewayInterface → Gateway → UseCase → Controller → Factory → Route → Page`
+
+### SearchParams
+
+Query string para endpoints externos usa uma classe que estende `SearchParams` (`~/app/shared/searchParams`):
+
+```ts
+// src/app/search/<feature>SearchParams.ts
+import { SearchParams } from "../shared/searchParams";
+type Filter = { start_date: string; end_date: string };
+class FeatureSearchParams extends SearchParams<Filter> {}
+export { FeatureSearchParams };
+```
+
+No gateway: `url += searchParams.toExternal(["page", "pageLimit"])` — exclui paginação padrão quando o endpoint não a usa.
+
+### Gateway interface (domain)
+
+Parâmetros separados, não agrupados em objeto genérico:
+```ts
+// correto
+getMetrics(id: string, searchParams: FeatureSearchParams): Promise<Data>
+// evitar
+getMetrics(params: { id: string; searchParams: FeatureSearchParams }): Promise<Data>
+```
+
+### donationApi vs api
+
+- `api` (`~/infra/http/api`) — chamadas autenticadas com token do usuário
+- `donationApi` (`~/infra/http/donationApi`) — endpoints da API de doações, autenticados via `api-key` no header (`environmentVariables.API_KEY_DONATION`). Controllers desses endpoints não precisam verificar `AuthService`.
+
+## Utilitários de data
+
+`src/lib/getMonthDates.ts` — retorna `{ firstDayOfMonth, lastDayOfMonth }` em `YYYY-MM-DD`:
+- `getMonthDates(0)` → mês atual
+- `getMonthDates(1)` → mês anterior
