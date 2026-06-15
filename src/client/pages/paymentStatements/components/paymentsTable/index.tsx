@@ -275,8 +275,8 @@ function PaymentsTable() {
         </Table.Body>
       </Table.Root>
 
-      <Card.Footer className="justify-between">
-        <p className="flex-1 text-sm text-(--text-muted)">
+      <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+        <p className="text-sm text-(--text-muted)">
           Exibindo {CURRENT_PAGE} de {TOTAL_PAGES} páginas
         </p>
         <Pagination.Root>
