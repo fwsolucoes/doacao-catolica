@@ -1,29 +1,22 @@
-import { ContactsSearchParams } from "~/app/search/contactsSearchParams";
-import type {
-  ContactOption,
-  ContactsGatewayDTO,
-} from "~/domain/gateways/contacts";
-
+import type { ContactDalDTO } from "~/domain/dal/contact";
+import type { Contact } from "~/domain/views/contact";
 import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
 
 type InputProps = {
   campaignId: string;
-  filter: { name?: string; status?: string };
+  name?: string;
 };
 
 class ListContactsUseCase {
   constructor(
-    private contactsGateway: ContactsGatewayDTO,
+    private contactDal: ContactDalDTO,
     private campaignGateway: CampaignGatewayDTO,
   ) {}
 
-  async execute(input: InputProps, token: string): Promise<ContactOption[]> {
-    const { campaignId, filter } = input;
+  async execute(input: InputProps, token: string): Promise<Contact[]> {
+    const { campaignId, name } = input;
     const campaign = await this.campaignGateway.getCampaign(campaignId, token);
-    const searchParams = new ContactsSearchParams({
-      filter: { ...filter, accountId: String(campaign.accountId) },
-    });
-    return this.contactsGateway.listContacts(searchParams, token);
+    return this.contactDal.listContacts(String(campaign.accountId), token, name);
   }
 }
 

@@ -12,7 +12,7 @@ import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
 import { Switch } from "~/client/components/ui/switch";
 import { ToggleGroup } from "~/client/components/ui/toggle-group";
-import type { ContactOption } from "~/domain/gateways/contacts";
+import type { Contact } from "~/domain/views/contact";
 import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
 import { cn } from "~/lib/utils";
 import { useFilter } from "~/client/hooks/useFilter";
@@ -44,7 +44,7 @@ function SwitchField({
   );
 }
 
-function ContactCard({ contact }: { contact: ContactOption }) {
+function ContactCard({ contact }: { contact: Contact }) {
   return (
     <div className="rounded-md border border-(--border) bg-(--secondary) p-4">
       <p className="font-medium text-(--foreground)">{contact.name}</p>

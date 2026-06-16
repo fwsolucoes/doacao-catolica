@@ -63,6 +63,30 @@ Ver `src/client/components/ui/CLAUDE.md` para todas as regras de implementação
 
 ## Clean architecture — camadas
 
+### DAL vs Gateway — quando usar cada um
+
+Antes de criar um novo acesso a dados, escolha a camada correta:
+
+| Critério | DAL (`infra/dal/`) | Gateway (`infra/gateways/`) |
+|---|---|---|
+| Propósito | Lista de seleção (combobox, dropdown) | Dados com filtros, paginação ou busca |
+| SearchParams | Não | Sim (`app/search/<feature>SearchParams.ts`) |
+| Tipo de retorno | View (`domain/views/`) | Option/Entity (`domain/gateways/`) |
+| Parâmetros | Diretos (`accountId`, `token`) | Via `SearchParams` |
+| Exemplos | `contact`, `activityArea`, `role` | `campaign`, `payments` |
+
+**DAL** — endpoint retorna lista simples sem paginação, usada em selects/comboboxes:
+```
+ExternalSchema → DalInterface (domain/dal/) → Dal (infra/dal/) → UseCase → Controller → Factory
+View class em domain/views/ — classe com restore() e toJson()
+```
+
+**Gateway** — endpoint tem filtros, paginação ou SearchParams:
+```
+ExternalSchema → GatewayInterface (domain/gateways/) → Gateway (infra/gateways/) → UseCase → Controller → Factory
+SearchParams class em app/search/<feature>SearchParams.ts
+```
+
 Cada feature segue: `ExternalSchema → GatewayInterface → Gateway → UseCase → Controller → Factory → Route → Page`
 
 ### SearchParams

@@ -1,22 +1,19 @@
-import type { ContactsSearchParams } from "~/app/search/contactsSearchParams";
-import type {
-  ContactOption,
-  ContactsGatewayDTO,
-} from "~/domain/gateways/contacts";
+import type { ContactDalDTO } from "~/domain/dal/contact";
+import { Contact } from "~/domain/views/contact";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
 import { listContactsSchema } from "../schemas/external/contacts";
 
-class ContactsGateway implements ContactsGatewayDTO {
+class ContactDal implements ContactDalDTO {
   async listContacts(
-    searchParams: ContactsSearchParams,
+    accountId: string,
     token: string,
-  ): Promise<ContactOption[]> {
+    name?: string,
+  ): Promise<Contact[]> {
     const params = new URLSearchParams();
-    const filter = searchParams.filter;
-    if (filter?.name) params.set("name", filter.name);
-    if (filter?.accountId) params.set("filter[account_id]", filter.accountId);
+    params.set("filter[account_id]", accountId);
+    if (name) params.set("name", name);
 
     const url = `/contact/select?${params.toString()}`;
 
@@ -27,8 +24,8 @@ class ContactsGateway implements ContactsGatewayDTO {
     const schemaValidator = new SchemaValidatorAdapter(listContactsSchema);
     const data = schemaValidator.validate(apiResponse.response);
 
-    return data.map((item) => ({ id: item.id, name: item.name }));
+    return data.map((item) => Contact.restore({ id: item.id, name: item.name }));
   }
 }
 
-export { ContactsGateway };
+export { ContactDal };
