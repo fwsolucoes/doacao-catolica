@@ -13,8 +13,12 @@ class ContactsGateway implements ContactsGatewayDTO {
     searchParams: ContactsSearchParams,
     token: string,
   ): Promise<ContactOption[]> {
-    let url = "/contact/find-many";
-    url += searchParams.toExternal(["page", "pageLimit"]);
+    const params = new URLSearchParams();
+    const filter = searchParams.filter;
+    if (filter?.name) params.set("name", filter.name);
+    if (filter?.accountId) params.set("filter[account_id]", filter.accountId);
+
+    const url = `/contact/find-many?${params.toString()}`;
 
     console.log("URL de busca de contatos:", url);
 
