@@ -20,7 +20,7 @@ const createRecurrenceSchema = z.object({
   currentMonthPayment: z
     .string()
     .optional()
-    .transform((v) => v === "true"),
+    .transform((v) => v === "sim"),
   activeNotification: z
     .string()
     .optional()

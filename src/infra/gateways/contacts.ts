@@ -20,25 +20,14 @@ class ContactsGateway implements ContactsGatewayDTO {
 
     const url = `/contact/select?${params.toString()}`;
 
-    console.log("URL de busca de contatos:", url);
-
     const apiResponse = await api.get(url, { token });
-
-    console.log("Resposta da API de contatos:", apiResponse);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(listContactsSchema);
     const data = schemaValidator.validate(apiResponse.response);
 
-    return data.items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      email: item.contactInfo?.email ?? undefined,
-      phone: item.contactInfo?.phone ?? undefined,
-      cpf: item.cpf ?? undefined,
-      birthDate: item.birth_date ?? undefined,
-    }));
+    return data.map((item) => ({ id: item.id, name: item.name }));
   }
 }
 

@@ -1,9 +1,7 @@
 import { z } from "zod";
-import { paginationSchema } from "./pagination";
 
-const listContactsSchema = paginationSchema.extend({
+const listContactsSchema = z.object({
   name: z.string().optional(),
-  status: z.string().optional(),
 });
 
 export { listContactsSchema };

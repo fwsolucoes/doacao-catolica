@@ -48,11 +48,6 @@ function ContactCard({ contact }: { contact: ContactOption }) {
   return (
     <div className="rounded-md border border-(--border) bg-(--secondary) p-4">
       <p className="font-medium text-(--foreground)">{contact.name}</p>
-      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-(--text-muted)">
-        {contact.email && <span>{contact.email}</span>}
-        {contact.phone && <span>{contact.phone}</span>}
-        {contact.cpf && <span>CPF: {contact.cpf}</span>}
-      </div>
     </div>
   );
 }
@@ -114,26 +109,6 @@ function CreateRecurrencePage() {
             type="hidden"
             name="contactName"
             value={selectedContact?.name ?? ""}
-          />
-          <input
-            type="hidden"
-            name="contactEmail"
-            value={selectedContact?.email ?? ""}
-          />
-          <input
-            type="hidden"
-            name="contactPhone"
-            value={selectedContact?.phone ?? ""}
-          />
-          <input
-            type="hidden"
-            name="contactCpf"
-            value={selectedContact?.cpf ?? ""}
-          />
-          <input
-            type="hidden"
-            name="contactBirthDate"
-            value={selectedContact?.birthDate ?? ""}
           />
 
           {/* contact selection */}
