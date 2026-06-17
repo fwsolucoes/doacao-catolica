@@ -1,3 +1,6 @@
+import { formatDate } from "~/lib/formatDate";
+import { formatToCpf } from "@arkyn/shared";
+
 type ContactDetailConstructorProps = {
   contactId: string;
   name: string;
@@ -40,10 +43,10 @@ class ContactDetail {
     return {
       contactId: this.contactId,
       name: this.name,
-      cpf: this.cpf,
+      cpf: this.cpf ? formatToCpf(this.cpf) : null,
       accountId: this.accountId,
-      birthDate: this.birthDate,
-      phone: this.phone,
+      birthDate: formatDate(this.birthDate),
+      phone: this.phone && this.phone.length >= 5 ? this.phone : null,
       email: this.email,
       avatar: this.avatar,
     };

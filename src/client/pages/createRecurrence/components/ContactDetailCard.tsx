@@ -63,7 +63,7 @@ function ContactDetailCard({ contact }: ContactDetailCardProps) {
         </div>
         <div className="px-4">
           <p className="text-xs text-muted-foreground">CPF/CNPJ</p>
-          <p className="text-foreground">{formatCpf(cpf)}</p>
+          <p className="text-foreground">{cpf}</p>
         </div>
         <div className="pl-4">
           <p className="text-xs text-muted-foreground">Whatsapp</p>
