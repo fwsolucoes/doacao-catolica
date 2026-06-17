@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import { Link, useLoaderData, useParams, useFetcher } from "react-router";
 import {
   FormErrorProvider,
@@ -58,17 +58,15 @@ function CreateRecurrencePage() {
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
 
-  const [selectedContactId, setSelectedContactId] = React.useState("");
-  const [paymentType, setPaymentType] = React.useState<"pix" | "bank_slip">(
-    "pix",
-  );
-  const [valueType, setValueType] = React.useState<"fixed" | "undetermined">(
+  const [selectedContactId, setSelectedContactId] = useState("");
+  const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
+  const [valueType, setValueType] = useState<"fixed" | "undetermined">(
     "fixed",
   );
-  const [currentMonthPayment, setCurrentMonthPayment] = React.useState<
+  const [currentMonthPayment, setCurrentMonthPayment] = useState<
     "sim" | "não"
   >("sim");
-  const [activeNotification, setActiveNotification] = React.useState(true);
+  const [activeNotification, setActiveNotification] = useState(true);
   const selectedContact =
     contacts.find((c) => c.id === selectedContactId) ?? null;
   const category = CATEGORY_MAP[campaign.type] ?? "donation";
