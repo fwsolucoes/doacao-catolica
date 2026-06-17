@@ -1,7 +1,13 @@
 import { Pencil } from "lucide-react";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/client/components/ui/avatar";
 import { Button } from "~/client/components/ui/button";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
+import { getInitials } from "~/lib/getInitials";
 
 type ContactDetailCardProps = {
   contact: {
@@ -30,14 +36,6 @@ function formatCpf(cpf: string | null): string {
   return cpf;
 }
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
 function ContactDetailCard({ contact }: ContactDetailCardProps) {
   const { name, cpf, birthDate, phone, email, avatar } = contact;
   const initials = getInitials(name);
@@ -45,19 +43,12 @@ function ContactDetailCard({ contact }: ContactDetailCardProps) {
   return (
     <div className="rounded-lg border border-border  p-4 space-y-4">
       <div className="flex items-center gap-3">
-        <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center overflow-hidden shrink-0">
-          {avatar ? (
-            <img
-              src={avatar}
-              alt={name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="text-sm font-medium text-muted-foreground">
-              {initials}
-            </span>
-          )}
-        </div>
+        <Avatar className="size-12">
+          <AvatarImage src={avatar ?? undefined} alt={name} />
+          <AvatarFallback className="text-sm font-medium">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
         <span className="flex-1 font-semibold text-foreground">{name}</span>
         <Button type="button" variant="outline" size="sm" className="gap-1.5">
           <Pencil size={14} />
