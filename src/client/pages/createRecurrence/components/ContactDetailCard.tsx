@@ -7,6 +7,7 @@ import {
 import { Button } from "~/client/components/ui/button";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
+import { PhoneInput } from "~/client/components/ui/phone-input";
 import { getInitials } from "~/lib/getInitials";
 
 type ContactDetailCardProps = {
@@ -73,7 +74,7 @@ function ContactDetailCard({ contact }: ContactDetailCardProps) {
       )}
       {!phone && (
         <FormField name="contactPhone" label="Whatsapp:">
-          <Input name="contactPhone" type="tel" placeholder="+55" />
+          <PhoneInput defaultCountry="BR" />
         </FormField>
       )}
       {!birthDate && (
