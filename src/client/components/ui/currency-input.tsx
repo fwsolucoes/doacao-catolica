@@ -1,7 +1,6 @@
 import { use, useState } from "react";
 import CurrencyInputPrimitive from "react-currency-input-field";
 import { FormFieldContext } from "~/client/components/ui/form-field";
-import { InputGroup } from "~/client/components/ui/input-group";
 import { cn } from "~/lib/utils";
 
 type CurrencyInputProps = {
@@ -32,10 +31,16 @@ function CurrencyInput({
   );
 
   return (
-    <InputGroup.Root>
-      <InputGroup.Addon>
-        <InputGroup.Text>R$</InputGroup.Text>
-      </InputGroup.Addon>
+    <div
+      className={cn(
+        "flex rounded-md border border-border bg-input",
+        "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1 ring-offset-background",
+        "has-disabled:opacity-50",
+      )}
+    >
+      <span className="flex items-center px-3 bg-muted border-r border-border rounded-l-md select-none text-sm text-muted-foreground font-mono">
+        R$
+      </span>
       <input type="hidden" name={resolvedName} value={numericValue} />
       <CurrencyInputPrimitive
         id={resolvedId}
@@ -43,20 +48,17 @@ function CurrencyInput({
         defaultValue={defaultValue}
         placeholder={placeholder}
         disabled={disabled}
-        onValueChange={(_, __, values) =>
-          setNumericValue(values?.value ?? "")
-        }
+        onValueChange={(_, __, values) => setNumericValue(values?.value ?? "")}
         className={cn(
-          "w-full min-h-11 rounded-md border border-border bg-input text-sm",
-          "pl-10 pr-3 py-2 text-foreground",
+          "flex-1 min-h-11 bg-transparent text-sm",
+          "px-3 py-2 text-foreground",
           "placeholder:text-muted-foreground",
-          "outline-none ring-offset-background",
-          "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-          "disabled:cursor-not-allowed disabled:opacity-50",
+          "outline-none",
+          "disabled:cursor-not-allowed",
           className,
         )}
       />
-    </InputGroup.Root>
+    </div>
   );
 }
 
