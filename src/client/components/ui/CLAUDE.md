@@ -87,6 +87,8 @@ const { root, dot, label } = badge({ variant });
 
 **Escala Tailwind:** preferir valores da escala numérica do Tailwind (N × 4px) em vez de sintaxe arbitrária `[Xpx]`. Ex: `w-15` (60px), `h-90` (360px), `translate-x-4.5` (18px). Exceção: font sizes sem equivalente na escala (`text-[13px]`) ficam arbitrários.
 
+**Largura de inputs:** todo componente de entrada de dados (`Input`, `Select.Trigger`, `Textarea` e similares) deve ter `w-full` como padrão. Restrições de largura são responsabilidade do layout que os envolve, não do componente.
+
 ## Adicionando novos componentes (shadcn/ui)
 
 Para adicionar um componente do catálogo shadcn/ui:

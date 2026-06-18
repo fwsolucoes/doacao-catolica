@@ -17,10 +17,11 @@ import { Card } from "~/client/components/ui/card";
 import { Combobox } from "~/client/components/ui/combobox";
 import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
+import { RadioGroup } from "~/client/components/ui/radio-group";
+import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
-import { ToggleGroup } from "~/client/components/ui/toggle-group";
+import { Textarea } from "~/client/components/ui/textarea";
 import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
-import { cn } from "~/lib/utils";
 import { useFilter } from "~/client/hooks/useFilter";
 import { ContactDetailCard } from "./components/ContactDetailCard";
 
@@ -41,7 +42,7 @@ function SwitchField({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center gap-4">
       <input type="hidden" name={name} value={checked ? "true" : "false"} />
       <Label className="cursor-pointer" onClick={() => onChange(!checked)}>
         {label}
@@ -152,7 +153,6 @@ function CreateRecurrencePage() {
                   min={1}
                   max={31}
                   placeholder="Ex: 10"
-                  className="max-w-36"
                 />
               </FormField>
 
@@ -161,31 +161,49 @@ function CreateRecurrencePage() {
                 label="Forma de pagamento:"
                 required
               >
-                <ToggleGroup.Root
+                <Select.Root
                   name="paymentType"
                   value={paymentType}
                   onValueChange={(v) =>
                     setPaymentType(v as "pix" | "bank_slip")
                   }
                 >
-                  <ToggleGroup.Item value="pix">Pix</ToggleGroup.Item>
-                  <ToggleGroup.Item value="bank_slip">Boleto</ToggleGroup.Item>
-                </ToggleGroup.Root>
+                  <Select.Trigger>
+                    <Select.Value />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="pix">Pix</Select.Item>
+                    <Select.Item value="bank_slip">Boleto</Select.Item>
+                  </Select.Content>
+                </Select.Root>
               </FormField>
 
               <FormField name="valueType" label="Tipo de valor:" required>
-                <ToggleGroup.Root
+                <RadioGroup.Root
                   name="valueType"
                   value={valueType}
                   onValueChange={(v) =>
                     setValueType(v as "fixed" | "undetermined")
                   }
                 >
-                  <ToggleGroup.Item value="fixed">Valor fixo</ToggleGroup.Item>
-                  <ToggleGroup.Item value="undetermined">
+                  <Label
+                    htmlFor="valueType-fixed"
+                    className="flex items-center gap-2 cursor-pointer font-normal"
+                  >
+                    <RadioGroup.Item value="fixed" id="valueType-fixed" />
+                    Valor fixo
+                  </Label>
+                  <Label
+                    htmlFor="valueType-undetermined"
+                    className="flex items-center gap-2 cursor-pointer font-normal"
+                  >
+                    <RadioGroup.Item
+                      value="undetermined"
+                      id="valueType-undetermined"
+                    />
                     Valor indeterminado
-                  </ToggleGroup.Item>
-                </ToggleGroup.Root>
+                  </Label>
+                </RadioGroup.Root>
               </FormField>
 
               {valueType === "fixed" && (
@@ -197,7 +215,6 @@ function CreateRecurrencePage() {
                     step="0.01"
                     min="5"
                     placeholder="0,00"
-                    className="max-w-48"
                   />
                   <p className="text-xs text-(--text-muted)">
                     Valor mínimo: R$ 5,00
@@ -210,30 +227,36 @@ function CreateRecurrencePage() {
                 label="Gerar cobrança para o mês atual:"
                 required
               >
-                <ToggleGroup.Root
+                <RadioGroup.Root
                   name="currentMonthPayment"
                   value={currentMonthPayment}
                   onValueChange={(v) =>
                     setCurrentMonthPayment(v as "sim" | "não")
                   }
                 >
-                  <ToggleGroup.Item value="sim">Sim</ToggleGroup.Item>
-                  <ToggleGroup.Item value="não">Não</ToggleGroup.Item>
-                </ToggleGroup.Root>
+                  <Label
+                    htmlFor="currentMonth-sim"
+                    className="flex items-center gap-2 cursor-pointer font-normal"
+                  >
+                    <RadioGroup.Item value="sim" id="currentMonth-sim" />
+                    Sim
+                  </Label>
+                  <Label
+                    htmlFor="currentMonth-não"
+                    className="flex items-center gap-2 cursor-pointer font-normal"
+                  >
+                    <RadioGroup.Item value="não" id="currentMonth-não" />
+                    Não
+                  </Label>
+                </RadioGroup.Root>
               </FormField>
 
               <FormField name="description" label="Descrição (opcional)">
-                <textarea
+                <Textarea
                   id="description"
                   name="description"
                   rows={3}
                   placeholder="Descreva a recorrência..."
-                  className={cn(
-                    "w-full rounded-md border border-border bg-input px-3 py-2 text-sm",
-                    "text-foreground placeholder:text-muted-foreground",
-                    "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-                    "disabled:cursor-not-allowed disabled:opacity-50 resize-none",
-                  )}
                 />
               </FormField>
 

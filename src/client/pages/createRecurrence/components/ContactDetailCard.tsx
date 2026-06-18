@@ -44,15 +44,17 @@ function ContactDetailCard({ contact }: ContactDetailCardProps) {
 
       <div className="flex text-sm divide-x divide-border">
         <div className="pr-4">
-          <p className="text-xs text-muted-foreground">Data de Nascimento</p>
+          <p className="text-xs text-muted-foreground mb-1">
+            Data de Nascimento
+          </p>
           <p className="text-foreground">{birthDate}</p>
         </div>
         <div className="px-4">
-          <p className="text-xs text-muted-foreground">CPF/CNPJ</p>
+          <p className="text-xs text-muted-foreground mb-1">CPF/CNPJ</p>
           <p className="text-foreground">{cpf}</p>
         </div>
         <div className="pl-4">
-          <p className="text-xs text-muted-foreground">Whatsapp</p>
+          <p className="text-xs text-muted-foreground mb-1">Whatsapp</p>
           <p className="text-foreground">{phone ?? "—"}</p>
         </div>
       </div>
