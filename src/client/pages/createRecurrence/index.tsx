@@ -20,49 +20,17 @@ import { CurrencyInput } from "~/client/components/ui/currency-input";
 import { Label } from "~/client/components/ui/label";
 import { RadioGroup } from "~/client/components/ui/radio-group";
 import { Select } from "~/client/components/ui/select";
-import { Switch } from "~/client/components/ui/switch";
 import { Textarea } from "~/client/components/ui/textarea";
 import { Alert } from "~/client/components/ui/alert";
+import { SwitchField } from "~/client/components/ui/switch-field";
 import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
 import { useFilter } from "~/client/hooks/useFilter";
-import { cn } from "~/lib/utils";
 import { ContactDetailCard } from "./components/ContactDetailCard";
 
 const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
   1: "donation",
   2: "tithe",
 };
-
-function SwitchField({
-  name,
-  label,
-  checked,
-  onChange,
-  disabled,
-}: {
-  name: string;
-  label: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <div className={cn("flex items-center gap-4", disabled && "opacity-50")}>
-      <input type="hidden" name={name} value={checked ? "true" : "false"} />
-      <Label
-        className={cn("cursor-pointer", disabled && "cursor-not-allowed")}
-        onClick={() => !disabled && onChange(!checked)}
-      >
-        {label}
-      </Label>
-      <Switch
-        checked={checked}
-        onCheckedChange={onChange}
-        disabled={disabled}
-      />
-    </div>
-  );
-}
 
 function CreateRecurrencePage() {
   const { contacts, campaign, contactDetail } =
