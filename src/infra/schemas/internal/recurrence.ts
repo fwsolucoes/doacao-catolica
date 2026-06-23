@@ -31,7 +31,10 @@ const createRecurrenceSchema = z.object({
   interest: z.coerce.number().optional(),
   fineType: z.enum(["fixed", "percentage"]).optional(),
   fineValue: z.coerce.number().optional(),
-  missingFields: z.string().transform((v) => v === "true"),
+  missingFields: z
+    .string()
+    .optional()
+    .transform((v) => v === "true"),
 });
 
 export { createRecurrenceSchema, type CreateRecurrenceType };
