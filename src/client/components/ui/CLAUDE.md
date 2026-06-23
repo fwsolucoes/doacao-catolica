@@ -95,7 +95,21 @@ const { root, dot, label } = badge({ variant });
 "group-data-[invalid]:border-(--destructive) group-data-[invalid]:focus-visible:ring-(--destructive)"
 ```
 
-`FormField` expõe `data-invalid` no wrapper com a classe `group` quando há erro no campo. Usar sempre `group-data-[invalid]:` — não usar `aria-invalid:` para esse fim.
+`FormField` expõe `data-invalid` no wrapper com a classe `group` quando há erro no campo. Usar sempre `group-data-invalid:` — não usar `aria-invalid:` para estilização via CSS.
+
+Para acessibilidade, cada input deve também setar `aria-invalid` consumindo os contextos do `FormField`:
+
+```tsx
+import { use } from "react";
+import { FormErrorContext, FormFieldContext } from "./form-field";
+
+const name = use(FormFieldContext);
+const fieldErrors = use(FormErrorContext);
+const hasError = !!fieldErrors[name]?.length;
+
+// setar antes do spread para permitir override explícito
+<input aria-invalid={hasError || undefined} {...props} />
+```
 
 ## Adicionando novos componentes (shadcn/ui)
 

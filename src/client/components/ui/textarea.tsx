@@ -1,10 +1,16 @@
-import type { ComponentProps } from "react";
+import { use, type ComponentProps } from "react";
 import { cn } from "~/lib/utils";
+import { FormErrorContext, FormFieldContext } from "./form-field";
 
 function Textarea({ className, ...props }: ComponentProps<"textarea">) {
+  const name = use(FormFieldContext);
+  const fieldErrors = use(FormErrorContext);
+  const hasError = !!fieldErrors[name]?.length;
+
   return (
     <textarea
       data-slot="textarea"
+      aria-invalid={hasError || undefined}
       className={cn(
         "w-full min-h-16 rounded-md border border-border bg-input px-3 py-2 text-sm",
         "text-foreground placeholder:text-muted-foreground",

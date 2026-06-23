@@ -1,7 +1,8 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
-import type { ComponentProps } from "react";
+import { use, type ComponentProps } from "react";
 import { cn } from "~/lib/utils";
+import { FormErrorContext, FormFieldContext } from "./form-field";
 
 function Root(props: ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -20,9 +21,14 @@ function Trigger({
   children,
   ...props
 }: ComponentProps<typeof SelectPrimitive.Trigger>) {
+  const name = use(FormFieldContext);
+  const fieldErrors = use(FormErrorContext);
+  const hasError = !!fieldErrors[name]?.length;
+
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
+      aria-invalid={hasError || undefined}
       className={cn(
         "flex w-full min-h-11 items-center justify-between gap-2 rounded-md border border-border bg-input px-3 py-2 text-sm whitespace-nowrap outline-none",
         "text-foreground data-placeholder:text-muted-foreground",
