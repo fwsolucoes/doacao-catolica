@@ -1,8 +1,9 @@
-import { Eye } from "lucide-react";
+import { Eye, FolderOpen } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Empty } from "~/client/components/ui/empty";
 import { Pagination } from "~/client/components/ui/pagination";
 import { Table } from "~/client/components/ui/table";
 import type { CampaignsLoader } from "~/client/types/campaignsLoader";
@@ -67,6 +68,27 @@ function typeVariantBadge(value: number): {
 
 function TableCard() {
   const { campaigns } = useLoaderData<CampaignsLoader>();
+
+  if (campaigns.data.length === 0) {
+    return (
+      <Card.Root>
+        <Empty.Root className="border-none">
+          <Empty.Header>
+            <Empty.Media variant="icon">
+              <FolderOpen />
+            </Empty.Media>
+            <Empty.Title>Nenhuma campanha cadastrada</Empty.Title>
+          </Empty.Header>
+          <Empty.Content>
+            <Button asChild>
+              <Link to="#">Criar campanha</Link>
+            </Button>
+          </Empty.Content>
+        </Empty.Root>
+      </Card.Root>
+    );
+  }
+
   return (
     <Card.Root>
       <Table.Root>
