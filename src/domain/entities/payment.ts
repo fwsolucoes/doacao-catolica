@@ -16,6 +16,7 @@ const PAYMENT_TYPE_MAP: Record<string, string> = {
   pix: "Pix",
   automatic_pix: "Pix automático",
   bank_slip: "Boleto",
+  credit_card: "Cartão de crédito",
 };
 
 type PaymentConstructorProps = {
