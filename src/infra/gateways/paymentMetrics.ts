@@ -1,13 +1,16 @@
 import type { PaymentMetricsSearchParams } from "~/app/search/paymentMetricsSearchParams";
+import { SearchResult } from "~/app/shared/searchResult";
+import { Payment } from "~/domain/entities/payment";
 import type {
   PaymentMetricsData,
   PaymentMetricsGatewayDTO,
 } from "~/domain/gateways/paymentMetrics";
+import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { externalPaymentMetricsSchema } from "../schemas/external/paymentMetrics";
-import { environmentVariables } from "~/main/config/environmentVariables";
+import { externalPaymentsListSchema } from "../schemas/external/paymentsList";
 
 class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
   async getPaymentMetrics(
@@ -48,6 +51,44 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
       canceled: fmt(canceled.amount),
       appliedFees: fmt(received.fee_amount + confirmed.fee_amount),
     };
+  }
+
+  async listPayments(
+    campaignPublicId: string,
+    searchParams: PaymentMetricsSearchParams,
+  ): Promise<SearchResult<Payment>> {
+    let url = `/api/metrics/payments/${campaignPublicId}`;
+    url += searchParams.toExternal(["pageLimit"]);
+
+    const apiResponse = await donationApi.get(url, {
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(externalPaymentsListSchema);
+    const data = schemaValidator.validate(apiResponse.response.data);
+
+    return new SearchResult({
+      data: data.data.map((item) =>
+        Payment.restore({
+          id: item.payment_uuid,
+          customerName: item.customer.name,
+          amount: item.amount,
+          status: item.payment_status,
+          origin: item.payment_origin,
+          paymentType: item.payment_type,
+          dueDate: item.payment_due_date,
+          paidDate: item.payment_paid_date,
+          confirmedDate: item.payment_confirmed_date,
+        }),
+      ),
+      meta: {
+        page: data.current_page,
+        pageLimit: data.per_page,
+        totalItems: data.total,
+      },
+    });
   }
 }
 
