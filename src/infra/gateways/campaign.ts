@@ -1,5 +1,5 @@
-import type { CampaignSearchParams } from "~/app/search/campaignSearchParams";
 import { SearchResult } from "~/app/shared/searchResult";
+import type { CampaignSearchParams } from "~/app/search/campaignSearchParams";
 import type { Campaign } from "~/domain/entities/campaign";
 import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
 import { HttpAdapter } from "../adapters/httpAdapter";
@@ -16,7 +16,7 @@ class CampaignGateway implements CampaignGatewayDTO {
     searchParams: CampaignSearchParams,
     token: string,
   ): Promise<SearchResult<Campaign>> {
-    let url = "/projects/summary";
+    let url = "/project/summary-list";
     url += searchParams.toExternal();
 
     const apiResponse = await api.get(url, { token });
@@ -27,11 +27,11 @@ class CampaignGateway implements CampaignGatewayDTO {
     const externalCampaigns = schemaValidator.validate(apiResponse.response);
 
     return new SearchResult({
-      data: externalCampaigns.items.map(CampaignMapper.toEntity),
+      data: externalCampaigns.data.map(CampaignMapper.toEntity),
       meta: {
-        page: externalCampaigns.current_page,
-        pageLimit: externalCampaigns.per_page,
-        totalItems: externalCampaigns.total,
+        page: externalCampaigns.meta.currentPage,
+        pageLimit: externalCampaigns.meta.itemsPerPage,
+        totalItems: externalCampaigns.meta.totalItems,
       },
     });
   }
