@@ -14,6 +14,8 @@ class ListPaymentsController {
     return await this.listPaymentsUseCase.execute({
       campaignPublicId: campaignId,
       page,
+      startDate: route.query.start_date,
+      endDate: route.query.end_date,
     });
   }
 }

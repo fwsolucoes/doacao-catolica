@@ -5,18 +5,24 @@ import { getMonthDates } from "~/lib/getMonthDates";
 type InputProps = {
   campaignPublicId: string;
   page?: number | null;
+  startDate?: string;
+  endDate?: string;
 };
 
 class ListPaymentsUseCase {
   constructor(private gateway: PaymentMetricsGatewayDTO) {}
 
   async execute(input: InputProps) {
-    const { campaignPublicId, page } = input;
+    const { campaignPublicId, page, startDate, endDate } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
     const searchParams = new PaymentsListSearchParams({
       page: page ?? 1,
-      filter: { start_date: firstDayOfMonth, end_date: lastDayOfMonth, per_page: 20 },
+      filter: {
+        start_date: startDate ?? firstDayOfMonth,
+        end_date: endDate ?? lastDayOfMonth,
+        per_page: 20,
+      },
     });
 
     const result = await this.gateway.listPayments(campaignPublicId, searchParams);

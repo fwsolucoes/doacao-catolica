@@ -7,17 +7,22 @@ import { getMonthDates } from "~/lib/getMonthDates";
 
 type InputProps = {
   campaignPublicId: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 class GetPaymentMetricsUseCase {
   constructor(private paymentMetricsGateway: PaymentMetricsGatewayDTO) {}
 
   async execute(input: InputProps): Promise<PaymentMetricsData> {
-    const { campaignPublicId } = input;
+    const { campaignPublicId, startDate, endDate } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
     const searchParams = new PaymentMetricsSearchParams({
-      filter: { start_date: firstDayOfMonth, end_date: lastDayOfMonth },
+      filter: {
+        start_date: startDate ?? firstDayOfMonth,
+        end_date: endDate ?? lastDayOfMonth,
+      },
     });
 
     return this.paymentMetricsGateway.getPaymentMetrics(

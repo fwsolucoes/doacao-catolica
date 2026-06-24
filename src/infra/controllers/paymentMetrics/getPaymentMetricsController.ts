@@ -11,6 +11,8 @@ class GetPaymentMetricsController {
 
     return await this.getPaymentMetricsUseCase.execute({
       campaignPublicId: campaignId,
+      startDate: route.query.start_date,
+      endDate: route.query.end_date,
     });
   }
 }

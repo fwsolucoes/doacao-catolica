@@ -13,6 +13,7 @@ import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import type { PaymentStatementsLoader } from "~/client/types/paymentStatementsLoader";
 import { PaymentsTable } from "./components/paymentsTable";
+import { PeriodSelect } from "./components/periodSelect";
 
 type MetricColor =
   | "teal"
@@ -46,9 +47,12 @@ function PaymentStatementsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-(--text-heading)">
-        Extratos de pagamentos
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-(--text-heading)">
+          Extratos de pagamentos
+        </h1>
+        <PeriodSelect />
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {metricCards.map((metric) => (
           <Card.Root key={metric.label} className="gap-3 p-5">
