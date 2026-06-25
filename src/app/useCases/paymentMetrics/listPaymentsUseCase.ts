@@ -13,6 +13,7 @@ type InputProps = {
   status?: string;
   notifiedEmail?: string;
   notifiedWhatsapp?: string;
+  customerReference?: string;
 };
 
 class ListPaymentsUseCase {
@@ -30,6 +31,7 @@ class ListPaymentsUseCase {
       status,
       notifiedEmail,
       notifiedWhatsapp,
+      customerReference,
     } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
@@ -45,6 +47,7 @@ class ListPaymentsUseCase {
         status: status,
         notified_email: notifiedEmail,
         notified_whatsapp: notifiedWhatsapp,
+        customer_reference: customerReference,
       },
     });
 

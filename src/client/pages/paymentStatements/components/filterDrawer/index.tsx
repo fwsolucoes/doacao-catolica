@@ -2,6 +2,7 @@ import { ListFilter, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { Combobox } from "~/client/components/ui/combobox";
 import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
 import { RadioGroup } from "~/client/components/ui/radio-group";
@@ -22,6 +23,7 @@ const DRAWER_PARAMS = [
   "status",
   "notified_email",
   "notified_whatsapp",
+  "customer_reference",
 ] as const;
 
 type DateType = "due" | "paid";
@@ -35,6 +37,7 @@ type FilterDraft = {
   status: string;
   notifiedEmail: string;
   notifiedWhatsapp: string;
+  donorId: string;
 };
 
 function draftFromParams(sp: URLSearchParams): FilterDraft {
@@ -47,10 +50,15 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
     status: sp.get("status") ?? "",
     notifiedEmail: sp.get("notified_email") ?? "",
     notifiedWhatsapp: sp.get("notified_whatsapp") ?? "",
+    donorId: sp.get("customer_reference") ?? "",
   };
 }
 
-function FilterDrawer() {
+type FilterDrawerProps = {
+  donors: { id: string; name: string }[];
+};
+
+function FilterDrawer({ donors }: FilterDrawerProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -61,14 +69,24 @@ function FilterDrawer() {
   const sp = new URLSearchParams(location.search);
   const filterCount = DRAWER_PARAMS.filter((p) => sp.get(p)).length;
 
+  const donorOptions = donors.map((d) => ({ value: d.id, label: d.name }));
+
   function handleOpenChange(isOpen: boolean) {
     if (isOpen) setDraft(draftFromParams(new URLSearchParams(location.search)));
     setOpen(isOpen);
   }
 
+  function handleDonorSearch(search: string) {
+    const nextSp = new URLSearchParams(location.search);
+    if (search) nextSp.set("donor_search", search);
+    else nextSp.delete("donor_search");
+    navigate(`?${nextSp.toString()}`);
+  }
+
   function clearFilters() {
     const nextSp = new URLSearchParams(location.search);
     DRAWER_PARAMS.forEach((p) => nextSp.delete(p));
+    nextSp.delete("donor_search");
     navigate(`?${nextSp.toString()}`);
   }
 
@@ -84,6 +102,7 @@ function FilterDrawer() {
       ["status", draft.status],
       ["notified_email", draft.notifiedEmail],
       ["notified_whatsapp", draft.notifiedWhatsapp],
+      ["customer_reference", draft.donorId],
     ];
 
     for (const [key, value] of fields) {
@@ -97,6 +116,7 @@ function FilterDrawer() {
       nextSp.set("period", "custom");
     }
 
+    nextSp.delete("donor_search");
     navigate(`?${nextSp.toString()}`);
     setOpen(false);
   }
@@ -149,6 +169,19 @@ function FilterDrawer() {
           </SheetHeader>
 
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-4">
+            <div className="flex flex-col gap-2">
+              <Label>Doador:</Label>
+              <Combobox
+                options={donorOptions}
+                value={draft.donorId}
+                onChange={setField("donorId")}
+                onSearchChange={handleDonorSearch}
+                placeholder="Selecione um doador"
+                searchPlaceholder="Pesquisar por nome..."
+                emptyText="Nenhum doador encontrado."
+              />
+            </div>
+
             <div className="border border-border rounded p-4">
               <div className="flex flex-col gap-2">
                 <Label>Tipo de data:</Label>

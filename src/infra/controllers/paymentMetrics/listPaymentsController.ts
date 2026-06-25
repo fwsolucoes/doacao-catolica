@@ -22,6 +22,7 @@ class ListPaymentsController {
       status: route.query.status,
       notifiedEmail: route.query.notified_email,
       notifiedWhatsapp: route.query.notified_whatsapp,
+      customerReference: route.query.customer_reference,
     });
   }
 }

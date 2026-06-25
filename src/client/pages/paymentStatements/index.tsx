@@ -33,7 +33,7 @@ type MetricCardData = {
 };
 
 function PaymentStatementsPage() {
-  const { metrics } = useLoaderData<PaymentStatementsLoader>();
+  const { metrics, donors } = useLoaderData<PaymentStatementsLoader>();
 
   const metricCards: MetricCardData[] = [
     { label: "Total recebido online", value: metrics.receivedOnline, icon: Wifi, color: "teal" },
@@ -54,7 +54,7 @@ function PaymentStatementsPage() {
         </h1>
         <div className="flex items-center gap-3">
           <PeriodSelect />
-          <FilterDrawer />
+          <FilterDrawer donors={donors.data} />
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
