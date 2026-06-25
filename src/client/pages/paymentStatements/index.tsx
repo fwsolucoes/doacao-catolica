@@ -12,6 +12,7 @@ import {
 import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import type { PaymentStatementsLoader } from "~/client/types/paymentStatementsLoader";
+import { FilterDrawer } from "./components/filterDrawer";
 import { PaymentsTable } from "./components/paymentsTable";
 import { PeriodSelect } from "./components/periodSelect";
 
@@ -51,7 +52,10 @@ function PaymentStatementsPage() {
         <h1 className="text-xl font-semibold text-(--text-heading)">
           Extratos de pagamentos
         </h1>
-        <PeriodSelect />
+        <div className="flex items-center gap-3">
+          <PeriodSelect />
+          <FilterDrawer />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {metricCards.map((metric) => (

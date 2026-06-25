@@ -58,7 +58,7 @@ function ActionButton({
       <TooltipTrigger asChild>
         <button
           type="button"
-          className="flex items-center justify-center rounded-md p-1.5 transition-colors hover:bg-(--secondary)"
+          className="flex items-center justify-center rounded-md p-1.5 transition-colors hover:bg-secondary"
         >
           {children}
         </button>

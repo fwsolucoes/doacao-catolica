@@ -16,6 +16,12 @@ class ListPaymentsController {
       page,
       startDate: route.query.start_date,
       endDate: route.query.end_date,
+      dateType: route.query.date_type,
+      origin: route.query.origin,
+      paymentType: route.query.type,
+      status: route.query.status,
+      notifiedEmail: route.query.notified_email,
+      notifiedWhatsapp: route.query.notified_whatsapp,
     });
   }
 }
