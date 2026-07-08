@@ -1,5 +1,4 @@
 import { use, useState } from "react";
-import CurrencyInputPrimitive from "react-currency-input-field";
 import { FormFieldContext } from "~/client/components/ui/form-field";
 import { cn } from "~/lib/utils";
 
@@ -12,6 +11,15 @@ type CurrencyInputProps = {
   disabled?: boolean;
   className?: string;
 };
+
+function digitsToDisplay(digits: string): string {
+  if (!digits) return "";
+  const padded = digits.padStart(3, "0");
+  const intPart = padded.slice(0, -2).replace(/^0+/, "") || "0";
+  const decPart = padded.slice(-2);
+  const intFormatted = Number(intPart).toLocaleString("pt-BR");
+  return `${intFormatted},${decPart}`;
+}
 
 function CurrencyInput({
   name,
@@ -26,9 +34,19 @@ function CurrencyInput({
   const resolvedName = name ?? (fieldName || undefined);
   const resolvedId = id ?? (fieldName || undefined);
 
-  const [numericValue, setNumericValue] = useState(
-    defaultValue?.toString() ?? "",
+  const [rawDigits, setRawDigits] = useState(() =>
+    defaultValue !== undefined
+      ? String(Math.round(defaultValue * 100))
+      : "",
   );
+
+  const displayValue = digitsToDisplay(rawDigits);
+  const numericValue = rawDigits ? (parseInt(rawDigits, 10) / 100).toString() : "";
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const digits = e.target.value.replace(/\D/g, "");
+    setRawDigits(digits);
+  }
 
   return (
     <div
@@ -42,13 +60,14 @@ function CurrencyInput({
         R$
       </span>
       <input type="hidden" name={resolvedName} value={numericValue} />
-      <CurrencyInputPrimitive
+      <input
         id={resolvedId}
-        intlConfig={{ locale: "pt-BR" }}
-        defaultValue={defaultValue}
+        type="text"
+        inputMode="numeric"
+        value={displayValue}
+        onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
-        onValueChange={(_, __, values) => setNumericValue(values?.value ?? "")}
         className={cn(
           "flex-1 min-h-11 bg-transparent text-sm",
           "px-3 py-2 text-foreground",
