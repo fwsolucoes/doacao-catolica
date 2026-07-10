@@ -1,17 +1,20 @@
 import {
   Eye,
-  FileDown,
   FileText,
   Mail,
   MoreHorizontal,
   Plus,
   Receipt,
   RefreshCw,
+  Search,
+  SlidersHorizontal,
+  Zap,
 } from "lucide-react";
 import { Link, useLoaderData, useParams } from "react-router";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
+import { Input } from "~/client/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -127,33 +130,41 @@ function PaymentsTable() {
 
   return (
     <Card.Root className="gap-4 p-6">
-      <div className="flex justify-end gap-2">
+      <div className="flex items-center gap-2.5">
+        <div className="flex-1">
+          <Input
+            leftIcon={Search}
+            placeholder="Buscar por nome, telefone, e-mail ou CPF..."
+            className="h-11 rounded-xl border-transparent bg-muted/50"
+          />
+        </div>
+        <Button
+          variant="outline"
+          className="h-11 min-h-0 shrink-0 gap-2 rounded-xl px-4 text-sm"
+        >
+          <SlidersHorizontal size={16} />
+          Filtros
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="h-9 min-h-0 w-auto gap-1.5 rounded-md px-4 text-sm"
-            >
-              <Plus size={14} />
-              Adicionar pagamento
+            <Button className="h-11 min-h-0 shrink-0 gap-2 rounded-xl px-4 text-sm">
+              <Plus size={16} />
+              Adicionar
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link to={`/campaign/${campaignId}/create-recurrence`}>
+                <RefreshCw size={16} className="text-foreground" />
                 Criar recorrência
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Criar pagamento avulso</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Zap size={16} className="text-foreground" />
+              Criar pagamento avulso
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button
-          variant="outline"
-          className="h-9 min-h-0 w-auto gap-1.5 rounded-md px-4 text-sm"
-        >
-          <FileDown size={14} />
-          Exportar relatório
-        </Button>
       </div>
 
       <Table.Root>
