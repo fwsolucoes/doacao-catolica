@@ -164,9 +164,11 @@ function PaymentsTable() {
                 Criar recorrência
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Zap size={16} className="text-foreground" />
-              Criar pagamento avulso
+            <DropdownMenuItem asChild>
+              <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
+                <Zap size={16} className="text-foreground" />
+                Criar pagamento avulso
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
