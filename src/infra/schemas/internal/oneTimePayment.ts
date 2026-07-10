@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 const oneTimePaymentSchema = z
   .object({
@@ -25,14 +25,14 @@ const oneTimePaymentSchema = z
     if (data.paymentOption === "onlinePayment") {
       if (!data.paymentType) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Selecione a forma de pagamento",
           path: ["paymentType"],
         });
       }
       if (!data.amount || data.amount < 5) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Valor mínimo: R$ 5,00",
           path: ["amount"],
         });
@@ -41,14 +41,14 @@ const oneTimePaymentSchema = z
     if (data.paymentOption === "receivedPayment") {
       if (!data.amount || data.amount <= 0) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Informe o valor recebido",
           path: ["amount"],
         });
       }
       if (!data.method) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Selecione a forma de pagamento",
           path: ["method"],
         });
