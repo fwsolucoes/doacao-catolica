@@ -10,11 +10,16 @@ function CampaignBanner() {
 
   return (
     <header className="sticky top-0 z-30 flex min-h-14 w-full items-center gap-3 border-b border-border bg-card/80 px-7 py-4 backdrop-blur-sm">
-      <SidebarTrigger className="shrink-0" />
+      <SidebarTrigger className="shrink-0 text-foreground" />
       <div className="h-10 w-px shrink-0 bg-border" />
-      <Button variant="ghost" size="icon" className="size-10 shrink-0 rounded-xl" asChild>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="size-10 shrink-0 rounded-xl"
+        asChild
+      >
         <Link to="/my-campaigns">
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} className="text-muted-foreground" />
         </Link>
       </Button>
       <div className="flex min-w-0 flex-col gap-0.5">
@@ -22,7 +27,9 @@ function CampaignBanner() {
           {campaign.name}
         </p>
         <div className="flex items-center gap-2.5 text-base">
-          <span className={campaign.status ? "text-[#1f7a4d]" : "text-destructive"}>
+          <span
+            className={`font-semibold text-base ${campaign.status ? "text-[#1f7a4d]" : "text-destructive"}`}
+          >
             {campaign.status ? "Ativa" : "Inativa"}
           </span>
           <span className="text-(--text-muted)/50">•</span>
@@ -40,14 +47,18 @@ function CampaignBanner() {
 
       <div className="flex shrink-0 items-center gap-1.5">
         <Button variant="ghost" size="icon" className="size-10 rounded-xl">
-          <Moon size={16} />
+          <Moon size={16} className="text-foreground" />
         </Button>
-        <Button variant="ghost" size="icon" className="relative size-10 rounded-xl">
-          <Bell size={16} />
-          <span className="absolute right-2.5 top-2.5 size-2.5 rounded-full bg-[#3a64f2]" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative size-10 rounded-xl"
+        >
+          <Bell size={16} className="text-foreground" />
+          <span className="absolute right-2 top-2 size-2.5 rounded-full bg-[#3a64f2]" />
         </Button>
         <Button variant="ghost" size="icon" className="size-10 rounded-xl">
-          <Eye size={16} />
+          <Eye size={16} className="text-foreground" />
         </Button>
       </div>
     </header>
