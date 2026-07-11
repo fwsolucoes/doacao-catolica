@@ -97,7 +97,7 @@ function PaymentStatementsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-0.5">
           <h1 className="text-2xl font-semibold tracking-tight text-(--text-heading)">
-            Extratos de pagamentos
+            Doações
           </h1>
           <p className="text-sm text-muted-foreground">
             Exibindo{" "}

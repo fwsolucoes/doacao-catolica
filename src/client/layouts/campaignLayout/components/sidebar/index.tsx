@@ -54,13 +54,12 @@ const sections: NavSection[] = [
     title: "Campanha",
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "home" },
-      { icon: Heart, label: "Doações" },
+      { icon: Heart, label: "Doações", path: "donations" },
       { icon: Users, label: "Doadores" },
       {
         icon: Wallet,
         label: "Financeiro",
         subItems: [
-          { label: "Extrato Financeiro", path: "payment-statements" },
           { label: "Transferências" },
         ],
       },

@@ -53,7 +53,7 @@ function CreateOneTimePaymentPage() {
 
   useEffect(() => {
     if (data?.toast?.type !== "success") return;
-    navigate(`/campaign/${campaignId}/payment-statements`);
+    navigate(`/campaign/${campaignId}/donations`);
   }, [data?.toast?.type]);
 
   const category = CATEGORY_MAP[campaign.type] ?? "donation";

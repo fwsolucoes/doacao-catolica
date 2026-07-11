@@ -63,7 +63,7 @@ function CreateRecurrencePage() {
 
   useEffect(() => {
     if (data?.toast?.type !== "success") return;
-    navigate(`/campaign/${campaignId}/payment-statements`);
+    navigate(`/campaign/${campaignId}/donations`);
   }, [data?.toast?.type]);
 
   const effectivePhone = contactDetail?.phone ?? (phoneInput.trim() || null);
