@@ -71,7 +71,7 @@ function PaymentMethodsPage() {
             Métodos de pagamento
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie os métodos de pagamento aceitos pela campanha.
+            Gerencie os métodos de pagamento offline aceitos pela campanha.
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
