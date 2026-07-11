@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   Link,
@@ -29,17 +29,8 @@ const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
   2: "tithe",
 };
 
-const OFFLINE_METHOD_OPTIONS = [
-  { value: "pix", label: "Pix" },
-  { value: "bank_slip", label: "Boleto" },
-  { value: "cash", label: "Dinheiro" },
-  { value: "transfer", label: "Transferência" },
-  { value: "check", label: "Cheque" },
-  { value: "ted_doc", label: "TED/DOC" },
-];
-
 function CreateOneTimePaymentPage() {
-  const { contacts, campaign, contactDetail } =
+  const { contacts, campaign, contactDetail, paymentMethods } =
     useLoaderData<CreateOneTimePaymentLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
@@ -54,7 +45,9 @@ function CreateOneTimePaymentPage() {
     "onlinePayment" | "receivedPayment"
   >("onlinePayment");
   const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
-  const [offlineMethod, setOfflineMethod] = useState("pix");
+  const [offlineMethod, setOfflineMethod] = useState(
+    paymentMethods[0]?.id ?? "",
+  );
 
   useActionToast(data);
 
@@ -125,9 +118,7 @@ function CreateOneTimePaymentPage() {
                   emptyText="Nenhum contato encontrado."
                 />
               </FormField>
-              {contactDetail && (
-                <ContactDetailCard contact={contactDetail} />
-              )}
+              {contactDetail && <ContactDetailCard contact={contactDetail} />}
             </div>
           </Card.Root>
 
@@ -145,9 +136,7 @@ function CreateOneTimePaymentPage() {
                   name="paymentOption"
                   value={paymentOption}
                   onValueChange={(v) =>
-                    setPaymentOption(
-                      v as "onlinePayment" | "receivedPayment",
-                    )
+                    setPaymentOption(v as "onlinePayment" | "receivedPayment")
                   }
                 >
                   <Select.Trigger>
@@ -219,28 +208,39 @@ function CreateOneTimePaymentPage() {
                     />
                   </FormField>
 
-                  <FormField
-                    name="method"
-                    label="Forma de pagamento:"
-                    required
-                  >
-                    <Select.Root
-                      name="method"
-                      value={offlineMethod}
-                      onValueChange={setOfflineMethod}
-                    >
-                      <Select.Trigger>
-                        <Select.Value />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {OFFLINE_METHOD_OPTIONS.map((o) => (
-                          <Select.Item key={o.value} value={o.value}>
-                            {o.label}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Root>
-                  </FormField>
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1">
+                      <FormField
+                        name="method"
+                        label="Forma de pagamento:"
+                        required
+                      >
+                        <Select.Root
+                          name="method"
+                          value={offlineMethod}
+                          onValueChange={setOfflineMethod}
+                        >
+                          <Select.Trigger>
+                            <Select.Value />
+                          </Select.Trigger>
+                          <Select.Content>
+                            {paymentMethods.map((pm) => (
+                              <Select.Item key={pm.id} value={pm.id}>
+                                {pm.name}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      </FormField>
+                    </div>
+                    <Button variant="default" size="icon" asChild>
+                      <Link
+                        to={`/campaign/${campaignId}/settings/payment-methods`}
+                      >
+                        <Plus size={16} />
+                      </Link>
+                    </Button>
+                  </div>
 
                   <FormField
                     name="bankAccount"

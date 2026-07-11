@@ -23,7 +23,7 @@ const button = tv({
       default: "rounded-xl h-11 px-4 py-2",
       sm: "h-9 rounded-xl px-3",
       lg: "h-13 rounded-xl px-8",
-      icon: "size-8 rounded-xl p-0",
+      icon: "size-11 rounded-xl p-0",
     },
   },
   defaultVariants: {

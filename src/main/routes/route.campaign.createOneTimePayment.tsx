@@ -8,6 +8,7 @@ import { getCampaign } from "../factories/campaign/getCampaignFactory";
 import { listContacts } from "../factories/contacts/listContactsFactory";
 import { findOneContact } from "../factories/contacts/findOneContactFactory";
 import { createOneTimePayment } from "../factories/createOneTimePayment/createOneTimePaymentFactory";
+import { paymentMethodFactory } from "../factories/paymentMethod/paymentMethodFactory";
 import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -18,15 +19,16 @@ export async function loader(args: Route.LoaderArgs) {
 
   const contactPublicId = adaptedRoute.query.contactPublicId;
 
-  const [contacts, campaign, contactDetail] = await Promise.all([
+  const [contacts, campaign, contactDetail, { paymentMethods }] = await Promise.all([
     listContacts.handle(adaptedRoute),
     getCampaign.handle(adaptedRoute),
     contactPublicId
       ? findOneContact.handle(adaptedRoute)
       : Promise.resolve(null),
+    paymentMethodFactory.handleLoader(adaptedRoute),
   ]);
 
-  return { contacts, campaign, contactDetail };
+  return { contacts, campaign, contactDetail, paymentMethods };
 }
 
 export async function action(args: Route.ActionArgs) {

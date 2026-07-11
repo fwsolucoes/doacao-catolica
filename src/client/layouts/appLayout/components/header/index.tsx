@@ -11,7 +11,7 @@ import { Button } from "~/client/components/ui/button";
 import { useRoot } from "~/client/hooks/useRoot";
 import { useTheme } from "~/client/hooks/useTheme";
 
-const iconButtonClass = "bg-(--card-foreground-secondary)";
+const iconButtonClass = "size-9 bg-(--card-foreground-secondary)";
 
 function Header() {
   const { LIGHT_LOGO } = useRoot().environmentVariables;

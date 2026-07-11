@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { MoreHorizontal, PencilLine, Plus, Trash2 } from "lucide-react";
-import { useLoaderData } from "react-router";
+import {
+  ArrowLeft,
+  MoreHorizontal,
+  PencilLine,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import { useLoaderData, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Empty } from "~/client/components/ui/empty";
@@ -58,6 +64,7 @@ function ActionsPopover({ onEdit, onDelete }: ActionsPopoverProps) {
 
 function PaymentMethodsPage() {
   const { paymentMethods } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<PaymentMethod | null>(null);
@@ -74,10 +81,16 @@ function PaymentMethodsPage() {
             Gerencie os métodos de pagamento offline aceitos pela campanha.
           </p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus size={16} />
-          Adicionar método
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft size={16} />
+            Voltar
+          </Button>
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus size={16} />
+            Adicionar método
+          </Button>
+        </div>
       </div>
 
       <Card.Root className="gap-4 p-6">
