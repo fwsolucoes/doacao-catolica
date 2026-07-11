@@ -72,7 +72,13 @@ const sections: NavSection[] = [
     title: "Sistema",
     items: [
       { icon: Users2, label: "Colaboradores" },
-      { icon: Settings, label: "Configurações" },
+      {
+        icon: Settings,
+        label: "Configurações",
+        subItems: [
+          { label: "Métodos de pagamento", path: "settings/payment-methods" },
+        ],
+      },
       { icon: CircleHelp, label: "Ajuda" },
     ],
   },

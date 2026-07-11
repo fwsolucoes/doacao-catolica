@@ -32,6 +32,7 @@ export default [
     route("payment-statements", "./main/routes/route.campaign.paymentStatements.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
+    route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),
   ]),
 
   route("treatment/:treatmentId", "./main/routes/layout.treatmentLayout.tsx", [
