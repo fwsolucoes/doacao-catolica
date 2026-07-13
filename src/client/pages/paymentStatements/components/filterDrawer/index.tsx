@@ -60,7 +60,11 @@ type FilterDrawerProps = {
   onOpenChange?: (open: boolean) => void;
 };
 
-function FilterDrawer({ donors, open: openProp, onOpenChange: onOpenChangeProp }: FilterDrawerProps) {
+function FilterDrawer({
+  donors,
+  open: openProp,
+  onOpenChange: onOpenChangeProp,
+}: FilterDrawerProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [openInternal, setOpenInternal] = useState(false);
@@ -189,7 +193,7 @@ function FilterDrawer({ donors, open: openProp, onOpenChange: onOpenChangeProp }
               />
             </div>
 
-            <div className="border border-border rounded p-4">
+            <div className="border border-border rounded p-4 flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <Label>Tipo de data:</Label>
                 <RadioGroup.Root
