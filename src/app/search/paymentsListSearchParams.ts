@@ -10,6 +10,7 @@ type Filter = {
   status?: string;
   notified_email?: string;
   notified_whatsapp?: string;
+  search?: string;
   customer_reference?: string;
 };
 

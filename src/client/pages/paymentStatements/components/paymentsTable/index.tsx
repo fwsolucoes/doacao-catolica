@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLoaderData, useParams } from "react-router";
+import { useFilter } from "~/client/hooks/useFilter";
 import { FilterDrawer } from "../filterDrawer";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
@@ -128,6 +129,7 @@ function PaymentsTable() {
   const { campaignId } = useParams<{ campaignId: string }>();
   const { payments, donors } = useLoaderData<DonationsLoader>();
   const [filterOpen, setFilterOpen] = useState(false);
+  const { handleChangeTimeoutFilter, getParam } = useFilter("payments");
 
   const { data, meta } = payments;
 
@@ -137,8 +139,12 @@ function PaymentsTable() {
         <div className="flex-1">
           <Input
             leftIcon={Search}
-            placeholder="Buscar por nome, telefone, e-mail ou CPF..."
+            placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
             className="h-11 rounded-xl border-transparent bg-muted/50"
+            defaultValue={getParam("search") || ""}
+            onChange={(e) =>
+              handleChangeTimeoutFilter("search", e.target.value)
+            }
           />
         </div>
         <Button
@@ -149,7 +155,11 @@ function PaymentsTable() {
           <SlidersHorizontal size={16} />
           Filtros
         </Button>
-        <FilterDrawer donors={donors.data} open={filterOpen} onOpenChange={setFilterOpen} />
+        <FilterDrawer
+          donors={donors.data}
+          open={filterOpen}
+          onOpenChange={setFilterOpen}
+        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm">

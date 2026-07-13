@@ -1,3 +1,4 @@
+import { SearchParamsMapper } from "~/app/shared/searchParamsMapper";
 import type { ListPaymentsUseCase } from "~/app/useCases/paymentMetrics/listPaymentsUseCase";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import type { RouteDTO } from "~/main/types/route";
@@ -10,6 +11,11 @@ class ListPaymentsController {
     if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
 
     const page = route.query.page ? Number(route.query.page) : 1;
+    const scopedParams = SearchParamsMapper.toObject({
+      query: route.query,
+      params: route.params,
+      scoped: "payments",
+    });
 
     return await this.listPaymentsUseCase.execute({
       campaignPublicId: campaignId,
@@ -23,6 +29,7 @@ class ListPaymentsController {
       notifiedEmail: route.query.notified_email,
       notifiedWhatsapp: route.query.notified_whatsapp,
       customerReference: route.query.customer_reference,
+      search: scopedParams.search,
     });
   }
 }
