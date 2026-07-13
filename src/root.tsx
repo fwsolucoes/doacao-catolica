@@ -22,9 +22,6 @@ export async function loader(args: LoaderFunctionArgs) {
 
   return {
     environmentVariables: {
-      ADMIN_PROFESSIONAL_ROLE_ID:
-        environmentVariables.ADMIN_PROFESSIONAL_ROLE_ID,
-      PROFESSIONAL_ROLE_ID: environmentVariables.PROFESSIONAL_ROLE_ID,
       DARK_LOGO: environmentVariables.DARK_LOGO,
       LIGHT_LOGO: environmentVariables.LIGHT_LOGO,
       MOBILE_LOGO: environmentVariables.MOBILE_LOGO,

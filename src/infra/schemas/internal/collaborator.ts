@@ -1,11 +1,5 @@
 import { z } from "zod";
 import { paginationSchema } from "./pagination";
-import { environmentVariables } from "~/main/config/environmentVariables";
-
-const collaboratorRoleWithRequiredProfessionalAdminData =
-  environmentVariables.ADMIN_PROFESSIONAL_ROLE_ID;
-const collaboratorRoleWithRequiredProfessionalData =
-  environmentVariables.PROFESSIONAL_ROLE_ID;
 
 const listCollaboratorsSchema = paginationSchema.extend({
   name: z.string().optional(),
@@ -20,13 +14,6 @@ type UpdateCollaboratorType = z.infer<typeof updateCollaboratorSchema>;
 type DeleteInviteType = z.infer<typeof deleteInviteSchema>;
 type DeleteCollaboratorType = z.infer<typeof deleteCollaboratorSchema>;
 
-function verifyIfRoleRequiresProfessionalData(roleId: string) {
-  return (
-    roleId === collaboratorRoleWithRequiredProfessionalData ||
-    roleId === collaboratorRoleWithRequiredProfessionalAdminData
-  );
-}
-
 const createInviteSchema = z
   .object({
     organizationId: z.uuid(),
@@ -40,8 +27,6 @@ const createInviteSchema = z
     specialtyId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (!verifyIfRoleRequiresProfessionalData(data.roleId)) return;
-
     if (!data.name) {
       ctx.addIssue({
         code: "custom",
@@ -95,8 +80,6 @@ const updateInviteSchema = z
     specialtyId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (!verifyIfRoleRequiresProfessionalData(data.roleId)) return;
-
     if (!data.name) {
       ctx.addIssue({
         code: "custom",
@@ -149,13 +132,6 @@ const updateCollaboratorSchema = z
     specialtyId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (
-      data.roleId !== collaboratorRoleWithRequiredProfessionalData ||
-      data.roleId !== collaboratorRoleWithRequiredProfessionalAdminData
-    ) {
-      return;
-    }
-
     if (!data.name) {
       ctx.addIssue({
         code: "custom",
@@ -211,18 +187,18 @@ const deleteCollaboratorSchema = z.object({
 });
 
 export {
+  acceptInviteSchema,
+  createInviteSchema,
+  deleteCollaboratorSchema,
+  deleteInviteSchema,
   listCollaboratorsSchema,
   listInvitesSchema,
-  createInviteSchema,
-  updateInviteSchema,
   updateCollaboratorSchema,
-  acceptInviteSchema,
-  deleteInviteSchema,
-  deleteCollaboratorSchema,
+  updateInviteSchema,
   type AcceptInviteType,
+  type CreateInviteType,
   type DeleteCollaboratorType,
   type DeleteInviteType,
-  type CreateInviteType,
   type UpdateCollaboratorType,
   type UpdateInviteType,
 };

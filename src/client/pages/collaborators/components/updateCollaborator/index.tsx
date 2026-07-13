@@ -19,7 +19,6 @@ import {
   useNavigation,
 } from "react-router";
 import { AvatarUploadArea } from "~/client/components/avatarUploadArea";
-import { useRoot } from "~/client/hooks/useRoot";
 import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
 import { ModalContent } from "./styles";
 
@@ -39,13 +38,6 @@ function UpdateCollaborator() {
   );
   const { roles, activityAreas, specialties } =
     useLoaderData<CollaboratorsLoader>();
-  const { environmentVariables } = useRoot();
-
-  const roleIdWithRequiredProfessionalAdminData =
-    environmentVariables.ADMIN_PROFESSIONAL_ROLE_ID;
-
-  const roleIdWithRequiredProfessionalData =
-    environmentVariables.PROFESSIONAL_ROLE_ID;
 
   const actionData = useActionData();
   const navigation = useNavigation();
@@ -56,13 +48,6 @@ function UpdateCollaborator() {
     typedModalData.roleId ?? "",
   );
   const [selectedActivityAreaId, setSelectedActivityAreaId] = useState("");
-
-  function verifyIfRoleRequiresProfessionalData(roleId: string) {
-    return (
-      roleId === roleIdWithRequiredProfessionalAdminData ||
-      roleId === roleIdWithRequiredProfessionalData
-    );
-  }
 
   useEffect(() => {
     if (!modalIsOpen) return;
@@ -138,57 +123,55 @@ function UpdateCollaborator() {
             </RadioGroup>
           </div>
 
-          {verifyIfRoleRequiresProfessionalData(selectedRoleId) && (
-            <div className="registerProfessional">
-              <div className="registerForm">
-                <AvatarUploadArea
-                  name="avatar"
-                  action="/api/file-upload"
-                  defaultValue={typedModalData.avatar}
+          <div className="registerProfessional">
+            <div className="registerForm">
+              <AvatarUploadArea
+                name="avatar"
+                action="/api/file-upload"
+                defaultValue={typedModalData.avatar}
+              />
+
+              <div className="professionalFields">
+                <Input
+                  name="name"
+                  label="Nome completo"
+                  placeholder="Dr. João Silva"
+                  defaultValue={typedModalData.name ?? ""}
+                  showAsterisk
                 />
 
-                <div className="professionalFields">
-                  <Input
-                    name="name"
-                    label="Nome completo"
-                    placeholder="Dr. João Silva"
-                    defaultValue={typedModalData.name ?? ""}
-                    showAsterisk
-                  />
+                <Input
+                  name="professionalRegistry"
+                  label="Registro profissional"
+                  placeholder="CRM 123456"
+                  defaultValue={typedModalData.professionalRegistry ?? ""}
+                  showAsterisk
+                />
 
-                  <Input
-                    name="professionalRegistry"
-                    label="Registro profissional"
-                    placeholder="CRM 123456"
-                    defaultValue={typedModalData.professionalRegistry ?? ""}
-                    showAsterisk
-                  />
+                <Select
+                  name="activityAreaId"
+                  label="Área de atuação"
+                  placeholder="Selecione a área de atuação"
+                  options={activityAreaOptions}
+                  value={selectedActivityAreaId}
+                  onChange={(value) => {
+                    const nextValue = String(value);
+                    setSelectedActivityAreaId(nextValue);
+                  }}
+                  showAsterisk
+                />
 
-                  <Select
-                    name="activityAreaId"
-                    label="Área de atuação"
-                    placeholder="Selecione a área de atuação"
-                    options={activityAreaOptions}
-                    value={selectedActivityAreaId}
-                    onChange={(value) => {
-                      const nextValue = String(value);
-                      setSelectedActivityAreaId(nextValue);
-                    }}
-                    showAsterisk
-                  />
-
-                  <Select
-                    name="specialtyId"
-                    label="Especialidade"
-                    placeholder="Selecione a especialidade"
-                    options={specialtyOptions}
-                    defaultValue={typedModalData.specialtyId ?? ""}
-                    showAsterisk
-                  />
-                </div>
+                <Select
+                  name="specialtyId"
+                  label="Especialidade"
+                  placeholder="Selecione a especialidade"
+                  options={specialtyOptions}
+                  defaultValue={typedModalData.specialtyId ?? ""}
+                  showAsterisk
+                />
               </div>
             </div>
-          )}
+          </div>
         </ModalContent>
 
         <ModalFooter>

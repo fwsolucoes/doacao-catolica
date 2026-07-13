@@ -26,9 +26,6 @@ const environmentVariablesSchema = z.object({
   AWS_REGION: z.string(),
   AWS_S3_BUCKET: z.string(),
 
-  ADMIN_PROFESSIONAL_ROLE_ID: z.string(),
-  PROFESSIONAL_ROLE_ID: z.string(),
-
   // Logging
   TRAFFIC_SOURCE_ID: z.uuid(),
   TRAFFIC_SOURCE_TOKEN: z.string(),
