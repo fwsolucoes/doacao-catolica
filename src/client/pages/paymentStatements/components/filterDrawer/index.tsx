@@ -1,5 +1,5 @@
 import { ListFilter, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Combobox } from "~/client/components/ui/combobox";
@@ -75,13 +75,16 @@ function FilterDrawer({
     draftFromParams(new URLSearchParams()),
   );
 
+  useEffect(() => {
+    if (open) setDraft(draftFromParams(new URLSearchParams(location.search)));
+  }, [open]);
+
   const sp = new URLSearchParams(location.search);
   const filterCount = DRAWER_PARAMS.filter((p) => sp.get(p)).length;
 
   const donorOptions = donors.map((d) => ({ value: d.id, label: d.name }));
 
   function handleOpenChange(isOpen: boolean) {
-    if (isOpen) setDraft(draftFromParams(new URLSearchParams(location.search)));
     setOpen(isOpen);
   }
 
