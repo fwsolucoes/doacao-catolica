@@ -1,4 +1,4 @@
-import { formatToCpf, formatToCnpj } from "@arkyn/shared";
+import { FormatAdapter } from "~/infra/adapters/formatAdapter";
 
 const STATUS_MAP: Record<string, string> = {
   failed: "Falha no pagamento",
@@ -20,14 +20,6 @@ const PAYMENT_TYPE_MAP: Record<string, string> = {
   bank_slip: "Boleto",
   credit_card: "Cartão de crédito",
 };
-
-function formatDocument(doc: string | null): string | null {
-  if (!doc) return null;
-  const digits = doc.replace(/\D/g, "");
-  if (digits.length === 11) return formatToCpf(digits);
-  if (digits.length === 14) return formatToCnpj(digits);
-  return doc;
-}
 
 type PaymentConstructorProps = {
   id: string;
@@ -84,7 +76,7 @@ class Payment {
     return {
       id: this.id,
       customerName: this.customerName,
-      customerDocument: formatDocument(this.customerDocument),
+      customerDocument: FormatAdapter.cpfCnpj(this.customerDocument ?? ""),
       amount: fmt(this.amount),
       status: STATUS_MAP[this.status] ?? this.status,
       origin: this.origin === "subscription" ? "Recorrente" : "Pontual",

@@ -44,6 +44,13 @@ class FormatAdapter {
     return formatToCnpj(cnpj);
   }
 
+  static cpfCnpj(cpfCnpj: string): string {
+    const digits = cpfCnpj.replace(/\D/g, "");
+    if (digits.length === 11) return formatToCpf(digits);
+    if (digits.length === 14) return formatToCnpj(digits);
+    return cpfCnpj;
+  }
+
   static date(date: Date): string {
     return formatDate(date.toISOString().split("T"), "isoDate", "DD/MM/YYYY");
   }
