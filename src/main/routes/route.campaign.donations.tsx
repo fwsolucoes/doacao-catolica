@@ -1,6 +1,6 @@
-import type { Route } from "+/route.campaign.paymentStatements";
+import type { Route } from "+/route.campaign.donations";
 import { redirect } from "react-router";
-import { PaymentStatementsPage } from "~/client/pages/paymentStatements";
+import { DonationsPage } from "~/client/pages/paymentStatements";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
@@ -26,6 +26,6 @@ export function ErrorBoundary() {
   return <ErrorBoundaryPage />;
 }
 
-export default function PaymentStatementsRoute() {
-  return <PaymentStatementsPage />;
+export default function DonationsRoute() {
+  return <DonationsPage />;
 }

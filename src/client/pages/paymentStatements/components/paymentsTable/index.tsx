@@ -32,7 +32,7 @@ import {
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
-import type { PaymentStatementsLoader } from "~/client/types/paymentStatementsLoader";
+import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 
 type BadgeVariant =
   | "success"
@@ -126,7 +126,7 @@ function ActionsPopover() {
 
 function PaymentsTable() {
   const { campaignId } = useParams<{ campaignId: string }>();
-  const { payments, donors } = useLoaderData<PaymentStatementsLoader>();
+  const { payments, donors } = useLoaderData<DonationsLoader>();
   const [filterOpen, setFilterOpen] = useState(false);
 
   const { data, meta } = payments;

@@ -124,7 +124,7 @@ function CreateRecurrencePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="outline" size="icon" asChild>
-          <Link to={`/campaign/${campaignId}/payment-statements`}>
+          <Link to={`/campaign/${campaignId}/donations`}>
             <ArrowLeft size={16} />
           </Link>
         </Button>

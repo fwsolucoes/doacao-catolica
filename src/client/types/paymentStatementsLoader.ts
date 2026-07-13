@@ -1,5 +1,5 @@
-import type { loader } from "~/main/routes/route.campaign.paymentStatements";
+import type { loader } from "~/main/routes/route.campaign.donations";
 
-type PaymentStatementsLoader = Awaited<ReturnType<typeof loader>>;
+type DonationsLoader = Awaited<ReturnType<typeof loader>>;
 
-export type { PaymentStatementsLoader };
+export type { DonationsLoader };

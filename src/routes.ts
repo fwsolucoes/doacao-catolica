@@ -29,7 +29,7 @@ export default [
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
     route("home", "./main/routes/route.campaign.home.tsx"),
     route("notifications", "./main/routes/route.campaign.notifications.tsx"),
-    route("donations", "./main/routes/route.campaign.paymentStatements.tsx"),
+    route("donations", "./main/routes/route.campaign.donations.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),

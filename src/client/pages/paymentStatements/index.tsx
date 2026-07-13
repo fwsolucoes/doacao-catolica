@@ -15,15 +15,15 @@ import {
   Zap,
 } from "lucide-react";
 import { useLoaderData, useLocation, useMatches } from "react-router";
-import type { PaymentStatementsLoader } from "~/client/types/paymentStatementsLoader";
+import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 import { Button } from "~/client/components/ui/button";
 import { MetricCard } from "./components/metricCard";
 import type { MetricCardProps } from "./components/metricCard";
 import { PaymentsTable } from "./components/paymentsTable";
 import { PERIOD_OPTIONS, PeriodSelect } from "./components/periodSelect";
 
-function PaymentStatementsPage() {
-  const { metrics } = useLoaderData<PaymentStatementsLoader>();
+function DonationsPage() {
+  const { metrics } = useLoaderData<DonationsLoader>();
 
   const location = useLocation();
   const matches = useMatches();
@@ -125,4 +125,4 @@ function PaymentStatementsPage() {
   );
 }
 
-export { PaymentStatementsPage };
+export { DonationsPage };
