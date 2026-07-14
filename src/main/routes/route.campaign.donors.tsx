@@ -7,6 +7,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
 import { updateRecurrence } from "../factories/updateRecurrence/updateRecurrenceFactory";
 
@@ -45,6 +46,17 @@ export async function action(args: Route.ActionArgs) {
             type: "success" as const,
           },
         };
+
+      case "generatePaymentBooklet": {
+        const urlResponse = await generatePaymentBooklet.handle(adaptedRoute);
+        return {
+          urlResponse,
+          toast: {
+            message: "Carnê gerado com sucesso!",
+            type: "success" as const,
+          },
+        };
+      }
 
       default:
         throw HttpAdapter.badRequest(`Ação desconhecida: ${_action}`);
