@@ -21,8 +21,28 @@ type CreateSubscriptionInput = {
   donorId: string;
 };
 
-type SubscriptionGatewayDTO = {
-  createSubscription(input: CreateSubscriptionInput): Promise<string>;
+type UpdateSubscriptionInput = {
+  paymentPublicId: string;
+  payDay: number;
+  type: "pix" | "bank_slip";
+  amount: number;
+  undeterminedAmount: boolean;
+  description: string;
+  activeNotification: number;
+  perpetuatePaymentsChange: boolean;
+  discount?: number;
+  interest?: number;
+  fineType?: "fixed" | "percentage";
+  fineValue?: number;
 };
 
-export type { SubscriptionGatewayDTO, CreateSubscriptionInput };
+type SubscriptionGatewayDTO = {
+  createSubscription(input: CreateSubscriptionInput): Promise<string>;
+  updateSubscription(input: UpdateSubscriptionInput): Promise<void>;
+};
+
+export type {
+  SubscriptionGatewayDTO,
+  CreateSubscriptionInput,
+  UpdateSubscriptionInput,
+};

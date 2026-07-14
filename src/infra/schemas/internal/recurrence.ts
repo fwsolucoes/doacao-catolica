@@ -1,5 +1,27 @@
 import z from "zod";
 type CreateRecurrenceType = z.infer<typeof createRecurrenceSchema>;
+type UpdateRecurrenceType = z.infer<typeof updateRecurrenceSchema>;
+
+const updateRecurrenceSchema = z.object({
+  paymentId: z.string().min(1, "Payment ID é obrigatório"),
+  payDay: z.coerce.number().int().min(1).max(31),
+  type: z.enum(["pix", "bank_slip"]),
+  valueType: z.enum(["fixed", "undetermined"]),
+  amount: z.coerce.number().optional(),
+  description: z.string().min(1, "A descrição é obrigatória"),
+  discount: z.coerce.number().optional(),
+  interest: z.coerce.number().optional(),
+  fineType: z.enum(["percentage", "fixed"]).optional(),
+  fineValue: z.coerce.number().optional(),
+  perpetuatePaymentsChange: z
+    .string()
+    .optional()
+    .transform((v) => v === "checked"),
+  activeNotification: z
+    .string()
+    .optional()
+    .transform((v) => (v === "checked" ? 1 : 0)),
+});
 
 const createRecurrenceSchema = z.object({
   contactId: z.string().min(1),
@@ -37,4 +59,9 @@ const createRecurrenceSchema = z.object({
     .transform((v) => v === "true"),
 });
 
-export { createRecurrenceSchema, type CreateRecurrenceType };
+export {
+  createRecurrenceSchema,
+  type CreateRecurrenceType,
+  updateRecurrenceSchema,
+  type UpdateRecurrenceType,
+};
