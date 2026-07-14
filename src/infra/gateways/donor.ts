@@ -2,7 +2,12 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import { SearchResult } from "~/app/shared/searchResult";
 import { Donor } from "~/domain/entities/donor";
-import type { CreateDonorInput, DonorGatewayDTO, DonorsSummary } from "~/domain/gateways/donor";
+import type {
+  CreateDonorInput,
+  DonorGatewayDTO,
+  DonorsSummary,
+  ListRecurringDonorsResult,
+} from "~/domain/gateways/donor";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
@@ -11,6 +16,7 @@ import { donationApi } from "../http/donationApi";
 import { createDonorResponseSchema } from "../schemas/external/createDonor";
 import { externalDonorsListSchema } from "../schemas/external/donor";
 import { donorsSummaryResponseSchema } from "../schemas/external/donorsSummary";
+import { recurringDonorsResponseSchema } from "../schemas/external/recurringDonors";
 
 class DonorGateway implements DonorGatewayDTO {
   async createDonor(input: CreateDonorInput): Promise<string> {
@@ -38,7 +44,9 @@ class DonorGateway implements DonorGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(createDonorResponseSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      createDonorResponseSchema,
+    );
     const data = schemaValidator.validate(apiResponse.response);
 
     return data.donator.id;
@@ -57,7 +65,9 @@ class DonorGateway implements DonorGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(externalDonorsListSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalDonorsListSchema,
+    );
     const data = schemaValidator.validate(apiResponse.response);
 
     return new SearchResult({
@@ -84,7 +94,7 @@ class DonorGateway implements DonorGatewayDTO {
   }
 
   async getDonorsSummary(campaignId: string): Promise<DonorsSummary> {
-    const url = `/donors/summary/${campaignId}`;
+    const url = `/api/donors/summary/${campaignId}`;
 
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -92,7 +102,9 @@ class DonorGateway implements DonorGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(donorsSummaryResponseSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      donorsSummaryResponseSchema,
+    );
     const data = schemaValidator.validate(apiResponse.response);
 
     return {
@@ -104,6 +116,50 @@ class DonorGateway implements DonorGatewayDTO {
       newDonorsVariationPercentage: data.data.new_donors_variation_percentage,
       totalRecurringAmount: data.data.total_recurring_amount,
       averageDonationAmount: data.data.average_donation_amount,
+    };
+  }
+
+  async listRecurringDonors(
+    campaignId: string,
+    searchParams: DonorSearchParams,
+  ): Promise<ListRecurringDonorsResult> {
+    let url = `/api/donors/recurring/${campaignId}`;
+    url += searchParams.toExternal([]);
+
+    const apiResponse = await donationApi.get(url, {
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(
+      recurringDonorsResponseSchema,
+    );
+    const { data } = schemaValidator.validate(apiResponse.response);
+
+    return {
+      data: data.data.map((item) => ({
+        subscriptionUuid: item.subscription_uuid,
+        customerUuid: item.customer.uuid,
+        customerReference: item.customer.reference,
+        name: item.customer.name,
+        cpf: item.customer.cpf_cnpj,
+        email: item.customer.email,
+        phone: item.customer.phone,
+        donationsLast12Months: item.donations_last_12_months,
+        lastDonationAt: item.last_donation_at,
+        status: item.status,
+        activeNotification: item.active_notification,
+        amount: item.amount,
+        payDay: item.pay_day,
+        paymentMethod: item.payment_method,
+        registeredAt: item.registered_at,
+      })),
+      meta: {
+        page: data.current_page,
+        totalItems: data.total,
+        totalPages: Math.ceil(data.total / data.per_page),
+      },
     };
   }
 }

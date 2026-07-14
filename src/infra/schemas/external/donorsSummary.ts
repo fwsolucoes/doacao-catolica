@@ -7,7 +7,7 @@ const donorsSummaryResponseSchema = z.object({
     one_time_donors: z.number(),
     new_donors_this_month: z.number(),
     new_donors_previous_month: z.number(),
-    new_donors_variation_percentage: z.number(),
+    new_donors_variation_percentage: z.number().nullable(),
     total_recurring_amount: z.number(),
     average_donation_amount: z.number(),
   }),

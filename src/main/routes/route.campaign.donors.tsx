@@ -8,6 +8,7 @@ import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { disableRecurrence } from "../factories/disableRecurrence/disableRecurrenceFactory";
+import { listRecurringDonors } from "../factories/listRecurringDonors/listRecurringDonorsFactory";
 import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
 import { getDonorsSummary } from "../factories/getDonorsSummary/getDonorsSummaryFactory";
@@ -19,9 +20,12 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const summary = await getDonorsSummary.handle(adaptedRoute);
+  const [summary, donors] = await Promise.all([
+    getDonorsSummary.handle(adaptedRoute),
+    listRecurringDonors.handle(adaptedRoute),
+  ]);
 
-  return { summary };
+  return { summary, donors };
 }
 
 export async function action(args: Route.ActionArgs) {
