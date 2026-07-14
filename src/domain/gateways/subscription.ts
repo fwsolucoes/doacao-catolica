@@ -36,13 +36,23 @@ type UpdateSubscriptionInput = {
   fineValue?: number;
 };
 
+type DisableSubscriptionInput = {
+  subscriptionUuid: string;
+  observation: string;
+  perpetuatePaymentsChange: boolean;
+  perpetuateNextPaymentsChange: boolean;
+  origin: string;
+};
+
 type SubscriptionGatewayDTO = {
   createSubscription(input: CreateSubscriptionInput): Promise<string>;
   updateSubscription(input: UpdateSubscriptionInput): Promise<void>;
+  disableSubscription(input: DisableSubscriptionInput): Promise<void>;
 };
 
 export type {
   SubscriptionGatewayDTO,
   CreateSubscriptionInput,
+  DisableSubscriptionInput,
   UpdateSubscriptionInput,
 };

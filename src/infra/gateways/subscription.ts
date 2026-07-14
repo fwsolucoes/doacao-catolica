@@ -1,5 +1,6 @@
 import type {
   CreateSubscriptionInput,
+  DisableSubscriptionInput,
   SubscriptionGatewayDTO,
   UpdateSubscriptionInput,
 } from "~/domain/gateways/subscription";
@@ -127,6 +128,21 @@ class SubscriptionGateway implements SubscriptionGatewayDTO {
     }
 
     const apiResponse = await donationApi.put(url, { body, headers });
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async disableSubscription(input: DisableSubscriptionInput): Promise<void> {
+    const headers = { "api-key": environmentVariables.API_KEY_DONATION };
+    const url = `/api/subscriptions/disable/${input.subscriptionUuid}`;
+
+    const body = {
+      obs: input.observation,
+      perpetuate_payments_change: input.perpetuatePaymentsChange,
+      perpetuate_next_payments_change: input.perpetuateNextPaymentsChange,
+      origin: input.origin,
+    };
+
+    const apiResponse = await donationApi.post(url, { body, headers });
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }

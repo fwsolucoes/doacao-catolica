@@ -1,5 +1,6 @@
 import z from "zod";
 type CreateRecurrenceType = z.infer<typeof createRecurrenceSchema>;
+type DisableRecurrenceType = z.infer<typeof disableRecurrenceSchema>;
 type UpdateRecurrenceType = z.infer<typeof updateRecurrenceSchema>;
 
 const updateRecurrenceSchema = z.object({
@@ -59,9 +60,24 @@ const createRecurrenceSchema = z.object({
     .transform((v) => v === "true"),
 });
 
+const disableRecurrenceSchema = z.object({
+  subscriptionUuid: z.string().uuid("UUID inválido"),
+  observation: z.string().min(1, "A observação é obrigatória"),
+  perpetuatePaymentsChange: z
+    .string()
+    .optional()
+    .transform((v) => v === "checked"),
+  perpetuateNextPaymentsChange: z
+    .string()
+    .optional()
+    .transform((v) => v === "checked"),
+});
+
 export {
   createRecurrenceSchema,
   type CreateRecurrenceType,
+  disableRecurrenceSchema,
+  type DisableRecurrenceType,
   updateRecurrenceSchema,
   type UpdateRecurrenceType,
 };

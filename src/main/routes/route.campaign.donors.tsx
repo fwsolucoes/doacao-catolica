@@ -7,6 +7,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { disableRecurrence } from "../factories/disableRecurrence/disableRecurrenceFactory";
 import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
 import { updateRecurrence } from "../factories/updateRecurrence/updateRecurrenceFactory";
@@ -57,6 +58,15 @@ export async function action(args: Route.ActionArgs) {
           },
         };
       }
+
+      case "disableRecurrence":
+        await disableRecurrence.handle(adaptedRoute);
+        return {
+          toast: {
+            message: "Recorrência cancelada com sucesso!",
+            type: "success" as const,
+          },
+        };
 
       default:
         throw HttpAdapter.badRequest(`Ação desconhecida: ${_action}`);
