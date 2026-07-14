@@ -2,11 +2,11 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import { SearchResult } from "~/app/shared/searchResult";
 import { Donor } from "~/domain/entities/donor";
+import { RecurringDonor } from "~/domain/entities/recurringDonor";
 import type {
   CreateDonorInput,
   DonorGatewayDTO,
   DonorsSummary,
-  ListRecurringDonorsResult,
 } from "~/domain/gateways/donor";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
@@ -122,7 +122,7 @@ class DonorGateway implements DonorGatewayDTO {
   async listRecurringDonors(
     campaignId: string,
     searchParams: DonorSearchParams,
-  ): Promise<ListRecurringDonorsResult> {
+  ): Promise<SearchResult<RecurringDonor>> {
     let url = `/api/donors/recurring/${campaignId}`;
     url += searchParams.toExternal([]);
 
@@ -137,30 +137,32 @@ class DonorGateway implements DonorGatewayDTO {
     );
     const { data } = schemaValidator.validate(apiResponse.response);
 
-    return {
-      data: data.data.map((item) => ({
-        subscriptionUuid: item.subscription_uuid,
-        customerUuid: item.customer.uuid,
-        customerReference: item.customer.reference,
-        name: item.customer.name,
-        cpf: item.customer.cpf_cnpj,
-        email: item.customer.email,
-        phone: item.customer.phone,
-        donationsLast12Months: item.donations_last_12_months,
-        lastDonationAt: item.last_donation_at,
-        status: item.status,
-        activeNotification: item.active_notification,
-        amount: item.amount,
-        payDay: item.pay_day,
-        paymentMethod: item.payment_method,
-        registeredAt: item.registered_at,
-      })),
+    return new SearchResult({
+      data: data.data.map((item) =>
+        RecurringDonor.restore({
+          subscriptionUuid: item.subscription_uuid,
+          customerUuid: item.customer.uuid,
+          customerReference: item.customer.reference,
+          name: item.customer.name,
+          cpf: item.customer.cpf_cnpj,
+          email: item.customer.email,
+          phone: item.customer.phone,
+          donationsLast12Months: item.donations_last_12_months,
+          lastDonationAt: item.last_donation_at,
+          status: item.status,
+          activeNotification: item.active_notification,
+          amount: item.amount,
+          payDay: item.pay_day,
+          paymentMethod: item.payment_method,
+          registeredAt: item.registered_at,
+        }),
+      ),
       meta: {
         page: data.current_page,
+        pageLimit: data.per_page,
         totalItems: data.total,
-        totalPages: Math.ceil(data.total / data.per_page),
       },
-    };
+    });
   }
 }
 

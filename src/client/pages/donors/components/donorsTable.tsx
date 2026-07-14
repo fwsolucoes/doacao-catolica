@@ -1,6 +1,7 @@
 import {
+  BellOff,
+  BellRing,
   HandCoins,
-  Mail,
   MoreHorizontal,
   RefreshCw,
   Search,
@@ -12,6 +13,7 @@ import { useRef, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import type { DonorsLoader } from "~/client/types/donorsLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Empty } from "~/client/components/ui/empty";
@@ -23,18 +25,17 @@ import {
 } from "~/client/components/ui/popover";
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
-import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { formatCurrency } from "~/lib/formatCurrency";
 import { getInitials } from "~/lib/getInitials";
 import { cn } from "~/lib/utils";
 
 type Tab = "recorrentes" | "pontuais";
 
-const PAYMENT_METHOD_LABEL: Record<string, string> = {
-  automatic_pix: "Pix Automático",
-  pix: "Pix",
-  bank_slip: "Boleto",
-  credit_card: "Cartão",
+const PAYMENT_METHOD_BADGE: Record<string, { className: string; label: string }> = {
+  automatic_pix: { className: "bg-violet-100 text-purple-800", label: "Pix Automático" },
+  pix: { className: "bg-emerald-100 text-emerald-700", label: "Pix" },
+  bank_slip: { className: "bg-orange-100 text-orange-700", label: "Boleto" },
+  credit_card: { className: "bg-blue-100 text-blue-800", label: "Cartão de Crédito" },
 };
 
 function formatApiDate(dateStr: string | null): string {
@@ -242,49 +243,43 @@ function DonorsTable() {
                   {formatApiDate(donor.lastDonationAt)}
                 </Table.Cell>
                 <Table.Cell>
-                  <span
-                    className={cn(
-                      "rounded-full px-2.5 py-0.5 text-xs font-medium",
-                      donor.status
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-muted text-muted-foreground",
-                    )}
-                  >
+                  <Badge variant={donor.status ? "success" : "danger"}>
                     {donor.status ? "Ativo" : "Inativo"}
-                  </span>
+                  </Badge>
                 </Table.Cell>
                 <Table.Cell>
-                  <div className="flex items-center justify-center gap-2">
-                    <Mail
-                      size={16}
-                      className={
-                        donor.email
-                          ? "text-muted-foreground"
-                          : "text-muted-foreground/30"
-                      }
-                    />
-                    <WhatsAppIcon
-                      size={16}
-                      className={
-                        donor.activeNotification
-                          ? "text-[rgb(var(--spotlight-success))]"
-                          : "text-muted-foreground/30"
-                      }
-                    />
+                  <div className="flex items-center justify-center">
+                    {donor.activeNotification ? (
+                      <BellRing size={16} className="text-sidebar-accent-foreground" />
+                    ) : (
+                      <BellOff size={16} className="text-muted-foreground/40" />
+                    )}
                   </div>
-                </Table.Cell>
-                <Table.Cell className="text-sm text-foreground">
-                  {formatCurrency(String(donor.amount))}
                 </Table.Cell>
                 <Table.Cell>
                   <div className="flex flex-col">
-                    <span className="text-sm text-foreground">
-                      Dia {donor.payDay}
+                    <span className="text-sm font-semibold text-foreground">
+                      {formatCurrency(String(donor.amount))}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {PAYMENT_METHOD_LABEL[donor.paymentMethod] ?? donor.paymentMethod}
+                      todo dia {donor.payDay}
                     </span>
                   </div>
+                </Table.Cell>
+                <Table.Cell>
+                  {(() => {
+                    const badge = PAYMENT_METHOD_BADGE[donor.paymentMethod];
+                    return (
+                      <span
+                        className={cn(
+                          "rounded-full px-3 py-1 text-xs",
+                          badge?.className ?? "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {badge?.label ?? donor.paymentMethod}
+                      </span>
+                    );
+                  })()}
                 </Table.Cell>
                 <Table.Cell className="text-sm text-muted-foreground">
                   {formatApiDate(donor.registeredAt)}

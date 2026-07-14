@@ -1,5 +1,5 @@
 import { DonorSearchParams } from "~/app/search/donorSearchParams";
-import type { DonorGatewayDTO, ListRecurringDonorsResult } from "~/domain/gateways/donor";
+import type { DonorGatewayDTO } from "~/domain/gateways/donor";
 
 type InputProps = {
   campaignId: string;
@@ -10,7 +10,7 @@ type InputProps = {
 class ListRecurringDonorsUseCase {
   constructor(private donorGateway: DonorGatewayDTO) {}
 
-  async execute(input: InputProps): Promise<ListRecurringDonorsResult> {
+  async execute(input: InputProps) {
     const { campaignId, page, search } = input;
 
     const searchParams = new DonorSearchParams({
@@ -18,7 +18,12 @@ class ListRecurringDonorsUseCase {
       filter: { search },
     });
 
-    return await this.donorGateway.listRecurringDonors(campaignId, searchParams);
+    const result = await this.donorGateway.listRecurringDonors(
+      campaignId,
+      searchParams,
+    );
+
+    return result.toJson();
   }
 }
 

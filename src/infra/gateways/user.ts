@@ -14,7 +14,6 @@ class UserGateway implements UserGatewayDTO {
     const apiResponse = await api.get(url, {
       token,
     });
-    console.log("apiResponse", apiResponse);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 

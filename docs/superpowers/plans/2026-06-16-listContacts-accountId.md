@@ -12,19 +12,20 @@
 
 ## Mapa de arquivos
 
-| Arquivo | Operação | Responsabilidade da mudança |
-|---|---|---|
-| `src/app/search/contactsSearchParams.ts` | Modificar | Adicionar `status` e `accountId` ao tipo `Filter` |
-| `src/infra/schemas/internal/contacts.ts` | Modificar | Remover `accountId` do schema interno (não é mais input válido) |
-| `src/app/useCases/contacts/listContactsUseCase.ts` | Modificar | Receber `campaignId`, buscar campanha e injetar `accountId` no filter |
-| `src/infra/controllers/contacts/listContactsController.ts` | Modificar | Extrair `campaignId` de `route.params` e passá-lo ao use case |
-| `src/infra/gateways/contacts.ts` | Modificar | Substituir `toExternal()` por `URLSearchParams` manual mapeando `accountId` → `filter[account_id]` |
+| Arquivo                                                    | Operação  | Responsabilidade da mudança                                                                        |
+| ---------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- |
+| `src/app/search/contactsSearchParams.ts`                   | Modificar | Adicionar `status` e `accountId` ao tipo `Filter`                                                  |
+| `src/infra/schemas/internal/contacts.ts`                   | Modificar | Remover `accountId` do schema interno (não é mais input válido)                                    |
+| `src/app/useCases/contacts/listContactsUseCase.ts`         | Modificar | Receber `campaignId`, buscar campanha e injetar `accountId` no filter                              |
+| `src/infra/controllers/contacts/listContactsController.ts` | Modificar | Extrair `campaignId` de `route.params` e passá-lo ao use case                                      |
+| `src/infra/gateways/contacts.ts`                           | Modificar | Substituir `toExternal()` por `URLSearchParams` manual mapeando `accountId` → `filter[account_id]` |
 
 ---
 
 ### Task 1: Atualizar ContactsSearchParams
 
 **Files:**
+
 - Modify: `src/app/search/contactsSearchParams.ts`
 
 - [ ] **Step 1: Substituir o conteúdo do arquivo**
@@ -60,6 +61,7 @@ git commit -m "feat(contacts): add status and accountId to ContactsSearchParams 
 ### Task 2: Remover accountId do schema interno
 
 **Files:**
+
 - Modify: `src/infra/schemas/internal/contacts.ts`
 
 - [ ] **Step 1: Remover o campo `accountId` do schema**
@@ -101,6 +103,7 @@ git commit -m "feat(contacts): remove accountId from internal schema (derived fr
 > Estes dois arquivos devem ser alterados no mesmo commit porque a mudança em `InputProps` no use case quebra o controller até que ele seja atualizado.
 
 **Files:**
+
 - Modify: `src/app/useCases/contacts/listContactsUseCase.ts`
 - Modify: `src/infra/controllers/contacts/listContactsController.ts`
 
@@ -202,6 +205,7 @@ git commit -m "feat(contacts): derive accountId from campaign in ListContactsUse
 ### Task 4: Atualizar gateway para usar filter[account_id]
 
 **Files:**
+
 - Modify: `src/infra/gateways/contacts.ts`
 
 - [ ] **Step 1: Substituir a construção da URL por URLSearchParams manual**
@@ -229,8 +233,6 @@ class ContactsGateway implements ContactsGatewayDTO {
     if (filter?.accountId) params.set("filter[account_id]", filter.accountId);
 
     const url = `/contact/find-many?${params.toString()}`;
-
-    console.log("URL de busca de contatos:", url);
 
     const apiResponse = await api.get(url, { token });
 

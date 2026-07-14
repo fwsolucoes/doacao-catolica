@@ -2,29 +2,7 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import type { SearchResult } from "~/app/shared/searchResult";
 import type { Donor } from "../entities/donor";
-
-type RecurringDonor = {
-  subscriptionUuid: string;
-  customerUuid: string;
-  customerReference: string;
-  name: string;
-  cpf: string | null;
-  email: string | null;
-  phone: string | null;
-  donationsLast12Months: number;
-  lastDonationAt: string | null;
-  status: boolean;
-  activeNotification: boolean;
-  amount: number;
-  payDay: number;
-  paymentMethod: "automatic_pix" | "pix" | "bank_slip" | "credit_card";
-  registeredAt: string;
-};
-
-type ListRecurringDonorsResult = {
-  data: RecurringDonor[];
-  meta: { page: number; totalItems: number; totalPages: number };
-};
+import type { RecurringDonor } from "../entities/recurringDonor";
 
 type CreateDonorInput = {
   accountId: number;
@@ -60,13 +38,7 @@ type DonorGatewayDTO = {
   listRecurringDonors(
     campaignId: string,
     searchParams: DonorSearchParams,
-  ): Promise<ListRecurringDonorsResult>;
+  ): Promise<SearchResult<RecurringDonor>>;
 };
 
-export type {
-  DonorGatewayDTO,
-  CreateDonorInput,
-  DonorsSummary,
-  RecurringDonor,
-  ListRecurringDonorsResult,
-};
+export type { DonorGatewayDTO, CreateDonorInput, DonorsSummary };

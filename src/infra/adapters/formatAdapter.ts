@@ -3,6 +3,7 @@ import {
   formatToCnpj,
   formatToCpf,
   formatToCurrency,
+  formatToPhone,
   parseToDate,
 } from "@arkyn/shared";
 
@@ -44,7 +45,23 @@ class FormatAdapter {
     return formatToCnpj(cnpj);
   }
 
-  static cpfCnpj(cpfCnpj: string): string {
+  static phone(phone: string | null): string | null {
+    if (!phone) return null;
+    let digits = phone.replace(/\D/g, "");
+    if (digits.startsWith("5555") && digits.length > 13) digits = digits.slice(2);
+    const normalized =
+      digits.startsWith("55") && digits.length > 11
+        ? `+${digits}`
+        : `+55${digits}`;
+    try {
+      return formatToPhone(normalized);
+    } catch {
+      return phone;
+    }
+  }
+
+  static cpfCnpj(cpfCnpj: string | null): string | null {
+    if (!cpfCnpj) return null;
     const digits = cpfCnpj.replace(/\D/g, "");
     if (digits.length === 11) return formatToCpf(digits);
     if (digits.length === 14) return formatToCnpj(digits);
