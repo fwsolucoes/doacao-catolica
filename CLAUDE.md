@@ -194,6 +194,21 @@ Nunca use `<input type="hidden" name="_action" value="..." />` para identificar 
 <Button type="submit">Ativar recorrência</Button>
 ```
 
+### Dialogs controlados por estado com `useFetcher`
+
+Quando um componente pai controla a abertura de múltiplos dialogs via um único estado (`DialogState`) e passa `onClose` como prop, **nunca passe a callback como função inline**. O `useEffect` nos dialogs inclui `onClose` nas dependências — se a referência mudar a cada render, o efeito re-executa com dados obsoletos do `useFetcher` e fecha o dialog imediatamente ao abrir.
+
+```tsx
+// ERRADO — nova referência a cada render do pai
+<EnableRecurrenceDialog onClose={() => setDialog(null)} />
+
+// CORRETO — referência estável via useCallback
+const closeDialog = useCallback(() => setDialog(null), []);
+<EnableRecurrenceDialog onClose={closeDialog} />
+```
+
+**Por que isso quebra:** após um submit bem-sucedido, `fetcher.data` permanece com `{toast:{type:"success"}}`. Na próxima vez que o pai re-renderiza (ao abrir outro dialog), uma nova referência de `onClose` faz o `useEffect` disparar novamente — encontra `fetcher.state === "idle"` e `fetcher.data.toast.type === "success"` (dados da submissão anterior) e fecha o dialog imediatamente, sem o usuário perceber o flash.
+
 ## Utilitários de data
 
 `src/lib/getMonthDates.ts` — retorna `{ firstDayOfMonth, lastDayOfMonth }` em `YYYY-MM-DD`:
