@@ -15,6 +15,11 @@ class ListRecurringDonorsController {
       campaignId,
       page,
       search: route.query.donor_search,
+      registeredStart: route.query.registered_start,
+      registeredEnd: route.query.registered_end,
+      paymentMethod: route.query.payment_method,
+      status: route.query.status,
+      payDay: route.query.pay_day,
     });
   }
 }

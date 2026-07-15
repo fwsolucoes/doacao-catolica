@@ -11,7 +11,6 @@ import {
   ReceiptText,
   RefreshCw,
   Search,
-  SlidersHorizontal,
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -42,6 +41,7 @@ import { formatCurrency } from "~/lib/formatCurrency";
 import { getInitials } from "~/lib/getInitials";
 import { cn } from "~/lib/utils";
 import { DisableRecurrenceDialog } from "./disableRecurrenceDialog";
+import { DonorsFilterDrawer } from "./donorsFilterDrawer";
 import { EnableRecurrenceDialog } from "./enableRecurrenceDialog";
 import { GenerateBookletDialog } from "./generateBookletDialog";
 import { GenerateUpcomingPaymentsDialog } from "./generateUpcomingPaymentsDialog";
@@ -300,13 +300,7 @@ function DonorsTable() {
               onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
-          <Button
-            variant="outline"
-            className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm"
-          >
-            <SlidersHorizontal size={16} />
-            Filtros
-          </Button>
+          <DonorsFilterDrawer />
         </div>
 
         {/* Table */}
