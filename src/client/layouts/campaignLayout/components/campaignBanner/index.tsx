@@ -26,14 +26,14 @@ function CampaignBanner() {
         <p className="truncate text-xl font-semibold leading-6 text-foreground">
           {campaign.name}
         </p>
-        <div className="flex items-center gap-2.5 text-base">
+        <div className="flex min-w-0 items-center gap-2.5 text-base">
           <span
-            className={`font-semibold text-base ${campaign.status ? "text-[#1f7a4d]" : "text-destructive"}`}
+            className={`shrink-0 font-semibold text-base ${campaign.status ? "text-[#1f7a4d]" : "text-destructive"}`}
           >
             {campaign.status ? "Ativa" : "Inativa"}
           </span>
-          <span className="text-(--text-muted)/50">•</span>
-          <span className="text-(--text-muted)">
+          <span className="shrink-0 text-(--text-muted)/50">•</span>
+          <span className="truncate text-(--text-muted)">
             {"Arrecadado: "}
             <span className="font-semibold text-foreground">
               {formatCurrency(campaign.currentRevenue)}
