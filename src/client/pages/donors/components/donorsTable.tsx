@@ -83,6 +83,8 @@ function buildWhatsAppHref(phone: string | null): string | null {
   if (!phone) return null;
   const digits = phone.replace(/\D/g, "");
   const number = digits.startsWith("55") ? digits : `55${digits}`;
+  // número mínimo: 55 + DDD (2) + 8 dígitos = 12; máximo: 55 + DDD (2) + 9 dígitos = 13
+  if (number.length < 12 || number.length > 13) return null;
   return `https://wa.me/${number}`;
 }
 
@@ -205,24 +207,18 @@ function ActionsPopover({
                 Gerar carnê
               </Button>
             )}
-            <Button
-              variant="ghost"
-              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
-              disabled={!whatsAppHref}
-              asChild={!!whatsAppHref}
-            >
-              {whatsAppHref ? (
+            {whatsAppHref && (
+              <Button
+                variant="ghost"
+                className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+                asChild
+              >
                 <a href={whatsAppHref} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon size={16} />
                   Falar no WhatsApp
                 </a>
-              ) : (
-                <>
-                  <WhatsAppIcon size={16} />
-                  Falar no WhatsApp
-                </>
-              )}
-            </Button>
+              </Button>
+            )}
             <div className="my-1 h-px bg-muted" />
             <Button
               variant="ghost"
