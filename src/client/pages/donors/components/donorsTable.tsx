@@ -1,4 +1,5 @@
 import {
+  ArrowRightLeft,
   Ban,
   BellOff,
   BellRing,
@@ -246,9 +247,7 @@ function ActionsPopover({
 }
 
 function OneTimeDonorRow({ donor }: { donor: OneTimeDonorRow }) {
-  const { campaignId } = useParams<{ campaignId: string }>();
   const [open, setOpen] = useState(false);
-  const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}`;
   const whatsAppHref = buildWhatsAppHref(donor.phone);
 
   return (
@@ -319,12 +318,23 @@ function OneTimeDonorRow({ donor }: { donor: OneTimeDonorRow }) {
             <Button
               variant="ghost"
               className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
-              asChild
             >
-              <Link to={donationsHref}>
-                <Eye size={16} />
-                Ver doações
-              </Link>
+              <Pencil size={16} />
+              Editar doador
+            </Button>
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+            >
+              <ArrowRightLeft size={16} />
+              Converter em recorrente
+            </Button>
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+            >
+              <ReceiptText size={16} />
+              Criar pagamento avulso
             </Button>
             {whatsAppHref && (
               <Button
