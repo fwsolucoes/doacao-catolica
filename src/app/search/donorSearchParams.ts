@@ -7,6 +7,8 @@ type Filter = {
   payment_method?: string;
   status?: string;
   pay_day?: string;
+  // known values: "true" | "false"
+  recurrent?: string;
 };
 
 class DonorSearchParams extends SearchParams<Filter> {}

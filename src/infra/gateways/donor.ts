@@ -2,6 +2,7 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import { SearchResult } from "~/app/shared/searchResult";
 import { Donor } from "~/domain/entities/donor";
+import { OneTimeDonor } from "~/domain/entities/oneTimeDonor";
 import { RecurringDonor } from "~/domain/entities/recurringDonor";
 import type {
   CreateDonorInput,
@@ -16,6 +17,7 @@ import { donationApi } from "../http/donationApi";
 import { createDonorResponseSchema } from "../schemas/external/createDonor";
 import { externalDonorsListSchema } from "../schemas/external/donor";
 import { donorsSummaryResponseSchema } from "../schemas/external/donorsSummary";
+import { oneTimeDonorsResponseSchema } from "../schemas/external/oneTimeDonors";
 import { recurringDonorsResponseSchema } from "../schemas/external/recurringDonors";
 
 class DonorGateway implements DonorGatewayDTO {
@@ -155,6 +157,50 @@ class DonorGateway implements DonorGatewayDTO {
           payDay: item.pay_day,
           paymentMethod: item.payment_method,
           registeredAt: item.registered_at,
+        }),
+      ),
+      meta: {
+        page: data.current_page,
+        pageLimit: data.per_page,
+        totalItems: data.total,
+      },
+    });
+  }
+
+  async listOneTimeDonors(
+    campaignId: string,
+    searchParams: DonorSearchParams,
+  ): Promise<SearchResult<OneTimeDonor>> {
+    let url = `/api/donors/one-time/${campaignId}`;
+    url += searchParams.toExternal(["pageLimit"]);
+
+    const apiResponse = await donationApi.get(url, {
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(
+      oneTimeDonorsResponseSchema,
+    );
+    const { data } = schemaValidator.validate(apiResponse.response);
+
+    return new SearchResult({
+      data: data.data.map((item) =>
+        OneTimeDonor.restore({
+          transferUuid: item.transfer_uuid,
+          customerUuid: item.customer.uuid,
+          customerReference: item.customer.reference,
+          name: item.customer.name,
+          cpf: item.customer.cpf_cnpj,
+          email: item.customer.email,
+          phone: item.customer.phone,
+          registeredAt: item.registered_at,
+          isRecurring: item.is_recurring,
+          recurringSince: item.recurring_since,
+          amount: item.amount,
+          paymentMethod: item.payment_method,
+          lastDonationAt: item.last_donation_at,
         }),
       ),
       meta: {

@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from "~/client/components/ui/sheet";
 
-const DRAWER_PARAMS = [
+const RECURRING_PARAMS = [
   "registered_start",
   "registered_end",
   "payment_method",
@@ -22,7 +22,13 @@ const DRAWER_PARAMS = [
   "pay_day",
 ] as const;
 
-type FilterDraft = {
+const ONE_TIME_PARAMS = [
+  "registered_start",
+  "registered_end",
+  "is_recurring",
+] as const;
+
+type RecurringDraft = {
   registeredStart: string;
   registeredEnd: string;
   paymentMethod: string;
@@ -30,7 +36,13 @@ type FilterDraft = {
   payDay: string;
 };
 
-function draftFromParams(sp: URLSearchParams): FilterDraft {
+type OneTimeDraft = {
+  registeredStart: string;
+  registeredEnd: string;
+  isRecurring: string;
+};
+
+function recurringDraftFromParams(sp: URLSearchParams): RecurringDraft {
   return {
     registeredStart: sp.get("registered_start") ?? "",
     registeredEnd: sp.get("registered_end") ?? "",
@@ -40,39 +52,67 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
   };
 }
 
+function oneTimeDraftFromParams(sp: URLSearchParams): OneTimeDraft {
+  return {
+    registeredStart: sp.get("registered_start") ?? "",
+    registeredEnd: sp.get("registered_end") ?? "",
+    isRecurring: sp.get("is_recurring") ?? "",
+  };
+}
+
 function DonorsFilterDrawer() {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState<FilterDraft>(
-    draftFromParams(new URLSearchParams()),
+
+  const sp = new URLSearchParams(location.search);
+  const isOneTimeTab = sp.get("tab") === "pontuais";
+
+  const [recurringDraft, setRecurringDraft] = useState<RecurringDraft>(
+    recurringDraftFromParams(new URLSearchParams()),
+  );
+  const [oneTimeDraft, setOneTimeDraft] = useState<OneTimeDraft>(
+    oneTimeDraftFromParams(new URLSearchParams()),
   );
 
   useEffect(() => {
-    if (open) setDraft(draftFromParams(new URLSearchParams(location.search)));
+    if (open) {
+      const current = new URLSearchParams(location.search);
+      setRecurringDraft(recurringDraftFromParams(current));
+      setOneTimeDraft(oneTimeDraftFromParams(current));
+    }
   }, [open]);
 
-  const sp = new URLSearchParams(location.search);
-  const filterCount = DRAWER_PARAMS.filter((p) => sp.get(p)).length;
-
-  function setField<K extends keyof FilterDraft>(field: K) {
-    return (value: FilterDraft[K]) =>
-      setDraft((d) => ({ ...d, [field]: value }));
-  }
+  const activeParams = isOneTimeTab ? ONE_TIME_PARAMS : RECURRING_PARAMS;
+  const filterCount = activeParams.filter((p) => sp.get(p)).length;
 
   function applyFilters() {
     const nextSp = new URLSearchParams(location.search);
-    const fields: [string, string][] = [
-      ["registered_start", draft.registeredStart],
-      ["registered_end", draft.registeredEnd],
-      ["payment_method", draft.paymentMethod],
-      ["status", draft.status],
-      ["pay_day", draft.payDay],
-    ];
-    for (const [key, value] of fields) {
-      if (value) nextSp.set(key, value);
-      else nextSp.delete(key);
+
+    if (isOneTimeTab) {
+      const fields: [string, string][] = [
+        ["registered_start", oneTimeDraft.registeredStart],
+        ["registered_end", oneTimeDraft.registeredEnd],
+        ["is_recurring", oneTimeDraft.isRecurring],
+      ];
+      for (const [key, value] of fields) {
+        if (value) nextSp.set(key, value);
+        else nextSp.delete(key);
+      }
+    } else {
+      const fields: [string, string][] = [
+        ["registered_start", recurringDraft.registeredStart],
+        ["registered_end", recurringDraft.registeredEnd],
+        ["payment_method", recurringDraft.paymentMethod],
+        ["status", recurringDraft.status],
+        ["pay_day", recurringDraft.payDay],
+      ];
+      for (const [key, value] of fields) {
+        if (value) nextSp.set(key, value);
+        else nextSp.delete(key);
+      }
     }
+
     nextSp.delete("page");
     navigate(`?${nextSp.toString()}`);
     setOpen(false);
@@ -80,7 +120,7 @@ function DonorsFilterDrawer() {
 
   function clearFilters() {
     const nextSp = new URLSearchParams(location.search);
-    DRAWER_PARAMS.forEach((p) => nextSp.delete(p));
+    activeParams.forEach((p) => nextSp.delete(p));
     nextSp.delete("page");
     navigate(`?${nextSp.toString()}`);
     setOpen(false);
@@ -121,7 +161,9 @@ function DonorsFilterDrawer() {
           <SheetHeader>
             <SheetTitle>Filtros</SheetTitle>
             <SheetDescription>
-              Refine a lista de doadores recorrentes.
+              {isOneTimeTab
+                ? "Refine a lista de doadores pontuais."
+                : "Refine a lista de doadores recorrentes."}
             </SheetDescription>
           </SheetHeader>
 
@@ -131,78 +173,135 @@ function DonorsFilterDrawer() {
               <div className="flex gap-2.5">
                 <Input
                   type="date"
-                  value={draft.registeredStart}
-                  onChange={(e) => setField("registeredStart")(e.target.value)}
+                  value={
+                    isOneTimeTab
+                      ? oneTimeDraft.registeredStart
+                      : recurringDraft.registeredStart
+                  }
+                  onChange={(e) =>
+                    isOneTimeTab
+                      ? setOneTimeDraft((d) => ({
+                          ...d,
+                          registeredStart: e.target.value,
+                        }))
+                      : setRecurringDraft((d) => ({
+                          ...d,
+                          registeredStart: e.target.value,
+                        }))
+                  }
                 />
                 <Input
                   type="date"
-                  value={draft.registeredEnd}
-                  onChange={(e) => setField("registeredEnd")(e.target.value)}
+                  value={
+                    isOneTimeTab
+                      ? oneTimeDraft.registeredEnd
+                      : recurringDraft.registeredEnd
+                  }
+                  onChange={(e) =>
+                    isOneTimeTab
+                      ? setOneTimeDraft((d) => ({
+                          ...d,
+                          registeredEnd: e.target.value,
+                        }))
+                      : setRecurringDraft((d) => ({
+                          ...d,
+                          registeredEnd: e.target.value,
+                        }))
+                  }
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <Label className="font-semibold">Forma de pagamento</Label>
-              <Select.Root
-                value={draft.paymentMethod}
-                onValueChange={setField("paymentMethod")}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Todas" />
-                </Select.Trigger>
-                <Select.Content position="popper">
-                  <Select.Item value="">Todas</Select.Item>
-                  <Select.Item value="pix">Pix</Select.Item>
-                  <Select.Item value="automatic_pix">
-                    Pix Automático
-                  </Select.Item>
-                  <Select.Item value="bank_slip">Boleto</Select.Item>
-                  <Select.Item value="credit_card">
-                    Cartão de Crédito
-                  </Select.Item>
-                </Select.Content>
-              </Select.Root>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label className="font-semibold">Status</Label>
-              <Select.Root
-                value={draft.status}
-                onValueChange={setField("status")}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Todos" />
-                </Select.Trigger>
-                <Select.Content position="popper">
-                  <Select.Item value="">Todos</Select.Item>
-                  <Select.Item value="1">Ativo</Select.Item>
-                  <Select.Item value="0">Inativo</Select.Item>
-                </Select.Content>
-              </Select.Root>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label className="font-semibold">Dia da doação</Label>
-              <Select.Root
-                value={draft.payDay}
-                onValueChange={setField("payDay")}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Todos" />
-                </Select.Trigger>
-                <Select.Content position="popper">
-                  <Select.Item value="">Todos</Select.Item>
-                  {Array.from({ length: 31 }, (_, i) => String(i + 1)).map(
-                    (day) => (
-                      <Select.Item key={day} value={day}>
-                        Dia {day}
+            {isOneTimeTab ? (
+              <div className="flex flex-col gap-1.5">
+                <Label className="font-semibold">É recorrente?</Label>
+                <Select.Root
+                  value={oneTimeDraft.isRecurring}
+                  onValueChange={(v) =>
+                    setOneTimeDraft((d) => ({ ...d, isRecurring: v }))
+                  }
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Todos" />
+                  </Select.Trigger>
+                  <Select.Content position="popper">
+                    <Select.Item value="">Todos</Select.Item>
+                    <Select.Item value="true">Sim</Select.Item>
+                    <Select.Item value="false">Não</Select.Item>
+                  </Select.Content>
+                </Select.Root>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-semibold">Forma de pagamento</Label>
+                  <Select.Root
+                    value={recurringDraft.paymentMethod}
+                    onValueChange={(v) =>
+                      setRecurringDraft((d) => ({ ...d, paymentMethod: v }))
+                    }
+                  >
+                    <Select.Trigger>
+                      <Select.Value placeholder="Todas" />
+                    </Select.Trigger>
+                    <Select.Content position="popper">
+                      <Select.Item value="">Todas</Select.Item>
+                      <Select.Item value="pix">Pix</Select.Item>
+                      <Select.Item value="automatic_pix">
+                        Pix Automático
                       </Select.Item>
-                    ),
-                  )}
-                </Select.Content>
-              </Select.Root>
-            </div>
+                      <Select.Item value="bank_slip">Boleto</Select.Item>
+                      <Select.Item value="credit_card">
+                        Cartão de Crédito
+                      </Select.Item>
+                    </Select.Content>
+                  </Select.Root>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-semibold">Status</Label>
+                  <Select.Root
+                    value={recurringDraft.status}
+                    onValueChange={(v) =>
+                      setRecurringDraft((d) => ({ ...d, status: v }))
+                    }
+                  >
+                    <Select.Trigger>
+                      <Select.Value placeholder="Todos" />
+                    </Select.Trigger>
+                    <Select.Content position="popper">
+                      <Select.Item value="">Todos</Select.Item>
+                      <Select.Item value="1">Ativo</Select.Item>
+                      <Select.Item value="0">Inativo</Select.Item>
+                    </Select.Content>
+                  </Select.Root>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-semibold">Dia da doação</Label>
+                  <Select.Root
+                    value={recurringDraft.payDay}
+                    onValueChange={(v) =>
+                      setRecurringDraft((d) => ({ ...d, payDay: v }))
+                    }
+                  >
+                    <Select.Trigger>
+                      <Select.Value placeholder="Todos" />
+                    </Select.Trigger>
+                    <Select.Content position="popper">
+                      <Select.Item value="">Todos</Select.Item>
+                      {Array.from({ length: 31 }, (_, i) => String(i + 1)).map(
+                        (day) => (
+                          <Select.Item key={day} value={day}>
+                            Dia {day}
+                          </Select.Item>
+                        ),
+                      )}
+                    </Select.Content>
+                  </Select.Root>
+                </div>
+              </>
+            )}
 
             <div className="flex items-center justify-between">
               <Button variant="danger" onClick={clearFilters}>

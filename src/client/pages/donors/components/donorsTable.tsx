@@ -49,6 +49,7 @@ import { UpdateRecurrenceDialog } from "./updateRecurrenceDialog";
 
 type Tab = "recorrentes" | "pontuais";
 type DonorRow = DonorsLoader["donors"]["data"][number];
+type OneTimeDonorRow = NonNullable<DonorsLoader["oneTimeDonors"]>["data"][number];
 
 type DialogState =
   | { type: "updateRecurrence"; donor: DonorRow }
@@ -244,17 +245,125 @@ function ActionsPopover({
   );
 }
 
+function OneTimeDonorRow({ donor }: { donor: OneTimeDonorRow }) {
+  const { campaignId } = useParams<{ campaignId: string }>();
+  const [open, setOpen] = useState(false);
+  const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}`;
+  const whatsAppHref = buildWhatsAppHref(donor.phone);
+
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <div className="flex items-center gap-3.5">
+          <Avatar size="lg">
+            <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
+              {getInitials(donor.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-sm text-foreground">{donor.name}</span>
+            <span className="font-mono text-xs text-muted-foreground">
+              {donor.cpf ?? "—"}
+            </span>
+          </div>
+        </div>
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex flex-col">
+          <span className="text-sm text-foreground">{donor.email ?? "—"}</span>
+          <span className="text-xs text-muted-foreground">
+            {donor.phone ?? "—"}
+          </span>
+        </div>
+      </Table.Cell>
+      <Table.Cell className="text-sm text-muted-foreground">
+        {formatApiDate(donor.registeredAt)}
+      </Table.Cell>
+      <Table.Cell>
+        {donor.isRecurring ? (
+          <div className="flex flex-col gap-0.5">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-sidebar-accent-foreground/15 px-3 py-1 text-xs font-semibold text-sidebar-accent-foreground">
+              <RefreshCw size={10} />
+              Recorrente
+            </span>
+            <span className="text-xs text-muted-foreground">
+              desde {formatApiDate(donor.recurringSince)}
+            </span>
+          </div>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        )}
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex flex-col">
+          <span className="text-sm font-semibold text-foreground">
+            {formatCurrency(String(donor.amount))}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {formatApiDate(donor.lastDonationAt)}
+          </span>
+        </div>
+      </Table.Cell>
+      <Table.Cell className="text-right">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-9 text-muted-foreground"
+            >
+              <MoreHorizontal size={18} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64 p-1.5" align="end" sideOffset={4}>
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+              asChild
+            >
+              <Link to={donationsHref}>
+                <Eye size={16} />
+                Ver doações
+              </Link>
+            </Button>
+            {whatsAppHref && (
+              <Button
+                variant="ghost"
+                className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+                asChild
+              >
+                <a href={whatsAppHref} target="_blank" rel="noopener noreferrer">
+                  <WhatsAppIcon size={16} />
+                  Falar no WhatsApp
+                </a>
+              </Button>
+            )}
+          </PopoverContent>
+        </Popover>
+      </Table.Cell>
+    </Table.Row>
+  );
+}
+
 function DonorsTable() {
-  const { donors, summary } = useLoaderData<DonorsLoader>();
-  const [activeTab, setActiveTab] = useState<Tab>("recorrentes");
+  const { donors, summary, oneTimeDonors } = useLoaderData<DonorsLoader>();
   const [dialog, setDialog] = useState<DialogState>(null);
   const closeDialog = useCallback(() => setDialog(null), []);
   const location = useLocation();
   const navigate = useNavigate();
   const searchRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const searchValue =
-    new URLSearchParams(location.search).get("donor_search") ?? "";
+  const searchParams = new URLSearchParams(location.search);
+  const activeTab = (searchParams.get("tab") ?? "recorrentes") as Tab;
+  const searchValue = searchParams.get("donor_search") ?? "";
+
+  function handleTabChange(tab: Tab) {
+    const params = new URLSearchParams(location.search);
+    if (tab === "recorrentes") params.delete("tab");
+    else params.set("tab", tab);
+    params.delete("page");
+    navigate(`${location.pathname}?${params.toString()}`);
+  }
 
   function handleSearch(value: string) {
     if (searchRef.current) clearTimeout(searchRef.current);
@@ -267,7 +376,8 @@ function DonorsTable() {
     }, 500);
   }
 
-  const visibleDonors = activeTab === "recorrentes" ? donors.data : [];
+  const visibleDonors = donors.data;
+  const visibleOneTimeDonors = oneTimeDonors?.data ?? [];
 
   return (
     <>
@@ -276,14 +386,14 @@ function DonorsTable() {
         <div className="flex w-fit items-center gap-1 rounded-xl border border-border bg-muted/60 p-1.5">
           <TabButton
             active={activeTab === "recorrentes"}
-            onClick={() => setActiveTab("recorrentes")}
+            onClick={() => handleTabChange("recorrentes")}
             icon={RefreshCw}
             label="Doadores recorrentes"
             count={summary.recurringDonors}
           />
           <TabButton
             active={activeTab === "pontuais"}
-            onClick={() => setActiveTab("pontuais")}
+            onClick={() => handleTabChange("pontuais")}
             icon={HandCoins}
             label="Doadores pontuais"
             count={summary.oneTimeDonors}
@@ -305,168 +415,223 @@ function DonorsTable() {
         </div>
 
         {/* Table */}
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Doador</Table.Head>
-              <Table.Head>Contato</Table.Head>
-              <Table.Head>Doações 12m</Table.Head>
-              <Table.Head>Última doação</Table.Head>
-              <Table.Head>Status</Table.Head>
-              <Table.Head className="text-center">Notif.</Table.Head>
-              <Table.Head>Recorrência</Table.Head>
-              <Table.Head>Pagamento</Table.Head>
-              <Table.Head>Cadastro</Table.Head>
-              <Table.Head className="text-right">Ações</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {visibleDonors.length === 0 ? (
-              <Table.Row>
-                <Table.Cell colSpan={10}>
-                  <Empty.Root className="py-12">
-                    <Empty.Media variant="icon">
-                      <Users />
-                    </Empty.Media>
-                    <Empty.Header>
-                      <Empty.Title>Nenhum doador encontrado</Empty.Title>
-                      <Empty.Description>
-                        {activeTab === "recorrentes" && searchValue
-                          ? "Tente ajustar os termos da busca."
-                          : "Ainda não há doadores nesta categoria."}
-                      </Empty.Description>
-                    </Empty.Header>
-                  </Empty.Root>
-                </Table.Cell>
-              </Table.Row>
-            ) : (
-              visibleDonors.map((donor) => (
-                <Table.Row key={donor.subscriptionUuid}>
-                  <Table.Cell>
-                    <div className="flex items-center gap-3.5">
-                      <Avatar size="lg">
-                        <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
-                          {getInitials(donor.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="text-sm text-foreground">
-                          {donor.name}
-                        </span>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          {donor.cpf ?? "—"}
-                        </span>
-                      </div>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex flex-col">
-                      <span className="text-sm text-foreground">
-                        {donor.email ?? "—"}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {donor.phone ?? "—"}
-                      </span>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell className="text-sm text-foreground">
-                    {donor.donationsLast12Months}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm text-muted-foreground">
-                    {formatApiDate(donor.lastDonationAt)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Badge variant={donor.status ? "success" : "danger"}>
-                      {donor.status ? "Ativo" : "Inativo"}
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center justify-center">
-                      {donor.activeNotification ? (
-                        <BellRing
-                          size={16}
-                          className="text-sidebar-accent-foreground"
-                        />
-                      ) : (
-                        <BellOff size={16} className="text-muted-foreground" />
-                      )}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-foreground">
-                        {formatCurrency(String(donor.amount))}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        todo dia {donor.payDay}
-                      </span>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {(() => {
-                      const badge = PAYMENT_METHOD_BADGE[donor.paymentMethod];
-                      return (
-                        <span
-                          className={cn(
-                            "rounded-full px-3 py-1 text-xs",
-                            badge?.className ?? "bg-muted text-muted-foreground",
-                          )}
-                        >
-                          {badge?.label ?? donor.paymentMethod}
-                        </span>
-                      );
-                    })()}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm text-muted-foreground">
-                    {formatApiDate(donor.registeredAt)}
-                  </Table.Cell>
-                  <Table.Cell className="text-right">
-                    <ActionsPopover
-                      donor={donor}
-                      onEditRecurrence={() =>
-                        setDialog({ type: "updateRecurrence", donor })
-                      }
-                      onGenerateUpcoming={() =>
-                        setDialog({
-                          type: "generateUpcoming",
-                          subscriptionUuid: donor.subscriptionUuid,
-                        })
-                      }
-                      onGenerateBooklet={() =>
-                        setDialog({
-                          type: "generateBooklet",
-                          subscriptionUuid: donor.subscriptionUuid,
-                        })
-                      }
-                      onCancelRecurrence={() =>
-                        setDialog({
-                          type: "disableRecurrence",
-                          subscriptionUuid: donor.subscriptionUuid,
-                          name: donor.name,
-                        })
-                      }
-                      onEnableRecurrence={() =>
-                        setDialog({
-                          type: "enableRecurrence",
-                          subscriptionUuid: donor.subscriptionUuid,
-                          name: donor.name,
-                        })
-                      }
-                    />
-                  </Table.Cell>
+        {activeTab === "recorrentes" ? (
+          <>
+            <Table.Root>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Doador</Table.Head>
+                  <Table.Head>Contato</Table.Head>
+                  <Table.Head>Doações 12m</Table.Head>
+                  <Table.Head>Última doação</Table.Head>
+                  <Table.Head>Status</Table.Head>
+                  <Table.Head className="text-center">Notif.</Table.Head>
+                  <Table.Head>Recorrência</Table.Head>
+                  <Table.Head>Pagamento</Table.Head>
+                  <Table.Head>Cadastro</Table.Head>
+                  <Table.Head className="text-right">Ações</Table.Head>
                 </Table.Row>
-              ))
-            )}
-          </Table.Body>
-        </Table.Root>
+              </Table.Header>
+              <Table.Body>
+                {visibleDonors.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={10}>
+                      <Empty.Root className="py-12">
+                        <Empty.Media variant="icon">
+                          <Users />
+                        </Empty.Media>
+                        <Empty.Header>
+                          <Empty.Title>Nenhum doador encontrado</Empty.Title>
+                          <Empty.Description>
+                            {searchValue
+                              ? "Tente ajustar os termos da busca."
+                              : "Ainda não há doadores nesta categoria."}
+                          </Empty.Description>
+                        </Empty.Header>
+                      </Empty.Root>
+                    </Table.Cell>
+                  </Table.Row>
+                ) : (
+                  visibleDonors.map((donor) => (
+                    <Table.Row key={donor.subscriptionUuid}>
+                      <Table.Cell>
+                        <div className="flex items-center gap-3.5">
+                          <Avatar size="lg">
+                            <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
+                              {getInitials(donor.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="text-sm text-foreground">
+                              {donor.name}
+                            </span>
+                            <span className="font-mono text-xs text-muted-foreground">
+                              {donor.cpf ?? "—"}
+                            </span>
+                          </div>
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <div className="flex flex-col">
+                          <span className="text-sm text-foreground">
+                            {donor.email ?? "—"}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {donor.phone ?? "—"}
+                          </span>
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell className="text-sm text-foreground">
+                        {donor.donationsLast12Months}
+                      </Table.Cell>
+                      <Table.Cell className="text-sm text-muted-foreground">
+                        {formatApiDate(donor.lastDonationAt)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Badge variant={donor.status ? "success" : "danger"}>
+                          {donor.status ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <div className="flex items-center justify-center">
+                          {donor.activeNotification ? (
+                            <BellRing
+                              size={16}
+                              className="text-sidebar-accent-foreground"
+                            />
+                          ) : (
+                            <BellOff
+                              size={16}
+                              className="text-muted-foreground"
+                            />
+                          )}
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold text-foreground">
+                            {formatCurrency(String(donor.amount))}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            todo dia {donor.payDay}
+                          </span>
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {(() => {
+                          const badge = PAYMENT_METHOD_BADGE[donor.paymentMethod];
+                          return (
+                            <span
+                              className={cn(
+                                "rounded-full px-3 py-1 text-xs",
+                                badge?.className ??
+                                  "bg-muted text-muted-foreground",
+                              )}
+                            >
+                              {badge?.label ?? donor.paymentMethod}
+                            </span>
+                          );
+                        })()}
+                      </Table.Cell>
+                      <Table.Cell className="text-sm text-muted-foreground">
+                        {formatApiDate(donor.registeredAt)}
+                      </Table.Cell>
+                      <Table.Cell className="text-right">
+                        <ActionsPopover
+                          donor={donor}
+                          onEditRecurrence={() =>
+                            setDialog({ type: "updateRecurrence", donor })
+                          }
+                          onGenerateUpcoming={() =>
+                            setDialog({
+                              type: "generateUpcoming",
+                              subscriptionUuid: donor.subscriptionUuid,
+                            })
+                          }
+                          onGenerateBooklet={() =>
+                            setDialog({
+                              type: "generateBooklet",
+                              subscriptionUuid: donor.subscriptionUuid,
+                            })
+                          }
+                          onCancelRecurrence={() =>
+                            setDialog({
+                              type: "disableRecurrence",
+                              subscriptionUuid: donor.subscriptionUuid,
+                              name: donor.name,
+                            })
+                          }
+                          onEnableRecurrence={() =>
+                            setDialog({
+                              type: "enableRecurrence",
+                              subscriptionUuid: donor.subscriptionUuid,
+                              name: donor.name,
+                            })
+                          }
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                )}
+              </Table.Body>
+            </Table.Root>
 
-        {activeTab === "recorrentes" && (
-          <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
-            <TablePagination
-              currentPage={donors.meta.page}
-              totalPages={donors.meta.totalPages}
-            />
-          </Card.Footer>
+            <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+              <TablePagination
+                currentPage={donors.meta.page}
+                totalPages={donors.meta.totalPages}
+              />
+            </Card.Footer>
+          </>
+        ) : (
+          <>
+            <Table.Root>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Doador</Table.Head>
+                  <Table.Head>Contato</Table.Head>
+                  <Table.Head>Cadastro</Table.Head>
+                  <Table.Head>Recorrente</Table.Head>
+                  <Table.Head>Última doação</Table.Head>
+                  <Table.Head className="text-right">Ações</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {visibleOneTimeDonors.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={6}>
+                      <Empty.Root className="py-12">
+                        <Empty.Media variant="icon">
+                          <Users />
+                        </Empty.Media>
+                        <Empty.Header>
+                          <Empty.Title>Nenhum doador encontrado</Empty.Title>
+                          <Empty.Description>
+                            {searchValue
+                              ? "Tente ajustar os termos da busca."
+                              : "Ainda não há doadores nesta categoria."}
+                          </Empty.Description>
+                        </Empty.Header>
+                      </Empty.Root>
+                    </Table.Cell>
+                  </Table.Row>
+                ) : (
+                  visibleOneTimeDonors.map((donor) => (
+                    <OneTimeDonorRow key={donor.transferUuid} donor={donor} />
+                  ))
+                )}
+              </Table.Body>
+            </Table.Root>
+
+            {oneTimeDonors && (
+              <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+                <TablePagination
+                  currentPage={oneTimeDonors.meta.page}
+                  totalPages={oneTimeDonors.meta.totalPages}
+                />
+              </Card.Footer>
+            )}
+          </>
         )}
       </Card.Root>
 

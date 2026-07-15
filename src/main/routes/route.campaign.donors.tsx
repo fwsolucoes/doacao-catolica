@@ -9,6 +9,7 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { disableRecurrence } from "../factories/disableRecurrence/disableRecurrenceFactory";
 import { enableRecurrence } from "../factories/enableRecurrence/enableRecurrenceFactory";
+import { listOneTimeDonors } from "../factories/listOneTimeDonors/listOneTimeDonorsFactory";
 import { listRecurringDonors } from "../factories/listRecurringDonors/listRecurringDonorsFactory";
 import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
@@ -21,12 +22,15 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const [summary, donors] = await Promise.all([
+  const tab = adaptedRoute.query.tab ?? "recorrentes";
+
+  const [summary, donors, oneTimeDonors] = await Promise.all([
     getDonorsSummary.handle(adaptedRoute),
     listRecurringDonors.handle(adaptedRoute),
+    tab === "pontuais" ? listOneTimeDonors.handle(adaptedRoute) : null,
   ]);
 
-  return { summary, donors };
+  return { summary, donors, oneTimeDonors };
 }
 
 export async function action(args: Route.ActionArgs) {

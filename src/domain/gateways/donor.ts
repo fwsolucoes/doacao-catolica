@@ -2,6 +2,7 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import type { SearchResult } from "~/app/shared/searchResult";
 import type { Donor } from "../entities/donor";
+import type { OneTimeDonor } from "../entities/oneTimeDonor";
 import type { RecurringDonor } from "../entities/recurringDonor";
 
 type CreateDonorInput = {
@@ -39,6 +40,10 @@ type DonorGatewayDTO = {
     campaignId: string,
     searchParams: DonorSearchParams,
   ): Promise<SearchResult<RecurringDonor>>;
+  listOneTimeDonors(
+    campaignId: string,
+    searchParams: DonorSearchParams,
+  ): Promise<SearchResult<OneTimeDonor>>;
 };
 
 export type { DonorGatewayDTO, CreateDonorInput, DonorsSummary };

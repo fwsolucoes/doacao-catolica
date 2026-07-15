@@ -142,6 +142,8 @@ export { FeatureSearchParams };
 
 No gateway: `url += searchParams.toExternal(["page", "pageLimit"])` — exclui paginação padrão quando o endpoint não a usa.
 
+**Regra:** nunca concatenar parâmetros manualmente na URL do gateway (ex.: `url += "&per_page=20"`). Todos os parâmetros enviados ao endpoint devem vir do `SearchParams` via `toExternal()`. Se um parâmetro usa nomenclatura diferente da gerada por `toExternal` (ex.: endpoint espera `per_page` mas `toExternal` gera `pagesize`), exclua o gerado com `toExternal(["pageLimit"])` e inclua o correto como campo do `filter` no `SearchParams`. Se o endpoint já usa o valor padrão desejado, simplesmente exclua o parâmetro.
+
 ### Gateway interface (domain)
 
 Parâmetros separados, não agrupados em objeto genérico:
