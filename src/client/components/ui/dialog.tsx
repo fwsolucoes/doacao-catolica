@@ -92,10 +92,12 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 function DialogFooter({
   className,
   showCloseButton = false,
+  closeButtonLabel = "Cancelar",
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
+  closeButtonLabel?: string;
 }) {
   return (
     <div
@@ -109,7 +111,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Cancelar</Button>
+          <Button variant="outline">{closeButtonLabel}</Button>
         </DialogPrimitive.Close>
       )}
     </div>

@@ -97,7 +97,7 @@ function DisableRecurrenceDialog({
             </div>
 
             <Separator />
-            <DialogFooter showCloseButton>
+            <DialogFooter showCloseButton closeButtonLabel="Fechar">
               <Button type="submit" variant="danger" disabled={isSubmitting}>
                 {isSubmitting ? "Cancelando..." : "Cancelar recorrência"}
               </Button>
