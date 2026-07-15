@@ -119,7 +119,11 @@ class SubscriptionGateway implements SubscriptionGatewayDTO {
     };
 
     if (input.discount) {
-      body.discount = { value: input.discount, due_date_limit_days: 0, type: "fixed" };
+      body.discount = {
+        value: input.discount,
+        due_date_limit_days: 0,
+        type: "fixed",
+      };
     }
     if (input.interest) {
       body.interest = { value: input.interest };
@@ -151,10 +155,10 @@ class SubscriptionGateway implements SubscriptionGatewayDTO {
     const headers = { "api-key": environmentVariables.API_KEY_DONATION };
     const url = `/api/subscriptions/enable/${input.subscriptionUuid}`;
 
-    const apiResponse = await donationApi.post(url, {
-      body: { origin: "admin" },
-      headers,
-    });
+    const body: Record<string, unknown> = { origin: "admin" };
+    if (input.observation) body.obs = input.observation;
+
+    const apiResponse = await donationApi.post(url, { body, headers });
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }

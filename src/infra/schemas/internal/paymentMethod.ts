@@ -5,12 +5,12 @@ const createPaymentMethodBodySchema = z.object({
 });
 
 const updatePaymentMethodBodySchema = z.object({
-  id: z.string().uuid("ID inválido"),
+  id: z.uuid({ message: "ID inválido" }),
   name: z.string().min(1, "Nome é obrigatório"),
 });
 
 const deletePaymentMethodBodySchema = z.object({
-  id: z.string().uuid("ID inválido"),
+  id: z.uuid({ message: "ID inválido" }),
 });
 
 type CreatePaymentMethodBody = z.infer<typeof createPaymentMethodBodySchema>;

@@ -2,6 +2,7 @@ import type { SubscriptionGatewayDTO } from "~/domain/gateways/subscription";
 
 type EnableRecurrenceInput = {
   subscriptionUuid: string;
+  observation?: string;
 };
 
 class EnableRecurrenceUseCase {
@@ -10,6 +11,7 @@ class EnableRecurrenceUseCase {
   async execute(input: EnableRecurrenceInput): Promise<void> {
     await this.subscriptionGateway.enableSubscription({
       subscriptionUuid: input.subscriptionUuid,
+      observation: input.observation,
     });
   }
 }

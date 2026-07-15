@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const generatePaymentBookletSchema = z.object({
-  subscriptionUuid: z.string().uuid("UUID da assinatura inválido"),
+  subscriptionUuid: z.uuid({ message: "UUID da assinatura inválido" }),
   startDate: z.string().min(1, "Data de início é obrigatória"),
   endDate: z.string().min(1, "Data de término é obrigatória"),
 });

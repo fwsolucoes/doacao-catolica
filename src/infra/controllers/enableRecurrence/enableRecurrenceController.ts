@@ -19,6 +19,7 @@ class EnableRecurrenceController {
 
     await this.enableRecurrenceUseCase.execute({
       subscriptionUuid: validatedBody.subscriptionUuid,
+      observation: validatedBody.observation,
     });
   }
 }

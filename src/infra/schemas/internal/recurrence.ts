@@ -61,7 +61,7 @@ const createRecurrenceSchema = z.object({
 });
 
 const disableRecurrenceSchema = z.object({
-  subscriptionUuid: z.string().uuid("UUID inválido"),
+  subscriptionUuid: z.uuid({ message: "UUID inválido" }),
   observation: z.string().min(1, "A observação é obrigatória"),
   perpetuatePaymentsChange: z
     .string()
@@ -74,7 +74,8 @@ const disableRecurrenceSchema = z.object({
 });
 
 const enableRecurrenceSchema = z.object({
-  subscriptionUuid: z.string().uuid("UUID inválido"),
+  subscriptionUuid: z.uuid({ message: "UUID inválido" }),
+  observation: z.string().optional(),
 });
 
 type EnableRecurrenceType = z.infer<typeof enableRecurrenceSchema>;

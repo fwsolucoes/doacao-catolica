@@ -9,7 +9,7 @@ const isDateTodayOrInFuture = (date: string) => {
 
 const upcomingPaymentsSchema = z
   .object({
-    subscriptionUuid: z.string().uuid("UUID da assinatura inválido"),
+    subscriptionUuid: z.uuid({ message: "UUID da assinatura inválido" }),
     startDate: z
       .string()
       .min(1, "Data de início é obrigatória")

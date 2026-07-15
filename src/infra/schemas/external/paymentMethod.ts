@@ -3,7 +3,7 @@ import { z } from "zod";
 type ExternalPaymentMethod = z.infer<typeof externalPaymentMethodSchema>;
 
 const externalPaymentMethodSchema = z.object({
-  uuid: z.string().uuid(),
+  uuid: z.uuid(),
   name: z.string(),
 });
 

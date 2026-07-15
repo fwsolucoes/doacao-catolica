@@ -8,8 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/client/components/ui/dialog";
-import { FormErrorProvider } from "~/client/components/ui/form-field";
+import {
+  FormErrorProvider,
+  FormField,
+} from "~/client/components/ui/form-field";
 import { Separator } from "~/client/components/ui/separator";
+import { Textarea } from "~/client/components/ui/textarea";
 import { useActionToast } from "~/client/hooks/useActionToast";
 
 type EnableRecurrenceDialogProps = {
@@ -47,11 +51,14 @@ function EnableRecurrenceDialog({
               name="subscriptionUuid"
               value={subscriptionUuid ?? ""}
             />
-            <div className="px-6">
-              <p className="text-sm text-muted-foreground">
-                Tem certeza que deseja ativar a recorrência de{" "}
-                <strong className="text-foreground">{name}</strong>?
-              </p>
+            <div className="p-6">
+              <FormField name="observation" label="Adicione uma observação:">
+                <Textarea
+                  name="observation"
+                  rows={3}
+                  placeholder="Opcional..."
+                />
+              </FormField>
             </div>
             <Separator />
             <DialogFooter showCloseButton>

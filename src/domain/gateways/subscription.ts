@@ -46,6 +46,7 @@ type DisableSubscriptionInput = {
 
 type EnableSubscriptionInput = {
   subscriptionUuid: string;
+  observation?: string;
 };
 
 type SubscriptionGatewayDTO = {
