@@ -73,11 +73,19 @@ const disableRecurrenceSchema = z.object({
     .transform((v) => v === "checked"),
 });
 
+const enableRecurrenceSchema = z.object({
+  subscriptionUuid: z.string().uuid("UUID inválido"),
+});
+
+type EnableRecurrenceType = z.infer<typeof enableRecurrenceSchema>;
+
 export {
   createRecurrenceSchema,
   type CreateRecurrenceType,
   disableRecurrenceSchema,
   type DisableRecurrenceType,
+  enableRecurrenceSchema,
+  type EnableRecurrenceType,
   updateRecurrenceSchema,
   type UpdateRecurrenceType,
 };

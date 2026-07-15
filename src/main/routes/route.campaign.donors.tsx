@@ -8,6 +8,7 @@ import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { disableRecurrence } from "../factories/disableRecurrence/disableRecurrenceFactory";
+import { enableRecurrence } from "../factories/enableRecurrence/enableRecurrenceFactory";
 import { listRecurringDonors } from "../factories/listRecurringDonors/listRecurringDonorsFactory";
 import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
@@ -71,6 +72,15 @@ export async function action(args: Route.ActionArgs) {
         return {
           toast: {
             message: "Recorrência cancelada com sucesso!",
+            type: "success" as const,
+          },
+        };
+
+      case "enableRecurrence":
+        await enableRecurrence.handle(adaptedRoute);
+        return {
+          toast: {
+            message: "Recorrência ativada com sucesso!",
             type: "success" as const,
           },
         };

@@ -28,7 +28,7 @@ type LinkProps = ComponentProps<"a"> & { isActive?: boolean; to?: string };
 
 function Link({ className, isActive, to, ...props }: LinkProps) {
   const cls = cn(
-    "flex size-7 items-center justify-center rounded text-sm font-semibold",
+    "flex size-7 items-center justify-center rounded-lg text-sm font-semibold",
     isActive
       ? "bg-(--primary) text-(--primary-foreground)"
       : "text-(--muted-foreground) hover:bg-(--muted)",
@@ -60,7 +60,7 @@ type NavProps = ComponentProps<"a"> & { to?: string; disabled?: boolean };
 
 function Previous({ className, to, disabled, ...props }: NavProps) {
   const cls = cn(
-    "flex size-7 items-center justify-center rounded text-(--muted-foreground) hover:bg-(--muted)",
+    "flex size-7 items-center justify-center rounded-lg text-(--muted-foreground) hover:bg-(--muted)",
     disabled && "pointer-events-none opacity-40",
     className,
   );
@@ -94,7 +94,7 @@ function Previous({ className, to, disabled, ...props }: NavProps) {
 
 function Next({ className, to, disabled, ...props }: NavProps) {
   const cls = cn(
-    "flex size-7 items-center justify-center rounded text-(--muted-foreground) hover:bg-(--muted)",
+    "flex size-7 items-center justify-center rounded-lg text-(--muted-foreground) hover:bg-(--muted)",
     disabled && "pointer-events-none opacity-40",
     className,
   );

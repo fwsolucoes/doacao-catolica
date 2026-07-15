@@ -44,15 +44,21 @@ type DisableSubscriptionInput = {
   origin: string;
 };
 
+type EnableSubscriptionInput = {
+  subscriptionUuid: string;
+};
+
 type SubscriptionGatewayDTO = {
   createSubscription(input: CreateSubscriptionInput): Promise<string>;
   updateSubscription(input: UpdateSubscriptionInput): Promise<void>;
   disableSubscription(input: DisableSubscriptionInput): Promise<void>;
+  enableSubscription(input: EnableSubscriptionInput): Promise<void>;
 };
 
 export type {
   SubscriptionGatewayDTO,
   CreateSubscriptionInput,
   DisableSubscriptionInput,
+  EnableSubscriptionInput,
   UpdateSubscriptionInput,
 };
