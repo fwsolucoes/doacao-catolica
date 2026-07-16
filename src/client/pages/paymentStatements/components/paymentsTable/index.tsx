@@ -61,7 +61,7 @@ const STATUS_BADGE: Record<string, BadgeVariant> = {
 
 const ORIGIN_BADGE: Record<string, BadgeVariant> = {
   Recorrente: "violet",
-  Pontual: "neutral",
+  Pontual: "navy",
 };
 
 const PAYMENT_TYPE_BADGE: Record<string, BadgeVariant> = {
