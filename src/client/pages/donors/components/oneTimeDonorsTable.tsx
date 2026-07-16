@@ -8,6 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { Link, useParams } from "react-router";
 import type { DonorsLoader } from "~/client/types/donorsLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Button } from "~/client/components/ui/button";
@@ -43,6 +44,7 @@ function OneTimeDonorRow({
   currentUrl: string;
 }) {
   const [open, setOpen] = useState(false);
+  const { campaignId } = useParams<{ campaignId: string }>();
   const { environmentVariables, user } = useRoot();
   const whatsAppHref = buildWhatsAppHref(donor.phone);
   const editDonorHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/${donor.customerUuid}?redirectBack=${encodeURIComponent(currentUrl)}`;
@@ -125,16 +127,26 @@ function OneTimeDonorRow({
             <Button
               variant="ghost"
               className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+              asChild
             >
-              <ArrowRightLeft size={16} />
-              Converter em recorrente
+              <Link
+                to={`/campaign/${campaignId}/create-recurrence?contactPublicId=${donor.customerUuid}`}
+              >
+                <ArrowRightLeft size={16} />
+                Converter em recorrente
+              </Link>
             </Button>
             <Button
               variant="ghost"
               className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+              asChild
             >
-              <ReceiptText size={16} />
-              Criar pagamento avulso
+              <Link
+                to={`/campaign/${campaignId}/create-one-time-payment?contactPublicId=${donor.customerUuid}`}
+              >
+                <ReceiptText size={16} />
+                Criar pagamento avulso
+              </Link>
             </Button>
             {whatsAppHref && (
               <Button

@@ -77,7 +77,7 @@ function CreateOneTimePaymentPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="outline" size="icon" asChild>
-          <Link to={`/campaign/${campaignId}/payment-statements`}>
+          <Link to={`/campaign/${campaignId}/donations`}>
             <ArrowLeft size={16} />
           </Link>
         </Button>
@@ -266,7 +266,7 @@ function CreateOneTimePaymentPage() {
           </Card.Root>
 
           <div className="ml-auto flex w-fit max-w-xl justify-end gap-3">
-            <Link to={`/campaign/${campaignId}/payment-statements`}>
+            <Link to={`/campaign/${campaignId}/donations`}>
               <Button type="button" variant="outline">
                 Cancelar
               </Button>
