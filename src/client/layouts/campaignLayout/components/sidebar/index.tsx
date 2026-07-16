@@ -15,7 +15,11 @@ import {
 import { NavLink, useLocation, useMatch, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { cn } from "~/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "~/client/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/client/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -59,18 +63,16 @@ const sections: NavSection[] = [
       {
         icon: Wallet,
         label: "Financeiro",
-        subItems: [
-          { label: "Transferências" },
-        ],
+        subItems: [{ label: "Transferências", path: "transfers" }],
       },
-      { icon: BarChart2, label: "Relatórios" },
+      { icon: BarChart2, label: "Relatórios", path: "reports" },
       { icon: MessageSquare, label: "Mensagens" },
     ],
   },
   {
     title: "Sistema",
     items: [
-      { icon: Users2, label: "Colaboradores" },
+      { icon: Users2, label: "Colaboradores", path: "collaborators" },
       {
         icon: Settings,
         label: "Configurações",

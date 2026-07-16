@@ -94,9 +94,9 @@
     --sidebar-primary: oklch(0.52 0.228 263); /* #116ddc blue */
     --sidebar-primary-foreground: oklch(1 0 0);
     --sidebar-accent: oklch(0.968 0.018 265); /* #f2f5ff light blue */
-    --sidebar-accent-foreground: oklch(0.50 0.22 268); /* #3a64f2 */
+    --sidebar-accent-foreground: oklch(0.5 0.22 268); /* #3a64f2 */
     --sidebar-border: oklch(0.928 0.013 255); /* light gray */
-    --sidebar-ring: oklch(0.50 0.22 268); /* #3a64f2 */
+    --sidebar-ring: oklch(0.5 0.22 268); /* #3a64f2 */
     --sidebar-width: 17rem; /* 272px — match do Figma */
     --sidebar-width-mobile: 18rem;
     --sidebar-width-icon: 3rem; /* largura colapsado */
@@ -159,14 +159,14 @@
     --toast-warning: 251, 146, 60;
 
     /* badge palette */
-    --badge-violet-bg: oklch(0.935 0.052 302);   /* #ede0ff */
+    --badge-violet-bg: oklch(0.935 0.052 302); /* #ede0ff */
     --badge-violet-text: oklch(0.375 0.183 295); /* #6b21a8 */
-    --badge-emerald-bg: oklch(0.942 0.055 155);  /* #d4f5e2 */
-    --badge-emerald-text: oklch(0.476 0.109 158);/* #1f7a4d */
-    --badge-navy-bg: oklch(0.928 0.059 249);     /* #dbe8ff */
-    --badge-navy-text: oklch(0.385 0.143 265);   /* #1e40af */
-    --badge-amber-bg: oklch(0.939 0.063 76);     /* #fde9c8 */
-    --badge-amber-text: oklch(0.556 0.117 52);   /* #a8631a */
+    --badge-emerald-bg: oklch(0.942 0.055 155); /* #d4f5e2 */
+    --badge-emerald-text: oklch(0.476 0.109 158); /* #1f7a4d */
+    --badge-navy-bg: oklch(0.928 0.059 249); /* #dbe8ff */
+    --badge-navy-text: oklch(0.385 0.143 265); /* #1e40af */
+    --badge-amber-bg: oklch(0.939 0.063 76); /* #fde9c8 */
+    --badge-amber-text: oklch(0.556 0.117 52); /* #a8631a */
   }
 }
 
@@ -250,9 +250,9 @@
   --badge-emerald-bg: oklch(0.25 0.06 155);
   --badge-emerald-text: oklch(0.78 0.12 155);
   --badge-navy-bg: oklch(0.22 0.08 265);
-  --badge-navy-text: oklch(0.78 0.10 249);
+  --badge-navy-text: oklch(0.78 0.1 249);
   --badge-amber-bg: oklch(0.28 0.06 52);
-  --badge-amber-text: oklch(0.80 0.11 76);
+  --badge-amber-text: oklch(0.8 0.11 76);
 }
 
 @keyframes theme-icon-in {

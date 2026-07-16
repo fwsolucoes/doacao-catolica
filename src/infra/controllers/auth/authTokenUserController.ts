@@ -20,6 +20,7 @@ class AuthTokenUserController {
       email: userJson.email,
       avatar: userJson.avatar ?? "",
       token: userJson.token,
+      accountId: user.accountId,
     };
 
     return AuthService.setAuthStorage(

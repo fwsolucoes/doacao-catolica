@@ -2,14 +2,11 @@
 import type { DonorSearchParams } from "~/app/search/donorSearchParams";
 import { SearchResult } from "~/app/shared/searchResult";
 import { Donor } from "~/domain/entities/donor";
-import { OneTimeDonor } from "~/domain/entities/oneTimeDonor";
-import { RecurringDonor } from "~/domain/entities/recurringDonor";
 import type {
   CreateDonorInput,
   DonorGatewayDTO,
   DonorsSummary,
 } from "~/domain/gateways/donor";
-import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
@@ -19,6 +16,9 @@ import { externalDonorsListSchema } from "../schemas/external/donor";
 import { donorsSummaryResponseSchema } from "../schemas/external/donorsSummary";
 import { oneTimeDonorsResponseSchema } from "../schemas/external/oneTimeDonors";
 import { recurringDonorsResponseSchema } from "../schemas/external/recurringDonors";
+import { environmentVariables } from "~/main/config/environmentVariables";
+import { RecurringDonor } from "~/domain/entities/recurringDonor";
+import { OneTimeDonor } from "~/domain/entities/oneTimeDonor";
 
 class DonorGateway implements DonorGatewayDTO {
   async createDonor(input: CreateDonorInput): Promise<string> {

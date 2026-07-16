@@ -4,6 +4,7 @@ type User = {
   email: string;
   avatar: string;
   token: string;
+  accountId: number;
 };
 
 export type { User };
