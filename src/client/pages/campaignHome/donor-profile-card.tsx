@@ -1,17 +1,19 @@
 import { Bar } from "react-chartjs-2";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { BASE_CHART_OPTIONS } from "./chart-setup";
 
-const AGE_LABELS = ["18–24", "25–34", "35–44", "45–54", "55–64", "65+"];
-const AGE_DATA = [45, 180, 290, 310, 220, 130];
-
 function DonorProfileCard() {
+  const { breakdowns } = useLoaderData<CampaignHomeLoader>();
+  const { donorProfile } = breakdowns;
+
   const data = {
-    labels: AGE_LABELS,
+    labels: donorProfile.map((p) => p.range),
     datasets: [
       {
         label: "Doadores",
-        data: AGE_DATA,
+        data: donorProfile.map((p) => p.donorsCount),
         backgroundColor: "rgba(59,130,246,0.75)",
         borderRadius: 6,
       },
@@ -25,7 +27,6 @@ function DonorProfileCard() {
       y: {
         grid: { color: "rgba(0,0,0,0.05)" },
         ticks: { font: { size: 11 } },
-        max: 340,
       },
     },
   };

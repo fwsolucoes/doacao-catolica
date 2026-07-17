@@ -1,24 +1,19 @@
 import { Bar } from "react-chartjs-2";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { BASE_CHART_OPTIONS } from "./chart-setup";
 
-const BRACKETS_LABELS = [
-  "Até R$ 50",
-  "R$ 51 – R$ 100",
-  "R$ 101 – R$ 250",
-  "R$ 251 – R$ 500",
-  "R$ 501 – R$ 1k",
-  "Acima de R$ 1k",
-];
-const BRACKETS_DATA = [320, 280, 220, 145, 60, 33];
-
 function DonationBracketsCard() {
+  const { breakdowns } = useLoaderData<CampaignHomeLoader>();
+  const { donationRanges } = breakdowns;
+
   const data = {
-    labels: BRACKETS_LABELS,
+    labels: donationRanges.map((r) => r.label),
     datasets: [
       {
         label: "Doações",
-        data: BRACKETS_DATA,
+        data: donationRanges.map((r) => r.donationsCount),
         backgroundColor: "#74e7bb",
         borderRadius: 4,
         barPercentage: 0.92,

@@ -1,41 +1,34 @@
-import { Eye, UserPlus, Heart } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { UserPlus, Heart } from "lucide-react";
 import type { CSSProperties } from "react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { Progress } from "~/client/components/ui/progress";
-
-const FUNNEL_STEPS: Array<{
-  label: string;
-  value: number;
-  pct: string | null;
-  color: string;
-  icon: LucideIcon;
-}> = [
-  {
-    label: "Visitas na página",
-    value: 12480,
-    pct: null,
-    color: "#5b4eff",
-    icon: Eye,
-  },
-  {
-    label: "Cadastros efetuados",
-    value: 1840,
-    pct: "15% da etapa anterior",
-    color: "#74e7bb",
-    icon: UserPlus,
-  },
-  {
-    label: "Doações concluídas",
-    value: 1052,
-    pct: "57% da etapa anterior",
-    color: "#6bceff",
-    icon: Heart,
-  },
-];
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 
 function ConversionFunnelCard() {
-  const maxValue = FUNNEL_STEPS[0].value;
+  const { breakdowns } = useLoaderData<CampaignHomeLoader>();
+  const { conversionFunnel: f } = breakdowns;
+
+  const steps = [
+    {
+      label: "Cadastros efetuados",
+      value: f.registrations,
+      sub: `${f.registrationsSubscriptions.toLocaleString("pt-BR")} assinaturas · ${f.registrationsTransfers.toLocaleString("pt-BR")} transferências`,
+      pct: null,
+      color: "#74e7bb",
+      icon: UserPlus,
+    },
+    {
+      label: "Doações concluídas",
+      value: f.completedDonations,
+      sub: `${f.completedSubscriptions.toLocaleString("pt-BR")} assinaturas · ${f.completedTransfers.toLocaleString("pt-BR")} transferências`,
+      pct: `${f.conversionPercentage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}% dos cadastros`,
+      color: "#6bceff",
+      icon: Heart,
+    },
+  ];
+
+  const maxValue = f.registrations || 1;
 
   return (
     <Card.Root className="p-6">
@@ -44,12 +37,12 @@ function ConversionFunnelCard() {
           Funil de conversão
         </p>
         <p className="text-xs text-muted-foreground">
-          Visitas na página até doações concluídas no período.
+          Do cadastro até as doações concluídas no período.
         </p>
       </div>
 
       <div className="flex flex-col gap-5">
-        {FUNNEL_STEPS.map((step) => {
+        {steps.map((step) => {
           const barWidth = Math.round((step.value / maxValue) * 100);
           const Icon = step.icon;
           return (
@@ -62,9 +55,14 @@ function ConversionFunnelCard() {
                       className="text-sidebar-accent-foreground"
                     />
                   </div>
-                  <span className="text-sm text-(--text-heading)">
-                    {step.label}
-                  </span>
+                  <div>
+                    <span className="text-sm text-(--text-heading)">
+                      {step.label}
+                    </span>
+                    <p className="text-[11px] text-muted-foreground">
+                      {step.sub}
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-semibold text-(--text-heading)">
