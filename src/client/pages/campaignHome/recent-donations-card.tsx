@@ -1,64 +1,42 @@
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router";
-import { Card } from "~/client/components/ui/card";
-import { Table } from "~/client/components/ui/table";
+import { Link, useLoaderData } from "react-router";
+import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
-import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
-
-const RECENT_DONATIONS = [
-  {
-    initials: "AC",
-    name: "Ana Carolina Silva",
-    time: "há 2 min",
-    method: "Pix",
-    status: "confirmed",
-    value: "R$ 250",
-  },
-  {
-    initials: "RL",
-    name: "Roberto Lima",
-    time: "há 14 min",
-    method: "Cartão",
-    status: "confirmed",
-    value: "R$ 1.000",
-  },
-  {
-    initials: "EV",
-    name: "Empresa Verde Ltda",
-    time: "há 1 h",
-    method: "Boleto",
-    status: "pending",
-    value: "R$ 5.000",
-  },
-  {
-    initials: "JM",
-    name: "Juliana Mendes",
-    time: "ontem",
-    method: "Pix",
-    status: "confirmed",
-    value: "R$ 75",
-  },
-  {
-    initials: "AN",
-    name: "Anônimo",
-    time: "ontem",
-    method: "Cartão",
-    status: "confirmed",
-    value: "R$ 320",
-  },
-];
+import { Card } from "~/client/components/ui/card";
+import { Table } from "~/client/components/ui/table";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
+import { formatCurrency } from "~/lib/formatCurrency";
+import { getInitials } from "~/lib/getInitials";
 
 const STATUS_BADGE: Record<
   string,
   { variant: "success" | "warning" | "info" | "neutral"; label: string }
 > = {
+  received: { variant: "info", label: "Recebida" },
   confirmed: { variant: "success", label: "Confirmada" },
   pending: { variant: "warning", label: "Pendente" },
   failed: { variant: "neutral", label: "Falhou" },
+  cancelled: { variant: "neutral", label: "Cancelada" },
 };
 
+const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  pix: "Pix",
+  credit_card: "Cartão",
+  card: "Cartão",
+  boleto: "Boleto",
+  debit_card: "Débito",
+};
+
+function formatPaidAt(paidAt: string): string {
+  // format: "14/07/2026 10:32:00"
+  const [datePart] = paidAt.split(" ");
+  return datePart ?? paidAt;
+}
+
 function RecentDonationsCard({ campaignId }: { campaignId: string }) {
+  const { activity } = useLoaderData<CampaignHomeLoader>();
+
   return (
     <Card.Root className="p-6">
       <Card.Header>
@@ -81,41 +59,45 @@ function RecentDonationsCard({ campaignId }: { campaignId: string }) {
         <Table.Header>
           <Table.Row>
             <Table.Head>Doador</Table.Head>
-            <Table.Head>Método</Table.Head>
-            <Table.Head>Status</Table.Head>
-            <Table.Head className="text-right">Valor</Table.Head>
+            <Table.Head className="w-px whitespace-nowrap">Método</Table.Head>
+            <Table.Head className="w-px whitespace-nowrap">Status</Table.Head>
+            <Table.Head className="w-px whitespace-nowrap text-right">Valor</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {RECENT_DONATIONS.map((d) => {
+          {activity.recentDonations.map((d) => {
             const badge = STATUS_BADGE[d.status];
             return (
-              <Table.Row key={d.name + d.time}>
-                <Table.Cell>
-                  <div className="flex items-center gap-3">
+              <Table.Row key={d.paymentUuid}>
+                <Table.Cell className="max-w-0">
+                  <div className="flex min-w-0 items-center gap-3">
                     <Avatar className="size-8">
                       <AvatarFallback className="bg-primary text-[0.65rem] font-bold text-primary-foreground">
-                        {d.initials}
+                        {getInitials(d.customerName)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium text-(--text-heading)">
-                        {d.name}
+                      <p className="truncate text-sm font-medium text-(--text-heading)">
+                        {d.customerName}
                       </p>
-                      <p className="text-xs text-muted-foreground">{d.time}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatPaidAt(d.paidAt)}
+                      </p>
                     </div>
                   </div>
                 </Table.Cell>
-                <Table.Cell>
-                  <span className="text-sm">{d.method}</span>
+                <Table.Cell className="w-px whitespace-nowrap">
+                  <span className="text-sm">
+                    {PAYMENT_METHOD_LABEL[d.paymentMethod] ?? d.paymentMethod}
+                  </span>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className="w-px whitespace-nowrap">
                   <Badge variant={badge?.variant ?? "neutral"}>
                     {badge?.label ?? d.status}
                   </Badge>
                 </Table.Cell>
-                <Table.Cell className="text-right font-medium">
-                  {d.value}
+                <Table.Cell className="w-px whitespace-nowrap text-right font-medium">
+                  {formatCurrency(String(d.amount))}
                 </Table.Cell>
               </Table.Row>
             );
