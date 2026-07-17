@@ -96,24 +96,24 @@ function DonorsTable() {
 
   return (
     <>
-      <Card.Root className="gap-4 p-6">
-        <div className="flex w-full items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5 sm:w-fit">
-          <TabButton
-            active={activeTab === "recorrentes"}
-            onClick={() => handleTabChange("recorrentes")}
-            icon={RefreshCw}
-            label="Doadores recorrentes"
-            count={summary.recurringDonors}
-          />
-          <TabButton
-            active={activeTab === "pontuais"}
-            onClick={() => handleTabChange("pontuais")}
-            icon={HandCoins}
-            label="Doadores pontuais"
-            count={summary.oneTimeDonors}
-          />
-        </div>
+      <div className="flex w-full items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5 sm:w-fit -mb-2">
+        <TabButton
+          active={activeTab === "recorrentes"}
+          onClick={() => handleTabChange("recorrentes")}
+          icon={RefreshCw}
+          label="Doadores recorrentes"
+          count={summary.recurringDonors}
+        />
+        <TabButton
+          active={activeTab === "pontuais"}
+          onClick={() => handleTabChange("pontuais")}
+          icon={HandCoins}
+          label="Doadores pontuais"
+          count={summary.oneTimeDonors}
+        />
+      </div>
 
+      <Card.Root className="gap-4 p-6">
         <div className="flex items-center gap-2.5">
           <div className="flex-1">
             <Input

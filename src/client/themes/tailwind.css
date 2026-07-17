@@ -93,7 +93,7 @@
     --sidebar-foreground: oklch(0.35 0.01 265); /* #46484e */
     --sidebar-primary: oklch(0.52 0.228 263); /* #116ddc blue */
     --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.968 0.018 265); /* #f2f5ff light blue */
+    --sidebar-accent: oklch(0.984 0.003 247.858); /* slate-50 #f8fafc */
     --sidebar-accent-foreground: oklch(0.5 0.22 268); /* #3a64f2 */
     --sidebar-border: oklch(0.928 0.013 255); /* light gray */
     --sidebar-ring: oklch(0.5 0.22 268); /* #3a64f2 */
