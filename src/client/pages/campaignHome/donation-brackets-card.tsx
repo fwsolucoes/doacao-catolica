@@ -21,7 +21,7 @@ function DonationBracketsCard() {
         data: BRACKETS_DATA,
         backgroundColor: "#74e7bb",
         borderRadius: 4,
-        barPercentage: 0.6,
+        barPercentage: 0.92,
       },
     ],
   };
