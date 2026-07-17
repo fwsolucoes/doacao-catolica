@@ -1,32 +1,23 @@
 import { Bar } from "react-chartjs-2";
 import { ChevronDown } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { Button } from "~/client/components/ui/button";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { BASE_CHART_OPTIONS } from "./chart-setup";
 
-const DAYS = Array.from({ length: 30 }, (_, i) =>
-  String(i + 1).padStart(2, "0"),
-);
-
-const EVOLUTION_DATA = {
-  pontual: [
-    800, 1200, 600, 1800, 2400, 1600, 900, 2800, 1100, 1500, 2200, 1700, 800,
-    1300, 2600, 900, 1400, 2800, 1200, 700, 1600, 2400, 1800, 900, 1100, 2600,
-    1500, 2200, 800, 1900,
-  ],
-  recorrente: [
-    500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 600, 600, 600, 600, 600,
-    600, 600, 600, 600, 600, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700,
-  ],
-};
-
 function DonationEvolutionCard() {
+  const { evolution } = useLoaderData<CampaignHomeLoader>();
+  const { days } = evolution;
+
+  const labels = days.map((d) => String(d.day).padStart(2, "0"));
+
   const data = {
-    labels: DAYS,
+    labels,
     datasets: [
       {
         label: "Doações pontuais",
-        data: EVOLUTION_DATA.pontual,
+        data: days.map((d) => d.oneTimeAmount),
         backgroundColor: "#4F46E5",
         stack: "a",
         borderRadius: { bottomLeft: 4, bottomRight: 4 },
@@ -35,7 +26,7 @@ function DonationEvolutionCard() {
       },
       {
         label: "Doações recorrentes",
-        data: EVOLUTION_DATA.recorrente,
+        data: days.map((d) => d.recurringAmount),
         backgroundColor: "#34D399",
         stack: "a",
         borderRadius: { topLeft: 4, topRight: 4 },

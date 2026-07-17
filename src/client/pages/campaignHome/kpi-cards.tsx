@@ -1,40 +1,40 @@
 import { DollarSign, Users, Target, Receipt } from "lucide-react";
+import { useLoaderData, useRouteLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
+import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 
-type KpiCardsProps = {
-  totalRaised: number;
-  supporters: number;
-  newSupportersLast7Days: number;
-  totalGoal: number | null;
-  totalGoalProgressPercentage: number | null;
-  averageTicketMonth: number;
-  averageTicketVariationPercentage: number | null;
-};
+function KpiCards() {
+  const { overview } = useLoaderData<CampaignHomeLoader>();
+  const layoutData = useRouteLoaderData<CampaignLayoutLoader>(
+    "main/routes/layout.campaignLayout",
+  );
 
-function KpiCards({
-  totalRaised,
-  supporters,
-  newSupportersLast7Days,
-  totalGoal,
-  totalGoalProgressPercentage,
-  averageTicketMonth,
-  averageTicketVariationPercentage,
-}: KpiCardsProps) {
+  const rawGoal = layoutData?.campaign.totalGoal;
+  const totalGoal: number | null =
+    rawGoal != null && rawGoal !== "" ? Number(rawGoal) : null;
+
+  const totalGoalProgressPercentage =
+    overview.totalGoalProgressPercentage ??
+    (totalGoal && totalGoal > 0
+      ? (overview.totalRaised / totalGoal) * 100
+      : null);
+
   const progressLabel =
     totalGoalProgressPercentage !== null
       ? `${Math.round(totalGoalProgressPercentage)}%`
       : "–";
 
   const variationDirection =
-    averageTicketVariationPercentage !== null &&
-    averageTicketVariationPercentage >= 0
+    overview.averageTicketVariationPercentage !== null &&
+    overview.averageTicketVariationPercentage >= 0
       ? "up"
       : "down";
 
   const variationLabel =
-    averageTicketVariationPercentage !== null
-      ? `${averageTicketVariationPercentage >= 0 ? "+" : ""}${averageTicketVariationPercentage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}% vs. mês anterior`
+    overview.averageTicketVariationPercentage !== null
+      ? `${overview.averageTicketVariationPercentage >= 0 ? "+" : ""}${overview.averageTicketVariationPercentage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}% vs. mês anterior`
       : null;
 
   return (
@@ -46,7 +46,9 @@ function KpiCards({
           color="success"
         />
         <div className="flex flex-col gap-1">
-          <Card.MetricValue>{formatCurrency(String(totalRaised))}</Card.MetricValue>
+          <Card.MetricValue>
+            {formatCurrency(String(overview.totalRaised))}
+          </Card.MetricValue>
           {totalGoal !== null && (
             <span className="text-xs text-muted-foreground">
               Meta: {formatCurrency(String(totalGoal))}
@@ -59,10 +61,10 @@ function KpiCards({
         <Card.MetricHeader label="Apoiadores" icon={Users} color="info" />
         <div className="flex flex-col gap-1">
           <Card.MetricValue>
-            {supporters.toLocaleString("pt-BR")}
+            {overview.supporters.toLocaleString("pt-BR")}
           </Card.MetricValue>
           <Card.MetricTrend
-            value={`+${newSupportersLast7Days} nos últimos 7 dias`}
+            value={`+${overview.newSupportersLast7Days} nos últimos 7 dias`}
             direction="up"
           />
         </div>
@@ -83,12 +85,11 @@ function KpiCards({
       <Card.Root className="gap-4 p-6">
         <Card.MetricHeader label="Ticket médio" icon={Receipt} color="teal" />
         <div className="flex flex-col gap-1">
-          <Card.MetricValue>{formatCurrency(String(averageTicketMonth))}</Card.MetricValue>
+          <Card.MetricValue>
+            {formatCurrency(String(overview.averageTicketMonth))}
+          </Card.MetricValue>
           {variationLabel && (
-            <Card.MetricTrend
-              value={variationLabel}
-              direction={variationDirection}
-            />
+            <Card.MetricTrend value={variationLabel} direction={variationDirection} />
           )}
         </div>
       </Card.Root>
