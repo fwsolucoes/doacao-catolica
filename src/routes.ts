@@ -7,7 +7,7 @@ export default [
   route("api/file-upload", "./main/routes/api.fileUpload.ts"),
   route("api/auth/token", "./main/routes/api.authToken.ts"),
   
-  layout("./main/routes/layout.appLayout.tsx", [
+  layout("./main/routes/layout.portalLayout.tsx", [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
   ]),
 
