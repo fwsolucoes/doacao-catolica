@@ -52,4 +52,13 @@ const listCampaignsSchema = z.object({
   }),
 });
 
-export { externalCampaignSchema, listCampaignsSchema, type ExternalCampaign };
+const verifySlugSchema = z.object({
+  isSlugInUse: z.boolean(),
+});
+
+export {
+  externalCampaignSchema,
+  listCampaignsSchema,
+  verifySlugSchema,
+  type ExternalCampaign,
+};

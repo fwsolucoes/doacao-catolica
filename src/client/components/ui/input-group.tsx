@@ -7,7 +7,24 @@ function Root({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="input-group"
-      className={cn("relative isolate flex items-center", className)}
+      className={cn(
+        "relative isolate flex items-stretch ring-offset-background",
+        // Side mode: shared border + rounding on Root
+        "[&:has([data-slot='input-side'])]:overflow-hidden",
+        "[&:has([data-slot='input-side'])]:rounded-md",
+        "[&:has([data-slot='input-side'])]:border",
+        "[&:has([data-slot='input-side'])]:border-border",
+        // Side mode: strip Input's own border/rounding (ring removed via className on Input)
+        "[&:has([data-slot='input-side'])_[data-slot='input-group-input']]:border-0",
+        "[&:has([data-slot='input-side'])_[data-slot='input-group-input']]:rounded-none",
+        "[&:has([data-slot='input-side'])_[data-slot='input-group-input']]:shadow-none",
+        // Side mode: ring on Root itself when its Input is focused
+        // (chained :has() — no "_" — targets Root, not a descendant)
+        "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-2",
+        "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-ring",
+        "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-offset-1",
+        className,
+      )}
       {...props}
     />
   );
@@ -25,6 +42,25 @@ function Addon({ align = "inline-start", className, ...props }: AddonProps) {
       className={cn(
         "absolute top-1/2 -translate-y-1/2 z-10 pointer-events-none flex items-center text-muted-foreground",
         align === "inline-start" ? "left-3" : "right-3",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+type SideProps = ComponentProps<"span"> & {
+  side?: "start" | "end";
+};
+
+function Side({ side = "start", className, ...props }: SideProps) {
+  return (
+    <span
+      data-slot="input-side"
+      data-side={side}
+      className={cn(
+        "inline-flex shrink-0 items-center select-none bg-muted/50 px-3 text-sm text-muted-foreground",
+        side === "start" ? "border-r border-border" : "border-l border-border",
         className,
       )}
       {...props}
@@ -66,4 +102,4 @@ function Input({ className, id, name, ...props }: ComponentProps<"input">) {
   );
 }
 
-export const InputGroup = { Root, Addon, Input, Text };
+export const InputGroup = { Root, Addon, Input, Text, Side };

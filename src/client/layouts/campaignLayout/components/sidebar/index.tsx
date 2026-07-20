@@ -77,6 +77,7 @@ const sections: NavSection[] = [
         icon: Settings,
         label: "Configurações",
         subItems: [
+          { label: "Informações Gerais", path: "settings/general-info" },
           { label: "Métodos de pagamento", path: "settings/payment-methods" },
         ],
       },
@@ -86,12 +87,11 @@ const sections: NavSection[] = [
 ];
 
 function getInitials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
+  const words = name.split(" ").filter(Boolean);
+  if (words.length === 0) return "";
+  const first = words[0][0].toUpperCase();
+  const last = words.length > 1 ? words[words.length - 1][0].toUpperCase() : "";
+  return first + last;
 }
 
 function NavItemRow({

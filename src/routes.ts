@@ -22,6 +22,7 @@ export default [
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("donors", "./main/routes/route.campaign.donors.tsx"),
     route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),
+    route("settings/general-info", "./main/routes/route.campaign.generalInfo.tsx"),
   ]),
 
 ] satisfies RouteConfig;

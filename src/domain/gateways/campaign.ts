@@ -8,6 +8,7 @@ type CampaignGatewayDTO = {
     token: string,
   ) => Promise<SearchResult<Campaign>>;
   getCampaign: (id: string, token: string) => Promise<Campaign>;
+  verifySlug: (slug: string, token: string) => Promise<{ available: boolean }>;
 };
 
 export type { CampaignGatewayDTO };

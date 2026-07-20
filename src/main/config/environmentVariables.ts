@@ -30,6 +30,9 @@ const environmentVariablesSchema = z.object({
   // CRM panel
   SANCTON_CRM_PANEL_URL: z.string(),
 
+  // Donation checkout
+  SANCTON_DONATION_CHECKOUT_URL: z.string(),
+
   // Logging
   TRAFFIC_SOURCE_ID: z.uuid(),
   TRAFFIC_SOURCE_TOKEN: z.string(),

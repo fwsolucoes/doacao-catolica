@@ -2,10 +2,12 @@ import { Eye, ImageOff, Settings, Users } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Progress } from "~/client/components/ui/progress";
+import { useRoot } from "~/client/hooks/useRoot";
 
 type Campaign = {
   id: string;
   name: string;
+  slug: string;
   image: string | null;
   status: boolean;
   currentRevenue: string | null;
@@ -41,6 +43,8 @@ function getProgress(
 }
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
+  const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
+  const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
   const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
@@ -105,8 +109,11 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
               size="icon"
               className="size-10 rounded-xl"
               aria-label="Visualizar campanha"
+              asChild
             >
-              <Eye size={18} />
+              <a href={checkoutUrl} target="_blank" rel="noreferrer">
+                <Eye size={18} />
+              </a>
             </Button>
             <Button
               variant="outline"

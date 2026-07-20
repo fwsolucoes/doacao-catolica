@@ -9,6 +9,7 @@ import { CampaignMapper } from "../mappers/campaign";
 import {
   externalCampaignSchema,
   listCampaignsSchema,
+  verifySlugSchema,
 } from "../schemas/external/campaign";
 
 class CampaignGateway implements CampaignGatewayDTO {
@@ -45,6 +46,22 @@ class CampaignGateway implements CampaignGatewayDTO {
     const externalCampaign = schemaValidator.validate(apiResponse.response);
 
     return CampaignMapper.toEntity(externalCampaign);
+  }
+
+  async verifySlug(
+    slug: string,
+    token: string,
+  ): Promise<{ available: boolean }> {
+    const apiResponse = await api.get(`/project/verify-slug/${slug}`, {
+      token,
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(verifySlugSchema);
+    const { isSlugInUse } = schemaValidator.validate(apiResponse.response);
+
+    return { available: !isSlugInUse };
   }
 }
 
