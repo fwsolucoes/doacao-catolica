@@ -23,29 +23,10 @@ class UpdateCampaignGeneralInfoController {
       updateCampaignGeneralInfoSchema,
     ).validate(body);
 
-    const startDate = validated.startDate || null;
-    const endDate = validated.endDate || null;
-    const totalGoal = validated.totalGoal ? parseFloat(validated.totalGoal) : null;
-    const monthlyGoal = validated.monthlyGoal
-      ? parseFloat(validated.monthlyGoal)
-      : null;
-
     return await this.updateCampaignGeneralInfoUseCase.execute({
       campaignId,
       token: user.token,
-      name: validated.name,
-      slug: validated.slug,
-      status: validated.status === "active",
-      published: validated.published === "true",
-      startDate,
-      endDate,
-      phone: validated.phone || null,
-      typeDonation: validated.typeDonation,
-      totalGoal,
-      monthlyGoal,
-      institutionName: validated.institutionName || null,
-      cnpj: validated.cnpj || null,
-      address: validated.address || null,
+      ...validated,
     });
   }
 }

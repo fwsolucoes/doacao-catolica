@@ -154,6 +154,33 @@ getMetrics(id: string, searchParams: FeatureSearchParams): Promise<Data>
 getMetrics(params: { id: string; searchParams: FeatureSearchParams }): Promise<Data>
 ```
 
+### Schemas internos — conversões de tipo via `.transform()`
+
+Schemas em `infra/schemas/internal/` validam dados brutos de formulário (strings). Conversões de tipo pertencem ao schema via `.transform()`, **nunca ao controller**. O controller recebe dados já tipados e corretos e os repassa diretamente ao use case.
+
+```ts
+// correto — conversões no schema
+const updateSchema = z.object({
+  status: z.string().transform((v) => v === "active"),           // string → boolean
+  published: z.string().transform((v) => v === "true"),          // string → boolean
+  totalGoal: z.string().optional().transform((v) => v ? parseFloat(v) : null), // string → number | null
+  phone: z.string().optional().transform((v) => v || null),      // "" → null
+});
+
+// controller limpo — só valida e delega
+const validated = new SchemaValidatorAdapter(updateSchema).validate(body);
+return await useCase.execute({ id, token, ...validated });
+
+// errado — conversões no controller
+const validated = new SchemaValidatorAdapter(updateSchema).validate(body);
+return await useCase.execute({
+  id,
+  token,
+  status: validated.status === "active",     // ← não faz isso aqui
+  totalGoal: parseFloat(validated.totalGoal), // ← não faz isso aqui
+});
+```
+
 ### donationApi vs api
 
 - `api` (`~/infra/http/api`) — chamadas autenticadas com token do usuário

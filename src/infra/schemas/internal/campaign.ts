@@ -90,17 +90,17 @@ const updateCampaignGeneralInfoSchema = z.object({
   name: z.string().min(3, "Mínimo de 3 caracteres"),
   slug: z.string().min(1, "Slug é obrigatório"),
   // known values: "active" | "inactive"
-  status: z.string(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  phone: z.string().optional(),
-  published: z.string(),
+  status: z.string().transform((v) => v === "active"),
+  published: z.string().transform((v) => v === "true"),
   typeDonation: z.string().min(1, "Campo obrigatório"),
-  totalGoal: z.string().optional(),
-  monthlyGoal: z.string().optional(),
-  institutionName: z.string().optional(),
-  cnpj: z.string().optional(),
-  address: z.string().optional(),
+  startDate: z.string().optional().transform((v) => v || null),
+  endDate: z.string().optional().transform((v) => v || null),
+  phone: z.string().optional().transform((v) => v || null),
+  totalGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
+  monthlyGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
+  institutionName: z.string().optional().transform((v) => v || null),
+  cnpj: z.string().optional().transform((v) => v || null),
+  address: z.string().optional().transform((v) => v || null),
 });
 
 type UpdateCampaignGeneralInfoType = z.infer<typeof updateCampaignGeneralInfoSchema>;
