@@ -1,35 +1,18 @@
 import { Bar } from "react-chartjs-2";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { BASE_CHART_OPTIONS } from "./chart-setup";
 
-const RECURRENCE_MONTHS = [
-  "Jul/25",
-  "Ago/25",
-  "Set/25",
-  "Out/25",
-  "Nov/25",
-  "Dez/25",
-  "Jan/26",
-  "Fev/26",
-  "Mar/26",
-  "Abr/26",
-  "Mai/26",
-  "Jun/26",
-];
-const RECURRENCE_ACTIVE = [
-  280, 295, 310, 290, 302, 318, 312, 305, 295, 304, 311, 314,
-];
-const RECURRENCE_REALIZED = [
-  265, 280, 298, 275, 290, 305, 298, 291, 280, 289, 300, 310,
-];
-
 function MonthlyRecurrenceCard() {
+  const { recurrence } = useLoaderData<CampaignHomeLoader>();
+
   const data = {
-    labels: RECURRENCE_MONTHS,
+    labels: recurrence.months.map((m) => m.label),
     datasets: [
       {
         label: "Assinaturas ativas",
-        data: RECURRENCE_ACTIVE,
+        data: recurrence.months.map((m) => m.activeSubscriptions),
         backgroundColor: "#5b4eff",
         borderRadius: 4,
         barPercentage: 0.92,
@@ -37,7 +20,7 @@ function MonthlyRecurrenceCard() {
       },
       {
         label: "Doações recorrentes",
-        data: RECURRENCE_REALIZED,
+        data: recurrence.months.map((m) => m.recurringDonations),
         backgroundColor: "#74e7bb",
         borderRadius: 4,
         barPercentage: 0.92,
