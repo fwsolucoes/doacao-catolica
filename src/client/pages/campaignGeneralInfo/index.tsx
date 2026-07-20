@@ -450,7 +450,12 @@ function CampaignGeneralInfoPage() {
             </SectionCard>
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                name="_action"
+                value="updateGeneralInfo"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Salvando..." : "Salvar alterações"}
               </Button>
             </div>

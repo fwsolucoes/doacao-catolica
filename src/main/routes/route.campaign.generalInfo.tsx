@@ -5,6 +5,7 @@ import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
+import { updateCampaignGeneralInfo } from "../factories/campaign/updateCampaignGeneralInfoFactory";
 import { verifySlug } from "../factories/campaign/verifySlugFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -24,7 +25,10 @@ export async function action(args: Route.ActionArgs) {
     return await verifySlug.handle(route);
   }
 
-  // TODO: implement campaign general info update
+  if (_action === "updateGeneralInfo") {
+    return await updateCampaignGeneralInfo.handle(route);
+  }
+
   return null;
 }
 

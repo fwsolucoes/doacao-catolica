@@ -86,12 +86,33 @@ const updateCampaignSchema = z.object({
 const deleteCampaignSchema = z.object({
   id: z.uuid("ID do paciente inválido"),
 });
+const updateCampaignGeneralInfoSchema = z.object({
+  name: z.string().min(3, "Mínimo de 3 caracteres"),
+  slug: z.string().min(1, "Slug é obrigatório"),
+  // known values: "active" | "inactive"
+  status: z.string(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  phone: z.string().optional(),
+  published: z.string(),
+  typeDonation: z.string().min(1, "Campo obrigatório"),
+  totalGoal: z.string().optional(),
+  monthlyGoal: z.string().optional(),
+  institutionName: z.string().optional(),
+  cnpj: z.string().optional(),
+  address: z.string().optional(),
+});
+
+type UpdateCampaignGeneralInfoType = z.infer<typeof updateCampaignGeneralInfoSchema>;
+
 export {
   createCampaignSchema,
   deleteCampaignSchema,
   listCampaignsSchema,
   updateCampaignSchema,
+  updateCampaignGeneralInfoSchema,
   type CreateCampaignType,
   type DeleteCampaignType,
   type UpdateCampaignType,
+  type UpdateCampaignGeneralInfoType,
 };
