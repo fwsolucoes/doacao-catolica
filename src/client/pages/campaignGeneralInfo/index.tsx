@@ -12,6 +12,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import { useRoot } from "~/client/hooks/useRoot";
 import { generateSlug } from "~/lib/generateSlug";
 import { Button } from "~/client/components/ui/button";
@@ -56,7 +57,7 @@ function toDateInput(formatted: string | null | undefined): string {
   return `${year}-${month}-${day}`;
 }
 
-type DonationType = "monthly" | "single" | "both";
+type DonationType = "MONTHLY" | "ONETIME" | "BOTH";
 
 const DONATION_TYPE_OPTIONS: {
   value: DonationType;
@@ -64,17 +65,17 @@ const DONATION_TYPE_OPTIONS: {
   desc: string;
 }[] = [
   {
-    value: "monthly",
+    value: "MONTHLY",
     label: "Doação Mensal",
     desc: "Aceita apenas doações recorrentes mensais",
   },
   {
-    value: "single",
+    value: "ONETIME",
     label: "Doação Única",
     desc: "Aceita apenas doações pontuais",
   },
   {
-    value: "both",
+    value: "BOTH",
     label: "Mensal e Única",
     desc: "Aceita ambos os tipos de doação",
   },
@@ -125,6 +126,7 @@ function CampaignGeneralInfoPage() {
     : `${SANCTON_DONATION_CHECKOUT_URL}/`;
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
+  useActionToast(data);
 
   const slugFetcher = useFetcher<{ available: boolean }>();
   const isVerifying = slugFetcher.state === "submitting";
@@ -155,7 +157,7 @@ function CampaignGeneralInfoPage() {
   const [isActive, setIsActive] = useState(campaign.status);
   const [isPublic, setIsPublic] = useState(campaign.published);
   const [donationType, setDonationType] = useState<DonationType>(
-    (campaign.typeDonation as DonationType) ?? "single",
+    (campaign.typeDonation as DonationType) ?? "ONETIME",
   );
 
   const startDateValue = toDateInput(campaign.startDate);

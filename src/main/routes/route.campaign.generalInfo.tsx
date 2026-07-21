@@ -2,6 +2,8 @@ import type { Route } from "+/route.campaign.generalInfo";
 import { redirect } from "react-router";
 import { CampaignGeneralInfoPage } from "~/client/pages/campaignGeneralInfo";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
+import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
+import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
@@ -21,15 +23,18 @@ export async function action(args: Route.ActionArgs) {
   const formData = await route.request.clone().formData();
   const _action = formData.get("_action");
 
-  if (_action === "verifySlug") {
-    return await verifySlug.handle(route);
+  try {
+    switch (_action) {
+      case "verifySlug":
+        return await verifySlug.handle(route);
+      case "updateGeneralInfo":
+        return await updateCampaignGeneralInfo.handle(route);
+      default:
+        return HttpAdapter.badRequest("Ação não definida");
+    }
+  } catch (error) {
+    return ErrorHandlerAdapter.handle(error);
   }
-
-  if (_action === "updateGeneralInfo") {
-    return await updateCampaignGeneralInfo.handle(route);
-  }
-
-  return null;
 }
 
 export function ErrorBoundary() {
