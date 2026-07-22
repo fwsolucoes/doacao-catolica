@@ -19,9 +19,12 @@ import { Table } from "~/client/components/ui/table";
 import { CreateDialog } from "./components/createDialog";
 import { UpdateDialog } from "./components/updateDialog";
 import { DeleteDialog } from "./components/deleteDialog";
-import type { loader } from "~/main/routes/route.campaign.paymentMethods";
 
 type PaymentMethod = { id: string; name: string };
+
+type PaymentMethodsLoaderData = {
+  paymentMethods: PaymentMethod[];
+};
 
 type ActionsPopoverProps = {
   onEdit: () => void;
@@ -63,7 +66,7 @@ function ActionsPopover({ onEdit, onDelete }: ActionsPopoverProps) {
 }
 
 function PaymentMethodsPage() {
-  const { paymentMethods } = useLoaderData<typeof loader>();
+  const { paymentMethods } = useLoaderData<PaymentMethodsLoaderData>();
   const navigate = useNavigate();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -113,7 +116,7 @@ function PaymentMethodsPage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paymentMethods.map((pm) => (
+              {paymentMethods.map((pm: PaymentMethod) => (
                 <Table.Row key={pm.id}>
                   <Table.Cell>{pm.name}</Table.Cell>
                   <Table.Cell className="text-right">

@@ -44,11 +44,6 @@ class CampaignGateway implements CampaignGatewayDTO {
   async getCampaign(id: string, token: string): Promise<Campaign> {
     const apiResponse = await api.get(`/project/find-one/${id}`, { token });
 
-    console.log(
-      "🚀 ~ file: campaign.ts:38 ~ CampaignGateway ~ getCampaign ~ apiResponse:",
-      apiResponse,
-    );
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(externalCampaignSchema);
