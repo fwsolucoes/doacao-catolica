@@ -1,4 +1,5 @@
 import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
+import type { CampaignPreferencesGatewayDTO } from "~/domain/gateways/campaignPreferences";
 
 type InputProps = {
   campaignId: string;
@@ -20,12 +21,35 @@ type InputProps = {
 };
 
 class UpdateCampaignPageUseCase {
-  constructor(private campaignGateway: CampaignGatewayDTO) {}
+  constructor(
+    private campaignGateway: CampaignGatewayDTO,
+    private campaignPreferencesGateway: CampaignPreferencesGatewayDTO,
+  ) {}
 
   async execute(input: InputProps) {
     const { campaignId, token } = input;
 
-    const campaign = await this.campaignGateway.getCampaign(campaignId, token);
+    const [campaign, preferences] = await Promise.all([
+      this.campaignGateway.getCampaign(campaignId, token),
+      this.campaignPreferencesGateway.getCampaignPreferences(campaignId, token),
+    ]);
+
+    await this.campaignPreferencesGateway.updateCampaignPreferences(
+      preferences.id,
+      {
+        title: input.title,
+        description: input.description,
+        whyDonateTitle: input.whyDonateTitle,
+        whyDonateText: input.whyDonateText,
+        whyDonateImage: input.whyDonateImage,
+        aboutUsTitle: input.aboutUsTitle,
+        aboutUsText: input.aboutUsText,
+        aboutUsImage: input.aboutUsImage,
+        supportWhatsapp: input.supportWhatsapp,
+        supportEmail: input.supportEmail,
+      },
+      token,
+    );
 
     await this.campaignGateway.updateCampaignPage(
       {
@@ -49,20 +73,11 @@ class UpdateCampaignPageUseCase {
         address: campaign.address,
         email: campaign.email,
         type: campaign.type,
-        title: input.title,
         description: input.description,
         image: input.image,
         imageMobile: input.imageMobile,
         videoUrl: input.videoUrl,
         headerImage: input.headerImage,
-        whyDonateTitle: input.whyDonateTitle,
-        whyDonateText: input.whyDonateText,
-        whyDonateImage: input.whyDonateImage,
-        aboutUsTitle: input.aboutUsTitle,
-        aboutUsText: input.aboutUsText,
-        aboutUsImage: input.aboutUsImage,
-        supportWhatsapp: input.supportWhatsapp,
-        supportEmail: input.supportEmail,
       },
       token,
     );

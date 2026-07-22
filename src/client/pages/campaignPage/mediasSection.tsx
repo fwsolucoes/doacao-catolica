@@ -44,6 +44,7 @@ function MediasSection() {
           <InputGroup.Input
             name="videoUrl"
             placeholder="https://www.youtube.com/watch?v=..."
+            defaultValue={campaign.videoUrl ?? ""}
           />
         </InputGroup.Root>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -54,7 +55,10 @@ function MediasSection() {
         name="headerImage"
         label="Imagem cabeçalho da tela de cadastro"
       >
-        <ImageUpload name="headerImage" />
+        <ImageUpload
+          name="headerImage"
+          defaultValue={campaign.headerImage}
+        />
       </FormField>
     </SectionCard>
   );

@@ -10,7 +10,6 @@ class ListTransferAccountsController {
 
   async handle(route: RouteDTO) {
     const user = await AuthService.getAuthStorage(route);
-    console.log(user?.accountId);
 
     if (!user) throw HttpAdapter.unauthorized("Unauthorized");
     if (!user.accountId) throw HttpAdapter.badRequest("account_id is required");

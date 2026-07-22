@@ -21,6 +21,8 @@ type CampaignConstructorProps = {
   institutionName: string | null;
   image: string | null;
   imageMobile: string | null;
+  videoUrl: string | null;
+  headerImage: string | null;
   type: number;
   typeDonation: string;
   createdAt: string;
@@ -52,6 +54,8 @@ class Campaign {
   institutionName: string | null;
   image: string | null;
   imageMobile: string | null;
+  videoUrl: string | null;
+  headerImage: string | null;
   type: number;
   typeDonation: string;
   createdAt: string;
@@ -80,6 +84,8 @@ class Campaign {
     this.institutionName = props.institutionName;
     this.image = props.image;
     this.imageMobile = props.imageMobile;
+    this.videoUrl = props.videoUrl;
+    this.headerImage = props.headerImage;
     this.type = props.type;
     this.typeDonation = props.typeDonation;
     this.createdAt = props.createdAt;
@@ -126,6 +132,8 @@ class Campaign {
       institutionName: this.institutionName,
       image: this.image,
       imageMobile: this.imageMobile,
+      videoUrl: this.videoUrl,
+      headerImage: this.headerImage,
       type: this.type,
       typeDonation: this.typeDonation,
       createdAt: this.createdAt,

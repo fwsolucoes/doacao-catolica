@@ -129,36 +129,17 @@ class CampaignGateway implements CampaignGatewayDTO {
       subaccount_id: input.subAccountId,
       email: input.email,
       type: input.type,
-      title: input.title,
       description: input.description,
       image: input.image,
       image_mobile: input.imageMobile,
       featured_video: input.videoUrl,
       featured_image: input.headerImage,
-      why_donate_title: input.whyDonateTitle,
-      why_donate_text: input.whyDonateText,
-      why_donate_image: input.whyDonateImage,
-      about_us_title: input.aboutUsTitle,
-      about_us_text: input.aboutUsText,
-      about_us_image: input.aboutUsImage,
-      support_whatsapp: input.supportWhatsapp,
-      support_email: input.supportEmail,
     };
-
-    console.log(
-      "🚀 ~ file: campaign.ts:136 ~ CampaignGateway ~ updateCampaignPage ~ body:",
-      body,
-    );
 
     const apiResponse = await api.put(`/project/update/${input.campaignId}`, {
       body,
       token,
     });
-
-    console.log(
-      "🚀 ~ file: campaign.ts:140 ~ CampaignGateway ~ updateCampaignPage ~ apiResponse:",
-      apiResponse,
-    );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }

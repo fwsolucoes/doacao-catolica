@@ -7,14 +7,18 @@ import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
+import { getCampaignPreferences } from "../factories/campaign/getCampaignPreferencesFactory";
 import { updateCampaignPage } from "../factories/campaign/updateCampaignPageFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  const campaign = await getCampaign.handle(route);
-  return { campaign };
+  const [campaign, preferences] = await Promise.all([
+    getCampaign.handle(route),
+    getCampaignPreferences.handle(route),
+  ]);
+  return { campaign, preferences };
 }
 
 export async function action(args: Route.ActionArgs) {

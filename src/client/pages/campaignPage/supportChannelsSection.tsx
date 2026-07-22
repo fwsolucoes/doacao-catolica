@@ -1,10 +1,14 @@
 import { Mail } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
+import type { CampaignPageLoader } from "~/client/types/campaignPageLoader";
 
 function SupportChannelsSection() {
+  const { preferences } = useLoaderData<CampaignPageLoader>();
+
   return (
     <SectionCard
       title="Canais de suporte"
@@ -22,6 +26,7 @@ function SupportChannelsSection() {
             name="supportWhatsapp"
             type="tel"
             placeholder="(11) 90000-0000"
+            defaultValue={preferences.supportWhatsapp ?? ""}
           />
         </InputGroup.Root>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -37,6 +42,7 @@ function SupportChannelsSection() {
             name="supportEmail"
             type="email"
             placeholder="suporte@paroquia.org.br"
+            defaultValue={preferences.supportEmail ?? ""}
           />
         </InputGroup.Root>
       </FormField>

@@ -44,20 +44,11 @@ type UpdateCampaignPageInput = {
   address: string | null;
   email: string | null;
   type: number;
-  title: string | null;
   description: string | null;
   image: string | null;
   imageMobile: string | null;
   videoUrl: string | null;
   headerImage: string | null;
-  whyDonateTitle: string | null;
-  whyDonateText: string | null;
-  whyDonateImage: string | null;
-  aboutUsTitle: string | null;
-  aboutUsText: string | null;
-  aboutUsImage: string | null;
-  supportWhatsapp: string | null;
-  supportEmail: string | null;
 };
 
 type CampaignGatewayDTO = {

@@ -6,7 +6,7 @@ import { Textarea } from "~/client/components/ui/textarea";
 import type { CampaignPageLoader } from "~/client/types/campaignPageLoader";
 
 function PageContentSection() {
-  const { campaign } = useLoaderData<CampaignPageLoader>();
+  const { campaign, preferences } = useLoaderData<CampaignPageLoader>();
 
   return (
     <SectionCard
@@ -14,13 +14,17 @@ function PageContentSection() {
       description="Informações principais exibidas na página pública da campanha."
     >
       <FormField name="title" label="Título">
-        <Input name="title" placeholder="Ex.: Ajude a reformar nossa paróquia" />
+        <Input
+          name="title"
+          placeholder="Ex.: Ajude a reformar nossa paróquia"
+          defaultValue={preferences.title ?? ""}
+        />
       </FormField>
       <FormField name="description" label="Texto principal">
         <Textarea
           name="description"
           placeholder="Descrição curta que aparece logo abaixo do título."
-          defaultValue={campaign.description ?? ""}
+          defaultValue={preferences.description ?? ""}
           className="min-h-24"
         />
       </FormField>

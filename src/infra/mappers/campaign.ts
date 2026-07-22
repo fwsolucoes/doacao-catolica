@@ -26,6 +26,10 @@ class CampaignMapper {
       typeDonation: externalCampaign.type_donation,
       image: externalCampaign.image,
       imageMobile: externalCampaign.image_mobile,
+      videoUrl: externalCampaign.featured_video
+        ? String(externalCampaign.featured_video)
+        : null,
+      headerImage: externalCampaign.featured_image,
       createdAt: externalCampaign.created_at,
       updatedAt: externalCampaign.updated_at,
       apiDonationPublicId: externalCampaign.api_donation_public_id,
