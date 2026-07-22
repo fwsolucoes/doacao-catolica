@@ -2,7 +2,7 @@ import { Play } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
-import { ImageUpload } from "~/client/components/ui/image-upload";
+import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { InputGroup } from "~/client/components/ui/input-group";
 import type { CampaignPageLoader } from "~/client/types/campaignPageLoader";
 
@@ -15,26 +15,22 @@ function MediasSection() {
       description="Imagens e vídeo exibidos no topo e no cabeçalho de cadastro."
     >
       <FormField name="image" label="Imagem desktop">
-        <ImageUpload
+        <ImageUploadCompact
           name="image"
           defaultValue={campaign.image}
           width={1400}
           height={433}
+          description="Dimensão recomendada: 1400×433px."
         />
-        <p className="text-xs text-muted-foreground">
-          Dimensão recomendada: 1400x433px.
-        </p>
       </FormField>
       <FormField name="imageMobile" label="Imagem mobile">
-        <ImageUpload
+        <ImageUploadCompact
           name="imageMobile"
           defaultValue={campaign.imageMobile}
           width={400}
           height={300}
+          description="Dimensão recomendada: 400×300px."
         />
-        <p className="text-xs text-muted-foreground">
-          Dimensão recomendada: 400x300px.
-        </p>
       </FormField>
       <FormField name="videoUrl" label="Vídeo destaque">
         <InputGroup.Root>
@@ -55,7 +51,7 @@ function MediasSection() {
         name="headerImage"
         label="Imagem cabeçalho da tela de cadastro"
       >
-        <ImageUpload
+        <ImageUploadCompact
           name="headerImage"
           defaultValue={campaign.headerImage}
         />

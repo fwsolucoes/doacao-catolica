@@ -32,6 +32,8 @@ const STEP_PATHS: Record<string, string> = {
   "Informações Gerais": "settings/general-info",
   "Página da Campanha": "settings/campaign-page",
   "Valores e Pagamento": "settings/payment-methods",
+  "Email": "settings/email",
+  "Metadados SEO": "settings/seo",
 };
 
 function buildSteps(campaignId: string): StepItem[] {

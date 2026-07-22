@@ -34,6 +34,8 @@ export default [
     route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),
     route("settings/general-info", "./main/routes/route.campaign.generalInfo.tsx"),
     route("settings/campaign-page", "./main/routes/route.campaign.campaignPage.tsx"),
+    route("settings/email", "./main/routes/route.campaign.email.tsx"),
+    route("settings/seo", "./main/routes/route.campaign.seoSettings.tsx"),
   ]),
 
 ] satisfies RouteConfig;
