@@ -35,6 +35,7 @@ const STEP_PATHS: Record<string, string> = {
   "Email": "settings/email",
   "Metadados SEO": "settings/seo",
   "Integrações": "settings/integrations",
+  "Conexão WhatsApp": "settings/whatsapp",
 };
 
 function buildSteps(campaignId: string): StepItem[] {
