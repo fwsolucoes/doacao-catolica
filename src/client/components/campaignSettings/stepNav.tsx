@@ -34,6 +34,7 @@ const STEP_PATHS: Record<string, string> = {
   "Valores e Pagamento": "settings/payment-methods",
   "Email": "settings/email",
   "Metadados SEO": "settings/seo",
+  "Integrações": "settings/integrations",
 };
 
 function buildSteps(campaignId: string): StepItem[] {

@@ -36,6 +36,7 @@ export default [
     route("settings/campaign-page", "./main/routes/route.campaign.campaignPage.tsx"),
     route("settings/email", "./main/routes/route.campaign.email.tsx"),
     route("settings/seo", "./main/routes/route.campaign.seoSettings.tsx"),
+    route("settings/integrations", "./main/routes/route.campaign.integrations.tsx"),
   ]),
 
 ] satisfies RouteConfig;
