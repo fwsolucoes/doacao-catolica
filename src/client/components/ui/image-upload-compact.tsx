@@ -173,17 +173,28 @@ function ImageUploadCompact({
 
         {/* Action */}
         {uploadError && pendingFile ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="shrink-0"
-            disabled={disabled || isLoading}
-            onClick={handleReSend}
-          >
-            <RefreshCw size={15} />
-            Reenviar
-          </Button>
+          <div className="flex shrink-0 flex-col gap-1.5">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={disabled || isLoading}
+              onClick={handleReSend}
+            >
+              <RefreshCw size={15} />
+              Reenviar
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={disabled || isLoading}
+              onClick={openFilePicker}
+            >
+              <Upload size={15} />
+              Trocar imagem
+            </Button>
+          </div>
         ) : (
           <Button
             type="button"
