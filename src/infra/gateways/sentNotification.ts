@@ -20,6 +20,8 @@ class SentNotificationGateway implements SentNotificationGatewayDTO {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
 
+    console.log("apiResponse", apiResponse);
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(sentNotificationsSchema);

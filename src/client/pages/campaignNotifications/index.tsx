@@ -17,6 +17,7 @@ import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
 import { Table } from "~/client/components/ui/table";
+import { TablePagination } from "~/client/components/ui/table-pagination";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import type { CampaignNotificationsLoader } from "~/client/types/campaignNotificationsLoader";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
@@ -34,7 +35,10 @@ type StatCardItem = {
 // known values: "delivered" | "sent" | "failed"
 const STATUS_BADGE: Record<
   string,
-  { variant: "emerald" | "info" | "danger" | "warning" | "neutral"; label: string }
+  {
+    variant: "emerald" | "info" | "danger" | "warning" | "neutral";
+    label: string;
+  }
 > = {
   success: { variant: "emerald", label: "Entregue" },
   awaiting_confirmation: { variant: "info", label: "Enviado" },
@@ -89,7 +93,8 @@ function getContact(notification: {
   customerPhone: string | null;
   customerEmail: string | null;
 }) {
-  if (notification.channel === "email") return notification.customerEmail ?? "-";
+  if (notification.channel === "email")
+    return notification.customerEmail ?? "-";
   return notification.customerPhone ?? "-";
 }
 
@@ -103,9 +108,7 @@ function CampaignNotificationsPage() {
   const pending = notifications.data.filter(
     (n) => n.logType === "awaiting_confirmation",
   ).length;
-  const failed = notifications.data.filter(
-    (n) => n.logType === "error",
-  ).length;
+  const failed = notifications.data.filter((n) => n.logType === "error").length;
 
   const statCards: StatCardItem[] = [
     {
@@ -181,9 +184,9 @@ function CampaignNotificationsPage() {
               <Table.Head>Cliente</Table.Head>
               <Table.Head>Contato</Table.Head>
               <Table.Head>Canal</Table.Head>
+              <Table.Head>Status</Table.Head>
               <Table.Head>Mensagem</Table.Head>
               <Table.Head>Data/Hora</Table.Head>
-              <Table.Head>Status</Table.Head>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -201,9 +204,15 @@ function CampaignNotificationsPage() {
                     <ChannelBadge channel={item.channel} />
                   </Table.Cell>
                   <Table.Cell>
+                    <Badge variant={statusConfig?.variant ?? "neutral"}>
+                      {statusConfig?.label ?? item.logType}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
                     <div className="flex flex-col gap-0.5">
                       <span className="font-semibold">
-                        {NOTIFICATION_TYPES[item.notificationType] ?? item.notificationType}
+                        {NOTIFICATION_TYPES[item.notificationType] ??
+                          item.notificationType}
                       </span>
                       {item.logType === "error" && item.response && (
                         <span className="text-xs text-destructive">
@@ -220,16 +229,18 @@ function CampaignNotificationsPage() {
                       </span>
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
-                    <Badge variant={statusConfig?.variant ?? "neutral"}>
-                      {statusConfig?.label ?? item.logType}
-                    </Badge>
-                  </Table.Cell>
                 </Table.Row>
               );
             })}
           </Table.Body>
         </Table.Root>
+
+        <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <TablePagination
+            currentPage={notifications.meta.page}
+            totalPages={notifications.meta.totalPages}
+          />
+        </Card.Footer>
       </Card.Root>
     </div>
   );
