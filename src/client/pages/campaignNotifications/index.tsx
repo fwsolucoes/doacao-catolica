@@ -19,7 +19,7 @@ import { Input } from "~/client/components/ui/input";
 import { Table } from "~/client/components/ui/table";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import type { CampaignNotificationsLoader } from "~/client/types/campaignNotificationsLoader";
-import { NOTIFICATION_TYPES } from "./constants/notificationTypes";
+import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 
 type MetricColor = Parameters<typeof Card.MetricHeader>[0]["color"];
 
