@@ -131,10 +131,7 @@ function CampaignEmailPage() {
             description="Como os emails aparecem na caixa de entrada dos doadores."
           >
             <FormField name="senderName" label="Nome do remetente" required>
-              <Input
-                name="senderName"
-                placeholder="Ex.: Educação para Todos"
-              />
+              <Input name="senderName" placeholder="Ex.: Educação para Todos" />
             </FormField>
             <FormField name="replyTo" label="Responder para (opcional)">
               <Input
@@ -156,7 +153,10 @@ function CampaignEmailPage() {
                   Configure layouts HTML reutilizáveis para seus emails.
                 </p>
               </div>
-              <Button className="shrink-0" onClick={() => setNewLayoutOpen(true)}>
+              <Button
+                className="shrink-0"
+                onClick={() => setNewLayoutOpen(true)}
+              >
                 <Plus size={15} />
                 Novo layout
               </Button>

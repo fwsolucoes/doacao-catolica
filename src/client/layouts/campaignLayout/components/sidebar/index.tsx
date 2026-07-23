@@ -66,7 +66,11 @@ const sections: NavSection[] = [
         subItems: [{ label: "Transferências", path: "transfers" }],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },
-      { icon: MessageSquare, label: "Mensagens" },
+      {
+        icon: MessageSquare,
+        label: "Mensagens",
+        subItems: [{ label: "Mensagens enviadas", path: "notifications" }],
+      },
     ],
   },
   {

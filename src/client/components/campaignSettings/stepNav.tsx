@@ -32,11 +32,11 @@ const STEP_PATHS: Record<string, string> = {
   "Informações Gerais": "settings/general-info",
   "Página da Campanha": "settings/campaign-page",
   "Valores e Pagamento": "settings/payment-methods",
-  "Email": "settings/email",
+  Email: "settings/email",
   "Metadados SEO": "settings/seo",
-  "Integrações": "settings/integrations",
+  Integrações: "settings/integrations",
   "Conexão WhatsApp": "settings/whatsapp",
-  "Preferências": "settings/preferences",
+  Preferências: "settings/preferences",
 };
 
 function buildSteps(campaignId: string): StepItem[] {
@@ -57,10 +57,10 @@ function StepNav({ steps }: { steps: StepItem[] }) {
         const className = cn(
           "flex items-center gap-3.5 rounded-[13px] px-4 py-3 text-base font-semibold transition-colors",
           isActive
-            ? "bg-sidebar-primary text-white"
+            ? "bg-sidebar-accent-foreground text-sidebar-primary-foreground"
             : href
-              ? "text-muted-foreground hover:bg-muted"
-              : "text-muted-foreground cursor-default",
+              ? "bg-card text-muted-foreground border border-transparent hover:bg-sidebar-accent hover:border-border"
+              : "bg-card text-muted-foreground border border-transparent cursor-default",
         );
         if (href && !isActive) {
           return (
@@ -90,10 +90,10 @@ function StepTabBar({ steps }: { steps: StepItem[] }) {
         const className = cn(
           "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold whitespace-nowrap shrink-0 transition-colors",
           isActive
-            ? "bg-sidebar-primary text-white"
+            ? "bg-sidebar-accent-foreground text-sidebar-primary-foreground"
             : href
-              ? "text-muted-foreground hover:bg-muted"
-              : "text-muted-foreground/40 cursor-not-allowed",
+              ? "bg-card text-muted-foreground border border-transparent hover:bg-sidebar-accent hover:border-border"
+              : "bg-card text-muted-foreground/40 border border-transparent cursor-not-allowed",
         );
         if (href && !isActive) {
           return (

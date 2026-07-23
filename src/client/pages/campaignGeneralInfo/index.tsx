@@ -18,7 +18,11 @@ import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import { cn } from "~/lib/utils";
-import { buildSteps, StepNav, StepTabBar } from "~/client/components/campaignSettings/stepNav";
+import {
+  buildSteps,
+  StepNav,
+  StepTabBar,
+} from "~/client/components/campaignSettings/stepNav";
 
 // "DD/MM/YYYY - hh:mm" → "YYYY-MM-DD"
 function toDateInput(formatted: string | null | undefined): string {
@@ -164,7 +168,7 @@ function CampaignGeneralInfoPage() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-[38px] shrink-0 rounded-[11px] text-xs"
+                      className="h-9.5 shrink-0 rounded-[11px] text-xs"
                       disabled={isVerifying}
                       onClick={handleVerifySlug}
                     >
@@ -207,7 +211,7 @@ function CampaignGeneralInfoPage() {
                 </FormField>
 
                 <FormField name="status" label="Status">
-                  <div className="flex h-[43px] items-center justify-between rounded-[11px] border border-border px-4">
+                  <div className="flex h-10.75 items-center justify-between rounded-[11px] border border-border px-4">
                     <span className="text-sm font-semibold text-foreground">
                       {isActive ? "Campanha ativa" : "Campanha inativa"}
                     </span>
