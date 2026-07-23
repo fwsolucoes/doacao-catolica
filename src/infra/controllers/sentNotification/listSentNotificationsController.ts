@@ -17,8 +17,11 @@ class ListSentNotificationsController {
       campaignId,
       page,
       search: route.query.search,
+      startDate: route.query.start_date,
+      endDate: route.query.end_date,
       notificationType: route.query.notification_type,
       logType: route.query.log_type,
+      channel: route.query.channel,
     });
   }
 }

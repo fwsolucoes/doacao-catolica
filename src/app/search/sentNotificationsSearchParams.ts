@@ -7,6 +7,7 @@ type Filter = {
   end_date?: string;
   notification_type?: string;
   log_type?: string;
+  channel?: string;
 };
 
 class SentNotificationsSearchParams extends SearchParams<Filter> {}

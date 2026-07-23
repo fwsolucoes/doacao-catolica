@@ -6,11 +6,11 @@ import {
   MessageSquare,
   Search,
   Send,
-  SlidersHorizontal,
   XCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { cn } from "~/lib/utils";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -21,6 +21,7 @@ import { TablePagination } from "~/client/components/ui/table-pagination";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import type { CampaignNotificationsLoader } from "~/client/types/campaignNotificationsLoader";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
+import { FilterDrawer } from "./components/filterDrawer";
 
 type MetricColor = Parameters<typeof Card.MetricHeader>[0]["color"];
 
@@ -100,6 +101,30 @@ function getContact(notification: {
 
 function CampaignNotificationsPage() {
   const { notifications } = useLoaderData<CampaignNotificationsLoader>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const [searchValue, setSearchValue] = useState(
+    () => new URLSearchParams(location.search).get("search") ?? "",
+  );
+
+  useEffect(() => {
+    const sp = new URLSearchParams(location.search);
+    setSearchValue(sp.get("search") ?? "");
+  }, [location.search]);
+
+  function handleSearch(value: string) {
+    setSearchValue(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const next = new URLSearchParams(location.search);
+      if (value) next.set("search", value);
+      else next.delete("search");
+      next.delete("page");
+      navigate(`?${next.toString()}`);
+    }, 400);
+  }
 
   const total = notifications.meta.totalItems;
   const delivered = notifications.data.filter(
@@ -170,12 +195,11 @@ function CampaignNotificationsPage() {
             <Input
               leftIcon={Search}
               placeholder="Buscar por cliente, telefone, e-mail ou mensagem..."
+              value={searchValue}
+              onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
-          <Button variant="outline">
-            <SlidersHorizontal size={18} />
-            Filtros
-          </Button>
+          <FilterDrawer />
         </div>
 
         <Table.Root>
