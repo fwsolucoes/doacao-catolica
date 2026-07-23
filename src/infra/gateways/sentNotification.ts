@@ -27,11 +27,8 @@ class SentNotificationGateway implements SentNotificationGatewayDTO {
     const { data } = validated;
 
     return new SearchResult({
-      data: data.data.map((item) => {
-        const [datePart, timePart] = item.created_at2.split(" ");
-        const [year, month, day] = datePart.split("-");
-
-        return SentNotification.restore({
+      data: data.data.map((item) =>
+        SentNotification.restore({
           uuid: item.uuid,
           channel: item.channel,
           notificationType: item.notification_type,
@@ -41,10 +38,9 @@ class SentNotificationGateway implements SentNotificationGatewayDTO {
           customerEmail: item.customer.email,
           customerPhone: item.customer.phone,
           response: item.response,
-          createdAt: `${day}/${month}/${year}`,
-          createdAtTime: timePart ?? "",
-        });
-      }),
+          createdAt: item.created_at2,
+        }),
+      ),
       meta: {
         page: data.current_page,
         pageLimit: data.per_page ?? 20,

@@ -80,7 +80,7 @@ function FilterDrawer() {
   }
 
   return (
-    <>
+    <div className="flex items-center gap-2">
       {filterCount > 0 && (
         <Button
           type="button"
@@ -188,7 +188,7 @@ function FilterDrawer() {
           </div>
         </SheetContent>
       </Sheet>
-    </>
+    </div>
   );
 }
 

@@ -11,8 +11,8 @@ type SentNotificationProps = {
   customerEmail: string | null;
   customerPhone: string | null;
   response: string;
+  // raw datetime string from the API, e.g. "23/07/2026 10:00:00"
   createdAt: string;
-  createdAtTime: string;
 };
 
 class SentNotification {
@@ -26,7 +26,6 @@ class SentNotification {
   readonly customerPhone: string | null;
   readonly response: string;
   readonly createdAt: string;
-  readonly createdAtTime: string;
 
   private constructor(props: SentNotificationProps) {
     this.uuid = props.uuid;
@@ -39,7 +38,6 @@ class SentNotification {
     this.customerPhone = props.customerPhone;
     this.response = props.response;
     this.createdAt = props.createdAt;
-    this.createdAtTime = props.createdAtTime;
   }
 
   static restore(props: SentNotificationProps): SentNotification {
@@ -47,6 +45,7 @@ class SentNotification {
   }
 
   toJson() {
+    const [createdAt, createdAtTime] = this.createdAt.split(" ");
     return {
       uuid: this.uuid,
       channel: this.channel,
@@ -57,8 +56,8 @@ class SentNotification {
       customerEmail: this.customerEmail,
       customerPhone: this.customerPhone,
       response: this.response,
-      createdAt: this.createdAt,
-      createdAtTime: this.createdAtTime,
+      createdAt: createdAt ?? "",
+      createdAtTime: createdAtTime ?? "",
     };
   }
 }
