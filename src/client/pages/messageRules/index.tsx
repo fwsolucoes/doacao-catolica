@@ -693,9 +693,11 @@ function NewBillingRuleDialog({
               </Tabs.Content>
 
               <Tabs.Content value="ligacao" className="mt-5">
-                <p className="py-6 text-center text-sm text-muted-foreground">
-                  Configuração de Ligação em breve.
-                </p>
+                <div className="rounded-xl border border-border px-7 py-5">
+                  <p className="text-sm text-muted-foreground">
+                    Configure o script da ligação e horários de disparo.
+                  </p>
+                </div>
               </Tabs.Content>
             </Tabs.Root>
           </div>
