@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Bell,
   CheckCircle2,
@@ -6,6 +7,7 @@ import {
   Ellipsis,
   Mail,
   MessageSquare,
+  Phone,
   Plus,
   Radio,
   Search,
@@ -18,10 +20,22 @@ import { cn } from "~/lib/utils";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/client/components/ui/dialog";
+import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
+import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import { Table } from "~/client/components/ui/table";
+import { Textarea } from "~/client/components/ui/textarea";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
+import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 
 type Channel = "email" | "whatsapp" | "sms" | "ligacao";
 type PaymentMethod = "pix" | "boleto" | "cartao";
@@ -154,7 +168,232 @@ function StatCard({
   );
 }
 
+const WHATSAPP_PREVIEW_TEXT = `Lembrete de vencimento
+Olá {{nome}},
+Gostaríamos de lembrar que vencerá em {{data_vencimento}} o título no valor de R$ {{valor_aberto}} ref. {{account_name}}.
+Estamos à disposição, entre em contato conosco pelo link abaixo:
+https://wa.me/55{{link_whatsapp}}
+Obrigado`;
+
+function NewBillingRuleDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const [activeChannel, setActiveChannel] = useState("whatsapp");
+  const [messageType, setMessageType] = useState("");
+  const [paymentMethods, setPaymentMethods] = useState({
+    pix: true,
+    cartao: true,
+    boleto: true,
+  });
+
+  function togglePayment(method: "pix" | "cartao" | "boleto") {
+    setPaymentMethods((prev) => ({ ...prev, [method]: !prev[method] }));
+  }
+
+  const channelTabs = [
+    { value: "whatsapp", label: "WhatsApp", icon: <WhatsAppIcon size={16} /> },
+    { value: "email", label: "E-mail", icon: <Mail size={16} /> },
+    { value: "sms", label: "SMS", icon: <MessageSquare size={16} /> },
+    { value: "ligacao", label: "Ligação", icon: <Phone size={16} /> },
+  ];
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="flex max-h-[90vh] w-[90vw] max-w-[90vw] sm:max-w-[90vw] flex-col gap-0 p-0">
+        <DialogHeader className="shrink-0 px-7 pt-7 pb-5">
+          <DialogTitle>Nova régua de cobrança</DialogTitle>
+        </DialogHeader>
+
+        <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-7 pb-7">
+          <div className="grid grid-cols-2 gap-5">
+            <FormField name="name" label="Nome da mensagem" required>
+              <Input name="name" placeholder="Ex.: Lembrete 3 dias antes" />
+            </FormField>
+            <FormField name="messageType" label="Tipo de mensagem" required>
+              <Select.Root value={messageType} onValueChange={setMessageType}>
+                <Select.Trigger>
+                  <Select.Value placeholder="Selecione o tipo" />
+                </Select.Trigger>
+                <Select.Content>
+                  {Object.entries(NOTIFICATION_TYPES).map(([value, label]) => (
+                    <Select.Item key={value} value={value}>
+                      {label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </FormField>
+          </div>
+
+          {(messageType === "payment_before_due_date" ||
+            messageType === "payment_after_due_date") && (
+            <div className="max-w-80">
+              <FormField name="daysBefore" label="Dias antes do vencimento">
+                <Input
+                  name="daysBefore"
+                  type="number"
+                  defaultValue="3"
+                  min={1}
+                  max={1000}
+                />
+              </FormField>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-5">
+            <div className="flex flex-col gap-0.5">
+              <p className="text-sm font-semibold text-foreground">
+                Formas de pagamento ativas
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Esta mensagem será enviada apenas para doações com as formas
+                selecionadas.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-2.5">
+              {(["pix", "cartao", "boleto"] as const).map((method) => {
+                const label =
+                  method === "cartao"
+                    ? "Cartão"
+                    : method.charAt(0).toUpperCase() + method.slice(1);
+                return (
+                  <div
+                    key={method}
+                    className={cn(
+                      "flex items-center justify-between rounded-xl border bg-muted px-4 py-2.5",
+                      paymentMethods[method]
+                        ? "border-primary/40"
+                        : "border-border",
+                    )}
+                  >
+                    <span className="text-sm font-semibold text-foreground">
+                      {label}
+                    </span>
+                    <Switch
+                      checked={paymentMethods[method]}
+                      onCheckedChange={() => togglePayment(method)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4 border-t border-border pt-5">
+            <p className="text-sm font-semibold text-foreground">
+              Mensagens por canal
+            </p>
+
+            <Tabs.Root value={activeChannel} onValueChange={setActiveChannel}>
+              <Tabs.List className="inline-flex gap-1.5 rounded-2xl border border-border bg-muted/60 p-1.5">
+                {channelTabs.map((tab) => (
+                  <Tabs.Trigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={cn(
+                      "flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors",
+                      "data-[state=active]:bg-secondary data-[state=active]:text-foreground",
+                      "hover:text-foreground",
+                    )}
+                  >
+                    {tab.icon}
+                    {tab.label}
+                  </Tabs.Trigger>
+                ))}
+              </Tabs.List>
+
+              <Tabs.Content value="whatsapp" className="mt-5">
+                <div className="grid grid-cols-5 gap-7">
+                  <div className="col-span-3 flex flex-col gap-4">
+                    {/* <FormField name="template" label="Template aprovado">
+                      <Select.Root defaultValue="lembrete_vencimento">
+                        <Select.Trigger>
+                          <Select.Value />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="lembrete_vencimento">
+                            Lembrete de vencimento
+                          </Select.Item>
+                        </Select.Content>
+                      </Select.Root>
+                    </FormField> */}
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Inserir variável
+                      </p>
+                      <Button variant="outline" size="sm" className="w-fit">
+                        <Plus size={14} />
+                        Inserir variável
+                      </Button>
+                    </div>
+                    <FormField name="whatsappMessage" label="Mensagem WhatsApp">
+                      <Textarea
+                        name="whatsappMessage"
+                        className="min-h-40 font-mono text-xs"
+                        defaultValue={WHATSAPP_PREVIEW_TEXT}
+                      />
+                    </FormField>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col gap-3">
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Prévia
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Variáveis serão preenchidas no envio
+                      </p>
+                    </div>
+                    <div className="overflow-clip rounded-2xl border border-border">
+                      <div className="bg-[#007a55] px-5 py-3">
+                        <span className="text-sm font-semibold text-white">
+                          Empresa Demo
+                        </span>
+                      </div>
+                      <div className="bg-[#ecfdf5] p-5">
+                        <p className="whitespace-pre-wrap text-sm text-[#002c22]">
+                          {WHATSAPP_PREVIEW_TEXT}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Tabs.Content>
+
+              {(["email", "sms", "ligacao"] as const).map((channel) => (
+                <Tabs.Content key={channel} value={channel} className="mt-5">
+                  <p className="py-6 text-center text-sm text-muted-foreground">
+                    Configuração de{" "}
+                    {channel === "email"
+                      ? "E-mail"
+                      : channel === "sms"
+                        ? "SMS"
+                        : "Ligação"}{" "}
+                    em breve.
+                  </p>
+                </Tabs.Content>
+              ))}
+            </Tabs.Root>
+          </div>
+        </div>
+
+        <DialogFooter className="shrink-0 border-t border-border px-7 py-5">
+          <DialogClose asChild>
+            <Button variant="outline">Cancelar</Button>
+          </DialogClose>
+          <Button>Salvar</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function BillingRulesTab() {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const activeCount = BILLING_RULES.filter((r) => r.active).length;
   const inactiveCount = BILLING_RULES.filter((r) => !r.active).length;
   const channelSet = new Set(BILLING_RULES.flatMap((r) => r.channels));
@@ -206,7 +445,7 @@ function BillingRulesTab() {
               Mensagens automáticas antes e após o vencimento.
             </p>
           </div>
-          <Button>
+          <Button onClick={() => setDialogOpen(true)}>
             <Plus size={18} />
             Nova régua de cobrança
           </Button>
@@ -268,11 +507,16 @@ function BillingRulesTab() {
           </Table.Root>
         </div>
       </Card.Root>
+
+      <NewBillingRuleDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 }
 
-const HISTORY_CHANNEL_STYLE: Record<string, { label: string; className: string }> = {
+const HISTORY_CHANNEL_STYLE: Record<
+  string,
+  { label: string; className: string }
+> = {
   whatsapp: { label: "WhatsApp", className: "bg-[#d4f5e2] text-[#1f7a4d]" },
   sms: { label: "SMS", className: "bg-[#dbe8ff] text-[#1447e6]" },
   email: { label: "E-mail", className: "bg-[#fef3c6] text-[#bb4d00]" },
