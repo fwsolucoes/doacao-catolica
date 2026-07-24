@@ -154,6 +154,28 @@ getMetrics(id: string, searchParams: FeatureSearchParams): Promise<Data>
 getMetrics(params: { id: string; searchParams: FeatureSearchParams }): Promise<Data>
 ```
 
+### Formatação de dados — responsabilidade do `toJson()`
+
+O gateway é responsável apenas por buscar e mapear dados brutos da API para a entidade via `restore()`. Formatações de apresentação (datas, moedas, máscaras) pertencem ao `toJson()` da entidade — nunca ao gateway.
+
+```ts
+// correto — gateway repassa o valor bruto
+SentNotification.restore({
+  createdAt: item.created_at2, // "23/07/2026 10:00:00" — sem tocar
+});
+
+// toJson() da entidade faz a formatação
+toJson() {
+  const [createdAt, createdAtTime] = this.createdAt.split(" ");
+  return { ..., createdAt: createdAt ?? "", createdAtTime: createdAtTime ?? "" };
+}
+
+// errado — gateway formata dado antes de passar à entidade
+const [datePart, timePart] = item.created_at2.split(" ");
+const [year, month, day] = datePart.split("-");
+SentNotification.restore({ createdAt: `${day}/${month}/${year}`, createdAtTime: timePart });
+```
+
 ### Schemas internos — conversões de tipo via `.transform()`
 
 Schemas em `infra/schemas/internal/` validam dados brutos de formulário (strings). Conversões de tipo pertencem ao schema via `.transform()`, **nunca ao controller**. O controller recebe dados já tipados e corretos e os repassa diretamente ao use case.

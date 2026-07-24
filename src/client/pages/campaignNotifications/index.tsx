@@ -1,7 +1,7 @@
 import {
   CheckCircle2,
   Clock,
-  Download,
+  // Download,
   Mail,
   MessageSquare,
   Search,
@@ -177,10 +177,11 @@ function CampaignNotificationsPage() {
             Acompanhe todas as notificações enviadas.
           </p>
         </div>
+        {/* TODO: implementar rota de exportação
         <Button>
           <Download size={18} />
           Exportar
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid grid-cols-4 gap-5">
