@@ -1,27 +1,39 @@
 import { useState } from "react";
 import { CheckCircle2, Ellipsis, Plus, Radio, Send, XCircle } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Switch } from "~/client/components/ui/switch";
 import { Table } from "~/client/components/ui/table";
-import { BILLING_RULES } from "../constants";
+import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
+import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
+import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
 import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
 import { StatCard } from "./stat-card";
 
 function BillingRulesTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { notificationSettings } = useLoaderData<MessageRulesLoader>();
 
-  const activeCount = BILLING_RULES.filter((r) => r.active).length;
-  const inactiveCount = BILLING_RULES.filter((r) => !r.active).length;
-  const channelCount = new Set(BILLING_RULES.flatMap((r) => r.channels)).size;
+  const billingRules = notificationSettings.filter((s) =>
+    BILLING_RULE_TYPES.has(s.type),
+  );
+
+  const activeCount = billingRules.filter((r) => r.active).length;
+  const inactiveCount = billingRules.filter((r) => !r.active).length;
+  const channelSet = new Set<string>();
+  for (const r of billingRules) {
+    if (r.enableWhatsapp) channelSet.add("whatsapp");
+    if (r.enableMail) channelSet.add("email");
+  }
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-4 gap-5">
         <StatCard
           label="Total"
-          value={BILLING_RULES.length}
+          value={billingRules.length}
           subtitle="Templates cadastrados"
           iconBg="bg-blue-100"
           icon={Send}
@@ -45,7 +57,7 @@ function BillingRulesTab() {
         />
         <StatCard
           label="Canais"
-          value={channelCount}
+          value={channelSet.size}
           subtitle="Canais utilizados"
           iconBg="bg-purple-100"
           icon={Radio}
@@ -81,42 +93,56 @@ function BillingRulesTab() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {BILLING_RULES.map((rule) => (
-                <Table.Row key={rule.id}>
-                  <Table.Cell>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-semibold">{rule.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {rule.description}
-                      </span>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex flex-wrap gap-1.5">
-                      {rule.channels.map((ch) => (
-                        <ChannelBadge key={ch} channel={ch} />
-                      ))}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex flex-wrap gap-1.5">
-                      {rule.paymentMethods.map((m) => (
-                        <PaymentBadge key={m} method={m} />
-                      ))}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Switch checked={rule.active} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex justify-end">
-                      <Button variant="ghost" size="icon" className="size-9 rounded-xl">
-                        <Ellipsis size={18} />
-                      </Button>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {billingRules.map((rule) => {
+                const channels = [
+                  rule.enableWhatsapp && "whatsapp",
+                  rule.enableMail && "email",
+                ].filter(Boolean) as string[];
+
+                const paymentMethods = [
+                  rule.enablePix && "pix",
+                  rule.enableCreditCard && "credit_card",
+                  rule.enableBankSlip && "bank_slip",
+                ].filter(Boolean) as string[];
+
+                return (
+                  <Table.Row key={rule.uuid}>
+                    <Table.Cell>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-semibold">{rule.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {NOTIFICATION_TYPES[rule.type] ?? rule.type}
+                          {rule.days > 0 ? ` (${rule.days} dias)` : ""}
+                        </span>
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex flex-wrap gap-1.5">
+                        {channels.map((ch) => (
+                          <ChannelBadge key={ch} channel={ch} />
+                        ))}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex flex-wrap gap-1.5">
+                        {paymentMethods.map((m) => (
+                          <PaymentBadge key={m} method={m} />
+                        ))}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Switch checked={rule.active} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex justify-end">
+                        <Button variant="ghost" size="icon" className="size-9 rounded-xl">
+                          <Ellipsis size={18} />
+                        </Button>
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
             </Table.Body>
           </Table.Root>
         </div>

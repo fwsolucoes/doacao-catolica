@@ -1,11 +1,21 @@
 import { Bell, MessageSquare } from "lucide-react";
 import { Tabs } from "radix-ui";
+import { useLoaderData } from "react-router";
 import { cn } from "~/lib/utils";
-import { BILLING_RULES } from "./constants";
+import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
+import { BILLING_RULE_TYPES } from "./constants";
 import { BillingRulesTab } from "./components/billing-rules-tab";
 import { OtherMessagesTab } from "./components/other-messages-tab";
 
 function MessageRulesPage() {
+  const { notificationSettings } = useLoaderData<MessageRulesLoader>();
+  const billingRulesCount = notificationSettings.filter((s) =>
+    BILLING_RULE_TYPES.has(s.type),
+  ).length;
+  const otherMessagesCount = notificationSettings.filter(
+    (s) => !BILLING_RULE_TYPES.has(s.type),
+  ).length;
+
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-1">
@@ -30,7 +40,7 @@ function MessageRulesPage() {
             <Bell size={16} />
             Réguas de cobrança
             <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-semibold">
-              {BILLING_RULES.length}
+              {billingRulesCount}
             </span>
           </Tabs.Trigger>
           <Tabs.Trigger
@@ -44,7 +54,7 @@ function MessageRulesPage() {
             <MessageSquare size={16} />
             Outras mensagens
             <span className="rounded-full bg-muted-foreground/15 px-2 py-0.5 text-xs font-semibold">
-              5
+              {otherMessagesCount}
             </span>
           </Tabs.Trigger>
         </Tabs.List>

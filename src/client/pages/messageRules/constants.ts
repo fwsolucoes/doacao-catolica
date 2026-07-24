@@ -33,6 +33,13 @@ export const SMS_DEFAULT =
   `Caro cliente, consta débito vencido em: {{data_vencimento}}, R$ {{valor_aberto}}, Att,` +
   `\n{{account_name}}-Tel.{{telefone_contato}}-{{email_contato}}`;
 
+export const BILLING_RULE_TYPES = new Set([
+  "payment_before_due_date",
+  "payment_on_due_date",
+  "payment_after_due_date",
+  "instant_reminder",
+]);
+
 export const BILLING_RULES: BillingRule[] = [
   {
     id: "1",
