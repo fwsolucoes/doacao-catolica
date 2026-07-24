@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Phone,
   Plus,
+  Smartphone,
   Radio,
   Search,
   Send,
@@ -198,8 +199,10 @@ const EMAIL_BODY_DEFAULT =
 
 function VariablePopover({
   onInsert,
+  disabled,
 }: {
   onInsert: (variable: string) => void;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -211,7 +214,7 @@ function VariablePopover({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-fit">
+        <Button variant="outline" className="w-fit" disabled={disabled}>
           <Plus size={14} />
           Inserir variável
         </Button>
@@ -254,6 +257,10 @@ function VariablePopover({
   );
 }
 
+const SMS_DEFAULT =
+  `Caro cliente, consta débito vencido em: {{data_vencimento}}, R$ {{valor_aberto}}, Att,` +
+  `\n{{account_name}}-Tel.{{telefone_contato}}-{{email_contato}}`;
+
 const WHATSAPP_PREVIEW_TEXT = `Lembrete de vencimento
 Olá {{nome}},
 Gostaríamos de lembrar que vencerá em {{data_vencimento}} o título no valor de R$ {{valor_aberto}} ref. {{account_name}}.
@@ -283,6 +290,14 @@ function NewBillingRuleDialog({
   const [emailBody, setEmailBody] = useState(EMAIL_BODY_DEFAULT);
   const emailSubjectCursorRef = useRef(0);
   const emailBodyCursorRef = useRef(EMAIL_BODY_DEFAULT.length);
+  const [smsMessage, setSmsMessage] = useState(SMS_DEFAULT);
+  const smsCursorRef = useRef(SMS_DEFAULT.length);
+
+  function insertSmsVariable(variable: string) {
+    const pos = smsCursorRef.current;
+    setSmsMessage((prev) => prev.slice(0, pos) + variable + prev.slice(pos));
+    smsCursorRef.current = pos + variable.length;
+  }
 
   function insertWhatsappVariable(variable: string) {
     const pos = whatsappCursorRef.current;
@@ -614,14 +629,74 @@ function NewBillingRuleDialog({
                 </div>
               </Tabs.Content>
 
-              {(["sms", "ligacao"] as const).map((channel) => (
-                <Tabs.Content key={channel} value={channel} className="mt-5">
-                  <p className="py-6 text-center text-sm text-muted-foreground">
-                    Configuração de {channel === "sms" ? "SMS" : "Ligação"} em
-                    breve.
-                  </p>
-                </Tabs.Content>
-              ))}
+              <Tabs.Content value="sms" className="mt-5">
+                <div className="grid grid-cols-5 gap-7">
+                  <div className="col-span-3 flex flex-col gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Inserir variável
+                      </p>
+                      <VariablePopover
+                        onInsert={insertSmsVariable}
+                        disabled={smsMessage.length >= 160}
+                      />
+                    </div>
+                    <FormField name="smsMessage" label="Mensagem SMS">
+                      <Textarea
+                        name="smsMessage"
+                        className="min-h-40 font-mono text-xs"
+                        maxLength={160}
+                        value={smsMessage}
+                        onChange={(e) => {
+                          setSmsMessage(e.target.value);
+                          smsCursorRef.current = e.target.selectionStart;
+                        }}
+                        onSelect={(e) => {
+                          smsCursorRef.current = (
+                            e.target as HTMLTextAreaElement
+                          ).selectionStart;
+                        }}
+                        onBlur={(e) => {
+                          smsCursorRef.current = e.target.selectionStart;
+                        }}
+                      />
+                    </FormField>
+                    <p className="text-xs text-muted-foreground">
+                      SMS limitado a 160 caracteres · {smsMessage.length} / 160
+                    </p>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col gap-3">
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Prévia
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Variáveis serão preenchidas no envio
+                      </p>
+                    </div>
+                    <div className="overflow-clip rounded-2xl border border-border bg-muted/30">
+                      <div className="flex items-center justify-between px-5 py-4">
+                        <span className="text-xs font-semibold text-foreground">
+                          SMS
+                        </span>
+                        <Smartphone size={16} className="text-muted-foreground" />
+                      </div>
+                      <div className="border-t border-border px-5 pb-5 pt-4">
+                        <p className="whitespace-pre-wrap text-sm text-foreground">
+                          {smsMessage}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Tabs.Content>
+
+              <Tabs.Content value="ligacao" className="mt-5">
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                  Configuração de Ligação em breve.
+                </p>
+              </Tabs.Content>
             </Tabs.Root>
           </div>
         </div>
