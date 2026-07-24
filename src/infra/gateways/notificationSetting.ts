@@ -1,5 +1,8 @@
 import { NotificationSetting } from "~/domain/entities/notificationSetting";
-import type { NotificationSettingGatewayDTO } from "~/domain/gateways/notificationSetting";
+import type {
+  CreateNotificationSettingData,
+  NotificationSettingGatewayDTO,
+} from "~/domain/gateways/notificationSetting";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
@@ -48,6 +51,32 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
         deletedAt: item.deleted_at2,
       }),
     );
+  }
+
+  async createNotificationSetting(
+    accountUuid: string,
+    data: CreateNotificationSettingData,
+  ): Promise<void> {
+    const apiResponse = await donationApi.post("/api/notifications_settings", {
+      body: {
+        account_reference: accountUuid,
+        type: data.type,
+        name: data.name,
+        days: data.days,
+        whatsapp_message: data.whatsappMessage || undefined,
+        mail_subject: data.mailSubject || undefined,
+        mail_message: data.mailMessage || undefined,
+        banner_image: data.bannerImage || undefined,
+        enable_whatsapp: data.enableWhatsapp,
+        enable_mail: data.enableMail,
+        enable_pix: data.enablePix,
+        enable_credit_card: data.enableCreditCard,
+        enable_bank_slip: data.enableBankSlip,
+      },
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }
 

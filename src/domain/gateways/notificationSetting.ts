@@ -1,7 +1,26 @@
 import type { NotificationSetting } from "../entities/notificationSetting";
 
-type NotificationSettingGatewayDTO = {
-  listNotificationSettings(accountUuid: string): Promise<NotificationSetting[]>;
+type CreateNotificationSettingData = {
+  name: string;
+  type: string;
+  days: number;
+  whatsappMessage: string;
+  mailSubject: string;
+  mailMessage: string;
+  bannerImage: string | null;
+  enableWhatsapp: boolean;
+  enableMail: boolean;
+  enablePix: boolean;
+  enableCreditCard: boolean;
+  enableBankSlip: boolean;
 };
 
-export type { NotificationSettingGatewayDTO };
+type NotificationSettingGatewayDTO = {
+  listNotificationSettings(accountUuid: string): Promise<NotificationSetting[]>;
+  createNotificationSetting(
+    accountUuid: string,
+    data: CreateNotificationSettingData,
+  ): Promise<void>;
+};
+
+export type { NotificationSettingGatewayDTO, CreateNotificationSettingData };
