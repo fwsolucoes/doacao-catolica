@@ -69,7 +69,10 @@ const sections: NavSection[] = [
       {
         icon: MessageSquare,
         label: "Mensagens",
-        subItems: [{ label: "Mensagens enviadas", path: "notifications" }],
+        subItems: [
+          { label: "Mensagens enviadas", path: "notifications" },
+          { label: "Régua de mensagens", path: "message-rules" },
+        ],
       },
     ],
   },

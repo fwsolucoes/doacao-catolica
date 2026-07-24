@@ -16,6 +16,7 @@ export default [
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
     route("home", "./main/routes/route.campaign.home.tsx"),
     route("notifications", "./main/routes/route.campaign.notifications.tsx"),
+    route("message-rules", "./main/routes/route.campaign.messageRules.tsx"),
     route("donations", "./main/routes/route.campaign.donations.tsx"),
     route("transfers", "./main/routes/route.campaign.transfers.tsx"),
     route("reports", "./main/routes/route.campaign.reports.tsx"),
