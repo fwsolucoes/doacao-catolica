@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
+import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
+
+type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
 import { Mail } from "lucide-react";
 import { Tabs } from "radix-ui";
 import { cn } from "~/lib/utils";
@@ -32,19 +35,22 @@ type PaymentMethods = { pix: boolean; cartao: boolean; boleto: boolean };
 function NewBillingRuleDialog({
   open,
   onOpenChange,
+  rule,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  rule?: NotificationSettingJson;
 }) {
+  const isEditing = !!rule;
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
   const [activeChannel, setActiveChannel] = useState("whatsapp");
-  const [messageType, setMessageType] = useState("");
+  const [messageType, setMessageType] = useState(rule?.type ?? "");
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethods>({
-    pix: true,
-    cartao: true,
-    boleto: true,
+    pix: rule?.enablePix ?? true,
+    cartao: rule?.enableCreditCard ?? true,
+    boleto: rule?.enableBankSlip ?? true,
   });
 
   useActionToast(fetcher.data);
@@ -68,6 +74,7 @@ function NewBillingRuleDialog({
       <DialogContent className="flex max-h-[90vh] w-[90vw] max-w-[90vw] sm:max-w-[90vw] flex-col gap-0 p-0">
         <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
           <fetcher.Form method="post" className="flex min-h-0 flex-1 flex-col">
+            {isEditing && <input type="hidden" name="uuid" value={rule.uuid} />}
             <input type="hidden" name="type" value={messageType} />
             <input
               type="hidden"
@@ -87,13 +94,19 @@ function NewBillingRuleDialog({
             {!showDaysField && <input type="hidden" name="days" value="0" />}
 
             <DialogHeader className="shrink-0 px-7 pb-5 pt-7">
-              <DialogTitle>Nova régua de cobrança</DialogTitle>
+              <DialogTitle>
+                {isEditing ? "Editar régua de cobrança" : "Nova régua de cobrança"}
+              </DialogTitle>
             </DialogHeader>
 
             <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-7 pb-7">
               <div className="grid grid-cols-2 gap-5">
                 <FormField name="name" label="Nome da mensagem" required>
-                  <Input name="name" placeholder="Ex.: Lembrete 3 dias antes" />
+                  <Input
+                    name="name"
+                    placeholder="Ex.: Lembrete 3 dias antes"
+                    defaultValue={rule?.name}
+                  />
                 </FormField>
                 <FormField name="type" label="Tipo de mensagem" required>
                   <Select.Root value={messageType} onValueChange={setMessageType}>
@@ -124,7 +137,7 @@ function NewBillingRuleDialog({
                     <Input
                       name="days"
                       type="number"
-                      defaultValue="3"
+                      defaultValue={rule?.days ?? 3}
                       min={1}
                       max={messageType === "payment_before_due_date" ? 5 : 1000}
                     />
@@ -197,14 +210,17 @@ function NewBillingRuleDialog({
                     className="mt-5 data-[state=inactive]:hidden"
                     forceMount
                   >
-                    <WhatsAppTab />
+                    <WhatsAppTab defaultMessage={rule?.whatsappMessage} />
                   </Tabs.Content>
                   <Tabs.Content
                     value="email"
                     className="mt-5 data-[state=inactive]:hidden"
                     forceMount
                   >
-                    <EmailTab />
+                    <EmailTab
+                      defaultSubject={rule?.mailSubject}
+                      defaultBody={rule?.mailMessage}
+                    />
                   </Tabs.Content>
                 </Tabs.Root>
               </div>

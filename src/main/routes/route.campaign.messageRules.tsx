@@ -15,7 +15,8 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const notificationSettings = await listNotificationSettings.handle(adaptedRoute);
+  const notificationSettings =
+    await listNotificationSettings.handle(adaptedRoute);
   return { notificationSettings };
 }
 

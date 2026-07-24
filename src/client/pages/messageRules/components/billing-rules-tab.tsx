@@ -1,12 +1,21 @@
-import { useState } from "react";
-import { CheckCircle2, Ellipsis, Plus, Radio, Send, XCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import { CheckCircle2, Ellipsis, Pencil, Plus, Radio, Send, Trash2, XCircle } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/client/components/ui/dropdown-menu";
 import { Switch } from "~/client/components/ui/switch";
 import { Table } from "~/client/components/ui/table";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
+
+type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
 import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
 import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
@@ -14,7 +23,18 @@ import { StatCard } from "./stat-card";
 
 function BillingRulesTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingRule, setEditingRule] = useState<NotificationSettingJson | null>(null);
   const { notificationSettings } = useLoaderData<MessageRulesLoader>();
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setDialogOpen(open);
+    if (!open) setEditingRule(null);
+  }, []);
+
+  const openEdit = useCallback((rule: NotificationSettingJson) => {
+    setEditingRule(rule);
+    setDialogOpen(true);
+  }, []);
 
   const billingRules = notificationSettings.filter((s) =>
     BILLING_RULE_TYPES.has(s.type),
@@ -75,7 +95,7 @@ function BillingRulesTab() {
               Mensagens automáticas antes e após o vencimento.
             </p>
           </div>
-          <Button onClick={() => setDialogOpen(true)}>
+          <Button onClick={() => { setEditingRule(null); setDialogOpen(true); }}>
             <Plus size={18} />
             Nova régua de cobrança
           </Button>
@@ -135,9 +155,24 @@ function BillingRulesTab() {
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex justify-end">
-                        <Button variant="ghost" size="icon" className="size-9 rounded-xl">
-                          <Ellipsis size={18} />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="size-9 rounded-xl">
+                              <Ellipsis size={18} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onSelect={() => openEdit(rule)}>
+                              <Pencil />
+                              Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem variant="destructive">
+                              <Trash2 />
+                              Remover
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </Table.Cell>
                   </Table.Row>
@@ -148,7 +183,12 @@ function BillingRulesTab() {
         </div>
       </Card.Root>
 
-      <NewBillingRuleDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <NewBillingRuleDialog
+        key={editingRule?.uuid ?? "new"}
+        open={dialogOpen}
+        onOpenChange={handleOpenChange}
+        rule={editingRule ?? undefined}
+      />
     </div>
   );
 }

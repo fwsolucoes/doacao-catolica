@@ -7,11 +7,19 @@ import { Textarea } from "~/client/components/ui/textarea";
 import { VariablePopover } from "../variable-popover";
 import { EMAIL_BODY_DEFAULT } from "../../constants";
 
-function EmailTab() {
-  const [subject, setSubject] = useState("Lembrete de Vencimento - {{nome}}");
-  const [body, setBody] = useState(EMAIL_BODY_DEFAULT);
+function EmailTab({
+  defaultSubject,
+  defaultBody,
+}: {
+  defaultSubject?: string;
+  defaultBody?: string;
+}) {
+  const initialSubject = defaultSubject ?? "Lembrete de Vencimento - {{nome}}";
+  const initialBody = defaultBody ?? EMAIL_BODY_DEFAULT;
+  const [subject, setSubject] = useState(initialSubject);
+  const [body, setBody] = useState(initialBody);
   const subjectCursorRef = useRef(0);
-  const bodyCursorRef = useRef(EMAIL_BODY_DEFAULT.length);
+  const bodyCursorRef = useRef(initialBody.length);
 
   function insertSubjectVariable(variable: string) {
     const pos = subjectCursorRef.current;

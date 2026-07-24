@@ -5,9 +5,10 @@ import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { VariablePopover } from "../variable-popover";
 import { WHATSAPP_DEFAULT } from "../../constants";
 
-function WhatsAppTab() {
-  const [message, setMessage] = useState(WHATSAPP_DEFAULT);
-  const cursorRef = useRef(WHATSAPP_DEFAULT.length);
+function WhatsAppTab({ defaultMessage }: { defaultMessage?: string }) {
+  const initial = defaultMessage ?? WHATSAPP_DEFAULT;
+  const [message, setMessage] = useState(initial);
+  const cursorRef = useRef(initial.length);
 
   function insertVariable(variable: string) {
     const pos = cursorRef.current;
