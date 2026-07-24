@@ -1,19 +1,27 @@
 import {
   Bell,
   CheckCircle2,
+  Clock,
+  Download,
   Ellipsis,
+  Mail,
   MessageSquare,
   Plus,
   Radio,
+  Search,
   Send,
+  SlidersHorizontal,
   XCircle,
 } from "lucide-react";
 import { Tabs } from "radix-ui";
 import { cn } from "~/lib/utils";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Input } from "~/client/components/ui/input";
 import { Switch } from "~/client/components/ui/switch";
 import { Table } from "~/client/components/ui/table";
+import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 
 type Channel = "email" | "whatsapp" | "sms" | "ligacao";
 type PaymentMethod = "pix" | "boleto" | "cartao";
@@ -189,9 +197,9 @@ function BillingRulesTab() {
       </div>
 
       <Card.Root className="gap-0 p-0">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-7 py-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 px-7 py-5">
           <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-base font-semibold text-foreground">
               Réguas de cobrança
             </p>
             <p className="text-xs text-muted-foreground">
@@ -264,162 +272,238 @@ function BillingRulesTab() {
   );
 }
 
-const OTHER_MESSAGES: BillingRule[] = [
+const HISTORY_CHANNEL_STYLE: Record<string, { label: string; className: string }> = {
+  whatsapp: { label: "WhatsApp", className: "bg-[#d4f5e2] text-[#1f7a4d]" },
+  sms: { label: "SMS", className: "bg-[#dbe8ff] text-[#1447e6]" },
+  email: { label: "E-mail", className: "bg-[#fef3c6] text-[#bb4d00]" },
+};
+
+const HISTORY_STATUS_BADGE: Record<
+  string,
+  { variant: "emerald" | "info" | "danger" | "neutral"; label: string }
+> = {
+  delivered: { variant: "emerald", label: "Entregue" },
+  sent: { variant: "info", label: "Enviado" },
+  failed: { variant: "danger", label: "Falha" },
+};
+
+type NotificationHistory = {
+  id: string;
+  customerName: string;
+  contact: string;
+  channel: string;
+  message: string;
+  errorMessage?: string;
+  date: string;
+  time: string;
+  status: string;
+};
+
+const NOTIFICATION_HISTORY: NotificationHistory[] = [
   {
     id: "1",
-    name: "Agradecimento (recorrência)",
-    description: "Agradecimento",
-    channels: ["email", "whatsapp"],
-    paymentMethods: ["pix", "cartao"],
-    active: true,
+    customerName: "João Silva",
+    contact: "(11) 98765-4321",
+    channel: "whatsapp",
+    message: "Cobrança - 3 dias antes",
+    date: "19/05/2026",
+    time: "05:00:00",
+    status: "delivered",
   },
   {
     id: "2",
-    name: "Agradecimento (pagamento pontual)",
-    description: "Agradecimento",
-    channels: ["email", "whatsapp"],
-    paymentMethods: ["pix", "cartao", "boleto"],
-    active: true,
+    customerName: "Maria Santos",
+    contact: "(21) 99123-4567",
+    channel: "whatsapp",
+    message: "Agradecimento (recorrência)",
+    date: "20/05/2026",
+    time: "11:30:00",
+    status: "delivered",
   },
   {
     id: "3",
-    name: "Falha em pagamento com cartão",
-    description: "Falha em pagamento",
-    channels: ["email", "whatsapp", "sms"],
-    paymentMethods: ["cartao"],
-    active: true,
+    customerName: "Pedro Oliveira",
+    contact: "(31) 98888-7777",
+    channel: "sms",
+    message: "Cobrança - 2º aviso",
+    date: "21/05/2026",
+    time: "06:15:00",
+    status: "delivered",
   },
   {
     id: "4",
-    name: "Falha em autorização de Pix automático",
-    description: "Falha em pagamento",
-    channels: ["email", "whatsapp"],
-    paymentMethods: ["pix"],
-    active: true,
+    customerName: "João Silva",
+    contact: "joao.silva@email.com",
+    channel: "email",
+    message: "Cobrança - 3 dias antes",
+    date: "21/05/2026",
+    time: "07:00:00",
+    status: "sent",
   },
   {
     id: "5",
-    name: "Cadastro com sucesso (externo)",
-    description: "Boas-vindas / Cadastro efetuado",
-    channels: ["email"],
-    paymentMethods: ["pix", "cartao", "boleto"],
-    active: true,
+    customerName: "Ana Costa",
+    contact: "(41) 97777-6666",
+    channel: "sms",
+    message: "Cobrança - 1º aviso",
+    errorMessage: "Número de telefone inválido",
+    date: "22/05/2026",
+    time: "08:00:00",
+    status: "failed",
   },
 ];
 
+function HistoryChannelBadge({ channel }: { channel: string }) {
+  const style = HISTORY_CHANNEL_STYLE[channel] ?? {
+    label: channel,
+    className: "bg-muted text-muted-foreground",
+  };
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
+        style.className,
+      )}
+    >
+      {channel === "whatsapp" && <WhatsAppIcon size={14} />}
+      {channel === "sms" && <MessageSquare size={14} />}
+      {channel === "email" && <Mail size={14} />}
+      {style.label}
+    </span>
+  );
+}
+
 function OtherMessagesTab() {
-  const activeCount = OTHER_MESSAGES.filter((m) => m.active).length;
-  const inactiveCount = OTHER_MESSAGES.filter((m) => !m.active).length;
-  const channelSet = new Set(OTHER_MESSAGES.flatMap((m) => m.channels));
+  const total = NOTIFICATION_HISTORY.length;
+  const delivered = NOTIFICATION_HISTORY.filter(
+    (n) => n.status === "delivered",
+  ).length;
+  const pending = NOTIFICATION_HISTORY.filter(
+    (n) => n.status === "sent",
+  ).length;
+  const failed = NOTIFICATION_HISTORY.filter(
+    (n) => n.status === "failed",
+  ).length;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-7">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Histórico de notificações
+          </h1>
+          <p className="text-muted-foreground">
+            Acompanhe todas as notificações enviadas.
+          </p>
+        </div>
+        <Button>
+          <Download size={18} />
+          Exportar
+        </Button>
+      </div>
+
       <div className="grid grid-cols-4 gap-5">
         <StatCard
           label="Total"
-          value={OTHER_MESSAGES.length}
-          subtitle="Templates cadastrados"
+          value={total}
+          subtitle="Notificações enviadas"
           iconBg="bg-blue-100"
           icon={Send}
           iconColor="text-blue-600"
         />
         <StatCard
-          label="Ativas"
-          value={activeCount}
-          subtitle="Em operação"
+          label="Entregues"
+          value={delivered}
+          subtitle="Confirmadas pelo canal"
           iconBg="bg-emerald-100"
           icon={CheckCircle2}
           iconColor="text-emerald-600"
         />
         <StatCard
-          label="Inativas"
-          value={inactiveCount}
-          subtitle="Pausadas"
+          label="Pendentes"
+          value={pending}
+          subtitle="Aguardando confirmação"
+          iconBg="bg-amber-100"
+          icon={Clock}
+          iconColor="text-amber-500"
+        />
+        <StatCard
+          label="Falhas"
+          value={failed}
+          subtitle="Necessitam atenção"
           iconBg="bg-rose-100"
           icon={XCircle}
           iconColor="text-rose-500"
         />
-        <StatCard
-          label="Canais"
-          value={channelSet.size}
-          subtitle="Canais utilizados"
-          iconBg="bg-purple-100"
-          icon={Radio}
-          iconColor="text-purple-600"
-        />
       </div>
 
-      <Card.Root className="gap-0 p-0">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-7 py-5">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-semibold text-foreground">
-              Outras mensagens
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Confirmações, boas-vindas, agradecimentos e demais avisos.
-            </p>
+      <Card.Root className="gap-4 p-7">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0 max-w-lg flex-1">
+            <Input
+              leftIcon={Search}
+              placeholder="Buscar por cliente, telefone, e-mail ou mensagem..."
+            />
           </div>
-          <Button>
-            <Plus size={18} />
-            Nova mensagem
+          <Button variant="outline">
+            <SlidersHorizontal size={18} />
+            Filtros
           </Button>
         </div>
 
-        <div className="p-7">
-          <Table.Root>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>Nome</Table.Head>
-                <Table.Head>Canais</Table.Head>
-                <Table.Head>Formas de pagamento</Table.Head>
-                <Table.Head className="w-28">Ativo</Table.Head>
-                <Table.Head className="w-16 text-right">Ações</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {OTHER_MESSAGES.map((message) => (
-                <Table.Row key={message.id}>
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Cliente</Table.Head>
+              <Table.Head>Contato</Table.Head>
+              <Table.Head>Canal</Table.Head>
+              <Table.Head>Mensagem</Table.Head>
+              <Table.Head>Data/Hora</Table.Head>
+              <Table.Head>Status</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {NOTIFICATION_HISTORY.map((item) => {
+              const statusConfig = HISTORY_STATUS_BADGE[item.status];
+              return (
+                <Table.Row key={item.id}>
+                  <Table.Cell className="font-semibold">
+                    {item.customerName}
+                  </Table.Cell>
+                  <Table.Cell className="text-muted-foreground">
+                    {item.contact}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <HistoryChannelBadge channel={item.channel} />
+                  </Table.Cell>
                   <Table.Cell>
                     <div className="flex flex-col gap-0.5">
-                      <span className="font-semibold">{message.name}</span>
+                      <span className="font-semibold">{item.message}</span>
+                      {item.status === "failed" && item.errorMessage && (
+                        <span className="text-xs text-destructive">
+                          {item.errorMessage}
+                        </span>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-col gap-0.5">
+                      <span>{item.date}</span>
                       <span className="text-xs text-muted-foreground">
-                        {message.description}
+                        {item.time}
                       </span>
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex flex-wrap gap-1.5">
-                      {message.channels.map((ch) => (
-                        <ChannelBadge key={ch} channel={ch} />
-                      ))}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex flex-wrap gap-1.5">
-                      {message.paymentMethods.map((m) => (
-                        <PaymentBadge key={m} method={m} />
-                      ))}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Switch checked={message.active} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex justify-end">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-9 rounded-xl"
-                      >
-                        <Ellipsis size={18} />
-                      </Button>
-                    </div>
+                    <Badge variant={statusConfig?.variant ?? "neutral"}>
+                      {statusConfig?.label ?? item.status}
+                    </Badge>
                   </Table.Cell>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </div>
+              );
+            })}
+          </Table.Body>
+        </Table.Root>
       </Card.Root>
     </div>
   );
