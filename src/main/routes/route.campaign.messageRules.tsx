@@ -21,6 +21,9 @@ export async function loader(args: Route.LoaderArgs) {
 
 export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
+  const user = await AuthService.getAuthStorage(adaptedRoute);
+  if (!user) throw redirect("/sign-in");
+
   const _action = await DecodeActionAdapter.decode(adaptedRoute.request);
 
   try {

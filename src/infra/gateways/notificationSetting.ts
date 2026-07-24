@@ -19,8 +19,6 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
 
-    console.log("🚀 ~~ ", apiResponse.response.data);
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const validated = new SchemaValidatorAdapter(
