@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Bell,
   CheckCircle2,
@@ -28,6 +28,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/client/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/client/components/ui/popover";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
@@ -168,6 +173,25 @@ function StatCard({
   );
 }
 
+const TEMPLATE_VARIABLES = [
+  { label: "Nome do Contato", value: "{{nome}}" },
+  { label: "Razão Social", value: "{{razao_social}}" },
+  { label: "Nome Fantasia", value: "{{nome_fantasia}}" },
+  { label: "CPF / CNPJ", value: "{{cpf_cnpj}}" },
+  { label: "Código do Cliente", value: "{{codigo_cliente}}" },
+  { label: "Email do Cliente", value: "{{email_cliente}}" },
+  { label: "Telefone do Cliente", value: "{{telefone_cliente}}" },
+  { label: "Valor Total", value: "{{valor_total}}" },
+  { label: "Valor em Aberto", value: "{{valor_aberto}}" },
+  { label: "Valor Pago", value: "{{valor_pago}}" },
+  { label: "Valor com Desconto", value: "{{valor_desconto}}" },
+  { label: "Data de Vencimento", value: "{{data_vencimento}}" },
+  { label: "Vencimento Ajustado", value: "{{vencimento_ajustado}}" },
+  { label: "Dias p/ Vencimento", value: "{{dias_vencimento}}" },
+  { label: "Nome da Conta", value: "{{account_name}}" },
+  { label: "Link WhatsApp", value: "{{link_whatsapp}}" },
+];
+
 const WHATSAPP_PREVIEW_TEXT = `Lembrete de vencimento
 Olá {{nome}},
 Gostaríamos de lembrar que vencerá em {{data_vencimento}} o título no valor de R$ {{valor_aberto}} ref. {{account_name}}.
@@ -189,6 +213,23 @@ function NewBillingRuleDialog({
     cartao: true,
     boleto: true,
   });
+  const [whatsappMessage, setWhatsappMessage] = useState(WHATSAPP_PREVIEW_TEXT);
+  const [varPopoverOpen, setVarPopoverOpen] = useState(false);
+  const [varSearch, setVarSearch] = useState("");
+  const cursorPosRef = useRef(WHATSAPP_PREVIEW_TEXT.length);
+
+  const filteredVars = TEMPLATE_VARIABLES.filter((v) =>
+    v.label.toLowerCase().includes(varSearch.toLowerCase()),
+  );
+
+  function insertVariable(variable: string) {
+    const pos = cursorPosRef.current;
+    const before = whatsappMessage.slice(0, pos);
+    const after = whatsappMessage.slice(pos);
+    setWhatsappMessage(before + variable + after);
+    cursorPosRef.current = pos + variable.length;
+    setVarPopoverOpen(false);
+  }
 
   function togglePayment(method: "pix" | "cartao" | "boleto") {
     setPaymentMethods((prev) => ({ ...prev, [method]: !prev[method] }));
@@ -325,16 +366,71 @@ function NewBillingRuleDialog({
                       <p className="text-sm font-semibold text-foreground">
                         Inserir variável
                       </p>
-                      <Button variant="outline" size="sm" className="w-fit">
-                        <Plus size={14} />
-                        Inserir variável
-                      </Button>
+                      <Popover
+                        open={varPopoverOpen}
+                        onOpenChange={setVarPopoverOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-fit"
+                          >
+                            <Plus size={14} />
+                            Inserir variável
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80 p-0" align="start">
+                          <div className="border-b border-border p-2">
+                            <Input
+                              leftIcon={Search}
+                              placeholder="Buscar variável..."
+                              value={varSearch}
+                              onChange={(e) => setVarSearch(e.target.value)}
+                            />
+                          </div>
+                          <div className="max-h-64 overflow-y-auto p-1">
+                            {filteredVars.length > 0 ? (
+                              filteredVars.map((v) => (
+                                <Button
+                                  key={v.value}
+                                  variant="ghost"
+                                  className="h-auto w-full justify-between px-3 py-2 font-normal"
+                                  onClick={() => insertVariable(v.value)}
+                                >
+                                  <span className="text-sm">{v.label}</span>
+                                  <span className="font-mono text-xs text-muted-foreground">
+                                    {v.value}
+                                  </span>
+                                </Button>
+                              ))
+                            ) : (
+                              <p className="py-4 text-center text-xs text-muted-foreground">
+                                Nenhuma variável encontrada.
+                              </p>
+                            )}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <FormField name="whatsappMessage" label="Mensagem WhatsApp">
                       <Textarea
                         name="whatsappMessage"
                         className="min-h-40 font-mono text-xs"
-                        defaultValue={WHATSAPP_PREVIEW_TEXT}
+                        value={whatsappMessage}
+                        onChange={(e) => {
+                          setWhatsappMessage(e.target.value);
+                          cursorPosRef.current = e.target.selectionStart;
+                        }}
+                        onSelect={(e) => {
+                          cursorPosRef.current = (
+                            e.target as HTMLTextAreaElement
+                          ).selectionStart;
+                        }}
+                        onBlur={(e) => {
+                          cursorPosRef.current =
+                            e.target.selectionStart;
+                        }}
                       />
                     </FormField>
                   </div>
@@ -356,7 +452,7 @@ function NewBillingRuleDialog({
                       </div>
                       <div className="bg-[#ecfdf5] p-5">
                         <p className="whitespace-pre-wrap text-sm text-[#002c22]">
-                          {WHATSAPP_PREVIEW_TEXT}
+                          {whatsappMessage}
                         </p>
                       </div>
                     </div>
