@@ -34,6 +34,7 @@ import {
   PopoverTrigger,
 } from "~/client/components/ui/popover";
 import { FormField } from "~/client/components/ui/form-field";
+import { ImageUpload } from "~/client/components/ui/image-upload";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
@@ -192,6 +193,67 @@ const TEMPLATE_VARIABLES = [
   { label: "Link WhatsApp", value: "{{link_whatsapp}}" },
 ];
 
+const EMAIL_BODY_DEFAULT =
+  "Olá {{nome}},\n\nEste é um lembrete do seu pagamento.\n\nAtenciosamente.";
+
+function VariablePopover({
+  onInsert,
+}: {
+  onInsert: (variable: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = TEMPLATE_VARIABLES.filter((v) =>
+    v.label.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="w-fit">
+          <Plus size={14} />
+          Inserir variável
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-0" align="start">
+        <div className="border-b border-border p-2">
+          <Input
+            leftIcon={Search}
+            placeholder="Buscar variável..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="max-h-64 overflow-y-auto p-1">
+          {filtered.length > 0 ? (
+            filtered.map((v) => (
+              <Button
+                key={v.value}
+                variant="ghost"
+                className="h-auto w-full justify-between px-3 py-2 font-normal"
+                onClick={() => {
+                  onInsert(v.value);
+                  setOpen(false);
+                }}
+              >
+                <span className="text-sm">{v.label}</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {v.value}
+                </span>
+              </Button>
+            ))
+          ) : (
+            <p className="py-4 text-center text-xs text-muted-foreground">
+              Nenhuma variável encontrada.
+            </p>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 const WHATSAPP_PREVIEW_TEXT = `Lembrete de vencimento
 Olá {{nome}},
 Gostaríamos de lembrar que vencerá em {{data_vencimento}} o título no valor de R$ {{valor_aberto}} ref. {{account_name}}.
@@ -214,21 +276,32 @@ function NewBillingRuleDialog({
     boleto: true,
   });
   const [whatsappMessage, setWhatsappMessage] = useState(WHATSAPP_PREVIEW_TEXT);
-  const [varPopoverOpen, setVarPopoverOpen] = useState(false);
-  const [varSearch, setVarSearch] = useState("");
-  const cursorPosRef = useRef(WHATSAPP_PREVIEW_TEXT.length);
-
-  const filteredVars = TEMPLATE_VARIABLES.filter((v) =>
-    v.label.toLowerCase().includes(varSearch.toLowerCase()),
+  const whatsappCursorRef = useRef(WHATSAPP_PREVIEW_TEXT.length);
+  const [emailSubject, setEmailSubject] = useState(
+    "Lembrete de Vencimento - {{nome}}",
   );
+  const [emailBody, setEmailBody] = useState(EMAIL_BODY_DEFAULT);
+  const emailSubjectCursorRef = useRef(0);
+  const emailBodyCursorRef = useRef(EMAIL_BODY_DEFAULT.length);
 
-  function insertVariable(variable: string) {
-    const pos = cursorPosRef.current;
+  function insertWhatsappVariable(variable: string) {
+    const pos = whatsappCursorRef.current;
     const before = whatsappMessage.slice(0, pos);
     const after = whatsappMessage.slice(pos);
     setWhatsappMessage(before + variable + after);
-    cursorPosRef.current = pos + variable.length;
-    setVarPopoverOpen(false);
+    whatsappCursorRef.current = pos + variable.length;
+  }
+
+  function insertEmailSubjectVariable(variable: string) {
+    const pos = emailSubjectCursorRef.current;
+    setEmailSubject((prev) => prev.slice(0, pos) + variable + prev.slice(pos));
+    emailSubjectCursorRef.current = pos + variable.length;
+  }
+
+  function insertEmailBodyVariable(variable: string) {
+    const pos = emailBodyCursorRef.current;
+    setEmailBody((prev) => prev.slice(0, pos) + variable + prev.slice(pos));
+    emailBodyCursorRef.current = pos + variable.length;
   }
 
   function togglePayment(method: "pix" | "cartao" | "boleto") {
@@ -366,52 +439,7 @@ function NewBillingRuleDialog({
                       <p className="text-sm font-semibold text-foreground">
                         Inserir variável
                       </p>
-                      <Popover
-                        open={varPopoverOpen}
-                        onOpenChange={setVarPopoverOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-fit"
-                          >
-                            <Plus size={14} />
-                            Inserir variável
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-80 p-0" align="start">
-                          <div className="border-b border-border p-2">
-                            <Input
-                              leftIcon={Search}
-                              placeholder="Buscar variável..."
-                              value={varSearch}
-                              onChange={(e) => setVarSearch(e.target.value)}
-                            />
-                          </div>
-                          <div className="max-h-64 overflow-y-auto p-1">
-                            {filteredVars.length > 0 ? (
-                              filteredVars.map((v) => (
-                                <Button
-                                  key={v.value}
-                                  variant="ghost"
-                                  className="h-auto w-full justify-between px-3 py-2 font-normal"
-                                  onClick={() => insertVariable(v.value)}
-                                >
-                                  <span className="text-sm">{v.label}</span>
-                                  <span className="font-mono text-xs text-muted-foreground">
-                                    {v.value}
-                                  </span>
-                                </Button>
-                              ))
-                            ) : (
-                              <p className="py-4 text-center text-xs text-muted-foreground">
-                                Nenhuma variável encontrada.
-                              </p>
-                            )}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
+                      <VariablePopover onInsert={insertWhatsappVariable} />
                     </div>
                     <FormField name="whatsappMessage" label="Mensagem WhatsApp">
                       <Textarea
@@ -420,16 +448,15 @@ function NewBillingRuleDialog({
                         value={whatsappMessage}
                         onChange={(e) => {
                           setWhatsappMessage(e.target.value);
-                          cursorPosRef.current = e.target.selectionStart;
+                          whatsappCursorRef.current = e.target.selectionStart;
                         }}
                         onSelect={(e) => {
-                          cursorPosRef.current = (
+                          whatsappCursorRef.current = (
                             e.target as HTMLTextAreaElement
                           ).selectionStart;
                         }}
                         onBlur={(e) => {
-                          cursorPosRef.current =
-                            e.target.selectionStart;
+                          whatsappCursorRef.current = e.target.selectionStart;
                         }}
                       />
                     </FormField>
@@ -460,16 +487,138 @@ function NewBillingRuleDialog({
                 </div>
               </Tabs.Content>
 
-              {(["email", "sms", "ligacao"] as const).map((channel) => (
+              <Tabs.Content value="email" className="mt-5">
+                <div className="grid grid-cols-5 gap-7">
+                  <div className="col-span-3 flex flex-col gap-4">
+                    <FormField name="emailLayout" label="Layout HTML">
+                      <Select.Root defaultValue="basico">
+                        <Select.Trigger>
+                          <Select.Value />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="basico">
+                            Layout básico
+                          </Select.Item>
+                        </Select.Content>
+                      </Select.Root>
+                    </FormField>
+
+                    <FormField name="emailImage1" label="Imagem 1 (Topo)">
+                      <ImageUpload
+                        name="emailImage1"
+                        width={600}
+                        height={200}
+                      />
+                    </FormField>
+                    {/* <FormField
+                      name="emailImage2"
+                      label="Imagem 2 (Rodapé - opcional)"
+                    >
+                      <ImageUpload
+                        name="emailImage2"
+                        width={600}
+                        height={150}
+                      />
+                    </FormField> */}
+
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Assunto
+                      </p>
+                      <div className="flex w-full items-center gap-2.5">
+                        <div className="min-w-0 flex-1">
+                          <Input
+                            value={emailSubject}
+                            onChange={(e) => {
+                              setEmailSubject(e.target.value);
+                              emailSubjectCursorRef.current =
+                                e.target.selectionStart ??
+                                e.target.value.length;
+                            }}
+                            onSelect={(e) => {
+                              emailSubjectCursorRef.current =
+                                (e.target as HTMLInputElement).selectionStart ??
+                                emailSubject.length;
+                            }}
+                            onBlur={(e) => {
+                              emailSubjectCursorRef.current =
+                                e.target.selectionStart ?? emailSubject.length;
+                            }}
+                          />
+                        </div>
+                        <VariablePopover
+                          onInsert={insertEmailSubjectVariable}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Corpo do e-mail
+                      </p>
+                      <VariablePopover onInsert={insertEmailBodyVariable} />
+                      <Textarea
+                        className="min-h-40 text-sm"
+                        value={emailBody}
+                        onChange={(e) => {
+                          setEmailBody(e.target.value);
+                          emailBodyCursorRef.current = e.target.selectionStart;
+                        }}
+                        onSelect={(e) => {
+                          emailBodyCursorRef.current = (
+                            e.target as HTMLTextAreaElement
+                          ).selectionStart;
+                        }}
+                        onBlur={(e) => {
+                          emailBodyCursorRef.current = e.target.selectionStart;
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 flex flex-col gap-3">
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        Prévia
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Variáveis serão preenchidas no envio
+                      </p>
+                    </div>
+                    <div className="overflow-clip rounded-2xl border border-border">
+                      <div className="border-b border-border bg-muted px-4 py-3">
+                        <p className="text-xs text-muted-foreground">
+                          Para: cliente@email.com
+                        </p>
+                        <p className="text-xs font-semibold text-foreground">
+                          {emailSubject}
+                        </p>
+                      </div>
+                      <div className="flex h-28 items-center justify-center bg-muted/50">
+                        <span className="text-xs text-muted-foreground">
+                          Imagem 1
+                        </span>
+                      </div>
+                      <div className="p-5">
+                        <p className="whitespace-pre-wrap text-sm text-foreground">
+                          {emailBody}
+                        </p>
+                      </div>
+                      {/* <div className="flex h-24 items-center justify-center bg-muted/50">
+                        <span className="text-xs text-muted-foreground">
+                          Imagem 2 (opcional)
+                        </span>
+                      </div> */}
+                    </div>
+                  </div>
+                </div>
+              </Tabs.Content>
+
+              {(["sms", "ligacao"] as const).map((channel) => (
                 <Tabs.Content key={channel} value={channel} className="mt-5">
                   <p className="py-6 text-center text-sm text-muted-foreground">
-                    Configuração de{" "}
-                    {channel === "email"
-                      ? "E-mail"
-                      : channel === "sms"
-                        ? "SMS"
-                        : "Ligação"}{" "}
-                    em breve.
+                    Configuração de {channel === "sms" ? "SMS" : "Ligação"} em
+                    breve.
                   </p>
                 </Tabs.Content>
               ))}
