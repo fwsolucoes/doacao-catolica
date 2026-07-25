@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
-import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { Table } from "~/client/components/ui/table";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
@@ -18,9 +17,10 @@ import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
 import { DeleteNotificationSettingDialog } from "./delete-notification-setting-dialog";
 import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
+import { NotificationSettingSwitch } from "./notification-setting-switch";
+import { StatCard } from "./stat-card";
 
 type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
-import { StatCard } from "./stat-card";
 
 function OtherMessagesTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -54,7 +54,7 @@ function OtherMessagesTab() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <StatCard
           label="Total"
           value={otherMessages.length}
@@ -101,7 +101,7 @@ function OtherMessagesTab() {
           </div>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-x-auto p-7">
           <Table.Root>
             <Table.Header>
               <Table.Row>

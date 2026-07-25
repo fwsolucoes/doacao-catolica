@@ -6,7 +6,10 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/client/components/ui/button";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { BILLING_RULE_TYPES } from "./constants";
-import { BillingRulesTab, type NotificationSettingJson } from "./components/billing-rules-tab";
+import {
+  BillingRulesTab,
+  type NotificationSettingJson,
+} from "./components/billing-rules-tab";
 import { NewBillingRuleDialog } from "./components/new-billing-rule-dialog";
 import { OtherMessagesTab } from "./components/other-messages-tab";
 
@@ -20,7 +23,8 @@ function MessageRulesPage() {
   ).length;
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingRule, setEditingRule] = useState<NotificationSettingJson | null>(null);
+  const [editingRule, setEditingRule] =
+    useState<NotificationSettingJson | null>(null);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setDialogOpen(open);
@@ -34,7 +38,7 @@ function MessageRulesPage() {
 
   return (
     <div className="flex flex-col gap-7">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
             Automação de notificações
@@ -43,9 +47,15 @@ function MessageRulesPage() {
             Configure réguas de cobrança e outras mensagens automáticas.
           </p>
         </div>
-        <Button onClick={() => { setEditingRule(null); setDialogOpen(true); }}>
+        <Button
+          className="w-full sm:w-auto"
+          onClick={() => {
+            setEditingRule(null);
+            setDialogOpen(true);
+          }}
+        >
           <Plus size={18} />
-          Nova régua de cobrança/mensagem
+          Nova régua de cobrança / mensagem
         </Button>
       </div>
 

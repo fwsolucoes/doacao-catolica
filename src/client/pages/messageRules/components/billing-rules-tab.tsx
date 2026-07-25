@@ -45,7 +45,7 @@ function BillingRulesTab({ onEdit }: Props) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
         <StatCard
           label="Total"
           value={billingRules.length}
@@ -90,7 +90,7 @@ function BillingRulesTab({ onEdit }: Props) {
           </p>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-x-auto p-7">
           <Table.Root>
             <Table.Header>
               <Table.Row>
