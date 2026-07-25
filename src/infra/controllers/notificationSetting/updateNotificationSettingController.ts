@@ -1,0 +1,67 @@
+import type { UpdateNotificationSettingUseCase } from "~/app/useCases/notificationSetting/updateNotificationSettingUseCase";
+import { DecodeRequestBodyAdapter } from "~/infra/adapters/decodeRequestBodyAdapter";
+import { HttpAdapter } from "~/infra/adapters/httpAdapter";
+import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
+import { updateNotificationSettingSchema } from "~/infra/schemas/internal/notificationSetting";
+import type { RouteDTO } from "~/main/types/route";
+
+class UpdateNotificationSettingController {
+  constructor(
+    private updateNotificationSettingUseCase: UpdateNotificationSettingUseCase,
+  ) {}
+
+  async handle(route: RouteDTO) {
+    const { campaignId } = route.params;
+    if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
+
+    const body = await DecodeRequestBodyAdapter.decode(route.request);
+    const validated = new SchemaValidatorAdapter(
+      updateNotificationSettingSchema,
+    ).validate(body);
+
+    const paymentMethods = [
+      validated.enablePix,
+      validated.enableCreditCard,
+      validated.enableBankSlip,
+    ];
+    const existsPaymentMethod = paymentMethods.some((method) => method);
+
+    if (!existsPaymentMethod) {
+      return {
+        toast: {
+          title: "Erro",
+          message: "É necessário selecionar uma forma de pagamento",
+          type: "danger",
+        },
+      };
+    }
+
+    await this.updateNotificationSettingUseCase.execute(
+      campaignId,
+      validated.uuid,
+      {
+        name: validated.name,
+        type: validated.type,
+        days: validated.days,
+        whatsappMessage: validated.whatsappMessage,
+        mailSubject: validated.mailSubject,
+        mailMessage: validated.mailMessage,
+        bannerImage: validated.emailImage1 || null,
+        enableWhatsapp: validated.enableWhatsapp,
+        enableMail: validated.enableMail,
+        enablePix: validated.enablePix,
+        enableCreditCard: validated.enableCreditCard,
+        enableBankSlip: validated.enableBankSlip,
+      },
+    );
+
+    return {
+      toast: {
+        message: "Régua atualizada com sucesso!",
+        type: "success" as const,
+      },
+    };
+  }
+}
+
+export { UpdateNotificationSettingController };

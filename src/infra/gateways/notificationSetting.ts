@@ -2,6 +2,7 @@ import { NotificationSetting } from "~/domain/entities/notificationSetting";
 import type {
   CreateNotificationSettingData,
   NotificationSettingGatewayDTO,
+  UpdateNotificationSettingData,
 } from "~/domain/gateways/notificationSetting";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
@@ -73,6 +74,38 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
       },
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async updateNotificationSetting(
+    accountUuid: string,
+    uuid: string,
+    data: UpdateNotificationSettingData,
+  ): Promise<void> {
+    const apiResponse = await donationApi.put(
+      `/api/notifications_settings/${uuid}`,
+      {
+        body: {
+          account_reference: accountUuid,
+          type: data.type,
+          name: data.name,
+          days: data.days,
+          whatsapp_message: data.whatsappMessage || undefined,
+          mail_subject: data.mailSubject || undefined,
+          mail_message: data.mailMessage || undefined,
+          banner_image: data.bannerImage || undefined,
+          enable_whatsapp: data.enableWhatsapp,
+          enable_mail: data.enableMail,
+          enable_pix: data.enablePix,
+          enable_credit_card: data.enableCreditCard,
+          enable_bank_slip: data.enableBankSlip,
+        },
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
+
+    console.log("🚀apiResponse", apiResponse.response.errors);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }

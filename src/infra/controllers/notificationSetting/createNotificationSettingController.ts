@@ -19,6 +19,23 @@ class CreateNotificationSettingController {
       createNotificationSettingSchema,
     ).validate(body);
 
+    const paymentMethods = [
+      validated.enablePix,
+      validated.enableCreditCard,
+      validated.enableBankSlip,
+    ];
+    const existsPaymentMethod = paymentMethods.some((method) => method);
+
+    if (!existsPaymentMethod) {
+      return {
+        toast: {
+          title: "Erro",
+          message: "É necessário selecionar uma forma de pagamento",
+          type: "danger",
+        },
+      };
+    }
+
     await this.createNotificationSettingUseCase.execute(campaignId, {
       name: validated.name,
       type: validated.type,

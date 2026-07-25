@@ -15,12 +15,36 @@ type CreateNotificationSettingData = {
   enableBankSlip: boolean;
 };
 
+type UpdateNotificationSettingData = {
+  name: string;
+  type: string;
+  days: number;
+  whatsappMessage: string;
+  mailSubject: string;
+  mailMessage: string;
+  bannerImage: string | null;
+  enableWhatsapp: boolean;
+  enableMail: boolean;
+  enablePix: boolean;
+  enableCreditCard: boolean;
+  enableBankSlip: boolean;
+};
+
 type NotificationSettingGatewayDTO = {
   listNotificationSettings(accountUuid: string): Promise<NotificationSetting[]>;
   createNotificationSetting(
     accountUuid: string,
     data: CreateNotificationSettingData,
   ): Promise<void>;
+  updateNotificationSetting(
+    accountUuid: string,
+    uuid: string,
+    data: UpdateNotificationSettingData,
+  ): Promise<void>;
 };
 
-export type { NotificationSettingGatewayDTO, CreateNotificationSettingData };
+export type {
+  NotificationSettingGatewayDTO,
+  CreateNotificationSettingData,
+  UpdateNotificationSettingData,
+};

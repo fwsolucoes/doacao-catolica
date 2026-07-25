@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
-
-type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
 import { Mail } from "lucide-react";
 import { Tabs } from "radix-ui";
 import { cn } from "~/lib/utils";
@@ -22,8 +19,11 @@ import { Switch } from "~/client/components/ui/switch";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
+import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { EmailTab } from "./email-tab";
 import { WhatsAppTab } from "./whatsapp-tab";
+
+type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
 
 const CHANNEL_TABS = [
   { value: "whatsapp", label: "WhatsApp", icon: <WhatsAppIcon size={16} /> },
@@ -69,7 +69,7 @@ function NewBillingRuleDialog({
     messageType === "payment_before_due_date" ||
     messageType === "payment_after_due_date";
 
-  return (
+return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] w-[90vw] max-w-[90vw] sm:max-w-[90vw] flex-col gap-0 p-0">
         <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
@@ -233,7 +233,7 @@ function NewBillingRuleDialog({
               <Button
                 type="submit"
                 name="_action"
-                value="createNotificationSetting"
+                value={isEditing ? "updateNotificationSetting" : "createNotificationSetting"}
                 isLoading={isSubmitting}
               >
                 Salvar
