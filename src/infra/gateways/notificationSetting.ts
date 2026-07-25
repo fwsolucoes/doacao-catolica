@@ -109,6 +109,15 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
+
+  async deleteNotificationSetting(uuid: string): Promise<void> {
+    const apiResponse = await donationApi.delete(
+      `/api/notifications_settings/${uuid}`,
+      { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
 }
 
 export { NotificationSettingGateway };

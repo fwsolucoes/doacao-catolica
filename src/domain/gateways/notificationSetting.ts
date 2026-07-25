@@ -41,6 +41,7 @@ type NotificationSettingGatewayDTO = {
     uuid: string,
     data: UpdateNotificationSettingData,
   ): Promise<void>;
+  deleteNotificationSetting(uuid: string): Promise<void>;
 };
 
 export type {

@@ -16,6 +16,7 @@ import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
+import { DeleteNotificationSettingDialog } from "./delete-notification-setting-dialog";
 import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
 
 type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
@@ -35,6 +36,9 @@ function OtherMessagesTab() {
     setEditingRule(rule);
     setDialogOpen(true);
   }, []);
+
+  const [deletingRule, setDeletingRule] = useState<NotificationSettingJson | null>(null);
+  const closeDeleteDialog = useCallback(() => setDeletingRule(null), []);
 
   const otherMessages = notificationSettings.filter(
     (s) => !BILLING_RULE_TYPES.has(s.type),
@@ -162,7 +166,7 @@ function OtherMessagesTab() {
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem variant="destructive">
+                            <DropdownMenuItem variant="destructive" onSelect={() => setDeletingRule(rule)}>
                               <Trash2 />
                               Remover
                             </DropdownMenuItem>
@@ -177,6 +181,7 @@ function OtherMessagesTab() {
           </Table.Root>
         </div>
       </Card.Root>
+      <DeleteNotificationSettingDialog rule={deletingRule} onClose={closeDeleteDialog} />
       <NewBillingRuleDialog
         key={editingRule?.uuid ?? "new"}
         open={dialogOpen}

@@ -9,6 +9,7 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { createNotificationSetting } from "../factories/notificationSetting/createNotificationSettingFactory";
 import { listNotificationSettings } from "../factories/notificationSetting/listNotificationSettingsFactory";
+import { deleteNotificationSetting } from "../factories/notificationSetting/deleteNotificationSettingFactory";
 import { updateNotificationSetting } from "../factories/notificationSetting/updateNotificationSettingFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -34,6 +35,8 @@ export async function action(args: Route.ActionArgs) {
         return await createNotificationSetting.handle(adaptedRoute);
       case "updateNotificationSetting":
         return await updateNotificationSetting.handle(adaptedRoute);
+      case "deleteNotificationSetting":
+        return await deleteNotificationSetting.handle(adaptedRoute);
       default:
         throw HttpAdapter.badRequest("Action not implemented");
     }
