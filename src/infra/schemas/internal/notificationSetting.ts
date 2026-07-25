@@ -39,5 +39,20 @@ type UpdateNotificationSettingBody = z.infer<
   typeof updateNotificationSettingSchema
 >;
 
-export { createNotificationSettingSchema, updateNotificationSettingSchema };
-export type { CreateNotificationSettingBody, UpdateNotificationSettingBody };
+const toggleNotificationSettingSchema = z.object({
+  uuid: z.uuid(),
+  active: z.string().transform((v) => v === "true"),
+});
+
+type ToggleNotificationSettingBody = z.infer<typeof toggleNotificationSettingSchema>;
+
+export {
+  createNotificationSettingSchema,
+  toggleNotificationSettingSchema,
+  updateNotificationSettingSchema,
+};
+export type {
+  CreateNotificationSettingBody,
+  ToggleNotificationSettingBody,
+  UpdateNotificationSettingBody,
+};

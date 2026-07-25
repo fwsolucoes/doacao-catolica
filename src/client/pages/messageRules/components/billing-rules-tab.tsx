@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
-import { Switch } from "~/client/components/ui/switch";
+import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { Table } from "~/client/components/ui/table";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
@@ -155,7 +155,7 @@ function BillingRulesTab() {
                       </div>
                     </Table.Cell>
                     <Table.Cell>
-                      <Switch checked={rule.active} />
+                      <NotificationSettingSwitch uuid={rule.uuid} active={rule.active} />
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex justify-end">

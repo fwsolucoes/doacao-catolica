@@ -42,6 +42,7 @@ type NotificationSettingGatewayDTO = {
     data: UpdateNotificationSettingData,
   ): Promise<void>;
   deleteNotificationSetting(uuid: string): Promise<void>;
+  toggleNotificationSetting(accountUuid: string, uuid: string, active: boolean): Promise<void>;
 };
 
 export type {

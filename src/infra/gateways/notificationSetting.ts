@@ -105,7 +105,21 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
       },
     );
 
-    console.log("🚀apiResponse", apiResponse.response.errors);
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async toggleNotificationSetting(
+    accountUuid: string,
+    uuid: string,
+    active: boolean,
+  ): Promise<void> {
+    const apiResponse = await donationApi.put(
+      `/api/notifications_settings/${uuid}`,
+      {
+        body: { account_reference: accountUuid, active },
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
