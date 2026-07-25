@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { CheckCircle2, Ellipsis, Pencil, Plus, Radio, Send, Trash2, XCircle } from "lucide-react";
+import { CheckCircle2, Ellipsis, Pencil, Radio, Send, Trash2, XCircle } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -10,32 +10,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
-import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { Table } from "~/client/components/ui/table";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
-
-type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
 import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
 import { DeleteNotificationSettingDialog } from "./delete-notification-setting-dialog";
-import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
+import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { StatCard } from "./stat-card";
 
-function BillingRulesTab() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingRule, setEditingRule] = useState<NotificationSettingJson | null>(null);
+type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
+
+type Props = {
+  onEdit: (rule: NotificationSettingJson) => void;
+};
+
+function BillingRulesTab({ onEdit }: Props) {
   const { notificationSettings } = useLoaderData<MessageRulesLoader>();
-
-  const handleOpenChange = useCallback((open: boolean) => {
-    setDialogOpen(open);
-    if (!open) setEditingRule(null);
-  }, []);
-
-  const openEdit = useCallback((rule: NotificationSettingJson) => {
-    setEditingRule(rule);
-    setDialogOpen(true);
-  }, []);
 
   const [deletingRule, setDeletingRule] = useState<NotificationSettingJson | null>(null);
   const closeDeleteDialog = useCallback(() => setDeletingRule(null), []);
@@ -90,19 +81,13 @@ function BillingRulesTab() {
       </div>
 
       <Card.Root className="gap-0 p-0">
-        <div className="flex flex-wrap items-center justify-between gap-4 px-7 py-5">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-base font-semibold text-foreground">
-              Réguas de cobrança
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Mensagens automáticas antes e após o vencimento.
-            </p>
-          </div>
-          <Button onClick={() => { setEditingRule(null); setDialogOpen(true); }}>
-            <Plus size={18} />
-            Nova régua de cobrança
-          </Button>
+        <div className="px-7 py-5">
+          <p className="text-base font-semibold text-foreground">
+            Réguas de cobrança
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Mensagens automáticas antes e após o vencimento.
+          </p>
         </div>
 
         <div className="p-7">
@@ -166,7 +151,7 @@ function BillingRulesTab() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onSelect={() => openEdit(rule)}>
+                            <DropdownMenuItem onSelect={() => onEdit(rule)}>
                               <Pencil />
                               Editar
                             </DropdownMenuItem>
@@ -188,14 +173,9 @@ function BillingRulesTab() {
       </Card.Root>
 
       <DeleteNotificationSettingDialog rule={deletingRule} onClose={closeDeleteDialog} />
-      <NewBillingRuleDialog
-        key={editingRule?.uuid ?? "new"}
-        open={dialogOpen}
-        onOpenChange={handleOpenChange}
-        rule={editingRule ?? undefined}
-      />
     </div>
   );
 }
 
 export { BillingRulesTab };
+export type { NotificationSettingJson };
