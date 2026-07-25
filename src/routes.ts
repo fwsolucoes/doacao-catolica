@@ -32,6 +32,7 @@ export default [
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("donors", "./main/routes/route.campaign.donors.tsx"),
+    route("payment-methods", "./main/routes/route.campaign.paymentMethodsStandalone.tsx"),
     route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),
     route("settings/general-info", "./main/routes/route.campaign.generalInfo.tsx"),
     route("settings/campaign-page", "./main/routes/route.campaign.campaignPage.tsx"),

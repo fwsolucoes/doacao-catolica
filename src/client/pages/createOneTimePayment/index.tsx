@@ -234,9 +234,7 @@ function CreateOneTimePaymentPage() {
                       </FormField>
                     </div>
                     <Button variant="default" size="icon" asChild>
-                      <Link
-                        to={`/campaign/${campaignId}/settings/payment-methods`}
-                      >
+                      <Link to={`/campaign/${campaignId}/payment-methods`}>
                         <Plus size={16} />
                       </Link>
                     </Button>

@@ -85,7 +85,7 @@ const sections: NavSection[] = [
         label: "Configurações",
         subItems: [
           { label: "Informações Gerais", path: "settings/general-info" },
-          { label: "Métodos de pagamento", path: "settings/payment-methods" },
+          { label: "Métodos de pagamento", path: "payment-methods" },
         ],
       },
       { icon: CircleHelp, label: "Ajuda" },
