@@ -24,16 +24,6 @@ import {
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
 
-// "DD/MM/YYYY - hh:mm" → "YYYY-MM-DD"
-function toDateInput(formatted: string | null | undefined): string {
-  if (!formatted) return "";
-  const datePart = formatted.split(" - ")[0];
-  if (!datePart) return "";
-  const [day, month, year] = datePart.split("/");
-  if (!day || !month || !year) return "";
-  return `${year}-${month}-${day}`;
-}
-
 type DonationType = "MONTHLY" | "ONETIME" | "BOTH";
 
 const DONATION_TYPE_OPTIONS: {
@@ -103,8 +93,8 @@ function CampaignGeneralInfoPage() {
     (campaign.typeDonation as DonationType) ?? "ONETIME",
   );
 
-  const startDateValue = toDateInput(campaign.startDate);
-  const endDateValue = toDateInput(campaign.endDate);
+  const startDateValue = campaign.startDateInput ?? "";
+  const endDateValue = campaign.endDateInput ?? "";
   const steps = buildSteps(campaignId!);
 
   return (

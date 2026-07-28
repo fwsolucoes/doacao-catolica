@@ -115,6 +115,7 @@ class Campaign {
             "DD/MM/YYYY - hh:mm",
           )
         : null,
+      startDateInput: this.startDate ? this.startDate.split("T")[0] : null,
       endDate: this.endDate
         ? formatDate(
             [this.endDate.split("T")[0]],
@@ -122,6 +123,7 @@ class Campaign {
             "DD/MM/YYYY - hh:mm",
           )
         : null,
+      endDateInput: this.endDate ? this.endDate.split("T")[0] : null,
       currentRevenue: this.currentRevenue ?? null,
       status: this.status,
       published: this.published,
