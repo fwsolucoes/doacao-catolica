@@ -1,67 +1,19 @@
-import { useState } from "react";
-import { Calendar } from "lucide-react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { useRoot } from "~/client/hooks/useRoot";
 import { Button } from "~/client/components/ui/button";
-import { Card } from "~/client/components/ui/card";
-import { CurrencyInput } from "~/client/components/ui/currency-input";
-import {
-  FormErrorProvider,
-  FormField,
-} from "~/client/components/ui/form-field";
-import { Input } from "~/client/components/ui/input";
-import { InputGroup } from "~/client/components/ui/input-group";
-import { RadioGroup } from "~/client/components/ui/radio-group";
-import { Select } from "~/client/components/ui/select";
-import { Switch } from "~/client/components/ui/switch";
+import { FormErrorProvider } from "~/client/components/ui/form-field";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
-import { cn } from "~/lib/utils";
 import {
   buildSteps,
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
-import { SlugField } from "./SlugField";
-
-type DonationType = "MONTHLY" | "ONETIME" | "BOTH";
-
-const DONATION_TYPE_OPTIONS: {
-  value: DonationType;
-  label: string;
-  desc: string;
-}[] = [
-  {
-    value: "MONTHLY",
-    label: "Doação Mensal",
-    desc: "Aceita apenas doações recorrentes mensais",
-  },
-  {
-    value: "ONETIME",
-    label: "Doação Única",
-    desc: "Aceita apenas doações pontuais",
-  },
-  {
-    value: "BOTH",
-    label: "Mensal e Única",
-    desc: "Aceita ambos os tipos de doação",
-  },
-];
-
-function SectionCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Card.Root className="flex flex-col gap-6 p-6">
-      <h2 className="text-base font-semibold text-foreground">{title}</h2>
-      {children}
-    </Card.Root>
-  );
-}
+import { CampaignDataCard } from "./components/CampaignDataCard";
+import { DonationTypeCard } from "./components/DonationTypeCard";
+import { FundraisingGoalsCard } from "./components/FundraisingGoalsCard";
+import { ReceivingInstitutionCard } from "./components/ReceivingInstitutionCard";
+import { VisibilityCard } from "./components/VisibilityCard";
 
 function CampaignGeneralInfoPage() {
   const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
@@ -74,14 +26,6 @@ function CampaignGeneralInfoPage() {
   const isSubmitting = state === "submitting";
   useActionToast(data);
 
-  const [isActive, setIsActive] = useState(campaign.status);
-  const [isPublic, setIsPublic] = useState(campaign.published);
-  const [donationType, setDonationType] = useState<DonationType>(
-    (campaign.typeDonation as DonationType) ?? "ONETIME",
-  );
-
-  const startDateValue = campaign.startDateInput ?? "";
-  const endDateValue = campaign.endDateInput ?? "";
   const steps = buildSteps(campaignId!);
 
   return (
@@ -106,236 +50,15 @@ function CampaignGeneralInfoPage() {
             action={`/campaign/${campaignId}/settings/general-info`}
             className="flex flex-1 flex-col gap-6 min-w-0"
           >
-            {/* Dados da Campanha */}
-            <SectionCard title="Dados da Campanha">
-              <FormField name="name" label="Nome da Campanha" required>
-                <Input
-                  name="name"
-                  placeholder="Ex.: Educação para Todos"
-                  defaultValue={campaign.name}
-                />
-              </FormField>
-
-              <SlugField
-                campaignId={campaignId!}
-                slugPrefix={slugPrefix}
-                defaultSlug={campaign.slug}
-              />
-
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <FormField name="category" label="Categoria">
-                  <Select.Root name="category" defaultValue="paroquia">
-                    <Select.Trigger>
-                      <Select.Value placeholder="Selecione a categoria" />
-                    </Select.Trigger>
-                    <Select.Content>
-                      <Select.Item value="paroquia">Paróquia</Select.Item>
-                      <Select.Item value="comunidade">Comunidade</Select.Item>
-                      <Select.Item value="missao">Missão</Select.Item>
-                      <Select.Item value="outro">Outro</Select.Item>
-                    </Select.Content>
-                  </Select.Root>
-                </FormField>
-
-                <FormField name="status" label="Status">
-                  <div className="flex h-10.75 items-center justify-between rounded-[11px] border border-border px-4">
-                    <span className="text-sm font-semibold text-foreground">
-                      {isActive ? "Campanha ativa" : "Campanha inativa"}
-                    </span>
-                    <input
-                      type="hidden"
-                      name="status"
-                      value={isActive ? "active" : "inactive"}
-                    />
-                    <Switch checked={isActive} onCheckedChange={setIsActive} />
-                  </div>
-                </FormField>
-              </div>
-
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <FormField name="startDate" label="Data de início">
-                  <InputGroup.Root>
-                    <InputGroup.Addon>
-                      <Calendar size={16} />
-                    </InputGroup.Addon>
-                    <InputGroup.Input
-                      type="date"
-                      name="startDate"
-                      defaultValue={startDateValue}
-                      className="cursor-pointer bg-muted pl-9"
-                    />
-                  </InputGroup.Root>
-                </FormField>
-
-                <FormField name="endDate" label="Data de término">
-                  <InputGroup.Root>
-                    <InputGroup.Addon>
-                      <Calendar size={16} />
-                    </InputGroup.Addon>
-                    <InputGroup.Input
-                      type="date"
-                      name="endDate"
-                      defaultValue={endDateValue}
-                      className="cursor-pointer bg-muted pl-9"
-                    />
-                  </InputGroup.Root>
-                </FormField>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <FormField
-                  name="phone"
-                  label="WhatsApp do responsável pela campanha"
-                >
-                  <Input
-                    name="phone"
-                    type="tel"
-                    placeholder="(11) 90000-0000"
-                    defaultValue={campaign.phone ?? ""}
-                  />
-                </FormField>
-                <p className="text-xs text-muted-foreground">
-                  Usado para avisos e comunicação interna. Não é exibido
-                  publicamente.
-                </p>
-              </div>
-            </SectionCard>
-
-            {/* Visibilidade */}
-            <SectionCard title="Visibilidade">
-              <div className="flex flex-col gap-3">
-                <RadioGroup.Root
-                  value={isPublic ? "public" : "private"}
-                  onValueChange={(v) => setIsPublic(v === "public")}
-                  className="flex-col sm:flex-row"
-                >
-                  <input
-                    type="hidden"
-                    name="published"
-                    value={isPublic ? "true" : "false"}
-                  />
-                  {(
-                    [
-                      {
-                        value: "public",
-                        label: "Pública",
-                        desc: "Qualquer pessoa pode visualizar e acessar a campanha",
-                      },
-                      {
-                        value: "private",
-                        label: "Privada",
-                        desc: "Apenas pessoas com o link podem acessar",
-                      },
-                    ] as const
-                  ).map(({ value, label, desc }) => {
-                    const selected =
-                      (value === "public" && isPublic) ||
-                      (value === "private" && !isPublic);
-                    return (
-                      <label
-                        key={value}
-                        className={cn(
-                          "flex flex-1 cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors",
-                          selected
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:bg-muted/50",
-                        )}
-                      >
-                        <RadioGroup.Item value={value} className="mt-0.5" />
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-sm font-medium">{label}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {desc}
-                          </span>
-                        </div>
-                      </label>
-                    );
-                  })}
-                </RadioGroup.Root>
-              </div>
-            </SectionCard>
-
-            {/* Tipo da Campanha */}
-            <SectionCard title="Tipo da Campanha">
-              <input type="hidden" name="typeDonation" value={donationType} />
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {DONATION_TYPE_OPTIONS.map(({ value, label, desc }) => (
-                  <Button
-                    key={value}
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setDonationType(value)}
-                    className={cn(
-                      "h-auto flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors hover:brightness-100",
-                      donationType === value
-                        ? "border-primary bg-primary/5 hover:bg-primary/5"
-                        : "border-border hover:bg-muted/50",
-                    )}
-                  >
-                    <span className="text-sm font-medium">{label}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {desc}
-                    </span>
-                  </Button>
-                ))}
-              </div>
-            </SectionCard>
-
-            {/* Metas de Arrecadação */}
-            <SectionCard title="Metas de Arrecadação">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField name="totalGoal" label="Meta total">
-                  <CurrencyInput
-                    name="totalGoal"
-                    defaultValue={
-                      campaign.totalGoal
-                        ? parseFloat(campaign.totalGoal)
-                        : undefined
-                    }
-                    placeholder="0,00"
-                  />
-                </FormField>
-
-                <FormField name="monthlyGoal" label="Meta mensal">
-                  <CurrencyInput
-                    name="monthlyGoal"
-                    defaultValue={
-                      campaign.monthlyGoal
-                        ? parseFloat(campaign.monthlyGoal)
-                        : undefined
-                    }
-                    placeholder="0,00"
-                  />
-                </FormField>
-              </div>
-            </SectionCard>
-
-            {/* Instituição Recebedora */}
-            <SectionCard title="Instituição Recebedora">
-              <FormField name="institutionName" label="Nome da instituição">
-                <Input
-                  name="institutionName"
-                  placeholder="Nome da organização"
-                  defaultValue={campaign.institutionName ?? ""}
-                />
-              </FormField>
-
-              <FormField name="cnpj" label="CNPJ">
-                <Input
-                  name="cnpj"
-                  placeholder="00.000.000/0000-00"
-                  defaultValue={campaign.cnpj ?? ""}
-                />
-              </FormField>
-
-              <FormField name="address" label="Endereço">
-                <Input
-                  name="address"
-                  placeholder="Rua, número, cidade — UF"
-                  defaultValue={campaign.address ?? ""}
-                />
-              </FormField>
-            </SectionCard>
+            <CampaignDataCard
+              campaign={campaign}
+              campaignId={campaignId!}
+              slugPrefix={slugPrefix}
+            />
+            <VisibilityCard defaultPublished={campaign.published} />
+            <DonationTypeCard defaultType={campaign.typeDonation ?? "ONETIME"} />
+            <FundraisingGoalsCard campaign={campaign} />
+            <ReceivingInstitutionCard campaign={campaign} />
 
             <div className="flex justify-end">
               <Button
