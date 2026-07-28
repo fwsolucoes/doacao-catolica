@@ -97,19 +97,6 @@ function CampaignGeneralInfoPage() {
     setCurrentSlugValue(generateSlug(e.target.value));
   }
 
-  function handleVerifySlug() {
-    const slug = currentSlugValue.trim();
-    if (!slug) return;
-    setLastVerifiedSlug(slug);
-    slugFetcher.submit(
-      { _action: "verifySlug", slug },
-      {
-        method: "post",
-        action: `/campaign/${campaignId}/settings/general-info`,
-      },
-    );
-  }
-
   const [isActive, setIsActive] = useState(campaign.status);
   const [isPublic, setIsPublic] = useState(campaign.published);
   const [donationType, setDonationType] = useState<DonationType>(
@@ -137,6 +124,14 @@ function CampaignGeneralInfoPage() {
         <StepNav steps={steps} />
 
         <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
+          <slugFetcher.Form
+            id="verify-slug-form"
+            method="post"
+            action={`/campaign/${campaignId}/settings/general-info`}
+            onSubmit={() => setLastVerifiedSlug(currentSlugValue)}
+          >
+            <input type="hidden" name="slug" value={currentSlugValue} />
+          </slugFetcher.Form>
           <Form
             method="post"
             action={`/campaign/${campaignId}/settings/general-info`}
@@ -166,11 +161,13 @@ function CampaignGeneralInfoPage() {
                       />
                     </InputGroup.Root>
                     <Button
-                      type="button"
+                      type="submit"
+                      form="verify-slug-form"
+                      name="_action"
+                      value="verifySlug"
                       variant="outline"
                       className="h-9.5 shrink-0 rounded-[11px] text-xs"
                       disabled={isVerifying}
-                      onClick={handleVerifySlug}
                     >
                       {isVerifying ? "Verificando..." : "Verificar"}
                     </Button>
