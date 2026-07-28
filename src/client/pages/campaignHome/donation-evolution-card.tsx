@@ -10,6 +10,11 @@ function DonationEvolutionCard() {
   const { evolution } = useLoaderData<CampaignHomeLoader>();
   const { days } = evolution;
 
+  const maxTotal = days.reduce(
+    (max, d) => Math.max(max, d.oneTimeAmount + d.recurringAmount),
+    0
+  );
+
   const labels = days.map((d) => String(d.day).padStart(2, "0"));
 
   const data = {
@@ -60,10 +65,18 @@ function DonationEvolutionCard() {
       },
       y: {
         stacked: true,
+        min: 0,
+        suggestedMax: maxTotal > 0 ? undefined : 5000,
         grid: { color: "rgba(0,0,0,0.05)" },
         ticks: {
           font: { size: 11 },
-          callback: (v: number | string) => `R$${Number(v) / 1000}k`,
+          callback: (v: number | string) => {
+            const val = Number(v);
+            if (val === 0) return "R$ 0";
+            if (val >= 1000)
+              return `R$ ${(val / 1000).toFixed(1).replace(".0", "")}k`;
+            return `R$ ${Math.round(val)}`;
+          },
         },
       },
     },
