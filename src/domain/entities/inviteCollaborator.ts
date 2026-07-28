@@ -7,6 +7,8 @@ type InviteCollaboratorProps = {
   invitedUserEmail: string;
   invitedUserName: string;
   invitedUserPhone: string | null;
+  invitedUserRoleId: string;
+  createdAt: string;
 };
 
 class InviteCollaborator {
@@ -18,6 +20,8 @@ class InviteCollaborator {
   readonly invitedUserEmail: string;
   readonly invitedUserName: string;
   readonly invitedUserPhone: string | null;
+  readonly invitedUserRoleId: string;
+  readonly createdAt: string;
 
   private constructor(props: InviteCollaboratorProps) {
     this.id = props.id;
@@ -28,6 +32,8 @@ class InviteCollaborator {
     this.invitedUserEmail = props.invitedUserEmail;
     this.invitedUserName = props.invitedUserName;
     this.invitedUserPhone = props.invitedUserPhone;
+    this.invitedUserRoleId = props.invitedUserRoleId;
+    this.createdAt = props.createdAt;
   }
 
   static restore(props: InviteCollaboratorProps): InviteCollaborator {
@@ -44,6 +50,8 @@ class InviteCollaborator {
       invitedUserEmail: this.invitedUserEmail,
       invitedUserName: this.invitedUserName,
       invitedUserPhone: this.invitedUserPhone,
+      invitedUserRoleId: this.invitedUserRoleId,
+      createdAt: this.createdAt,
     };
   }
 }

@@ -76,6 +76,7 @@ function CollaboratorsTable({
               {isActiveTab && <Table.Head>E-mail</Table.Head>}
               <Table.Head>Função</Table.Head>
               {!isActiveTab && <Table.Head>Convidado</Table.Head>}
+              {!isActiveTab && <Table.Head>Status</Table.Head>}
               <Table.Head className="text-right">Ações</Table.Head>
             </Table.Row>
           </Table.Header>
@@ -95,12 +96,12 @@ function CollaboratorsTable({
                       </span>
                     </div>
                   </Table.Cell>
-                  <Table.Cell className="font-mono text-xs text-muted-foreground">
+                  <Table.Cell className="text-muted-foreground">
                     {(row as ActiveCollaborator).email}
                   </Table.Cell>
                   <Table.Cell>
                     <Badge
-                      className="py-3"
+                      className="py-3 font-semibold"
                       variant={(row as ActiveCollaborator).role.tone}
                     >
                       {(row as ActiveCollaborator).role.name}
@@ -153,11 +154,30 @@ function CollaboratorsTable({
                       </span>
                     </div>
                   </Table.Cell>
-                  <Table.Cell className="text-muted-foreground">
-                    <span>-</span>
+                  <Table.Cell>
+                    <Badge
+                      className="py-3 font-semibold"
+                      variant={(row as PendingCollaborator).role.tone}
+                    >
+                      {(row as PendingCollaborator).role.name}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Badge
+                      className="py-3"
+                      variant={
+                        (row as PendingCollaborator).status === "Pendente"
+                          ? "amber"
+                          : (row as PendingCollaborator).status === "Aceito"
+                            ? "emerald"
+                            : "danger"
+                      }
+                    >
+                      {(row as PendingCollaborator).status}
+                    </Badge>
                   </Table.Cell>
                   <Table.Cell className="text-muted-foreground">
-                    <span>-</span>
+                    {(row as PendingCollaborator).invitedAt}
                   </Table.Cell>
                   <Table.Cell className="text-right">
                     <DropdownMenu>
@@ -205,7 +225,7 @@ function CollaboratorsTable({
             {!isActiveTab && !pendingCollaborators.length && (
               <Table.Row>
                 <Table.Cell
-                  colSpan={4}
+                  colSpan={5}
                   className="h-28 text-center text-muted-foreground"
                 >
                   Nenhum convite pendente encontrado.

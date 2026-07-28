@@ -16,6 +16,7 @@ const ROLE_TONES: CollaboratorRole["tone"][] = [
   "emerald",
   "navy",
   "violet",
+  "amber",
 ];
 
 function getInitials(name: string, email: string) {
@@ -32,14 +33,34 @@ function formatStatus(status: string) {
   const normalized = status.trim().toLowerCase();
   if (normalized === "pending") return "Pendente";
   if (normalized === "accepted") return "Aceito";
-  if (normalized === "rejected") return "Recusado";
+  if (normalized === "rejected" || normalized === "revoked") {
+    return "Recusado";
+  }
+  if (normalized === "cancelled") return "Cancelado";
 
   return status;
+}
+
+function formatInvitedAt(createdAt: string) {
+  const inviteDate = new Date(createdAt);
+  if (Number.isNaN(inviteDate.getTime())) return "-";
+
+  const elapsedTime = Date.now() - inviteDate.getTime();
+  const elapsedDays = Math.max(
+    0,
+    Math.floor(elapsedTime / (1000 * 60 * 60 * 24)),
+  );
+
+  if (elapsedDays === 0) return "hoje";
+  if (elapsedDays === 1) return "há 1 dia";
+
+  return `há ${elapsedDays} dias`;
 }
 
 function getRoleTone(name: string, index: number): CollaboratorRole["tone"] {
   const normalizedName = name.trim().toLowerCase();
 
+  if (normalizedName.includes("administrador")) return "rose";
   if (normalizedName.includes("supervisor")) return "violet";
   if (normalizedName.includes("finance")) return "navy";
   if (normalizedName.includes("relacionamento")) return "emerald";
@@ -93,7 +114,14 @@ function CollaboratorsPage() {
       initials: getInitials(invite.invitedUserName, invite.invitedUserEmail),
       name: invite.invitedUserName,
       email: invite.invitedUserEmail,
+      role: rolesById.get(invite.invitedUserRoleId) ?? {
+        id: invite.invitedUserRoleId,
+        name: "Função não encontrada",
+        description: "Esta função não está disponível na lista de funções.",
+        tone: "navy",
+      },
       status: formatStatus(invite.inviteStatus),
+      invitedAt: formatInvitedAt(invite.createdAt),
     }));
 
   return (

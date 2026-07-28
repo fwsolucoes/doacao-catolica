@@ -13,6 +13,8 @@ const externalInviteCollaboratorSchema = z.object({
   invited_user_email: z.string(),
   invited_user_name: z.string(),
   invited_user_phone: z.string().nullable(),
+  invited_user_role_id: z.string(),
+  created_at: z.string(),
 });
 
 const externalInvitesCollaboratorsSchema = z.object({
