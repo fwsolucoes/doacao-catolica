@@ -1,6 +1,8 @@
+import { CreditCard } from "lucide-react";
 import { Doughnut } from "react-chartjs-2";
 import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import { Empty } from "~/client/components/ui/empty";
 import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 import { BASE_CHART_OPTIONS } from "./chart-setup";
@@ -69,36 +71,50 @@ function PaymentMethodsCard() {
         </p>
       </div>
 
-      <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
-        <div className="relative size-40 shrink-0">
-          <Doughnut data={data} options={options} />
-        </div>
+      {methods.length === 0 ? (
+        <Empty.Root className="border-0 py-8">
+          <Empty.Media variant="icon">
+            <CreditCard />
+          </Empty.Media>
+          <Empty.Header>
+            <Empty.Title>Nenhuma forma de pagamento.</Empty.Title>
+            <Empty.Description>
+              Os métodos utilizados nesta campanha aparecerão aqui.
+            </Empty.Description>
+          </Empty.Header>
+        </Empty.Root>
+      ) : (
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+          <div className="relative size-40 shrink-0">
+            <Doughnut data={data} options={options} />
+          </div>
 
-        <div className="flex w-full flex-col gap-3">
-          {methods.map((m) => (
-            <div key={m.label} className="flex items-center gap-2">
-              <span
-                className="size-2.5 shrink-0 rounded-full"
-                style={{ backgroundColor: m.color }}
-              />
-              <div className="flex flex-1 flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-(--text-heading)">
-                    {m.label}
-                  </span>
-                  <span className="text-xs font-semibold text-(--text-heading)">
-                    {m.pct}%
+          <div className="flex w-full flex-col gap-3">
+            {methods.map((m) => (
+              <div key={m.label} className="flex items-center gap-2">
+                <span
+                  className="size-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: m.color }}
+                />
+                <div className="flex flex-1 flex-col">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-(--text-heading)">
+                      {m.label}
+                    </span>
+                    <span className="text-xs font-semibold text-(--text-heading)">
+                      {m.pct}%
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground">
+                    {formatCurrency(String(m.totalAmount))} ·{" "}
+                    {m.donationsCount.toLocaleString("pt-BR")} doações
                   </span>
                 </div>
-                <span className="text-[11px] text-muted-foreground">
-                  {formatCurrency(String(m.totalAmount))} ·{" "}
-                  {m.donationsCount.toLocaleString("pt-BR")} doações
-                </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </Card.Root>
   );
 }

@@ -56,7 +56,12 @@ function TopDonorsCard({ campaignId }: { campaignId: string }) {
               </Table.Cell>
             </Table.Row>
           ))}
-          {!activity.topDonors.length && <Table.Empty />}
+          {!activity.topDonors.length && (
+            <Table.Empty
+              title="Nenhum doador encontrado."
+              description="Os maiores doadores desta campanha aparecerão aqui."
+            />
+          )}
         </Table.Body>
       </Table.Root>
     </Card.Root>

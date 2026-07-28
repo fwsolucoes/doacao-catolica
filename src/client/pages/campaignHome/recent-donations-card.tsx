@@ -102,7 +102,12 @@ function RecentDonationsCard({ campaignId }: { campaignId: string }) {
               </Table.Row>
             );
           })}
-          {!activity.recentDonations.length && <Table.Empty />}
+          {!activity.recentDonations.length && (
+            <Table.Empty
+              title="Nenhuma doação recente."
+              description="As doações desta campanha aparecerão aqui."
+            />
+          )}
         </Table.Body>
       </Table.Root>
     </Card.Root>
