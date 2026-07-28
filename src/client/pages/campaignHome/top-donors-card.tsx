@@ -56,6 +56,7 @@ function TopDonorsCard({ campaignId }: { campaignId: string }) {
               </Table.Cell>
             </Table.Row>
           ))}
+          {!activity.topDonors.length && <Table.Empty />}
         </Table.Body>
       </Table.Root>
     </Card.Root>
