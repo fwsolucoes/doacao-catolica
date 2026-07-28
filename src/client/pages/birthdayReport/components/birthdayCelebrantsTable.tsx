@@ -84,6 +84,7 @@ function BirthdayCelebrantsTable({
               </Table.Cell>
             </Table.Row>
           ))}
+          {!data.length && <Table.Empty />}
         </Table.Body>
       </Table.Root>
 
