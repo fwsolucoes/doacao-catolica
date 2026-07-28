@@ -96,16 +96,7 @@ function CampaignGroupsTable({
             </Table.Row>
           ))}
 
-          {!campaignGroups.length && (
-            <Table.Row>
-              <Table.Cell
-                colSpan={3}
-                className="h-28 text-center text-muted-foreground"
-              >
-                Nenhum grupo de campanha encontrado.
-              </Table.Cell>
-            </Table.Row>
-          )}
+          {!campaignGroups.length && <Table.Empty />}
         </Table.Body>
       </Table.Root>
 
