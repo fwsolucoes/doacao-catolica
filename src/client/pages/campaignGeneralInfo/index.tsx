@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Calendar, CheckCircle2 } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { useRoot } from "~/client/hooks/useRoot";
-import { generateSlug } from "~/lib/generateSlug";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { CurrencyInput } from "~/client/components/ui/currency-input";
@@ -23,6 +22,7 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
+import { SlugField } from "./SlugField";
 
 type DonationType = "MONTHLY" | "ONETIME" | "BOTH";
 
@@ -74,19 +74,6 @@ function CampaignGeneralInfoPage() {
   const isSubmitting = state === "submitting";
   useActionToast(data);
 
-  const slugFetcher = useFetcher<{ available: boolean }>();
-  const isVerifying = slugFetcher.state === "submitting";
-  const [currentSlugValue, setCurrentSlugValue] = useState(campaign.slug);
-  const [lastVerifiedSlug, setLastVerifiedSlug] = useState<string | null>(null);
-  const slugResult =
-    slugFetcher.data !== undefined && currentSlugValue === lastVerifiedSlug
-      ? slugFetcher.data
-      : null;
-
-  function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCurrentSlugValue(generateSlug(e.target.value));
-  }
-
   const [isActive, setIsActive] = useState(campaign.status);
   const [isPublic, setIsPublic] = useState(campaign.published);
   const [donationType, setDonationType] = useState<DonationType>(
@@ -114,14 +101,6 @@ function CampaignGeneralInfoPage() {
         <StepNav steps={steps} />
 
         <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
-          <slugFetcher.Form
-            id="verify-slug-form"
-            method="post"
-            action={`/campaign/${campaignId}/settings/general-info`}
-            onSubmit={() => setLastVerifiedSlug(currentSlugValue)}
-          >
-            <input type="hidden" name="slug" value={currentSlugValue} />
-          </slugFetcher.Form>
           <Form
             method="post"
             action={`/campaign/${campaignId}/settings/general-info`}
@@ -137,50 +116,11 @@ function CampaignGeneralInfoPage() {
                 />
               </FormField>
 
-              <div className="flex flex-col gap-2">
-                <FormField name="slug" label="Slug (URL)">
-                  <div className="flex items-center gap-2.5">
-                    <InputGroup.Root className="flex-1">
-                      <InputGroup.Side>{slugPrefix}</InputGroup.Side>
-                      <InputGroup.Input
-                        name="slug"
-                        placeholder="minha-campanha"
-                        value={currentSlugValue}
-                        onChange={handleSlugChange}
-                        className="focus-visible:ring-0"
-                      />
-                    </InputGroup.Root>
-                    <Button
-                      type="submit"
-                      form="verify-slug-form"
-                      name="_action"
-                      value="verifySlug"
-                      variant="outline"
-                      className="h-9.5 shrink-0 rounded-[11px] text-xs"
-                      disabled={isVerifying}
-                    >
-                      {isVerifying ? "Verificando..." : "Verificar"}
-                    </Button>
-                  </div>
-                </FormField>
-                {slugResult !== null && (
-                  <div
-                    className={cn(
-                      "flex items-center gap-1.5 text-xs",
-                      slugResult.available
-                        ? "text-emerald-600"
-                        : "text-destructive",
-                    )}
-                  >
-                    <CheckCircle2 size={17} className="shrink-0" />
-                    <span>
-                      {slugResult.available
-                        ? "Slug disponível"
-                        : "Este slug já está em uso"}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <SlugField
+                campaignId={campaignId!}
+                slugPrefix={slugPrefix}
+                defaultSlug={campaign.slug}
+              />
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <FormField name="category" label="Categoria">
