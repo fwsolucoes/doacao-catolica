@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { useFetcher } from "react-router";
 import { generateSlug } from "~/lib/generateSlug";
 import { Button } from "~/client/components/ui/button";
@@ -27,17 +27,19 @@ function SlugField({ campaignId, slugPrefix, defaultSlug }: SlugFieldProps) {
     setCurrentSlugValue(generateSlug(e.target.value));
   }
 
+  function handleVerify() {
+    setLastVerifiedSlug(currentSlugValue);
+    slugFetcher.submit(
+      { slug: currentSlugValue, _action: "verifySlug" },
+      {
+        method: "post",
+        action: `/campaign/${campaignId}/settings/general-info`,
+      },
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      <slugFetcher.Form
-        id="verify-slug-form"
-        method="post"
-        action={`/campaign/${campaignId}/settings/general-info`}
-        onSubmit={() => setLastVerifiedSlug(currentSlugValue)}
-      >
-        <input type="hidden" name="slug" value={currentSlugValue} />
-      </slugFetcher.Form>
-
       <FormField name="slug" label="Slug (URL)">
         <div className="flex items-center gap-2.5">
           <InputGroup.Root className="flex-1">
@@ -51,10 +53,8 @@ function SlugField({ campaignId, slugPrefix, defaultSlug }: SlugFieldProps) {
             />
           </InputGroup.Root>
           <Button
-            type="submit"
-            form="verify-slug-form"
-            name="_action"
-            value="verifySlug"
+            type="button"
+            onClick={handleVerify}
             variant="outline"
             className="h-9.5 shrink-0 rounded-[11px] text-xs"
             disabled={isVerifying}
@@ -71,7 +71,11 @@ function SlugField({ campaignId, slugPrefix, defaultSlug }: SlugFieldProps) {
             slugResult.available ? "text-emerald-600" : "text-destructive",
           )}
         >
-          <CheckCircle2 size={17} className="shrink-0" />
+          {slugResult.available ? (
+            <CheckCircle2 size={17} className="shrink-0" />
+          ) : (
+            <XCircle size={17} className="shrink-0" />
+          )}
           <span>
             {slugResult.available
               ? "Slug disponível"
