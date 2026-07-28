@@ -167,6 +167,7 @@ function BillingRulesTab({ onEdit }: Props) {
                   </Table.Row>
                 );
               })}
+              {!billingRules.length && <Table.Empty />}
             </Table.Body>
           </Table.Root>
         </div>

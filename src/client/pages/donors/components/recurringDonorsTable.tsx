@@ -17,7 +17,6 @@ import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import { Empty } from "~/client/components/ui/empty";
 import {
   Popover,
   PopoverContent,
@@ -318,32 +317,23 @@ function RecurringDonorsTable({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {donors.data.length === 0 ? (
-            <Table.Row>
-              <Table.Cell colSpan={10}>
-                <Empty.Root className="py-12">
-                  <Empty.Media variant="icon">
-                    <Users />
-                  </Empty.Media>
-                  <Empty.Header>
-                    <Empty.Title>Nenhum doador encontrado</Empty.Title>
-                    <Empty.Description>
-                      {searchValue
-                        ? "Tente ajustar os termos da busca."
-                        : "Ainda não há doadores nesta categoria."}
-                    </Empty.Description>
-                  </Empty.Header>
-                </Empty.Root>
-              </Table.Cell>
-            </Table.Row>
-          ) : (
-            donors.data.map((donor) => (
-              <RecurringDonorRow
-                key={donor.subscriptionUuid}
-                donor={donor}
-                setDialog={setDialog}
-              />
-            ))
+          {donors.data.map((donor) => (
+            <RecurringDonorRow
+              key={donor.subscriptionUuid}
+              donor={donor}
+              setDialog={setDialog}
+            />
+          ))}
+          {!donors.data.length && (
+            <Table.Empty
+              icon={<Users />}
+              title="Nenhum doador encontrado"
+              description={
+                searchValue
+                  ? "Tente ajustar os termos da busca."
+                  : "Ainda não há doadores nesta categoria."
+              }
+            />
           )}
         </Table.Body>
       </Table.Root>

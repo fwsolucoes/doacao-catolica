@@ -102,6 +102,7 @@ function RecentDonationsCard({ campaignId }: { campaignId: string }) {
               </Table.Row>
             );
           })}
+          {!activity.recentDonations.length && <Table.Empty />}
         </Table.Body>
       </Table.Root>
     </Card.Root>

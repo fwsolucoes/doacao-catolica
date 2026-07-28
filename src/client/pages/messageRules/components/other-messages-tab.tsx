@@ -177,6 +177,7 @@ function OtherMessagesTab() {
                   </Table.Row>
                 );
               })}
+              {!otherMessages.length && <Table.Empty />}
             </Table.Body>
           </Table.Root>
         </div>

@@ -69,16 +69,7 @@ function TransfersTable({ transfers }: TransfersTableProps) {
             </Table.Row>
           ))}
 
-          {!transfers.data.length && (
-            <Table.Row>
-              <Table.Cell
-                colSpan={6}
-                className="h-28 text-center text-muted-foreground"
-              >
-                Nenhuma solicitação de saque encontrada.
-              </Table.Cell>
-            </Table.Row>
-          )}
+          {!transfers.data.length && <Table.Empty />}
         </Table.Body>
       </Table.Root>
 

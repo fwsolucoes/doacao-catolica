@@ -192,25 +192,10 @@ function CollaboratorsTable({
             )}
 
             {isActiveTab && !activeCollaborators.length && (
-              <Table.Row>
-                <Table.Cell
-                  colSpan={4}
-                  className="h-28 text-center text-muted-foreground"
-                >
-                  Nenhum colaborador ativo encontrado.
-                </Table.Cell>
-              </Table.Row>
+              <Table.Empty title="Nenhum colaborador ativo encontrado." />
             )}
-
             {!isActiveTab && !pendingCollaborators.length && (
-              <Table.Row>
-                <Table.Cell
-                  colSpan={4}
-                  className="h-28 text-center text-muted-foreground"
-                >
-                  Nenhum convite pendente encontrado.
-                </Table.Cell>
-              </Table.Row>
+              <Table.Empty title="Nenhum convite pendente encontrado." />
             )}
           </Table.Body>
         </Table.Root>

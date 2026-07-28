@@ -257,6 +257,7 @@ function CampaignNotificationsPage() {
                 </Table.Row>
               );
             })}
+            {!notifications.data.length && <Table.Empty />}
           </Table.Body>
         </Table.Root>
 
