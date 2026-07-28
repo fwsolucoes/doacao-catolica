@@ -1,5 +1,7 @@
+import { Inbox } from "lucide-react";
+import type { ComponentProps, ReactNode } from "react";
+import { Empty as EmptyComponent } from "./empty";
 import { cn } from "~/lib/utils";
-import type { ComponentProps } from "react";
 
 function Root({ className, ...props }: ComponentProps<"table">) {
   return (
@@ -61,4 +63,34 @@ function Cell({ className, ...props }: ComponentProps<"td">) {
   );
 }
 
-export const Table = { Root, Header, Body, Row, Head, Cell };
+type TableEmptyProps = {
+  title?: string;
+  description?: string;
+  icon?: ReactNode;
+  className?: string;
+};
+
+function Empty({
+  title = "Nenhum registro encontrado.",
+  description,
+  icon = <Inbox />,
+  className,
+}: TableEmptyProps) {
+  return (
+    <Row>
+      <Cell colSpan={9999}>
+        <EmptyComponent.Root className={cn("border-0 py-12", className)}>
+          <EmptyComponent.Media variant="icon">{icon}</EmptyComponent.Media>
+          <EmptyComponent.Header>
+            <EmptyComponent.Title>{title}</EmptyComponent.Title>
+            {description && (
+              <EmptyComponent.Description>{description}</EmptyComponent.Description>
+            )}
+          </EmptyComponent.Header>
+        </EmptyComponent.Root>
+      </Cell>
+    </Row>
+  );
+}
+
+export const Table = { Root, Header, Body, Row, Head, Cell, Empty };
