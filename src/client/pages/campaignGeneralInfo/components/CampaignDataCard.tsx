@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Calendar } from "lucide-react";
+import { useLoaderData, useParams } from "react-router";
+import { useRoot } from "~/client/hooks/useRoot";
 import { Card } from "~/client/components/ui/card";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
@@ -8,14 +10,6 @@ import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import { SlugField } from "../SlugField";
-
-type Campaign = CampaignGeneralInfoLoader["campaign"];
-
-type CampaignDataCardProps = {
-  campaign: Campaign;
-  campaignId: string;
-  slugPrefix: string;
-};
 
 function SectionCard({
   title,
@@ -32,9 +26,21 @@ function SectionCard({
   );
 }
 
-function CampaignDataCard({ campaign, campaignId, slugPrefix }: CampaignDataCardProps) {
+function CampaignDataCard() {
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
+
+  const { campaignId } = useParams<{ campaignId: string }>();
+
+  const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
+
+  const slugPrefix = SANCTON_DONATION_CHECKOUT_URL.endsWith("/")
+    ? SANCTON_DONATION_CHECKOUT_URL
+    : `${SANCTON_DONATION_CHECKOUT_URL}/`;
+
   const [isActive, setIsActive] = useState(campaign.status);
+
   const startDateValue = campaign.startDateInput ?? "";
+
   const endDateValue = campaign.endDateInput ?? "";
 
   return (
@@ -48,7 +54,7 @@ function CampaignDataCard({ campaign, campaignId, slugPrefix }: CampaignDataCard
       </FormField>
 
       <SlugField
-        campaignId={campaignId}
+        campaignId={campaignId!}
         slugPrefix={slugPrefix}
         defaultSlug={campaign.slug}
       />

@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from "react";
+import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import { cn } from "~/lib/utils";
 
 type DonationType = "MONTHLY" | "ONETIME" | "BOTH";
@@ -27,10 +29,6 @@ const DONATION_TYPE_OPTIONS: {
   },
 ];
 
-type DonationTypeCardProps = {
-  defaultType: string;
-};
-
 function SectionCard({
   title,
   children,
@@ -46,9 +44,10 @@ function SectionCard({
   );
 }
 
-function DonationTypeCard({ defaultType }: DonationTypeCardProps) {
+function DonationTypeCard() {
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
   const [donationType, setDonationType] = useState<DonationType>(
-    (defaultType as DonationType) || "ONETIME",
+    (campaign.typeDonation as DonationType) || "ONETIME",
   );
 
   return (

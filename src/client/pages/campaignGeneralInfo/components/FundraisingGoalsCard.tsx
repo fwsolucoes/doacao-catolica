@@ -1,14 +1,9 @@
 import type { ReactNode } from "react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { CurrencyInput } from "~/client/components/ui/currency-input";
 import { FormField } from "~/client/components/ui/form-field";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
-
-type Campaign = CampaignGeneralInfoLoader["campaign"];
-
-type FundraisingGoalsCardProps = {
-  campaign: Campaign;
-};
 
 function SectionCard({
   title,
@@ -25,7 +20,8 @@ function SectionCard({
   );
 }
 
-function FundraisingGoalsCard({ campaign }: FundraisingGoalsCardProps) {
+function FundraisingGoalsCard() {
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
   return (
     <SectionCard title="Metas de Arrecadação">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -1,14 +1,9 @@
 import type { ReactNode } from "react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
-
-type Campaign = CampaignGeneralInfoLoader["campaign"];
-
-type ReceivingInstitutionCardProps = {
-  campaign: Campaign;
-};
 
 function SectionCard({
   title,
@@ -25,7 +20,8 @@ function SectionCard({
   );
 }
 
-function ReceivingInstitutionCard({ campaign }: ReceivingInstitutionCardProps) {
+function ReceivingInstitutionCard() {
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
   return (
     <SectionCard title="Instituição Recebedora">
       <FormField name="institutionName" label="Nome da instituição">

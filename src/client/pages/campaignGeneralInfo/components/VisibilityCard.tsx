@@ -1,11 +1,9 @@
 import { useState, type ReactNode } from "react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { RadioGroup } from "~/client/components/ui/radio-group";
+import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import { cn } from "~/lib/utils";
-
-type VisibilityCardProps = {
-  defaultPublished: boolean;
-};
 
 function SectionCard({
   title,
@@ -22,8 +20,9 @@ function SectionCard({
   );
 }
 
-function VisibilityCard({ defaultPublished }: VisibilityCardProps) {
-  const [isPublic, setIsPublic] = useState(defaultPublished);
+function VisibilityCard() {
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
+  const [isPublic, setIsPublic] = useState(campaign.published);
 
   return (
     <SectionCard title="Visibilidade">

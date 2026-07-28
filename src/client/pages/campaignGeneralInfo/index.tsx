@@ -1,9 +1,7 @@
-import { useFetcher, useLoaderData, useParams } from "react-router";
+import { useFetcher, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
-import { useRoot } from "~/client/hooks/useRoot";
 import { Button } from "~/client/components/ui/button";
 import { FormErrorProvider } from "~/client/components/ui/form-field";
-import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import {
   buildSteps,
   StepNav,
@@ -16,12 +14,7 @@ import { ReceivingInstitutionCard } from "./components/ReceivingInstitutionCard"
 import { VisibilityCard } from "./components/VisibilityCard";
 
 function CampaignGeneralInfoPage() {
-  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
-  const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
-  const slugPrefix = SANCTON_DONATION_CHECKOUT_URL.endsWith("/")
-    ? SANCTON_DONATION_CHECKOUT_URL
-    : `${SANCTON_DONATION_CHECKOUT_URL}/`;
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
   useActionToast(data);
@@ -50,15 +43,11 @@ function CampaignGeneralInfoPage() {
             action={`/campaign/${campaignId}/settings/general-info`}
             className="flex flex-1 flex-col gap-6 min-w-0"
           >
-            <CampaignDataCard
-              campaign={campaign}
-              campaignId={campaignId!}
-              slugPrefix={slugPrefix}
-            />
-            <VisibilityCard defaultPublished={campaign.published} />
-            <DonationTypeCard defaultType={campaign.typeDonation ?? "ONETIME"} />
-            <FundraisingGoalsCard campaign={campaign} />
-            <ReceivingInstitutionCard campaign={campaign} />
+            <CampaignDataCard />
+            <VisibilityCard />
+            <DonationTypeCard />
+            <FundraisingGoalsCard />
+            <ReceivingInstitutionCard />
 
             <div className="flex justify-end">
               <Button
