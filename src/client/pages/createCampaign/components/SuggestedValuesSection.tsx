@@ -95,6 +95,7 @@ function SuggestedValuesSection() {
           variant="outline"
           size="sm"
           onClick={addValue}
+          disabled={editingId !== null}
           className="shrink-0"
         >
           <Plus size={15} />
@@ -168,6 +169,7 @@ function SuggestedValuesSection() {
                   variant="outline"
                   size="sm"
                   onClick={() => startEdit(val)}
+                  disabled={editingId !== null}
                   className="h-8 text-xs"
                 >
                   <Pencil size={13} />
@@ -178,6 +180,7 @@ function SuggestedValuesSection() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setDeleteTarget(val)}
+                  disabled={editingId !== null}
                   className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                 >
                   <Trash2 size={14} />
