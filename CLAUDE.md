@@ -53,7 +53,12 @@ Tailwind v4 gera utilitários sob demanda (N × 4px). Preferir escala sobre `[Xp
 
 ## Componentes UI
 
-**Regra:** sempre usar os componentes do design system. Nunca usar elementos HTML nativos (`<button>`, `<input>`, `<select>`, etc.) quando existe um componente equivalente em `src/client/components/ui/`. Mesmo que o estilo exija customização, use o componente e sobrescreva via `className`:
+**Regra:** sempre usar os componentes do design system. Nunca usar elementos HTML nativos (`<button>`, `<input>`, `<select>`, `<hr>`, etc.) quando existe um componente equivalente em `src/client/components/ui/`. Mesmo que o estilo exija customização, use o componente e sobrescreva via `className`:
+
+Exemplos de mapeamento obrigatório:
+- Divisor/linha separadora → `<Separator />` (nunca `<hr>`)
+- Botão → `<Button>` (nunca `<button>`)
+- Input → `<Input>` (nunca `<input>`)
 
 ```tsx
 // correto — usa Button com override de estilo

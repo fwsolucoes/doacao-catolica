@@ -13,10 +13,10 @@ function MediasSection() {
       <FormField name="image" label="Imagem desktop">
         <ImageUploadCompact name="image" width={1400} height={433} description="Dimensão recomendada: 1400×433px." />
       </FormField>
-      <FormField name="imageMobile" label="Imagem mobile">
+      <FormField name="imageMobile" label="Imagem mobile" optional>
         <ImageUploadCompact name="imageMobile" width={400} height={300} description="Dimensão recomendada: 400×300px." />
       </FormField>
-      <FormField name="videoUrl" label="Vídeo destaque">
+      <FormField name="videoUrl" label="Vídeo destaque" optional>
         <InputGroup.Root>
           <InputGroup.Addon>
             <Play size={16} />
@@ -30,7 +30,7 @@ function MediasSection() {
           Cole a URL do YouTube para exibir o vídeo destaque.
         </p>
       </FormField>
-      <FormField name="headerImage" label="Imagem cabeçalho da tela de cadastro">
+      <FormField name="headerImage" label="Imagem cabeçalho da tela de cadastro" optional>
         <ImageUploadCompact name="headerImage" />
       </FormField>
     </SectionCard>

@@ -24,6 +24,7 @@ type FormFieldProps = {
   name: string;
   label: string;
   required?: boolean;
+  optional?: boolean;
   className?: string;
   children: React.ReactNode;
 };
@@ -32,6 +33,7 @@ function FormField({
   name,
   label,
   required = false,
+  optional = false,
   className,
   children,
 }: FormFieldProps) {
@@ -45,9 +47,10 @@ function FormField({
         data-invalid={hasError ? "" : undefined}
         className={cn("group flex flex-col gap-1.5", className)}
       >
-        <Label htmlFor={name} className="inline-flex items-baseline gap-0.5">
+        <Label htmlFor={name} className="inline-flex items-baseline gap-1.5">
           {required && <span className="text-destructive">*</span>}
           {label}
+          {optional && <span className="text-xs font-normal text-muted-foreground">(opcional)</span>}
         </Label>
 
         {children}
