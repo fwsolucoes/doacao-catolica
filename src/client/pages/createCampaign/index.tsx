@@ -4,11 +4,16 @@ import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { FormErrorProvider } from "~/client/components/ui/form-field";
 import { CampaignDataSection } from "./components/CampaignDataSection";
+import { DonationRulesSection } from "./components/DonationRulesSection";
 import { DonationTypeSection } from "./components/DonationTypeSection";
 import { FundraisingGoalsSection } from "./components/FundraisingGoalsSection";
 import { MediasSection } from "./components/MediasSection";
 import { PageContentSection } from "./components/PageContentSection";
+import { PaymentMethodsSection } from "./components/PaymentMethodsSection";
 import { ReceivingInstitutionSection } from "./components/ReceivingInstitutionSection";
+import { SobreNosSection } from "./components/SobreNosSection";
+import { SuggestedValuesSection } from "./components/SuggestedValuesSection";
+import { SupportChannelsSection } from "./components/SupportChannelsSection";
 import { VisibilitySection } from "./components/VisibilitySection";
 import { WhyDonateSection } from "./components/WhyDonateSection";
 
@@ -45,6 +50,11 @@ function CreateCampaignPage() {
           <PageContentSection />
           <MediasSection />
           <WhyDonateSection />
+          <SobreNosSection />
+          <SupportChannelsSection />
+          <PaymentMethodsSection />
+          <DonationRulesSection />
+          <SuggestedValuesSection />
 
           <div className="flex justify-end">
             <Button
