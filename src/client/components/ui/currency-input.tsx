@@ -9,7 +9,9 @@ type CurrencyInputProps = {
   placeholder?: string;
   min?: number;
   disabled?: boolean;
+  autoFocus?: boolean;
   className?: string;
+  onValueChange?: (value: number) => void;
 };
 
 function digitsToDisplay(digits: string): string {
@@ -28,7 +30,9 @@ function CurrencyInput({
   placeholder = "0,00",
   min,
   disabled,
+  autoFocus,
   className,
+  onValueChange,
 }: CurrencyInputProps) {
   const fieldName = use(FormFieldContext);
   const resolvedName = name ?? (fieldName || undefined);
@@ -46,6 +50,7 @@ function CurrencyInput({
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const digits = e.target.value.replace(/\D/g, "");
     setRawDigits(digits);
+    onValueChange?.(digits ? parseInt(digits, 10) / 100 : 0);
   }
 
   return (
@@ -68,6 +73,7 @@ function CurrencyInput({
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
+        autoFocus={autoFocus}
         className={cn(
           "flex-1 min-h-11 bg-transparent text-sm",
           "px-3 py-2 text-foreground",

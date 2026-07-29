@@ -4,7 +4,7 @@ import { FormField } from "~/client/components/ui/form-field";
 import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { Input } from "~/client/components/ui/input";
 
-function SobreNosSection() {
+function AboutUsSection() {
   return (
     <SectionCard
       title="Sobre nós"
@@ -28,4 +28,4 @@ function SobreNosSection() {
   );
 }
 
-export { SobreNosSection };
+export { AboutUsSection };

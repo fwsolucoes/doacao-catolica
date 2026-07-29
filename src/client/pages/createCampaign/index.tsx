@@ -11,7 +11,7 @@ import { MediasSection } from "./components/MediasSection";
 import { PageContentSection } from "./components/PageContentSection";
 import { PaymentMethodsSection } from "./components/PaymentMethodsSection";
 import { ReceivingInstitutionSection } from "./components/ReceivingInstitutionSection";
-import { SobreNosSection } from "./components/SobreNosSection";
+import { AboutUsSection } from "./components/AboutUsSection";
 import { SuggestedValuesSection } from "./components/SuggestedValuesSection";
 import { SupportChannelsSection } from "./components/SupportChannelsSection";
 import { VisibilitySection } from "./components/VisibilitySection";
@@ -50,7 +50,7 @@ function CreateCampaignPage() {
           <PageContentSection />
           <MediasSection />
           <WhyDonateSection />
-          <SobreNosSection />
+          <AboutUsSection />
           <SupportChannelsSection />
           <PaymentMethodsSection />
           <DonationRulesSection />
