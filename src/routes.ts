@@ -9,6 +9,7 @@ export default [
   
   layout("./main/routes/layout.portalLayout.tsx", [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
+    route("my-campaigns/create", "./main/routes/route.createCampaign.tsx"),
     route("pending-invites", "./main/routes/route.pendingInvites.tsx"),
     route("campaigns-groups", "./main/routes/route.campaignsGroups.tsx"),
   ]),
