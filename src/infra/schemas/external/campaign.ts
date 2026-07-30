@@ -56,7 +56,12 @@ const verifySlugSchema = z.object({
   isSlugInUse: z.boolean(),
 });
 
+const createCampaignResponseSchema = z.object({
+  id: z.string(),
+});
+
 export {
+  createCampaignResponseSchema,
   externalCampaignSchema,
   listCampaignsSchema,
   verifySlugSchema,

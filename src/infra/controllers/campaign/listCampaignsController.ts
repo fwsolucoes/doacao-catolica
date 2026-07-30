@@ -3,7 +3,7 @@ import type { ListCampaignsUseCase } from "~/app/useCases/campaign/listCampaigns
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
 import { AuthService } from "~/infra/services/authService";
-import { listCampaignsSchema } from "~/infra/schemas/internal/campaign";
+import { paginationSchema as listCampaignsSchema } from "~/infra/schemas/internal/pagination";
 import type { RouteDTO } from "~/main/types/route";
 
 class ListCampaignsController {

@@ -6,6 +6,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { createCampaign } from "../factories/campaign/createCampaignFactory";
 import { verifySlug } from "../factories/campaign/verifySlugFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -24,9 +25,10 @@ export async function action(args: Route.ActionArgs) {
     switch (_action) {
       case "verifySlug":
         return await verifySlug.handle(route);
-      case "createCampaign":
-        // TODO: implement when backend is ready
-        return null;
+      case "createCampaign": {
+        const { campaignId } = await createCampaign.handle(route);
+        return redirect(`/campaign/${campaignId}/home`);
+      }
       default:
         return HttpAdapter.badRequest("Ação não definida");
     }
