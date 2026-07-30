@@ -27,7 +27,7 @@ export async function action(args: Route.ActionArgs) {
         return await verifySlug.handle(route);
       case "createCampaign": {
         const { campaignId } = await createCampaign.handle(route);
-        return redirect(`/campaign/${campaignId}/home`);
+        return redirect(`/campaign/${campaignId}/created`);
       }
       default:
         return HttpAdapter.badRequest("Ação não definida");
