@@ -10,8 +10,8 @@ function MediasSection() {
       title="Mídias"
       description="Imagens e vídeo exibidos no topo e no cabeçalho de cadastro."
     >
-      <FormField name="image" label="Imagem desktop">
-        <ImageUploadCompact name="image" width={1400} height={433} description="Dimensão recomendada: 1400×433px." />
+      <FormField name="featuredImage" label="Imagem desktop">
+        <ImageUploadCompact name="featuredImage" width={1400} height={433} description="Dimensão recomendada: 1400×433px." />
       </FormField>
       <FormField name="imageMobile" label="Imagem mobile" optional>
         <ImageUploadCompact name="imageMobile" width={400} height={300} description="Dimensão recomendada: 400×300px." />

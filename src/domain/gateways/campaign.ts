@@ -14,9 +14,9 @@ type CreateCampaignInput = {
   phone: string | null;
   cnpj: string | null;
   institutionName: string | null;
-  institutionLogo: string | null;
-  address: string | null;
   image: string | null;
+  address: string | null;
+  featuredImage: string | null;
   imageMobile: string | null;
   headerImage: string | null;
   videoUrl: string | null;

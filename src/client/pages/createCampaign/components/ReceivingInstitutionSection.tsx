@@ -10,9 +10,9 @@ function ReceivingInstitutionSection() {
       title="Instituição recebedora"
       description="Dados legais da entidade que receberá as doações."
     >
-      <FormField name="institutionLogo" label="Logo da instituição" required>
+      <FormField name="image" label="Logo da instituição" required>
         <ImageUploadCompact
-          name="institutionLogo"
+          name="image"
           description="Formato PNG ou JPG. Dimensão recomendada: 400x400px."
           width={400}
           height={400}

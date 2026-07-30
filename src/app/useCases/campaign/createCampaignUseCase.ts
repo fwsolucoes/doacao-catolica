@@ -13,7 +13,7 @@ type InputProps = {
   phone: string | null;
   cnpj: string | null;
   institutionName: string | null;
-  institutionLogo: string | null;
+  image: string | null;
   institutionCep: string | null;
   institutionStreet: string | null;
   institutionNumber: string | null;
@@ -21,7 +21,7 @@ type InputProps = {
   institutionNeighborhood: string | null;
   institutionCity: string | null;
   institutionState: string | null;
-  image: string | null;
+  featuredImage: string | null;
   imageMobile: string | null;
   headerImage: string | null;
   videoUrl: string | null;
@@ -65,9 +65,9 @@ class CreateCampaignUseCase {
         phone: input.phone,
         cnpj: input.cnpj,
         institutionName: input.institutionName,
-        institutionLogo: input.institutionLogo,
-        address,
         image: input.image,
+        address,
+        featuredImage: input.featuredImage,
         imageMobile: input.imageMobile,
         headerImage: input.headerImage,
         videoUrl: input.videoUrl,
