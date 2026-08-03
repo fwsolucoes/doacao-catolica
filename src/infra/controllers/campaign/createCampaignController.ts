@@ -14,7 +14,10 @@ class CreateCampaignController {
     if (!user) throw HttpAdapter.unauthorized("Unauthorized");
 
     const body = await DecodeRequestBodyAdapter.decode(route.request);
-    const validated = new SchemaValidatorAdapter(createCampaignSchema).validate(body);
+
+    const validated = new SchemaValidatorAdapter(createCampaignSchema).validate(
+      body,
+    );
 
     return await this.createCampaignUseCase.execute({
       token: user.token,

@@ -45,6 +45,8 @@ const environmentVariablesSchema = z.object({
   LIGHT_LOGO: z.url(),
   MOBILE_LOGO: z.url(),
   PLATAFORM_NAME: z.string().default("Doação Católica"),
+
+  SUB_ACCOUNT_ID: z.string(),
 });
 
 function formatErrorMessage(error: z.ZodError) {

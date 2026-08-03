@@ -18,6 +18,8 @@ import {
   verifySlugSchema,
 } from "../schemas/external/campaign";
 
+import { environmentVariables } from "~/main/config/environmentVariables";
+
 class CampaignGateway implements CampaignGatewayDTO {
   async listCampaigns(
     searchParams: CampaignSearchParams,
@@ -79,9 +81,9 @@ class CampaignGateway implements CampaignGatewayDTO {
       slug: input.slug,
       type_donation: input.typeDonation,
       type: 1,
-      subaccount_id: "019ab7b4-d0c3-7662-bac0-5a8377c51f7f",
+      subaccount_id: environmentVariables.SUB_ACCOUNT_ID,
       status: input.status,
-      published: input.published,
+      visible_in_marketplace: input.published,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: !input.endDate,
@@ -116,14 +118,16 @@ class CampaignGateway implements CampaignGatewayDTO {
       },
     };
 
-    const apiResponse = await api.post(
-      `/project/create/${input.accountId}`,
-      { body, token },
-    );
+    const apiResponse = await api.post(`/project/create/${input.accountId}`, {
+      body,
+      token,
+    });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(createCampaignResponseSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      createCampaignResponseSchema,
+    );
     return schemaValidator.validate(apiResponse.response);
   }
 
@@ -135,7 +139,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       name: input.name,
       slug: input.slug,
       status: input.status,
-      published: input.published,
+      visible_in_marketplace: input.published,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: input.noEndDate,
@@ -169,7 +173,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       name: input.name,
       slug: input.slug,
       status: input.status,
-      published: input.published,
+      visible_in_marketplace: input.published,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: input.noEndDate,
