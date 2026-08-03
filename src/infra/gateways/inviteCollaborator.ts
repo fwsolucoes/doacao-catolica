@@ -26,24 +26,18 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
     });
 
     if (!apiResponse.success) {
-      throw HttpAdapter.badRequest(
-        apiResponse.message,
-        apiResponse.response,
-      );
+      throw HttpAdapter.badRequest(apiResponse.message, apiResponse.response);
     }
   }
 
   async declineInvitation(id: string, token: string): Promise<void> {
-    const apiResponse = await api.put(
-      `/project-user-invite/cancel/${id}`,
-      { body: {}, token },
-    );
+    const apiResponse = await api.put(`/project-user-invite/cancel/${id}`, {
+      body: {},
+      token,
+    });
 
     if (!apiResponse.success) {
-      throw HttpAdapter.badRequest(
-        apiResponse.message,
-        apiResponse.response,
-      );
+      throw HttpAdapter.badRequest(apiResponse.message, apiResponse.response);
     }
   }
 
@@ -78,10 +72,7 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  async deleteInviteCollaborator(
-    id: string,
-    token: string,
-  ): Promise<void> {
+  async deleteInviteCollaborator(id: string, token: string): Promise<void> {
     const apiResponse = await api.delete(`/project_user/disable/${id}`, {
       token,
     });

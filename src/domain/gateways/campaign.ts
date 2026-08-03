@@ -90,6 +90,11 @@ type UpdateCampaignPageInput = {
   headerImage: string | null;
 };
 
+type GetProjectPermissionsOutput = {
+  projectRole: { name: string };
+  projectPermissions: string[];
+};
+
 type CampaignGatewayDTO = {
   listCampaigns: (
     searchParams: CampaignSearchParams,
@@ -109,6 +114,11 @@ type CampaignGatewayDTO = {
     input: UpdateCampaignPageInput,
     token: string,
   ) => Promise<void>;
+  getProjectPermissions: (
+    projectId: string,
+    userId: string,
+    token: string,
+  ) => Promise<GetProjectPermissionsOutput>;
 };
 
 export type {
@@ -116,4 +126,5 @@ export type {
   CreateCampaignInput,
   UpdateCampaignGeneralInfoInput,
   UpdateCampaignPageInput,
+  GetProjectPermissionsOutput,
 };

@@ -6,7 +6,10 @@ import type {
   CreateCampaignInput,
   UpdateCampaignGeneralInfoInput,
   UpdateCampaignPageInput,
+  GetProjectPermissionsOutput,
 } from "~/domain/gateways/campaign";
+import { PROJECT_ALL_PERMISSIONS } from "~/app/template/PROJECT_ALL_PERMISSIONS";
+import { externalCampaignPermissionsSchema } from "../schemas/external/campaignPermissions";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
@@ -200,6 +203,36 @@ class CampaignGateway implements CampaignGatewayDTO {
     });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async getProjectPermissions(
+    projectId: string,
+    userId: string,
+    token: string,
+  ): Promise<GetProjectPermissionsOutput> {
+    if (process.env.NODE_ENV === "development") {
+      return {
+        projectRole: { name: "Administrador" },
+        projectPermissions: [...PROJECT_ALL_PERMISSIONS],
+      };
+    }
+
+    const url = `/user/get-role/project-id/${projectId}/user-id/${userId}`;
+    const apiResponse = await api.get(url, { token });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalCampaignPermissionsSchema,
+    );
+    const data = schemaValidator.validate(apiResponse.response);
+
+    return {
+      projectRole: { name: data.project_role.name },
+      projectPermissions: data.project_role.project_role_permissions.map(
+        (p) => p.project_permissions.name,
+      ),
+    };
   }
 }
 
