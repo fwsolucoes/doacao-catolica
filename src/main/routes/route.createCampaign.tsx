@@ -8,12 +8,16 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { createCampaign } from "../factories/campaign/createCampaignFactory";
 import { verifySlug } from "../factories/campaign/verifySlugFactory";
+import { listProjectCategories } from "../factories/projectCategory/listProjectCategoriesFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  return null;
+
+  const projectCategories = await listProjectCategories.handle(route);
+
+  return { projectCategories };
 }
 
 export async function action(args: Route.ActionArgs) {

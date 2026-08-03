@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Calendar } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
+import type { CreateCampaignLoader } from "~/client/types/createCampaignLoader";
 import { CreateSlugField } from "../CreateSlugField";
 
 function CampaignDataSection() {
+  const { projectCategories } = useLoaderData<CreateCampaignLoader>();
   const [isActive, setIsActive] = useState(true);
 
   return (
@@ -24,15 +27,16 @@ function CampaignDataSection() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField name="category" label="Categoria">
-          <Select.Root name="category" defaultValue="paroquia">
+          <Select.Root name="category">
             <Select.Trigger>
               <Select.Value placeholder="Selecione a categoria" />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="paroquia">Paróquia</Select.Item>
-              <Select.Item value="comunidade">Comunidade</Select.Item>
-              <Select.Item value="missao">Missão</Select.Item>
-              <Select.Item value="outro">Outro</Select.Item>
+              {projectCategories.map((category) => (
+                <Select.Item key={category.id} value={category.id}>
+                  {category.name}
+                </Select.Item>
+              ))}
             </Select.Content>
           </Select.Root>
         </FormField>
