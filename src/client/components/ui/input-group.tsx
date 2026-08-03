@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { use } from "react";
-import { FormFieldContext } from "~/client/components/ui/form-field";
+import { FormErrorContext, FormFieldContext } from "~/client/components/ui/form-field";
 import { cn } from "~/lib/utils";
 
 function Root({ className, ...props }: ComponentProps<"div">) {
@@ -23,6 +23,9 @@ function Root({ className, ...props }: ComponentProps<"div">) {
         "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-2",
         "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-ring",
         "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-offset-1",
+        // Error state: red border and red focus ring in side mode
+        "group-data-invalid:[&:has([data-slot='input-side'])]:border-destructive",
+        "group-data-invalid:[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-destructive",
         className,
       )}
       {...props}
@@ -80,20 +83,24 @@ function Text({ className, ...props }: ComponentProps<"span">) {
 
 function Input({ className, id, name, ...props }: ComponentProps<"input">) {
   const fieldName = use(FormFieldContext);
+  const fieldErrors = use(FormErrorContext);
   const resolvedName = name ?? (fieldName || undefined);
   const resolvedId = id ?? (fieldName || undefined);
+  const hasError = !!fieldErrors[fieldName]?.length;
 
   return (
     <input
       data-slot="input-group-input"
       id={resolvedId}
       name={resolvedName}
+      aria-invalid={hasError || undefined}
       className={cn(
         "w-full min-h-11 rounded-md border border-border bg-input text-sm",
         "px-3 py-2 text-foreground",
         "placeholder:text-muted-foreground",
         "outline-none ring-offset-background",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+        "group-data-invalid:border-destructive group-data-invalid:focus-visible:ring-destructive",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}

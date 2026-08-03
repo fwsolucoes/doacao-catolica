@@ -9,7 +9,7 @@ const createCampaignSchema = z.object({
   startDate: z.string().optional().transform((v) => v || null),
   endDate: z.string().optional().transform((v) => v || null),
   phone: z.string().optional().transform((v) => v || null),
-  cnpj: z.string().optional().transform((v) => v || null),
+  cnpj: z.string().min(1, "CPF/CNPJ é obrigatório"),
   institutionName: z.string().optional().transform((v) => v || null),
   image: z.string().optional().transform((v) => v || null),
   institutionCep: z.string().optional().transform((v) => v || null),
@@ -56,7 +56,7 @@ const updateCampaignGeneralInfoSchema = z.object({
   totalGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   monthlyGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   institutionName: z.string().optional().transform((v) => v || null),
-  cnpj: z.string().optional().transform((v) => v || null),
+  cnpj: z.string().min(1, "CPF/CNPJ é obrigatório"),
   address: z.string().optional().transform((v) => v || null),
 });
 
