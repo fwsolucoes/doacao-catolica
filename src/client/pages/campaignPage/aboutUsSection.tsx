@@ -14,23 +14,23 @@ function AboutUsSection() {
       title="Sobre nós"
       description="Apresente a instituição responsável pela campanha."
     >
-      <FormField name="aboutUsTitle" label="Título">
+      <FormField name="aboutTitle" label="Título">
         <Input
-          name="aboutUsTitle"
+          name="aboutTitle"
           placeholder="Ex.: Sobre nossa paróquia"
           defaultValue={preferences.aboutUsTitle ?? ""}
         />
       </FormField>
-      <FormField name="aboutUsText" label="Texto">
+      <FormField name="aboutText" label="Texto">
         <RichTextarea
-          name="aboutUsText"
+          name="aboutText"
           placeholder="Conte a história da instituição..."
           defaultValue={preferences.aboutUsText ?? ""}
         />
       </FormField>
-      <FormField name="aboutUsImage" label="Imagem do bloco">
+      <FormField name="aboutImage" label="Imagem do bloco">
         <ImageUpload
-          name="aboutUsImage"
+          name="aboutImage"
           defaultValue={preferences.aboutUsImage}
           width={800}
           height={600}

@@ -6,16 +6,16 @@ type InputProps = {
   token: string;
   title: string | null;
   description: string | null;
-  image: string | null;
+  featuredImage: string | null;
   imageMobile: string | null;
   videoUrl: string | null;
   headerImage: string | null;
   whyDonateTitle: string | null;
   whyDonateText: string | null;
   whyDonateImage: string | null;
-  aboutUsTitle: string | null;
-  aboutUsText: string | null;
-  aboutUsImage: string | null;
+  aboutTitle: string | null;
+  aboutText: string | null;
+  aboutImage: string | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
 };
@@ -42,9 +42,9 @@ class UpdateCampaignPageUseCase {
         whyDonateTitle: input.whyDonateTitle,
         whyDonateText: input.whyDonateText,
         whyDonateImage: input.whyDonateImage,
-        aboutUsTitle: input.aboutUsTitle,
-        aboutUsText: input.aboutUsText,
-        aboutUsImage: input.aboutUsImage,
+        aboutUsTitle: input.aboutTitle,
+        aboutUsText: input.aboutText,
+        aboutUsImage: input.aboutImage,
         supportWhatsapp: input.supportWhatsapp,
         supportEmail: input.supportEmail,
       },
@@ -74,7 +74,7 @@ class UpdateCampaignPageUseCase {
         email: campaign.email,
         type: campaign.type,
         description: input.description,
-        image: input.image,
+        image: input.featuredImage,
         imageMobile: input.imageMobile,
         videoUrl: input.videoUrl,
         headerImage: input.headerImage,

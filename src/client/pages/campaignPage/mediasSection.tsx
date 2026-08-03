@@ -14,9 +14,9 @@ function MediasSection() {
       title="Mídias"
       description="Imagens e vídeo exibidos no topo e no cabeçalho de cadastro."
     >
-      <FormField name="image" label="Imagem desktop">
+      <FormField name="featuredImage" label="Imagem desktop">
         <ImageUploadCompact
-          name="image"
+          name="featuredImage"
           defaultValue={campaign.image}
           width={1400}
           height={433}
