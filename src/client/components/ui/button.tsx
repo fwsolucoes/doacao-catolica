@@ -32,7 +32,7 @@ const button = tv({
   },
 });
 
-type ButtonVariants = VariantProps<typeof button>;
+export type ButtonVariants = VariantProps<typeof button>;
 
 type ButtonProps = ComponentProps<"button"> &
   ButtonVariants & {

@@ -8,6 +8,7 @@ import { AccessActionModal } from "./accessActionModal";
 import { ActiveCollaboratorsTable } from "./activeCollaboratorsTable";
 import { ChangeRoleModal } from "./changeRoleModal";
 import { PendingCollaboratorsTable } from "./pendingCollaboratorsTable";
+import { ResendInviteModal } from "./resendInviteModal";
 import type {
   ActiveCollaborator,
   CollaboratorRole,
@@ -20,6 +21,7 @@ type DialogState =
   | { type: "changeRole"; collaborator: ActiveCollaborator }
   | { type: "removeAccess"; collaborator: ActiveCollaborator }
   | { type: "cancelInvite"; invite: PendingCollaborator }
+  | { type: "resendInvite"; invite: PendingCollaborator }
   | null;
 
 function getInitials(name: string, email: string) {
@@ -141,6 +143,9 @@ function CollaboratorsTable() {
               onCancelInvite={(invite) =>
                 setDialog({ type: "cancelInvite", invite })
               }
+              onResendInvite={(invite) =>
+                setDialog({ type: "resendInvite", invite })
+              }
             />
           )}
         </Card.Root>
@@ -168,6 +173,10 @@ function CollaboratorsTable() {
         title="Cancelar convite"
         description={`Cancelar o convite enviado para ${dialog?.type === "cancelInvite" ? dialog.invite.email : "este e-mail"}?`}
         actionLabel="Cancelar convite"
+        onClose={() => setDialog(null)}
+      />
+      <ResendInviteModal
+        invite={dialog?.type === "resendInvite" ? dialog.invite : null}
         onClose={() => setDialog(null)}
       />
     </>

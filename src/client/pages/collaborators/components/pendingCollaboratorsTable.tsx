@@ -22,11 +22,13 @@ const STATUS_BADGE: Record<string, { className: string; label: string }> = {
 type PendingCollaboratorsTableProps = {
   invites: PendingCollaborator[];
   onCancelInvite: (invite: PendingCollaborator) => void;
+  onResendInvite: (invite: PendingCollaborator) => void;
 };
 
 function PendingCollaboratorsTable({
   invites,
   onCancelInvite,
+  onResendInvite,
 }: PendingCollaboratorsTableProps) {
   return (
     <Table.Root>
@@ -81,7 +83,7 @@ function PendingCollaboratorsTable({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => onResendInvite(invite)}>
                       <UserCheck size={16} />
                       Reenviar convite
                     </DropdownMenuItem>

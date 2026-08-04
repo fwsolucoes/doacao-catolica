@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import type { ButtonVariants } from "~/client/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ type AccessActionModalProps = {
   actionLabel: string;
   actionName?: string;
   resourceId?: string;
+  buttonVariant?: ButtonVariants["variant"];
   onClose: () => void;
 };
 
@@ -27,6 +29,7 @@ function AccessActionModal({
   actionLabel,
   actionName,
   resourceId,
+  buttonVariant = "danger",
   onClose,
 }: AccessActionModalProps) {
   const fetcher = useFetcher();
@@ -57,7 +60,7 @@ function AccessActionModal({
               type="submit"
               name="_action"
               value={actionName ?? ""}
-              variant="danger"
+              variant={buttonVariant}
               disabled={isSubmitting || !actionName || !resourceId}
               isLoading={isSubmitting}
             >

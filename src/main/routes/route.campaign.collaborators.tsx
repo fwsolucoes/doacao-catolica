@@ -10,6 +10,7 @@ import { AuthService } from "~/infra/services/authService";
 import { listCollaborators } from "../factories/collaborators/listCollaboratorsFactory";
 import { createInviteCollaborator } from "../factories/inviteCollaborator/createInviteCollaboratorFactory";
 import { deleteInviteCollaborator } from "../factories/inviteCollaborator/deleteInviteCollaboratorFactory";
+import { resendInviteCollaborator } from "../factories/inviteCollaborator/resendInviteCollaboratorFactory";
 import { listInviteCollaborators } from "../factories/inviteCollaborator/listInviteCollaboratorsFactory";
 import { updateInviteCollaborator } from "../factories/inviteCollaborator/updateInviteCollaboratorFactory";
 import { listProjectRoles } from "../factories/projectRole/listProjectRolesFactory";
@@ -44,6 +45,8 @@ export async function action(args: Route.ActionArgs) {
         return await updateInviteCollaborator.handle(adaptedRoute);
       case "deleteInviteCollaborator":
         return await deleteInviteCollaborator.handle(adaptedRoute);
+      case "resendInviteCollaborator":
+        return await resendInviteCollaborator.handle(adaptedRoute);
       default:
         throw HttpAdapter.badRequest("Action not implemented");
     }
