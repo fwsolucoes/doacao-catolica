@@ -1,132 +1,19 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router";
-import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
 import { AddCollaboratorModal } from "./components/addCollaboratorModal";
-import { AccessActionModal } from "./components/accessActionModal";
-import { ChangeRoleModal } from "./components/changeRoleModal";
 import { CollaboratorsHeader } from "./components/header";
 import { CollaboratorsTable } from "./components/collaboratorsTable";
-import type {
-  ActiveCollaborator,
-  CollaboratorRole,
-  PendingCollaborator,
-} from "./components/types";
-
-const ROLE_TONES: CollaboratorRole["tone"][] = [
-  "emerald",
-  "navy",
-  "violet",
-];
-
-function getInitials(name: string, email: string) {
-  const base = name.trim() || email.split("@")[0] || email;
-  const parts = base.split(/\s+/).filter(Boolean);
-
-  if (parts.length === 0) return "--";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-
-  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
-}
-
-function formatStatus(status: string) {
-  const normalized = status.trim().toLowerCase();
-  if (normalized === "pending") return "Pendente";
-  if (normalized === "accepted") return "Aceito";
-  if (normalized === "rejected") return "Recusado";
-
-  return status;
-}
-
-function getRoleTone(name: string, index: number): CollaboratorRole["tone"] {
-  const normalizedName = name.trim().toLowerCase();
-
-  if (normalizedName.includes("supervisor")) return "violet";
-  if (normalizedName.includes("finance")) return "navy";
-  if (normalizedName.includes("relacionamento")) return "emerald";
-
-  return ROLE_TONES[index % ROLE_TONES.length];
-}
 
 function CollaboratorsPage() {
-  const { collaborators, inviteCollaborators, projectRoles } =
-    useLoaderData<CollaboratorsLoader>();
-  const roles: CollaboratorRole[] = projectRoles.map((role, index) => ({
-    id: role.id,
-    name: role.name,
-    description: role.description,
-    tone: getRoleTone(role.name, index),
-  }));
-  const rolesById = new Map(roles.map((role) => [role.id, role]));
   const [addOpen, setAddOpen] = useState(false);
-  const [changeRoleCollaborator, setChangeRoleCollaborator] =
-    useState<ActiveCollaborator | null>(null);
-  const [removeCollaborator, setRemoveCollaborator] =
-    useState<ActiveCollaborator | null>(null);
-  const [cancelInvite, setCancelInvite] = useState<PendingCollaborator | null>(
-    null,
-  );
-
-  const activeCollaborators: ActiveCollaborator[] = collaborators.data.map(
-    (collaborator) => ({
-      id: collaborator.id,
-      initials: getInitials(collaborator.user.name, collaborator.user.email),
-      name: collaborator.user.name,
-      email: collaborator.user.email,
-      role: rolesById.get(collaborator.roleId) ?? {
-        id: collaborator.roleId,
-        name: "Função não encontrada",
-        description: "Esta função não está disponível na lista de funções.",
-        tone: "navy",
-      },
-    }),
-  );
-
-  const pendingCollaborators: PendingCollaborator[] = inviteCollaborators.data
-    .filter(
-      (invite) => invite.inviteStatus.trim().toLowerCase() !== "accepted",
-    )
-    .map((invite) => ({
-      id: invite.id,
-      initials: getInitials(invite.invitedUserName, invite.invitedUserEmail),
-      name: invite.invitedUserName,
-      email: invite.invitedUserEmail,
-      status: formatStatus(invite.inviteStatus),
-    }));
 
   return (
     <div className="flex flex-col gap-6">
       <CollaboratorsHeader onAddCollaborator={() => setAddOpen(true)} />
-      <CollaboratorsTable
-        activeCollaborators={activeCollaborators}
-        pendingCollaborators={pendingCollaborators}
-        onChangeRole={setChangeRoleCollaborator}
-        onRemoveAccess={setRemoveCollaborator}
-        onCancelInvite={setCancelInvite}
-      />
+      <CollaboratorsTable />
 
       <AddCollaboratorModal
         open={addOpen}
         onClose={() => setAddOpen(false)}
-      />
-      <ChangeRoleModal
-        collaborator={changeRoleCollaborator}
-        onClose={() => setChangeRoleCollaborator(null)}
-      />
-      <AccessActionModal
-        open={!!removeCollaborator}
-        title="Remover acesso"
-        description={`Remover o acesso de ${removeCollaborator?.name ?? "este colaborador"} à campanha?`}
-        actionLabel="Remover acesso"
-        actionName="deleteInviteCollaborator"
-        resourceId={removeCollaborator?.id}
-        onClose={() => setRemoveCollaborator(null)}
-      />
-      <AccessActionModal
-        open={!!cancelInvite}
-        title="Cancelar convite"
-        description={`Cancelar o convite enviado para ${cancelInvite?.email ?? "este e-mail"}?`}
-        actionLabel="Cancelar convite"
-        onClose={() => setCancelInvite(null)}
       />
     </div>
   );
