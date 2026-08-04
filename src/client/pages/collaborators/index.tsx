@@ -87,8 +87,11 @@ function CollaboratorsPage() {
     }),
   );
 
-  const pendingCollaborators: PendingCollaborator[] =
-    inviteCollaborators.data.map((invite) => ({
+  const pendingCollaborators: PendingCollaborator[] = inviteCollaborators.data
+    .filter(
+      (invite) => invite.inviteStatus.trim().toLowerCase() !== "accepted",
+    )
+    .map((invite) => ({
       id: invite.id,
       initials: getInitials(invite.invitedUserName, invite.invitedUserEmail),
       name: invite.invitedUserName,

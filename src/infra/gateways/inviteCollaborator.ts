@@ -57,6 +57,8 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
       token,
     });
 
+    console.log("🚀~~ apiResponse", apiResponse);
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
@@ -91,6 +93,9 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
       `/project-user-invite/list?${params.toString()}`,
       { token },
     );
+
+    console.log("🚀~~ apiResponse", apiResponse);
+    console.log("🚀~~ apiResponse", apiResponse.response.items);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 

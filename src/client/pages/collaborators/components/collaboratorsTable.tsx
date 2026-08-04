@@ -20,6 +20,14 @@ import {
 import { Table } from "~/client/components/ui/table";
 import type { ActiveCollaborator, PendingCollaborator } from "./types";
 
+const STATUS_BADGE: Record<string, { className: string; label: string }> = {
+  Pendente: { className: "bg-amber-100 text-amber-700", label: "Pendente" },
+  Aceito: { className: "bg-emerald-100 text-emerald-700", label: "Aceito" },
+  Recusado: { className: "bg-red-100 text-red-700", label: "Recusado" },
+  cancelled: { className: "bg-red-100 text-red-700", label: "Recusado" },
+  revoked: { className: "bg-zinc-100 text-zinc-600", label: "Acesso removido" },
+};
+
 type CollaboratorsTableProps = {
   activeCollaborators: ActiveCollaborator[];
   pendingCollaborators: PendingCollaborator[];
@@ -76,6 +84,7 @@ function CollaboratorsTable({
               {isActiveTab && <Table.Head>E-mail</Table.Head>}
               <Table.Head>Função</Table.Head>
               {!isActiveTab && <Table.Head>Convidado</Table.Head>}
+              {!isActiveTab && <Table.Head>Status</Table.Head>}
               <Table.Head className="text-right">Ações</Table.Head>
             </Table.Row>
           </Table.Header>
@@ -159,6 +168,18 @@ function CollaboratorsTable({
                   <Table.Cell className="text-muted-foreground">
                     <span>-</span>
                   </Table.Cell>
+                  <Table.Cell>
+                    {(() => {
+                      const s = STATUS_BADGE[(row as PendingCollaborator).status];
+                      return (
+                        <Badge
+                          className={s?.className ?? "bg-muted text-muted-foreground"}
+                        >
+                          {s?.label ?? (row as PendingCollaborator).status}
+                        </Badge>
+                      );
+                    })()}
+                  </Table.Cell>
                   <Table.Cell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -200,20 +221,6 @@ function CollaboratorsTable({
           </Table.Body>
         </Table.Root>
 
-        <Card.Footer className="flex-col items-center gap-3 text-sm text-muted-foreground sm:flex-row sm:justify-between">
-          <span>Total de {rows.length} registros</span>
-          <div className="flex items-center gap-3">
-            <span>Página 1 de 1</span>
-            <div className="flex gap-1">
-              <Button variant="outline" size="icon" className="size-9" disabled>
-                ‹
-              </Button>
-              <Button variant="outline" size="icon" className="size-9" disabled>
-                ›
-              </Button>
-            </div>
-          </div>
-        </Card.Footer>
       </Card.Root>
     </div>
   );

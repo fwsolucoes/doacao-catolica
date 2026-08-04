@@ -1,6 +1,9 @@
 import type { ComponentProps } from "react";
 import { use } from "react";
-import { FormErrorContext, FormFieldContext } from "~/client/components/ui/form-field";
+import {
+  FormErrorContext,
+  FormFieldContext,
+} from "~/client/components/ui/form-field";
 import { cn } from "~/lib/utils";
 
 function Root({ className, ...props }: ComponentProps<"div">) {
@@ -10,10 +13,10 @@ function Root({ className, ...props }: ComponentProps<"div">) {
       className={cn(
         "relative isolate flex items-stretch ring-offset-background",
         // Side mode: shared border + rounding on Root
-        "[&:has([data-slot='input-side'])]:overflow-hidden",
-        "[&:has([data-slot='input-side'])]:rounded-md",
-        "[&:has([data-slot='input-side'])]:border",
-        "[&:has([data-slot='input-side'])]:border-border",
+        "has-data-[slot='input-side']:overflow-hidden",
+        "has-data-[slot='input-side']:rounded-md",
+        "has-data-[slot='input-side']:border",
+        "has-data-[slot='input-side']:border-border",
         // Side mode: strip Input's own border/rounding (ring removed via className on Input)
         "[&:has([data-slot='input-side'])_[data-slot='input-group-input']]:border-0",
         "[&:has([data-slot='input-side'])_[data-slot='input-group-input']]:rounded-none",
@@ -24,7 +27,7 @@ function Root({ className, ...props }: ComponentProps<"div">) {
         "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-ring",
         "[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-offset-1",
         // Error state: red border and red focus ring in side mode
-        "group-data-invalid:[&:has([data-slot='input-side'])]:border-destructive",
+        "group-data-invalid:has-data-[slot='input-side']:border-destructive",
         "group-data-invalid:[&:has([data-slot='input-side']):has([data-slot='input-group-input']:focus-visible)]:ring-destructive",
         className,
       )}
