@@ -1,3 +1,4 @@
+import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
 import type { CollaboratorRole } from "./types";
 
 const ROLE_TONES: CollaboratorRole["tone"][] = ["emerald", "navy", "violet"];
@@ -26,4 +27,16 @@ function getRoleTone(name: string, index: number): CollaboratorRole["tone"] {
   return ROLE_TONES[index % ROLE_TONES.length];
 }
 
-export { getInitials, formatStatus, getRoleTone };
+function buildRolesById(
+  projectRoles: CollaboratorsLoader["projectRoles"],
+): Map<string, CollaboratorRole> {
+  const roles: CollaboratorRole[] = projectRoles.map((role, index) => ({
+    id: role.id,
+    name: role.name,
+    description: role.description,
+    tone: getRoleTone(role.name, index),
+  }));
+  return new Map(roles.map((role) => [role.id, role]));
+}
+
+export { buildRolesById, formatStatus, getInitials, getRoleTone };
