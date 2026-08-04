@@ -58,7 +58,6 @@ function CollaboratorsPage() {
   }));
   const rolesById = new Map(roles.map((role) => [role.id, role]));
   const [addOpen, setAddOpen] = useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState(roles[0]?.id ?? "");
   const [changeRoleCollaborator, setChangeRoleCollaborator] =
     useState<ActiveCollaborator | null>(null);
   const [removeCollaborator, setRemoveCollaborator] =
@@ -66,11 +65,6 @@ function CollaboratorsPage() {
   const [cancelInvite, setCancelInvite] = useState<PendingCollaborator | null>(
     null,
   );
-
-  function handleChangeRole(collaborator: ActiveCollaborator) {
-    setSelectedRoleId(collaborator.role.id);
-    setChangeRoleCollaborator(collaborator);
-  }
 
   const activeCollaborators: ActiveCollaborator[] = collaborators.data.map(
     (collaborator) => ({
@@ -105,7 +99,7 @@ function CollaboratorsPage() {
       <CollaboratorsTable
         activeCollaborators={activeCollaborators}
         pendingCollaborators={pendingCollaborators}
-        onChangeRole={handleChangeRole}
+        onChangeRole={setChangeRoleCollaborator}
         onRemoveAccess={setRemoveCollaborator}
         onCancelInvite={setCancelInvite}
       />
@@ -116,10 +110,7 @@ function CollaboratorsPage() {
       />
       <ChangeRoleModal
         collaborator={changeRoleCollaborator}
-        roles={roles}
-        selectedRoleId={selectedRoleId}
         onClose={() => setChangeRoleCollaborator(null)}
-        onSelectedRoleChange={setSelectedRoleId}
       />
       <AccessActionModal
         open={!!removeCollaborator}
