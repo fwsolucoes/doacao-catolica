@@ -112,10 +112,7 @@ function CollaboratorsPage() {
 
       <AddCollaboratorModal
         open={addOpen}
-        roles={roles}
-        selectedRoleId={selectedRoleId}
-        onOpenChange={setAddOpen}
-        onSelectedRoleChange={setSelectedRoleId}
+        onClose={() => setAddOpen(false)}
       />
       <ChangeRoleModal
         collaborator={changeRoleCollaborator}

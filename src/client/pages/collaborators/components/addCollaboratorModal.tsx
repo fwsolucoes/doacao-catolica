@@ -1,6 +1,6 @@
 import { Send } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import {
   Dialog,
@@ -13,28 +13,21 @@ import {
 import { FormField, FormErrorProvider } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { RadioGroup } from "~/client/components/ui/radio-group";
+import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
 import { InviteSentModal } from "./inviteSentModal";
-import type { CollaboratorRole } from "./types";
 
 type AddCollaboratorModalProps = {
   open: boolean;
-  roles: CollaboratorRole[];
-  selectedRoleId: string;
-  onOpenChange: (open: boolean) => void;
-  onSelectedRoleChange: (roleId: string) => void;
+  onClose: () => void;
 };
 
-function AddCollaboratorModal({
-  open,
-  roles,
-  selectedRoleId,
-  onOpenChange,
-  onSelectedRoleChange,
-}: AddCollaboratorModalProps) {
+function AddCollaboratorModal({ open, onClose }: AddCollaboratorModalProps) {
+  const { projectRoles } = useLoaderData<CollaboratorsLoader>();
   const fetcher = useFetcher();
   const formRef = useRef<HTMLFormElement>(null);
   const [successOpen, setSuccessOpen] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
+  const [selectedRoleId, setSelectedRoleId] = useState(projectRoles[0]?.id ?? "");
   const isSubmitting = fetcher.state !== "idle";
 
   useEffect(() => {
@@ -52,12 +45,12 @@ function AddCollaboratorModal({
     setSuccessOpen(false);
     setSubmittedEmail("");
     formRef.current?.reset();
-    onOpenChange(false);
+    onClose();
   }
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
         <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-132">
           <DialogHeader className="shrink-0 px-8 pb-5 pt-8">
             <DialogTitle className="text-xl">Adicionar colaborador</DialogTitle>
@@ -73,12 +66,6 @@ function AddCollaboratorModal({
               className="flex min-h-0 flex-1 flex-col"
               onSubmit={handleSubmit}
             >
-              <input
-                type="hidden"
-                name="_action"
-                value="createInviteCollaborator"
-              />
-
               <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto overscroll-contain px-8 pb-6">
                 <FormField name="userEmail" label="E-mail" required>
                   <Input
@@ -92,10 +79,10 @@ function AddCollaboratorModal({
                   <RadioGroup.Root
                     name="roleId"
                     value={selectedRoleId}
-                    onValueChange={onSelectedRoleChange}
+                    onValueChange={setSelectedRoleId}
                     className="flex flex-col gap-4"
                   >
-                    {roles.map((role) => (
+                    {projectRoles.map((role) => (
                       <label
                         key={role.id}
                         className="flex cursor-pointer gap-4 rounded-xl border border-border p-4 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5"
@@ -123,6 +110,8 @@ function AddCollaboratorModal({
                 </DialogClose>
                 <Button
                   type="submit"
+                  name="_action"
+                  value="createInviteCollaborator"
                   disabled={isSubmitting || !selectedRoleId}
                   isLoading={isSubmitting}
                   className="gap-2"
