@@ -33,8 +33,8 @@ function PendingCollaboratorsTable({
       <Table.Header>
         <Table.Row>
           <Table.Head>E-mail</Table.Head>
-          <Table.Head>Função</Table.Head>
-          <Table.Head>Convidado</Table.Head>
+          {/* <Table.Head>Função</Table.Head> */}
+          {/* <Table.Head>Convidado</Table.Head> */}
           <Table.Head>Status</Table.Head>
           <Table.Head className="text-right">Ações</Table.Head>
         </Table.Row>
@@ -56,12 +56,12 @@ function PendingCollaboratorsTable({
                   </span>
                 </div>
               </Table.Cell>
-              <Table.Cell className="text-muted-foreground">
+              {/* <Table.Cell className="text-muted-foreground">
                 <span>-</span>
-              </Table.Cell>
-              <Table.Cell className="text-muted-foreground">
+              </Table.Cell> */}
+              {/* <Table.Cell className="text-muted-foreground">
                 <span>-</span>
-              </Table.Cell>
+              </Table.Cell> */}
               <Table.Cell>
                 <Badge
                   className={badge?.className ?? "bg-muted text-muted-foreground"}
