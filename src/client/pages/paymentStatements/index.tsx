@@ -1,8 +1,8 @@
 import {
-  AlertCircle,
   AlertTriangle,
   Banknote,
-  Clock,
+  Hourglass,
+  TriangleAlert,
   DollarSign,
   Download,
   Globe,
@@ -82,11 +82,11 @@ function DonationsPage() {
       iconColor: "text-orange-700",
       breakdown: [
         {
-          icon: Clock,
+          icon: Hourglass,
           label: "Aguardando pgto",
           value: metrics.awaitingRelease,
         },
-        { icon: AlertCircle, label: "Em atraso", value: metrics.overdue },
+        { icon: TriangleAlert, label: "Em atraso", value: metrics.overdue },
         { icon: XCircle, label: "Cancelados", value: metrics.canceled },
       ],
     },

@@ -39,8 +39,8 @@ function CancelInviteModal({ invite, onClose }: CancelInviteModalProps) {
         <fetcher.Form method="post" className="flex flex-col gap-4">
           <input type="hidden" name="Id" value={invite?.id ?? ""} />
           <div className="flex items-center justify-center">
-            <div className="flex size-30 items-center justify-center rounded-full border border-dashed border-border bg-muted p-[15px]">
-              <div className="flex size-[90px] items-center justify-center rounded-full bg-destructive">
+            <div className="flex size-30 items-center justify-center rounded-full border border-dashed border-border bg-muted p-3.75">
+              <div className="flex size-22.5 items-center justify-center rounded-full bg-destructive">
                 <UserX className="size-10 text-white" />
               </div>
             </div>

@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { Separator } from "~/client/components/ui/separator";
 import { cn } from "~/lib/utils";
 
 type BreakdownItem = {
@@ -27,8 +28,8 @@ function MetricCard({
   breakdown,
 }: MetricCardProps) {
   return (
-    <div className="flex flex-col rounded-3xl border border-border bg-card">
-      <div className="flex items-center justify-between px-7 pb-3 pt-7">
+    <div className="flex flex-col rounded-3xl border border-border bg-card px-7">
+      <div className="flex items-center justify-between pb-3 pt-7">
         <span className="text-base tracking-tight text-muted-foreground">
           {label}
         </span>
@@ -42,14 +43,15 @@ function MetricCard({
         </div>
       </div>
 
-      <div className="flex flex-col gap-0.5 px-7 pb-4">
+      <div className="flex flex-col gap-0.5 pb-4">
         <p className="text-2xl font-semibold tracking-tight text-foreground">
           {value}
         </p>
         <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
 
-      <div className="flex flex-col gap-2 border-t border-border px-7 py-4">
+      <Separator />
+      <div className="flex flex-col gap-2 py-4">
         {breakdown.map((item) => (
           <div key={item.label} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
