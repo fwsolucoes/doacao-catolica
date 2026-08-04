@@ -59,12 +59,14 @@ function RequestWithdrawalModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus size={16} />
-          Solicitar saque
-        </Button>
-      </DialogTrigger>
+      {availableAmount > 0 && (
+        <DialogTrigger asChild>
+          <Button className="gap-2">
+            <Plus size={16} />
+            Solicitar saque
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="gap-0 p-0 sm:max-w-120">
         <DialogHeader className="flex-row items-center justify-between gap-3 px-6 py-5">
           <DialogTitle className="text-base">

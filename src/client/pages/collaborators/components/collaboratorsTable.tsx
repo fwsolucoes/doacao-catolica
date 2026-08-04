@@ -8,7 +8,11 @@ import { AccessActionModal } from "./accessActionModal";
 import { ActiveCollaboratorsTable } from "./activeCollaboratorsTable";
 import { ChangeRoleModal } from "./changeRoleModal";
 import { PendingCollaboratorsTable } from "./pendingCollaboratorsTable";
-import type { ActiveCollaborator, CollaboratorRole, PendingCollaborator } from "./types";
+import type {
+  ActiveCollaborator,
+  CollaboratorRole,
+  PendingCollaborator,
+} from "./types";
 
 const ROLE_TONES: CollaboratorRole["tone"][] = ["emerald", "navy", "violet"];
 
@@ -78,7 +82,14 @@ function CollaboratorsTable() {
       initials: getInitials(invite.invitedUserName, invite.invitedUserEmail),
       name: invite.invitedUserName,
       email: invite.invitedUserEmail,
+      role: rolesById.get(invite.invitedUserRoleId) ?? {
+        id: invite.invitedUserRoleId,
+        name: "Função não encontrada",
+        description: "Esta função não está disponível na lista de funções.",
+        tone: "navy" as const,
+      },
       status: formatStatus(invite.inviteStatus),
+      invitedAt: invite.createdAt,
     }));
 
   const isActiveTab = tab === "active";
@@ -136,7 +147,9 @@ function CollaboratorsTable() {
       </div>
 
       <ChangeRoleModal
-        collaborator={dialog?.type === "changeRole" ? dialog.collaborator : null}
+        collaborator={
+          dialog?.type === "changeRole" ? dialog.collaborator : null
+        }
         onClose={() => setDialog(null)}
       />
       <AccessActionModal
@@ -145,7 +158,9 @@ function CollaboratorsTable() {
         description={`Remover o acesso de ${dialog?.type === "removeAccess" ? dialog.collaborator.name : "este colaborador"} à campanha?`}
         actionLabel="Remover acesso"
         actionName="deleteInviteCollaborator"
-        resourceId={dialog?.type === "removeAccess" ? dialog.collaborator.id : undefined}
+        resourceId={
+          dialog?.type === "removeAccess" ? dialog.collaborator.id : undefined
+        }
         onClose={() => setDialog(null)}
       />
       <AccessActionModal

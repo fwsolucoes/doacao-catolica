@@ -17,6 +17,7 @@ const badge = tv({
       emerald: "bg-(--badge-emerald-bg) text-(--badge-emerald-text)",
       navy: "bg-(--badge-navy-bg) text-(--badge-navy-text)",
       amber: "bg-(--badge-amber-bg) text-(--badge-amber-text)",
+      rose: "bg-(--badge-rose-bg) text-(--badge-rose-text)",
     },
   },
   defaultVariants: {

@@ -2,7 +2,7 @@ type CollaboratorRole = {
   id: string;
   name: string;
   description: string;
-  tone: "violet" | "emerald" | "navy";
+  tone: "violet" | "emerald" | "navy" | "amber" | "rose";
 };
 
 type ActiveCollaborator = {
@@ -18,7 +18,9 @@ type PendingCollaborator = {
   initials: string;
   email: string;
   name: string;
+  role: CollaboratorRole;
   status: string;
+  invitedAt: string;
 };
 
 export type { ActiveCollaborator, CollaboratorRole, PendingCollaborator };

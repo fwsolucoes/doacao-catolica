@@ -117,6 +117,8 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
           invitedUserEmail: invite.invited_user_email,
           invitedUserName: invite.invited_user_name,
           invitedUserPhone: invite.invited_user_phone,
+          invitedUserRoleId: invite.invited_user_role_id,
+          createdAt: invite.created_at,
         }),
       ),
       meta: {

@@ -167,6 +167,8 @@
     --badge-navy-text: oklch(0.385 0.143 265); /* #1e40af */
     --badge-amber-bg: oklch(0.939 0.063 76); /* #fde9c8 */
     --badge-amber-text: oklch(0.556 0.117 52); /* #a8631a */
+    --badge-rose-bg: oklch(0.936 0.045 12); /* #ffe1e6 */
+    --badge-rose-text: oklch(0.47 0.174 18); /* #a91d3a */
   }
 }
 
@@ -253,6 +255,8 @@
   --badge-navy-text: oklch(0.78 0.1 249);
   --badge-amber-bg: oklch(0.28 0.06 52);
   --badge-amber-text: oklch(0.8 0.11 76);
+  --badge-rose-bg: oklch(0.26 0.075 18);
+  --badge-rose-text: oklch(0.8 0.1 12);
 }
 
 @keyframes theme-icon-in {
