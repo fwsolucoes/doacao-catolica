@@ -44,7 +44,6 @@ function AccessActionModal({
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent>
         <fetcher.Form method="post" className="flex flex-col gap-4">
-          <input type="hidden" name="_action" value={actionName ?? ""} />
           <input type="hidden" name="Id" value={resourceId ?? ""} />
 
           <DialogHeader>
@@ -56,6 +55,8 @@ function AccessActionModal({
           <DialogFooter showCloseButton>
             <Button
               type="submit"
+              name="_action"
+              value={actionName ?? ""}
               variant="danger"
               disabled={isSubmitting || !actionName || !resourceId}
               isLoading={isSubmitting}
