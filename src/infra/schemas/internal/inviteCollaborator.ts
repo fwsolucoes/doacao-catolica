@@ -21,7 +21,12 @@ const resendInviteCollaboratorSchema = z.object({
   Id: z.string().min(1, "Id obrigatório"),
 });
 
+const cancelInviteCollaboratorSchema = z.object({
+  Id: z.string().min(1, "Id obrigatório"),
+});
+
 export {
+  cancelInviteCollaboratorSchema,
   createInviteCollaboratorSchema,
   deleteInviteCollaboratorSchema,
   resendInviteCollaboratorSchema,

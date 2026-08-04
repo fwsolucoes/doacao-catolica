@@ -74,6 +74,15 @@ class InviteCollaboratorGateway implements InviteCollaboratorGatewayDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
+  async cancelInviteCollaborator(id: string, token: string): Promise<void> {
+    const apiResponse = await api.put(`/project-user-invite/undo/${id}`, {
+      body: {},
+      token,
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
   async resendInviteCollaborator(id: string, token: string): Promise<void> {
     const apiResponse = await api.put(`/project-user-invite/resend/${id}`, {
       body: {},

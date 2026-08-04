@@ -30,6 +30,7 @@ type InviteCollaboratorGatewayDTO = {
   ) => Promise<void>;
   deleteInviteCollaborator: (id: string, token: string) => Promise<void>;
   resendInviteCollaborator: (id: string, token: string) => Promise<void>;
+  cancelInviteCollaborator: (id: string, token: string) => Promise<void>;
   listInviteCollaborators: (
     campaignId: string,
     token: string,

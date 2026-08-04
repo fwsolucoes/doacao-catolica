@@ -6,6 +6,7 @@ import { Card } from "~/client/components/ui/card";
 import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
 import { AccessActionModal } from "./accessActionModal";
 import { ActiveCollaboratorsTable } from "./activeCollaboratorsTable";
+import { CancelInviteModal } from "./cancelInviteModal";
 import { ChangeRoleModal } from "./changeRoleModal";
 import { PendingCollaboratorsTable } from "./pendingCollaboratorsTable";
 import { ResendInviteModal } from "./resendInviteModal";
@@ -168,11 +169,8 @@ function CollaboratorsTable() {
         }
         onClose={() => setDialog(null)}
       />
-      <AccessActionModal
-        open={dialog?.type === "cancelInvite"}
-        title="Cancelar convite"
-        description={`Cancelar o convite enviado para ${dialog?.type === "cancelInvite" ? dialog.invite.email : "este e-mail"}?`}
-        actionLabel="Cancelar convite"
+      <CancelInviteModal
+        invite={dialog?.type === "cancelInvite" ? dialog.invite : null}
         onClose={() => setDialog(null)}
       />
       <ResendInviteModal

@@ -8,6 +8,7 @@ import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { listCollaborators } from "../factories/collaborators/listCollaboratorsFactory";
+import { cancelInviteCollaborator } from "../factories/inviteCollaborator/cancelInviteCollaboratorFactory";
 import { createInviteCollaborator } from "../factories/inviteCollaborator/createInviteCollaboratorFactory";
 import { deleteInviteCollaborator } from "../factories/inviteCollaborator/deleteInviteCollaboratorFactory";
 import { resendInviteCollaborator } from "../factories/inviteCollaborator/resendInviteCollaboratorFactory";
@@ -47,6 +48,8 @@ export async function action(args: Route.ActionArgs) {
         return await deleteInviteCollaborator.handle(adaptedRoute);
       case "resendInviteCollaborator":
         return await resendInviteCollaborator.handle(adaptedRoute);
+      case "cancelInviteCollaborator":
+        return await cancelInviteCollaborator.handle(adaptedRoute);
       default:
         throw HttpAdapter.badRequest("Action not implemented");
     }
