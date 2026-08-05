@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
-import { Textarea } from "~/client/components/ui/textarea";
+import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
 import type { CampaignPageLoader } from "~/client/types/campaignPageLoader";
 
 function PageContentSection() {
@@ -21,11 +21,10 @@ function PageContentSection() {
         />
       </FormField>
       <FormField name="description" label="Texto principal">
-        <Textarea
+        <RichTextarea
           name="description"
           placeholder="Descrição curta que aparece logo abaixo do título."
           defaultValue={preferences.description ?? ""}
-          className="min-h-24"
         />
       </FormField>
     </SectionCard>
