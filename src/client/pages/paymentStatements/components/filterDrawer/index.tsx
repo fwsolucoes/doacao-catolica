@@ -275,6 +275,7 @@ function FilterDrawer({
                     Cartão de crédito
                   </Select.Item>
                   <Select.Item value="pix">Pix</Select.Item>
+                  <Select.Item value="automatic_pix">Pix automático</Select.Item>
                   <Select.Item value="bank_slip">Boleto</Select.Item>
                   <Select.Item value="manual_payment">Baixa manual</Select.Item>
                 </Select.Content>
