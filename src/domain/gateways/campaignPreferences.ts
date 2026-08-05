@@ -9,6 +9,8 @@ type CampaignPreferences = {
   aboutUsTitle: string | null;
   aboutUsText: string | null;
   aboutUsImage: string | null;
+  whyDonateEnabled: boolean | null;
+  aboutUsEnabled: boolean | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
 };
@@ -22,6 +24,8 @@ type UpdateCampaignPreferencesInput = {
   aboutUsTitle: string | null;
   aboutUsText: string | null;
   aboutUsImage: string | null;
+  whyDonateEnabled: boolean | null;
+  aboutUsEnabled: boolean | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
 };

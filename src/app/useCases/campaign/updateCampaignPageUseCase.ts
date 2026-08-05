@@ -18,6 +18,8 @@ type InputProps = {
   aboutImage: string | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
+  whyDonateEnabled: boolean;
+  aboutUsEnabled: boolean;
 };
 
 class UpdateCampaignPageUseCase {
@@ -47,6 +49,8 @@ class UpdateCampaignPageUseCase {
         aboutUsImage: input.aboutImage,
         supportWhatsapp: input.supportWhatsapp,
         supportEmail: input.supportEmail,
+        whyDonateEnabled: input.whyDonateEnabled,
+        aboutUsEnabled: input.aboutUsEnabled,
       },
       token,
     );

@@ -78,6 +78,8 @@ const updateCampaignPageSchema = z.object({
   aboutImage: z.string().optional().transform((v) => v || null),
   supportWhatsapp: z.string().optional().transform((v) => v || null),
   supportEmail: z.string().optional().transform((v) => v || null),
+  whyDonateEnabled: z.string().transform((v) => v === "true"),
+  aboutUsEnabled: z.string().transform((v) => v === "true"),
 });
 
 type UpdateCampaignPageType = z.infer<typeof updateCampaignPageSchema>;

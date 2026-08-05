@@ -35,6 +35,16 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
+  why_donate_enabled: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  about_us_enabled: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
   support_whatsapp: z
     .string()
     .nullable()

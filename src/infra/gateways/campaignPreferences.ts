@@ -35,6 +35,8 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       aboutUsTitle: data.about_us_title,
       aboutUsText: data.about_us_text,
       aboutUsImage: data.about_us_image,
+      whyDonateEnabled: data.why_donate_enabled,
+      aboutUsEnabled: data.about_us_enabled,
       supportWhatsapp: data.support_whatsapp,
       supportEmail: data.support_email,
     };
@@ -48,6 +50,8 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
     const body = {
       // Fields below will be sent once the API supports them:
       registration_title: input.title,
+      why_donate_enabled: input.whyDonateEnabled,
+      about_us_enabled: input.aboutUsEnabled,
       // why_donate_title: input.whyDonateTitle,
       // why_donate_text: input.whyDonateText,
       // why_donate_image: input.whyDonateImage,
