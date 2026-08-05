@@ -34,7 +34,7 @@ function VisibilityCard() {
         >
           <input
             type="hidden"
-            name="published"
+            name="visibleInMarketplace"
             value={isPublic ? "true" : "false"}
           />
           {(

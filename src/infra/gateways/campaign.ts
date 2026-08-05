@@ -142,7 +142,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       name: input.name,
       slug: input.slug,
       status: input.status,
-      published: input.published,
+      visible_in_marketplace: input.visibleInMarketplace,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: input.noEndDate,

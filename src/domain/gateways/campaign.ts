@@ -49,7 +49,7 @@ type UpdateCampaignWithDetailsInput = {
   name?: string | null;
   slug?: string | null;
   status?: boolean;
-  published?: boolean;
+  visibleInMarketplace?: boolean;
   startDate?: string | null;
   endDate?: string | null;
   noEndDate?: boolean;

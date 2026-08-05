@@ -6,7 +6,7 @@ type InputProps = {
   name: string;
   slug: string;
   status: boolean;
-  published: boolean;
+  visibleInMarketplace: boolean;
   startDate: string | null;
   endDate: string | null;
   phone: string | null;
@@ -30,7 +30,7 @@ class UpdateCampaignGeneralInfoUseCase {
         name: input.name,
         slug: input.slug,
         status: input.status,
-        published: input.published,
+        visibleInMarketplace: input.visibleInMarketplace,
         startDate: input.startDate,
         endDate: input.endDate,
         noEndDate: !input.endDate,
