@@ -1,7 +1,7 @@
-import { Eye, ImageOff, Settings, Users } from "lucide-react";
+import { Eye, ImageOff, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/client/components/ui/button";
-import { Progress } from "~/client/components/ui/progress";
+// import { Progress } from "~/client/components/ui/progress";
 import { useRoot } from "~/client/hooks/useRoot";
 
 type Campaign = {
@@ -10,8 +10,8 @@ type Campaign = {
   slug: string;
   image: string | null;
   status: boolean;
-  currentRevenue: string | null;
-  totalGoal: string | null;
+  // currentRevenue: string | null;
+  // totalGoal: string | null;
 };
 
 const STATUS_BADGE: Record<string, { className: string; label: string }> = {
@@ -19,35 +19,35 @@ const STATUS_BADGE: Record<string, { className: string; label: string }> = {
   inativo: { className: "bg-muted text-muted-foreground", label: "Inativo" },
 };
 
-function formatCurrency(value: string | null | undefined): string {
-  if (!value) return "—";
-  const num = parseFloat(value);
-  if (isNaN(num)) return value;
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(num);
-}
+// function formatCurrency(value: string | null | undefined): string {
+//   if (!value) return "—";
+//   const num = parseFloat(value);
+//   if (isNaN(num)) return value;
+//   return new Intl.NumberFormat("pt-BR", {
+//     style: "currency",
+//     currency: "BRL",
+//     minimumFractionDigits: 0,
+//     maximumFractionDigits: 0,
+//   }).format(num);
+// }
 
-function getProgress(
-  current: string | null | undefined,
-  goal: string | null,
-): number {
-  if (!current || !goal) return 0;
-  const c = parseFloat(current);
-  const g = parseFloat(goal);
-  if (isNaN(c) || isNaN(g) || g === 0) return 0;
-  return Math.min(100, Math.round((c / g) * 100));
-}
+// function getProgress(
+//   current: string | null | undefined,
+//   goal: string | null,
+// ): number {
+//   if (!current || !goal) return 0;
+//   const c = parseFloat(current);
+//   const g = parseFloat(goal);
+//   if (isNaN(c) || isNaN(g) || g === 0) return 0;
+//   return Math.min(100, Math.round((c / g) * 100));
+// }
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
   const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
-  const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
+  // const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
 
   return (
     <div className="overflow-clip rounded-[1.1rem] border border-border bg-card flex flex-col">
@@ -75,7 +75,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           {campaign.name}
         </h3>
 
-        <div className="flex items-end justify-between">
+        {/* <div className="flex items-end justify-between">
           <div className="flex flex-col gap-0.5">
             <span className="text-xs text-muted-foreground">Arrecadado</span>
             <span className="text-lg font-semibold text-foreground">
@@ -88,20 +88,20 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
               {formatCurrency(campaign.totalGoal)}
             </span>
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex flex-col gap-1.5">
+        {/* <div className="flex flex-col gap-1.5">
           <Progress value={progress} className="h-2.5" />
           <span className="text-xs text-sidebar-primary">
             {progress}% da meta
           </span>
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-between pt-1">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          {/* <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Users size={14} />
             <span>apoiadores</span>
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-2">
             <Button
