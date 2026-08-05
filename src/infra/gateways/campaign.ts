@@ -4,7 +4,7 @@ import type { Campaign } from "~/domain/entities/campaign";
 import type {
   CampaignGatewayDTO,
   CreateCampaignInput,
-  UpdateCampaignGeneralInfoInput,
+  UpdateCampaignWithDetailsInput,
   UpdateCampaignPageInput,
   GetProjectPermissionsOutput,
 } from "~/domain/gateways/campaign";
@@ -134,15 +134,15 @@ class CampaignGateway implements CampaignGatewayDTO {
     return schemaValidator.validate(apiResponse.response);
   }
 
-  async updateCampaignGeneralInfo(
-    input: UpdateCampaignGeneralInfoInput,
+  async updateCampaignWithDetails(
+    input: UpdateCampaignWithDetailsInput,
     token: string,
   ): Promise<void> {
     const body = {
       name: input.name,
       slug: input.slug,
       status: input.status,
-      visible_in_marketplace: input.published,
+      published: input.published,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: input.noEndDate,
@@ -153,17 +153,12 @@ class CampaignGateway implements CampaignGatewayDTO {
       institution_name: input.institutionName,
       cnpj: input.cnpj,
       address: input.address,
-      subaccount_id: input.subAccountId,
-      email: input.email,
-      type: input.type,
-      description: input.description,
-      image: input.image,
     };
 
-    const apiResponse = await api.put(`/project/update/${input.campaignId}`, {
-      body,
-      token,
-    });
+    const apiResponse = await api.put(
+      `/project/update-with-details/${input.campaignId}`,
+      { body, token },
+    );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }

@@ -41,27 +41,25 @@ type CreateCampaignInput = {
   progressGoalType: string | null;
 };
 
-type UpdateCampaignGeneralInfoInput = {
+// Shared input for PUT /project/update-with-details/:id.
+// Expanded incrementally as each settings menu is migrated to this endpoint.
+type UpdateCampaignWithDetailsInput = {
   campaignId: string;
-  subAccountId: string;
-  name: string;
-  slug: string;
-  status: boolean;
-  published: boolean;
-  startDate: string | null;
-  endDate: string | null;
-  noEndDate: boolean;
-  phone: string | null;
-  typeDonation: string;
-  totalGoal: number | null;
-  monthlyGoal: number | null;
-  institutionName: string | null;
-  cnpj: string | null;
-  address: string | null;
-  email: string | null;
-  type: number;
-  description: string | null;
-  image: string | null;
+  // Informações Gerais
+  name?: string | null;
+  slug?: string | null;
+  status?: boolean;
+  published?: boolean;
+  startDate?: string | null;
+  endDate?: string | null;
+  noEndDate?: boolean;
+  phone?: string | null;
+  typeDonation?: string | null;
+  totalGoal?: number | null;
+  monthlyGoal?: number | null;
+  institutionName?: string | null;
+  cnpj?: string | null;
+  address?: string | null;
 };
 
 type UpdateCampaignPageInput = {
@@ -106,8 +104,8 @@ type CampaignGatewayDTO = {
     input: CreateCampaignInput,
     token: string,
   ) => Promise<{ id: string }>;
-  updateCampaignGeneralInfo: (
-    input: UpdateCampaignGeneralInfoInput,
+  updateCampaignWithDetails: (
+    input: UpdateCampaignWithDetailsInput,
     token: string,
   ) => Promise<void>;
   updateCampaignPage: (
@@ -124,7 +122,7 @@ type CampaignGatewayDTO = {
 export type {
   CampaignGatewayDTO,
   CreateCampaignInput,
-  UpdateCampaignGeneralInfoInput,
+  UpdateCampaignWithDetailsInput,
   UpdateCampaignPageInput,
   GetProjectPermissionsOutput,
 };

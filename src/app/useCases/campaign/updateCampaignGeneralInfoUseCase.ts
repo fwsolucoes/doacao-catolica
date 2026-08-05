@@ -24,16 +24,9 @@ class UpdateCampaignGeneralInfoUseCase {
   async execute(input: InputProps) {
     const { campaignId, token } = input;
 
-    const campaign = await this.campaignGateway.getCampaign(campaignId, token);
-
-    await this.campaignGateway.updateCampaignGeneralInfo(
+    await this.campaignGateway.updateCampaignWithDetails(
       {
         campaignId,
-        subAccountId: campaign.subAccountId,
-        email: campaign.email,
-        type: campaign.type,
-        description: campaign.description,
-        image: campaign.image,
         name: input.name,
         slug: input.slug,
         status: input.status,
