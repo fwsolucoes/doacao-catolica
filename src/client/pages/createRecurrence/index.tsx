@@ -26,6 +26,7 @@ import { Alert } from "~/client/components/ui/alert";
 import { SwitchField } from "~/client/components/ui/switch-field";
 import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
 import { useFilter } from "~/client/hooks/useFilter";
+import { useRoot } from "~/client/hooks/useRoot";
 import { ContactDetailCard } from "./components/ContactDetailCard";
 
 const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
@@ -34,10 +35,11 @@ const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
 };
 
 function CreateRecurrencePage() {
-  const { contacts, campaign, contactDetail } =
+  const { contacts, campaign, contactDetail, currentUrl } =
     useLoaderData<CreateRecurrenceLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
+  const { environmentVariables, user } = useRoot();
   const navigate = useNavigate();
   const location = useLocation();
   const isSubmitting = state === "submitting";
@@ -109,6 +111,8 @@ function CreateRecurrencePage() {
 
   const { handleChangeFilter } = useFilter("contacts");
 
+  const newContactHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/new?redirectBack=${encodeURIComponent(currentUrl)}`;
+
   function handleContactChange(contactId: string) {
     setSelectedContactId(contactId);
     const params = new URLSearchParams(location.search);
@@ -152,19 +156,29 @@ function CreateRecurrencePage() {
           <Card.Root className="p-6">
             <div className="mr-auto w-full max-w-xl flex flex-col gap-4">
               <h2 className="font-semibold text-(--text-heading)">Contato</h2>
-              <FormField name="contactId" label="Pesquisar contato:" required>
-                <Combobox
-                  options={contactOptions}
-                  value={selectedContactId}
-                  onChange={handleContactChange}
-                  onSearchChange={(search) =>
-                    handleChangeFilter("name", search)
-                  }
-                  placeholder="Selecione um contato"
-                  searchPlaceholder="Pesquisar por nome..."
-                  emptyText="Nenhum contato encontrado."
-                />
-              </FormField>
+              <div className="flex items-end gap-3">
+                <FormField
+                  name="contactId"
+                  label="Pesquisar contato:"
+                  required
+                  className="flex-1"
+                >
+                  <Combobox
+                    options={contactOptions}
+                    value={selectedContactId}
+                    onChange={handleContactChange}
+                    onSearchChange={(search) =>
+                      handleChangeFilter("name", search)
+                    }
+                    placeholder="Selecione um contato"
+                    searchPlaceholder="Pesquisar por nome..."
+                    emptyText="Nenhum contato encontrado."
+                  />
+                </FormField>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={newContactHref}>Cadastrar novo</a>
+                </Button>
+              </div>
               {contactDetail && (
                 <ContactDetailCard
                   contact={contactDetail}

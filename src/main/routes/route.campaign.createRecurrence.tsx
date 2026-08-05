@@ -26,7 +26,7 @@ export async function loader(args: Route.LoaderArgs) {
       : Promise.resolve(null),
   ]);
 
-  return { contacts, campaign, contactDetail };
+  return { contacts, campaign, contactDetail, currentUrl: args.request.url };
 }
 
 export async function action(args: Route.ActionArgs) {
