@@ -24,7 +24,7 @@ function WhyDonateSection() {
         </>
       }
     >
-      <div className={cn(!enabled && "pointer-events-none opacity-50")}>
+      <div className={cn("flex flex-col gap-5", !enabled && "pointer-events-none opacity-50")}>
         <FormField name="whyDonateTitle" label="Título">
           <Input
             name="whyDonateTitle"
