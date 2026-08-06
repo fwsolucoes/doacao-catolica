@@ -1,10 +1,10 @@
 import {
-  BarChart2,
-  CircleHelp,
+  // BarChart2,
+  // CircleHelp,
   ChevronsUpDown,
-  LayoutDashboard,
+  // LayoutDashboard,
   Megaphone,
-  Settings,
+  // Settings,
 } from "lucide-react";
 import { NavLink, useMatch } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
@@ -40,18 +40,18 @@ const sections: NavSection[] = [
   {
     title: "Principal",
     items: [
-      { icon: LayoutDashboard, label: "Dashboard" },
+      // { icon: LayoutDashboard, label: "Dashboard" },
       { icon: Megaphone, label: "Campanhas", path: "/my-campaigns" },
-      { icon: BarChart2, label: "Relatórios" },
+      // { icon: BarChart2, label: "Relatórios" },
     ],
   },
-  {
-    title: "Sistema",
-    items: [
-      { icon: Settings, label: "Configurações" },
-      { icon: CircleHelp, label: "Ajuda" },
-    ],
-  },
+  // {
+  //   title: "Sistema",
+  //   items: [
+  //     { icon: Settings, label: "Configurações" },
+  //     { icon: CircleHelp, label: "Ajuda" },
+  //   ],
+  // },
 ];
 
 function getInitials(name: string) {
