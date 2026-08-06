@@ -217,8 +217,8 @@ function CampaignPreferencesPage() {
                     </Select.Trigger>
                     <Select.Content>
                       <Select.Item value="donation">Doação</Select.Item>
-                      <Select.Item value="contribution">Contribuição</Select.Item>
-                      <Select.Item value="offering">Oferta</Select.Item>
+                      <Select.Item value="payment">Pagamento</Select.Item>
+                      <Select.Item value="mensalidade">Mensalidade</Select.Item>
                       <Select.Item value="tithe">Dízimo</Select.Item>
                     </Select.Content>
                   </Select.Root>
