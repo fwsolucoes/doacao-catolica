@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Calendar } from "lucide-react";
+import type { Value } from "react-phone-number-input";
 import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { InputGroup } from "~/client/components/ui/input-group";
+import { PhoneInput } from "~/client/components/ui/phone-input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CreateCampaignLoader } from "~/client/types/createCampaignLoader";
@@ -13,6 +15,7 @@ import { CreateSlugField } from "../CreateSlugField";
 function CampaignDataSection() {
   const { projectCategories } = useLoaderData<CreateCampaignLoader>();
   const [isActive, setIsActive] = useState(true);
+  const [phone, setPhone] = useState<Value | "">("");
 
   return (
     <SectionCard
@@ -82,7 +85,12 @@ function CampaignDataSection() {
 
       <div className="flex flex-col gap-1">
         <FormField name="phone" label="WhatsApp do responsável pela campanha">
-          <Input name="phone" type="tel" placeholder="(11) 90000-0000" />
+          <input type="hidden" name="phone" value={phone} />
+          <PhoneInput
+            defaultCountry="BR"
+            value={phone}
+            onChange={(v) => setPhone(v || "")}
+          />
         </FormField>
         <p className="text-xs text-muted-foreground">
           Usado para avisos e comunicação interna. Não é exibido publicamente.

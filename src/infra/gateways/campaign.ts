@@ -120,10 +120,14 @@ class CampaignGateway implements CampaignGatewayDTO {
       },
     };
 
+    console.log("🚀~ Creating campaign with body:", body);
+
     const apiResponse = await api.post(`/project/create/${input.accountId}`, {
       body,
       token,
     });
+
+    console.log("🚀~ API response:", apiResponse);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 

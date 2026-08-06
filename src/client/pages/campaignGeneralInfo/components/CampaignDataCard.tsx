@@ -1,11 +1,13 @@
 import { useState, type ReactNode } from "react";
 import { Calendar } from "lucide-react";
+import type { Value } from "react-phone-number-input";
 import { useLoaderData, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { Card } from "~/client/components/ui/card";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { InputGroup } from "~/client/components/ui/input-group";
+import { PhoneInput } from "~/client/components/ui/phone-input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
@@ -38,6 +40,7 @@ function CampaignDataCard() {
     : `${SANCTON_DONATION_CHECKOUT_URL}/`;
 
   const [isActive, setIsActive] = useState(campaign.status);
+  const [phone, setPhone] = useState<Value | "">(campaign.phone ?? "");
 
   const startDateValue = campaign.startDateInput ?? "";
 
@@ -121,11 +124,11 @@ function CampaignDataCard() {
 
       <div className="flex flex-col gap-1">
         <FormField name="phone" label="WhatsApp do responsável pela campanha">
-          <Input
-            name="phone"
-            type="tel"
-            placeholder="(11) 90000-0000"
-            defaultValue={campaign.phone ?? ""}
+          <input type="hidden" name="phone" value={phone} />
+          <PhoneInput
+            defaultCountry="BR"
+            value={phone}
+            onChange={(v) => setPhone(v || "")}
           />
         </FormField>
         <p className="text-xs text-muted-foreground">
