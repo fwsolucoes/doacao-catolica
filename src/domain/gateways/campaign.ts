@@ -90,6 +90,15 @@ type UpdateCampaignWithDetailsInput = {
   // Metadados SEO — projectMetatag
   metaTitle?: string | null;
   metaDescription?: string | null;
+  // Preferências — top-level
+  redirectAfterRegistration?: string | null;
+  redirectAfterOneTimePayment?: string | null;
+  redirectAfterRecurringPayment?: string | null;
+  // Preferências — preferences
+  nomenclature?: string | null;
+  supportTagId?: string | null;
+  showAutoPixInvite?: boolean;
+  requireLogin?: boolean;
 };
 
 type GetProjectPermissionsOutput = {

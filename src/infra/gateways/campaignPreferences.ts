@@ -48,6 +48,10 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       chargeImmediately: data.generate_payment_immediately,
       emailSenderName: data.email_sender_name,
       emailReplyTo: data.email_reply_to,
+      nomenclature: data.nomenclature,
+      supportTagId: data.support_tag_id,
+      showAutoPixInvite: data.show_auto_pix_invite,
+      requireLogin: data.require_login,
     };
   }
 

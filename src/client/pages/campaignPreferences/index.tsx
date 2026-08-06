@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
-import { FormField } from "~/client/components/ui/form-field";
+import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
@@ -12,6 +13,7 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
+import type { CampaignPreferencesSettingsLoader } from "~/client/types/campaignPreferencesSettingsLoader";
 
 function CheckoutToggleRow({
   name,
@@ -39,11 +41,33 @@ function CheckoutToggleRow({
 }
 
 function CampaignPreferencesPage() {
+  const { preferences } = useLoaderData<CampaignPreferencesSettingsLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
+  const { Form, state, data } = useFetcher();
+  const isSubmitting = state === "submitting";
+  useActionToast(data);
+
   const steps = buildSteps(campaignId!);
 
-  const [showPixInvite, setShowPixInvite] = useState(true);
-  const [requireLogin, setRequireLogin] = useState(false);
+  const [redirectAfterRegistration, setRedirectAfterRegistration] = useState(
+    "",
+  );
+  const [redirectAfterOneTimePayment, setRedirectAfterOneTimePayment] =
+    useState("");
+  const [redirectAfterRecurringPayment, setRedirectAfterRecurringPayment] =
+    useState("");
+  const [nomenclature, setNomenclature] = useState(
+    preferences.nomenclature ?? "donation",
+  );
+  const [supportTagId, setSupportTagId] = useState(
+    preferences.supportTagId ?? "",
+  );
+  const [showPixInvite, setShowPixInvite] = useState(
+    preferences.showAutoPixInvite ?? true,
+  );
+  const [requireLogin, setRequireLogin] = useState(
+    preferences.requireLogin ?? false,
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,184 +85,190 @@ function CampaignPreferencesPage() {
       <div className="flex items-start gap-8">
         <StepNav steps={steps} />
 
-        <div className="flex min-w-0 flex-1 flex-col gap-6">
-          <div className="flex flex-col gap-0.5">
-            <h2 className="text-xl font-semibold tracking-tight text-foreground">
-              Preferências
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Configure textos, redirecionamentos e comportamentos do fluxo de
-              doação.
-            </p>
-          </div>
-
-          <SectionCard
-            title="Página de pagamento de doação avulsa"
-            description="Título exibido no topo da página de pagamento avulsa."
+        <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
+          <Form
+            method="post"
+            action={`/campaign/${campaignId}/settings/preferences`}
+            className="flex min-w-0 flex-1 flex-col gap-6"
           >
-            <FormField name="oneTimePaymentTitle" label="Título">
-              <Input
-                name="oneTimePaymentTitle"
-                defaultValue="Faça sua Doação ao Colégio Rainha dos Anjos"
-              />
-            </FormField>
-          </SectionCard>
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                Preferências
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Configure textos, redirecionamentos e comportamentos do fluxo de
+                doação.
+              </p>
+            </div>
 
-          <SectionCard
-            title="Página de pagamento mensal"
-            description="Título exibido no topo da página de pagamento recorrente."
-          >
-            <FormField name="monthlyPaymentTitle" label="Título">
-              <Input
-                name="monthlyPaymentTitle"
-                defaultValue="Faça sua Doação Mensal ao Colégio Rainha dos Anjos"
-              />
-            </FormField>
-          </SectionCard>
-
-          <SectionCard
-            title="Página de obrigado — doação única"
-            description="Mensagem exibida após uma doação avulsa."
-          >
-            <FormField name="oneTimeThanksTitle" label="Título">
-              <Input
-                name="oneTimeThanksTitle"
-                defaultValue="Deus lhe pague mais uma vez por sua generosidade!"
-              />
-            </FormField>
-            <FormField name="oneTimeThanksDescription" label="Descrição">
-              <Textarea
-                name="oneTimeThanksDescription"
-                defaultValue="Deus lhe pague mais uma vez por sua generosidade!"
-              />
-            </FormField>
-          </SectionCard>
-
-          <SectionCard
-            title="Página de obrigado — doação mensal"
-            description="Mensagem exibida após uma doação recorrente confirmada."
-          >
-            <FormField name="monthlyThanksTitle" label="Título">
-              <Input
-                name="monthlyThanksTitle"
-                defaultValue="Doação Recebida com Sucesso!"
-              />
-            </FormField>
-            <FormField name="monthlyThanksDescription" label="Descrição">
-              <Textarea
-                name="monthlyThanksDescription"
-                defaultValue="Deus lhe pague mais uma vez por sua generosidade!"
-              />
-            </FormField>
-          </SectionCard>
-
-          <SectionCard
-            title="Página de obrigado — cadastro efetuado"
-            description="Mensagem exibida após concluir o cadastro como doador recorrente."
-          >
-            <FormField name="registrationThanksTitle" label="Título">
-              <Input
-                name="registrationThanksTitle"
-                defaultValue="Deus lhe pague mais uma vez por sua generosidade!"
-              />
-            </FormField>
-            <FormField name="registrationThanksDescription" label="Descrição">
-              <Textarea
-                name="registrationThanksDescription"
-                defaultValue="Você receberá todos os meses, antes da data escolhida para o pagamento, lembretes via Whatsapp e Email, com o link para o pagamento mensal! Qualquer dúvida entre em contato conosco!"
-              />
-            </FormField>
-          </SectionCard>
-
-          <SectionCard
-            title="Redirecionamentos"
-            description="Defina para onde o doador será enviado após cada etapa do fluxo de doação."
-          >
-            <FormField
-              name="redirectAfterRegistration"
-              label="URL após cadastro como doador recorrente"
+            <SectionCard
+              title="Página de pagamento de doação avulsa"
+              description="Título exibido no topo da página de pagamento avulsa."
             >
-              <Input
+              <FormField name="oneTimePaymentTitle" label="Título">
+                <Input name="oneTimePaymentTitle" disabled />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Página de pagamento mensal"
+              description="Título exibido no topo da página de pagamento recorrente."
+            >
+              <FormField name="monthlyPaymentTitle" label="Título">
+                <Input name="monthlyPaymentTitle" disabled />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Página de obrigado — doação única"
+              description="Mensagem exibida após uma doação avulsa."
+            >
+              <FormField name="oneTimeThanksTitle" label="Título">
+                <Input name="oneTimeThanksTitle" disabled />
+              </FormField>
+              <FormField name="oneTimeThanksDescription" label="Descrição">
+                <Textarea name="oneTimeThanksDescription" disabled />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Página de obrigado — doação mensal"
+              description="Mensagem exibida após uma doação recorrente confirmada."
+            >
+              <FormField name="monthlyThanksTitle" label="Título">
+                <Input name="monthlyThanksTitle" disabled />
+              </FormField>
+              <FormField name="monthlyThanksDescription" label="Descrição">
+                <Textarea name="monthlyThanksDescription" disabled />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Página de obrigado — cadastro efetuado"
+              description="Mensagem exibida após concluir o cadastro como doador recorrente."
+            >
+              <FormField name="registrationThanksTitle" label="Título">
+                <Input name="registrationThanksTitle" disabled />
+              </FormField>
+              <FormField name="registrationThanksDescription" label="Descrição">
+                <Textarea name="registrationThanksDescription" disabled />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Redirecionamentos"
+              description="Defina para onde o doador será enviado após cada etapa do fluxo de doação."
+            >
+              <FormField
                 name="redirectAfterRegistration"
-                type="url"
-                placeholder="https://..."
-              />
-            </FormField>
-            <FormField
-              name="redirectAfterOneTimePayment"
-              label="URL após pagamento pontual"
-            >
-              <Input
-                name="redirectAfterOneTimePayment"
-                type="url"
-                placeholder="https://..."
-              />
-            </FormField>
-            <FormField
-              name="redirectAfterRecurringPayment"
-              label="URL após pagamento recorrente"
-            >
-              <Input
-                name="redirectAfterRecurringPayment"
-                type="url"
-                placeholder="https://..."
-              />
-            </FormField>
-          </SectionCard>
-
-          <SectionCard
-            title="Nomenclatura e identificação"
-            description="Como as contribuições serão chamadas nas telas e comunicações."
-          >
-            <div className="grid grid-cols-2 gap-5">
-              <FormField name="nomenclature" label="Nomenclatura">
-                <Select.Root name="nomenclature" defaultValue="donation">
-                  <Select.Trigger>
-                    <Select.Value />
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Item value="donation">Doação</Select.Item>
-                    <Select.Item value="contribution">Contribuição</Select.Item>
-                    <Select.Item value="offering">Oferta</Select.Item>
-                    <Select.Item value="tithe">Dízimo</Select.Item>
-                  </Select.Content>
-                </Select.Root>
+                label="URL após cadastro como doador recorrente"
+              >
+                <Input
+                  name="redirectAfterRegistration"
+                  type="url"
+                  placeholder="https://..."
+                  value={redirectAfterRegistration}
+                  onChange={(e) => setRedirectAfterRegistration(e.target.value)}
+                />
               </FormField>
               <FormField
-                name="tagId"
-                label="Tag no sistema de atendimento (Tag ID)"
+                name="redirectAfterOneTimePayment"
+                label="URL após pagamento pontual"
               >
-                <Input name="tagId" placeholder="Ex: 12345" />
+                <Input
+                  name="redirectAfterOneTimePayment"
+                  type="url"
+                  placeholder="https://..."
+                  value={redirectAfterOneTimePayment}
+                  onChange={(e) =>
+                    setRedirectAfterOneTimePayment(e.target.value)
+                  }
+                />
               </FormField>
+              <FormField
+                name="redirectAfterRecurringPayment"
+                label="URL após pagamento recorrente"
+              >
+                <Input
+                  name="redirectAfterRecurringPayment"
+                  type="url"
+                  placeholder="https://..."
+                  value={redirectAfterRecurringPayment}
+                  onChange={(e) =>
+                    setRedirectAfterRecurringPayment(e.target.value)
+                  }
+                />
+              </FormField>
+            </SectionCard>
+
+            <SectionCard
+              title="Nomenclatura e identificação"
+              description="Como as contribuições serão chamadas nas telas e comunicações."
+            >
+              <div className="grid grid-cols-2 gap-5">
+                <FormField name="nomenclature" label="Nomenclatura">
+                  <Select.Root
+                    name="nomenclature"
+                    value={nomenclature}
+                    onValueChange={setNomenclature}
+                  >
+                    <Select.Trigger>
+                      <Select.Value />
+                    </Select.Trigger>
+                    <Select.Content>
+                      <Select.Item value="donation">Doação</Select.Item>
+                      <Select.Item value="contribution">Contribuição</Select.Item>
+                      <Select.Item value="offering">Oferta</Select.Item>
+                      <Select.Item value="tithe">Dízimo</Select.Item>
+                    </Select.Content>
+                  </Select.Root>
+                </FormField>
+                <FormField
+                  name="supportTagId"
+                  label="Tag no sistema de atendimento (Tag ID)"
+                >
+                  <Input
+                    name="supportTagId"
+                    placeholder="Ex: 12345"
+                    value={supportTagId}
+                    onChange={(e) => setSupportTagId(e.target.value)}
+                  />
+                </FormField>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="Comportamento do checkout"
+              description="Ajustes que impactam a experiência do doador."
+            >
+              <CheckoutToggleRow
+                name="showAutoPixInvite"
+                label="Mostrar convite para PIX automático"
+                description="Exibe uma sugestão para ativar o PIX automático na tela de pagamento."
+                checked={showPixInvite}
+                onChange={setShowPixInvite}
+              />
+              <CheckoutToggleRow
+                name="requireLogin"
+                label="Obrigar login ao se cadastrar"
+                description="Exige criação de conta / login para concluir o cadastro do doador."
+                checked={requireLogin}
+                onChange={setRequireLogin}
+              />
+            </SectionCard>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                name="_action"
+                value="updatePreferencesSettings"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Salvando..." : "Salvar alterações"}
+              </Button>
             </div>
-          </SectionCard>
-
-          <SectionCard
-            title="Comportamento do checkout"
-            description="Ajustes que impactam a experiência do doador."
-          >
-            <CheckoutToggleRow
-              name="showPixInvite"
-              label="Mostrar convite para PIX automático"
-              description="Exibe uma sugestão para ativar o PIX automático na tela de pagamento."
-              checked={showPixInvite}
-              onChange={setShowPixInvite}
-            />
-            <CheckoutToggleRow
-              name="requireLogin"
-              label="Obrigar login ao se cadastrar"
-              description="Exige criação de conta / login para concluir o cadastro do doador."
-              checked={requireLogin}
-              onChange={setRequireLogin}
-            />
-          </SectionCard>
-
-          <div className="flex justify-end">
-            <Button type="button" disabled>
-              Salvar alterações
-            </Button>
-          </div>
-        </div>
+          </Form>
+        </FormErrorProvider>
       </div>
     </div>
   );

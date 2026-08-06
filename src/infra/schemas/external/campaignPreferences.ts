@@ -100,6 +100,26 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
+  nomenclature: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  support_tag_id: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  show_auto_pix_invite: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  require_login: z
+    .boolean()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
 });
 
 type ExternalCampaignPreferences = z.infer<

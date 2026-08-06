@@ -157,6 +157,10 @@ class CampaignGateway implements CampaignGatewayDTO {
       generate_payment_immediately: input.chargeImmediately,
       email_sender_name: input.emailSenderName,
       email_reply_to: input.emailReplyTo,
+      nomenclature: input.nomenclature,
+      support_tag_id: input.supportTagId,
+      show_auto_pix_invite: input.showAutoPixInvite,
+      require_login: input.requireLogin,
     };
 
     const hasPreferences = Object.values(preferencesBody).some(
@@ -188,6 +192,9 @@ class CampaignGateway implements CampaignGatewayDTO {
       image_mobile: input.imageMobile,
       featured_video: input.videoUrl,
       featured_image: input.headerImage,
+      url_thank_you_recurring_signup: input.redirectAfterRegistration,
+      url_thank_you_single: input.redirectAfterOneTimePayment,
+      url_thank_you_recurring: input.redirectAfterRecurringPayment,
       ...(hasPreferences ? { preferences: preferencesBody } : {}),
       ...(hasMetaTag ? { projectMetatag: metaTagBody } : {}),
     };

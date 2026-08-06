@@ -22,6 +22,10 @@ type CampaignPreferences = {
   chargeImmediately: boolean | null;
   emailSenderName: string | null;
   emailReplyTo: string | null;
+  nomenclature: string | null;
+  supportTagId: string | null;
+  showAutoPixInvite: boolean | null;
+  requireLogin: boolean | null;
 };
 
 type UpdateCampaignPreferencesInput = {
