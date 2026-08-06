@@ -8,10 +8,11 @@ type CampaignConstructorProps = {
   description: string | null;
   noEndDate: boolean;
   monthlyGoal: string | undefined;
-  totalGoal: string | null;
+  totalGoal: number | null;
   startDate: string | null;
   endDate: string | null;
   currentRevenue: string | null;
+  revenueExists: boolean | null;
   status: boolean;
   published: boolean;
   phone: string | null;
@@ -41,10 +42,11 @@ class Campaign {
   description: string | null;
   noEndDate: boolean;
   monthlyGoal: string | undefined;
-  totalGoal: string | null;
+  totalGoal: number | null;
   startDate: string | null;
   endDate: string | null;
   currentRevenue: string | null;
+  revenueExists: boolean | null;
   status: boolean;
   published: boolean;
   phone: string | null;
@@ -75,6 +77,7 @@ class Campaign {
     this.startDate = props.startDate;
     this.endDate = props.endDate;
     this.currentRevenue = props.currentRevenue;
+    this.revenueExists = props.revenueExists;
     this.status = props.status;
     this.published = props.published;
     this.phone = props.phone;
@@ -125,6 +128,7 @@ class Campaign {
         : null,
       endDateInput: this.endDate ? this.endDate.split("T")[0] : null,
       currentRevenue: this.currentRevenue ?? null,
+      revenueExists: this.revenueExists,
       status: this.status,
       published: this.published,
       phone: this.phone,

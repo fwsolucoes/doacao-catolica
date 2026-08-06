@@ -11,9 +11,7 @@ function KpiCards() {
     "main/routes/layout.campaignLayout",
   );
 
-  const rawGoal = layoutData?.campaign.totalGoal;
-  const totalGoal: number | null =
-    rawGoal != null && rawGoal !== "" ? Number(rawGoal) : null;
+  const totalGoal = layoutData?.campaign.totalGoal ?? null;
 
   const totalGoalProgressPercentage =
     overview.totalGoalProgressPercentage ??

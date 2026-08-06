@@ -29,7 +29,7 @@ function FundraisingGoalsCard() {
           <CurrencyInput
             name="totalGoal"
             defaultValue={
-              campaign.totalGoal ? parseFloat(campaign.totalGoal) : undefined
+              campaign.totalGoal ?? undefined
             }
             placeholder="0,00"
           />

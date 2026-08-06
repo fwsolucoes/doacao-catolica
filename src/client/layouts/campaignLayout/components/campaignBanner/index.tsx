@@ -39,7 +39,7 @@ function CampaignBanner() {
               {formatCurrency(String(overview.totalRaised))}
             </span>
             {campaign.totalGoal
-              ? ` de ${formatCurrency(campaign.totalGoal)}`
+              ? ` de ${formatCurrency(String(campaign.totalGoal))}`
               : null}
           </span>
         </div>

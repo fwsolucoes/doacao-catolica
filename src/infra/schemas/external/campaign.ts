@@ -34,11 +34,11 @@ const externalCampaignSchema = z.object({
   template: z.any(),
   last_revenue: z.any(),
   monthy_goal: z.any(),
-  revenue_exists: z.boolean(),
+  revenue_exists: z.boolean().nullable(),
   already_has_revenue: z.boolean().optional(),
   current_revenue: z.string().optional(),
   monthly_goal: z.string().optional(),
-  total_goal: z.string().nullable(),
+  total_goal: z.number().nullable(),
 });
 
 const listCampaignsSchema = z.object({
