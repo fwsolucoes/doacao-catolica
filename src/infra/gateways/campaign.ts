@@ -163,6 +163,12 @@ class CampaignGateway implements CampaignGatewayDTO {
       (v) => v !== undefined,
     );
 
+    const metaTagBody = {
+      title: input.metaTitle,
+      description: input.metaDescription,
+    };
+    const hasMetaTag = Object.values(metaTagBody).some((v) => v !== undefined);
+
     const body = {
       name: input.name,
       slug: input.slug,
@@ -183,6 +189,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       featured_video: input.videoUrl,
       featured_image: input.headerImage,
       ...(hasPreferences ? { preferences: preferencesBody } : {}),
+      ...(hasMetaTag ? { projectMetatag: metaTagBody } : {}),
     };
 
     const apiResponse = await api.put(

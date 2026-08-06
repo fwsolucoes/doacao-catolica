@@ -87,6 +87,9 @@ type UpdateCampaignWithDetailsInput = {
   // Email — preferences
   emailSenderName?: string | null;
   emailReplyTo?: string | null;
+  // Metadados SEO — projectMetatag
+  metaTitle?: string | null;
+  metaDescription?: string | null;
 };
 
 type GetProjectPermissionsOutput = {
