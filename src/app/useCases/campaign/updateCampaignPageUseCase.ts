@@ -1,5 +1,4 @@
 import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
-import type { CampaignPreferencesGatewayDTO } from "~/domain/gateways/campaignPreferences";
 
 type InputProps = {
   campaignId: string;
@@ -18,72 +17,31 @@ type InputProps = {
   aboutImage: string | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
-  whyDonateEnabled: boolean;
-  aboutUsEnabled: boolean;
 };
 
 class UpdateCampaignPageUseCase {
-  constructor(
-    private campaignGateway: CampaignGatewayDTO,
-    private campaignPreferencesGateway: CampaignPreferencesGatewayDTO,
-  ) {}
+  constructor(private campaignGateway: CampaignGatewayDTO) {}
 
   async execute(input: InputProps) {
-    const { campaignId, token } = input;
-
-    const [campaign, preferences] = await Promise.all([
-      this.campaignGateway.getCampaign(campaignId, token),
-      this.campaignPreferencesGateway.getCampaignPreferences(campaignId, token),
-    ]);
-
-    await this.campaignPreferencesGateway.updateCampaignPreferences(
-      preferences.id,
+    await this.campaignGateway.updateCampaignWithDetails(
       {
+        campaignId: input.campaignId,
+        image: input.featuredImage,
+        imageMobile: input.imageMobile,
+        videoUrl: input.videoUrl,
+        headerImage: input.headerImage,
         title: input.title,
         description: input.description,
         whyDonateTitle: input.whyDonateTitle,
         whyDonateText: input.whyDonateText,
         whyDonateImage: input.whyDonateImage,
-        aboutUsTitle: input.aboutTitle,
-        aboutUsText: input.aboutText,
-        aboutUsImage: input.aboutImage,
+        aboutTitle: input.aboutTitle,
+        aboutText: input.aboutText,
+        aboutImage: input.aboutImage,
         supportWhatsapp: input.supportWhatsapp,
         supportEmail: input.supportEmail,
-        whyDonateEnabled: input.whyDonateEnabled,
-        aboutUsEnabled: input.aboutUsEnabled,
       },
-      token,
-    );
-
-    await this.campaignGateway.updateCampaignPage(
-      {
-        campaignId,
-        subAccountId: campaign.subAccountId,
-        name: campaign.name,
-        slug: campaign.slug,
-        status: campaign.status,
-        published: campaign.published,
-        startDate: campaign.startDate,
-        endDate: campaign.endDate,
-        noEndDate: campaign.noEndDate,
-        phone: campaign.phone,
-        typeDonation: campaign.typeDonation,
-        totalGoal: campaign.totalGoal ? parseFloat(campaign.totalGoal) : null,
-        monthlyGoal: campaign.monthlyGoal
-          ? parseFloat(campaign.monthlyGoal)
-          : null,
-        institutionName: campaign.institutionName,
-        cnpj: campaign.cnpj,
-        address: campaign.address,
-        email: campaign.email,
-        type: campaign.type,
-        description: input.description,
-        image: input.featuredImage,
-        imageMobile: input.imageMobile,
-        videoUrl: input.videoUrl,
-        headerImage: input.headerImage,
-      },
-      token,
+      input.token,
     );
 
     return {

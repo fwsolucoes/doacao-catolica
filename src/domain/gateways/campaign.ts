@@ -60,32 +60,22 @@ type UpdateCampaignWithDetailsInput = {
   institutionName?: string | null;
   cnpj?: string | null;
   address?: string | null;
-};
-
-type UpdateCampaignPageInput = {
-  campaignId: string;
-  subAccountId: string;
-  name: string;
-  slug: string;
-  status: boolean;
-  published: boolean;
-  startDate: string | null;
-  endDate: string | null;
-  noEndDate: boolean;
-  phone: string | null;
-  typeDonation: string;
-  totalGoal: number | null;
-  monthlyGoal: number | null;
-  institutionName: string | null;
-  cnpj: string | null;
-  address: string | null;
-  email: string | null;
-  type: number;
-  description: string | null;
-  image: string | null;
-  imageMobile: string | null;
-  videoUrl: string | null;
-  headerImage: string | null;
+  // Página da Campanha — top-level
+  image?: string | null;
+  imageMobile?: string | null;
+  videoUrl?: string | null;
+  headerImage?: string | null;
+  // Página da Campanha — preferences
+  title?: string | null;
+  description?: string | null;
+  whyDonateTitle?: string | null;
+  whyDonateText?: string | null;
+  whyDonateImage?: string | null;
+  aboutTitle?: string | null;
+  aboutText?: string | null;
+  aboutImage?: string | null;
+  supportWhatsapp?: string | null;
+  supportEmail?: string | null;
 };
 
 type GetProjectPermissionsOutput = {
@@ -108,10 +98,6 @@ type CampaignGatewayDTO = {
     input: UpdateCampaignWithDetailsInput,
     token: string,
   ) => Promise<void>;
-  updateCampaignPage: (
-    input: UpdateCampaignPageInput,
-    token: string,
-  ) => Promise<void>;
   getProjectPermissions: (
     projectId: string,
     userId: string,
@@ -123,6 +109,5 @@ export type {
   CampaignGatewayDTO,
   CreateCampaignInput,
   UpdateCampaignWithDetailsInput,
-  UpdateCampaignPageInput,
   GetProjectPermissionsOutput,
 };
