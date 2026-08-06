@@ -13,6 +13,15 @@ type CampaignPreferences = {
   aboutUsEnabled: boolean | null;
   supportWhatsapp: string | null;
   supportEmail: string | null;
+  pixEnabled: boolean | null;
+  boletoEnabled: boolean | null;
+  creditCardEnabled: boolean | null;
+  minAmount: number | null;
+  passFeeToDonor: boolean | null;
+  allowCustomAmount: boolean | null;
+  chargeImmediately: boolean | null;
+  emailSenderName: string | null;
+  emailReplyTo: string | null;
 };
 
 type UpdateCampaignPreferencesInput = {

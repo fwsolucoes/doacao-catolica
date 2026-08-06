@@ -76,6 +76,17 @@ type UpdateCampaignWithDetailsInput = {
   aboutImage?: string | null;
   supportWhatsapp?: string | null;
   supportEmail?: string | null;
+  // Valores e Pagamento — preferences
+  pixEnabled?: boolean;
+  boletoEnabled?: boolean;
+  creditCardEnabled?: boolean;
+  minAmount?: number | null;
+  passFeeToDonor?: boolean;
+  allowCustomAmount?: boolean;
+  chargeImmediately?: boolean;
+  // Email — preferences
+  emailSenderName?: string | null;
+  emailReplyTo?: string | null;
 };
 
 type GetProjectPermissionsOutput = {

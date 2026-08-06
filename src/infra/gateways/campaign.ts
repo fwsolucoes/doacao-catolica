@@ -148,6 +148,15 @@ class CampaignGateway implements CampaignGatewayDTO {
       about_us_image: input.aboutImage,
       whatsapp_project_support: input.supportWhatsapp,
       email_project_support: input.supportEmail,
+      pix_enable: input.pixEnabled,
+      bankslip_enable: input.boletoEnabled,
+      credit_enable: input.creditCardEnabled,
+      min_amount: input.minAmount,
+      allow_transfer_taxes: input.passFeeToDonor,
+      show_custom_amount_option: input.allowCustomAmount,
+      generate_payment_immediately: input.chargeImmediately,
+      email_sender_name: input.emailSenderName,
+      email_reply_to: input.emailReplyTo,
     };
 
     const hasPreferences = Object.values(preferencesBody).some(

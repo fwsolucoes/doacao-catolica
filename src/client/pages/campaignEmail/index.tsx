@@ -1,9 +1,10 @@
 import { Code2, Eye, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import { FormField } from "~/client/components/ui/form-field";
+import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import {
@@ -11,6 +12,7 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
+import type { CampaignEmailLoader } from "~/client/types/campaignEmailLoader";
 import { NewLayoutDialog } from "./components/newLayoutDialog";
 
 type EmailLayout = {
@@ -104,9 +106,21 @@ function VariablesBanner() {
 }
 
 function CampaignEmailPage() {
+  const { preferences } = useLoaderData<CampaignEmailLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
+  const { Form, state, data } = useFetcher();
+  const isSubmitting = state === "submitting";
+  useActionToast(data);
+
   const steps = buildSteps(campaignId!);
   const [newLayoutOpen, setNewLayoutOpen] = useState(false);
+
+  const [emailSenderName, setEmailSenderName] = useState(
+    preferences.emailSenderName ?? "",
+  );
+  const [emailReplyTo, setEmailReplyTo] = useState(
+    preferences.emailReplyTo ?? "",
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -126,21 +140,47 @@ function CampaignEmailPage() {
 
         <div className="flex min-w-0 flex-1 flex-col gap-6">
           {/* Remetente */}
-          <SectionCard
-            title="Remetente"
-            description="Como os emails aparecem na caixa de entrada dos doadores."
-          >
-            <FormField name="senderName" label="Nome do remetente" required>
-              <Input name="senderName" placeholder="Ex.: Educação para Todos" />
-            </FormField>
-            <FormField name="replyTo" label="Responder para (opcional)">
-              <Input
-                name="replyTo"
-                type="email"
-                placeholder="atendimento@suainstituicao.org"
-              />
-            </FormField>
-          </SectionCard>
+          <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
+            <Form
+              method="post"
+              action={`/campaign/${campaignId}/settings/email`}
+              className="contents"
+            >
+              <SectionCard
+                title="Remetente"
+                description="Como os emails aparecem na caixa de entrada dos doadores."
+              >
+                <FormField name="emailSenderName" label="Nome do remetente" required>
+                  <Input
+                    name="emailSenderName"
+                    placeholder="Ex.: Educação para Todos"
+                    value={emailSenderName}
+                    onChange={(e) => setEmailSenderName(e.target.value)}
+                  />
+                </FormField>
+                <FormField name="emailReplyTo" label="Responder para (opcional)">
+                  <Input
+                    name="emailReplyTo"
+                    type="email"
+                    placeholder="atendimento@suainstituicao.org"
+                    value={emailReplyTo}
+                    onChange={(e) => setEmailReplyTo(e.target.value)}
+                  />
+                </FormField>
+              </SectionCard>
+
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  name="_action"
+                  value="updateEmailSettings"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Salvando..." : "Salvar alterações"}
+                </Button>
+              </div>
+            </Form>
+          </FormErrorProvider>
 
           {/* Layouts de e-mail */}
           <Card.Root className="flex flex-col gap-0 p-0">
@@ -172,12 +212,6 @@ function CampaignEmailPage() {
               </div>
             </div>
           </Card.Root>
-
-          <div className="flex justify-end">
-            <Button type="button" disabled>
-              Salvar alterações
-            </Button>
-          </div>
         </div>
       </div>
 

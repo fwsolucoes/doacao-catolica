@@ -39,6 +39,15 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       aboutUsEnabled: data.about_us_enabled,
       supportWhatsapp: data.support_whatsapp,
       supportEmail: data.support_email,
+      pixEnabled: data.pix_enable,
+      boletoEnabled: data.bankslip_enable,
+      creditCardEnabled: data.credit_enable,
+      minAmount: data.min_amount,
+      passFeeToDonor: data.allow_transfer_taxes,
+      allowCustomAmount: data.show_custom_amount_option,
+      chargeImmediately: data.generate_payment_immediately,
+      emailSenderName: data.email_sender_name,
+      emailReplyTo: data.email_reply_to,
     };
   }
 
