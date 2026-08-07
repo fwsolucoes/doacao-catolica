@@ -10,6 +10,14 @@
     box-sizing: border-box;
   }
 
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+
   *,
   input,
   textarea,
@@ -19,9 +27,14 @@
     font-optical-sizing: auto;
   }
 
+  .text-sm {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+
   @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: "Geist Variable", sans-serif;
+    --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -100,9 +113,9 @@
     --sidebar-width: 17rem; /* 272px — match do Figma */
     --sidebar-width-mobile: 18rem;
     --sidebar-width-icon: 3rem; /* largura colapsado */
-    --font-sans: Nunito Sans, sans-serif;
-    --font-serif: Nunito Sans, sans-serif;
-    --font-mono: monospace;
+    --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --font-serif: Merriweather, ui-serif, serif;
+    --font-mono: "Roboto Mono", ui-monospace, monospace;
     --radius: 0.5rem;
     --shadow-x: 4px;
     --shadow-y: 4px;
@@ -208,9 +221,9 @@
   --sidebar-accent-foreground: oklch(0.968 0.007 247.896);
   --sidebar-border: oklch(0.148 0.044 264);
   --sidebar-ring: oklch(0.623 0.214 259.815);
-  --font-sans: Nunito Sans, sans-serif;
-  --font-serif: Nunito Sans, sans-serif;
-  --font-mono: monospace;
+  --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Merriweather, ui-serif, serif;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
   --radius: 0.75rem; /*em pixels
 
   /* aliases — mantêm compatibilidade com código existente fora dos componentes UI */
