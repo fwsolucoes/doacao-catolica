@@ -7,8 +7,8 @@ import {
   RefreshCw,
   Users,
 } from "lucide-react";
-import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, useFetcher, useParams } from "react-router";
 import type { DonorsLoader } from "~/client/types/donorsLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Button } from "~/client/components/ui/button";
@@ -46,7 +46,20 @@ function OneTimeDonorRow({
   const { campaignId } = useParams<{ campaignId: string }>();
   const { environmentVariables, user } = useRoot();
   const whatsAppHref = buildWhatsAppHref(donor.phone);
-  const editDonorHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/${donor.customerUuid}?redirectBack=${encodeURIComponent(currentUrl)}`;
+  const contactFetcher = useFetcher<{ contactId: string }>();
+  const prevFetcherState = useRef<string>("idle");
+
+  useEffect(() => {
+    if (
+      prevFetcherState.current === "loading" &&
+      contactFetcher.state === "idle" &&
+      contactFetcher.data?.contactId
+    ) {
+      const href = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/${contactFetcher.data.contactId}?redirectBack=${encodeURIComponent(currentUrl)}`;
+      window.location.href = href;
+    }
+    prevFetcherState.current = contactFetcher.state;
+  }, [contactFetcher.state, contactFetcher.data, environmentVariables.SANCTON_CRM_PANEL_URL, user?.token, currentUrl]);
 
   return (
     <Table.Row>
@@ -116,12 +129,15 @@ function OneTimeDonorRow({
             <Button
               variant="ghost"
               className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
-              asChild
+              disabled={contactFetcher.state === "loading"}
+              onClick={() =>
+                contactFetcher.load(
+                  `/api/donatorContact?donatorsId=${donor.customerReference}`,
+                )
+              }
             >
-              <a href={editDonorHref}>
-                <Pencil size={16} />
-                Editar doador
-              </a>
+              <Pencil size={16} />
+              {contactFetcher.state === "loading" ? "Aguarde..." : "Editar doador"}
             </Button>
             <Button
               variant="ghost"
