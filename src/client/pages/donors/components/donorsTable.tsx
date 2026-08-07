@@ -130,6 +130,7 @@ function DonorsTable() {
         {activeTab === "recorrentes" ? (
           <RecurringDonorsTable
             donors={donors}
+            currentUrl={currentUrl}
             searchValue={searchValue}
             setDialog={setDialog}
           />

@@ -10,8 +10,8 @@ import {
   ReceiptText,
   Users,
 } from "lucide-react";
-import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, useFetcher, useParams } from "react-router";
 import type { DonorsLoader } from "~/client/types/donorsLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
@@ -29,6 +29,7 @@ import { formatCurrency } from "~/lib/formatCurrency";
 import { getInitials } from "~/lib/getInitials";
 import { buildWhatsAppHref } from "~/lib/buildWhatsAppHref";
 import { cn } from "~/lib/utils";
+import { useRoot } from "~/client/hooks/useRoot";
 import type { DialogState, DonorRow } from "./donorsTable";
 
 const PAYMENT_METHOD_BADGE: Record<
@@ -54,6 +55,7 @@ function formatApiDate(dateStr: string | null): string {
 
 type ActionsPopoverProps = {
   donor: DonorRow;
+  currentUrl: string;
   onEditRecurrence: () => void;
   onGenerateUpcoming: () => void;
   onGenerateBooklet: () => void;
@@ -63,6 +65,7 @@ type ActionsPopoverProps = {
 
 function ActionsPopover({
   donor,
+  currentUrl,
   onEditRecurrence,
   onGenerateUpcoming,
   onGenerateBooklet,
@@ -70,10 +73,25 @@ function ActionsPopover({
   onEnableRecurrence,
 }: ActionsPopoverProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
+  const { environmentVariables, user } = useRoot();
   const [open, setOpen] = useState(false);
+  const contactFetcher = useFetcher<{ contactId: string }>();
+  const prevFetcherState = useRef<string>("idle");
 
   const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}`;
   const whatsAppHref = buildWhatsAppHref(donor.phone);
+
+  useEffect(() => {
+    if (
+      prevFetcherState.current === "loading" &&
+      contactFetcher.state === "idle" &&
+      contactFetcher.data?.contactId
+    ) {
+      const href = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/${contactFetcher.data.contactId}?redirectBack=${encodeURIComponent(currentUrl)}`;
+      window.location.href = href;
+    }
+    prevFetcherState.current = contactFetcher.state;
+  }, [contactFetcher.state, contactFetcher.data, environmentVariables.SANCTON_CRM_PANEL_URL, user?.token, currentUrl]);
 
   function openDialog(fn: () => void) {
     setOpen(false);
@@ -92,6 +110,19 @@ function ActionsPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-1.5" align="end" sideOffset={4}>
+        <Button
+          variant="ghost"
+          className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+          disabled={contactFetcher.state === "loading"}
+          onClick={() =>
+            contactFetcher.load(
+              `/api/donatorContact?donatorsId=${donor.customerReference}`,
+            )
+          }
+        >
+          <Pencil size={16} />
+          {contactFetcher.state === "loading" ? "Aguarde..." : "Editar doador"}
+        </Button>
         <Button
           variant="ghost"
           className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
@@ -173,10 +204,15 @@ function ActionsPopover({
 
 type RecurringDonorRowProps = {
   donor: DonorRow;
+  currentUrl: string;
   setDialog: (state: DialogState) => void;
 };
 
-function RecurringDonorRow({ donor, setDialog }: RecurringDonorRowProps) {
+function RecurringDonorRow({
+  donor,
+  currentUrl,
+  setDialog,
+}: RecurringDonorRowProps) {
   return (
     <Table.Row>
       <Table.Cell>
@@ -253,6 +289,7 @@ function RecurringDonorRow({ donor, setDialog }: RecurringDonorRowProps) {
       <Table.Cell className="text-right">
         <ActionsPopover
           donor={donor}
+          currentUrl={currentUrl}
           onEditRecurrence={() =>
             setDialog({ type: "updateRecurrence", donor })
           }
@@ -290,12 +327,14 @@ function RecurringDonorRow({ donor, setDialog }: RecurringDonorRowProps) {
 
 type RecurringDonorsTableProps = {
   donors: DonorsLoader["donors"];
+  currentUrl: string;
   searchValue: string;
   setDialog: (state: DialogState) => void;
 };
 
 function RecurringDonorsTable({
   donors,
+  currentUrl,
   searchValue,
   setDialog,
 }: RecurringDonorsTableProps) {
@@ -321,6 +360,7 @@ function RecurringDonorsTable({
             <RecurringDonorRow
               key={donor.subscriptionUuid}
               donor={donor}
+              currentUrl={currentUrl}
               setDialog={setDialog}
             />
           ))}

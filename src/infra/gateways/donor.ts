@@ -14,6 +14,7 @@ import { donationApi } from "../http/donationApi";
 import { createDonorResponseSchema } from "../schemas/external/createDonor";
 import { externalDonorsListSchema } from "../schemas/external/donor";
 import { donorsSummaryResponseSchema } from "../schemas/external/donorsSummary";
+import { donatorContactSchema } from "../schemas/external/donatorContact";
 import { oneTimeDonorsResponseSchema } from "../schemas/external/oneTimeDonors";
 import { recurringDonorsResponseSchema } from "../schemas/external/recurringDonors";
 import { environmentVariables } from "~/main/config/environmentVariables";
@@ -209,6 +210,19 @@ class DonorGateway implements DonorGatewayDTO {
         totalItems: data.total,
       },
     });
+  }
+
+  async findDonatorContact(donatorsId: string, token: string): Promise<string> {
+    const url = `/donators/find-one/${donatorsId}`;
+
+    const apiResponse = await api.get(url, { token });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(donatorContactSchema);
+    const data = schemaValidator.validate(apiResponse.response);
+
+    return data.contact.id;
   }
 }
 

@@ -44,6 +44,7 @@ type DonorGatewayDTO = {
     campaignId: string,
     searchParams: DonorSearchParams,
   ): Promise<SearchResult<OneTimeDonor>>;
+  findDonatorContact(donatorsId: string, token: string): Promise<string>;
 };
 
 export type { DonorGatewayDTO, CreateDonorInput, DonorsSummary };

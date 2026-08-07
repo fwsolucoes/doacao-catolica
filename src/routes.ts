@@ -6,6 +6,7 @@ export default [
   route("api/logout-user", "./main/routes/api.logoutUser.ts"),
   route("api/file-upload", "./main/routes/api.fileUpload.ts"),
   route("api/auth/token", "./main/routes/api.authToken.ts"),
+  route("api/donatorContact", "./main/routes/api.donatorContact.ts"),
   
   layout("./main/routes/layout.portalLayout.tsx", [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
