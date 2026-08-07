@@ -22,9 +22,11 @@ const STATUS_BADGE: Record<
 
 const PAYMENT_METHOD_LABEL: Record<string, string> = {
   pix: "Pix",
+  automatic_pix: "Pix automático",
   credit_card: "Cartão",
   card: "Cartão",
   boleto: "Boleto",
+  bank_slip: "Boleto",
   debit_card: "Débito",
 };
 
