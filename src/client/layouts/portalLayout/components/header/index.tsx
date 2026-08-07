@@ -8,7 +8,7 @@ function PortalHeader() {
   const { theme, toggle } = useTheme();
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-card px-6">
+    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-6">
       <SidebarTrigger className="size-9 shrink-0" />
 
       <div className="h-7 w-px bg-border shrink-0" aria-hidden="true" />
