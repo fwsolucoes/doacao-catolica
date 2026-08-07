@@ -78,8 +78,6 @@ function PhoneInput({
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         smartCaret={false}
-        international
-        withCountryCallingCode
         value={value || undefined}
         onChange={(value) => onChange?.(value || ("" as BasePhoneInput.Value))}
         {...props}
