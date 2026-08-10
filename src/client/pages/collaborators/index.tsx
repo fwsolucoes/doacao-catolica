@@ -4,6 +4,7 @@ import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import type { CollaboratorsLoader } from "~/client/types/collaboratorsLoader";
+import { cn } from "~/lib/utils";
 import { ActiveCollaboratorsTable } from "./components/activeCollaboratorsTable";
 import { CollaboratorsHeader } from "./components/header";
 import { PendingCollaboratorsTable } from "./components/pendingCollaboratorsTable";
@@ -25,28 +26,38 @@ function CollaboratorsPage() {
       <CollaboratorsHeader />
 
       <div className="flex flex-col gap-4">
-        <div className="flex w-fit rounded-xl border border-border bg-card p-1">
+        <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
           <Button
-            variant={isActiveTab ? "secondary" : "ghost"}
+            variant="ghost"
             size="sm"
-            className="gap-2 rounded-lg"
+            className={cn(
+              "gap-2 rounded-xl",
+              isActiveTab
+                ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground"
+                : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
+            )}
             onClick={() => setTab("active")}
           >
             <Users size={15} />
             Ativos
-            <span className="rounded-full bg-muted px-2 text-xs">
+            <span className="rounded-full bg-muted-foreground/15 px-2 text-xs">
               {activeCount}
             </span>
           </Button>
           <Button
-            variant={!isActiveTab ? "secondary" : "ghost"}
+            variant="ghost"
             size="sm"
-            className="gap-2 rounded-lg"
+            className={cn(
+              "gap-2 rounded-xl",
+              !isActiveTab
+                ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground"
+                : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
+            )}
             onClick={() => setTab("pending")}
           >
             <Send size={15} />
             Pendentes
-            <span className="rounded-full bg-muted px-2 text-xs">
+            <span className="rounded-full bg-muted-foreground/15 px-2 text-xs">
               {pendingCount}
             </span>
           </Button>
