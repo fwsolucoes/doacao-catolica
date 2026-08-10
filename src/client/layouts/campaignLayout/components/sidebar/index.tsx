@@ -126,7 +126,7 @@ function NavItemRow({
           className="rounded-xl"
         >
           <NavLink to={to} end>
-            <Icon size={18} />
+            <Icon size={20} />
             <span>{label}</span>
           </NavLink>
         </SidebarMenuButton>
@@ -135,7 +135,7 @@ function NavItemRow({
           tooltip={label}
           className="cursor-default opacity-60 rounded-xl"
         >
-          <Icon size={18} />
+          <Icon size={20} />
           <span>{label}</span>
         </SidebarMenuButton>
       )}
@@ -168,7 +168,7 @@ function CollapsibleNavItem({
         onClick={() => setOpen((o) => !o)}
         className="rounded-xl"
       >
-        <Icon size={18} />
+        <Icon size={20} />
         <span>{label}</span>
         <ChevronDown
           className={cn(
@@ -246,11 +246,11 @@ function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-4">
+      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-6">
         <img
           src={LIGHT_LOGO}
           alt="Logo"
-          className="h-8 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
+          className="h-10 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
         />
       </SidebarHeader>
 

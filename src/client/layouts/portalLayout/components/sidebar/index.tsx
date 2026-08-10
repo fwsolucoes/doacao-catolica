@@ -77,7 +77,7 @@ function NavItemRow({ icon: Icon, label, path }: NavItem) {
           className="rounded-xl"
         >
           <NavLink to={path} end>
-            <Icon size={18} />
+            <Icon size={20} />
             <span>{label}</span>
           </NavLink>
         </SidebarMenuButton>
@@ -86,7 +86,7 @@ function NavItemRow({ icon: Icon, label, path }: NavItem) {
           tooltip={label}
           className="cursor-default opacity-60 rounded-xl"
         >
-          <Icon size={18} />
+          <Icon size={20} />
           <span>{label}</span>
         </SidebarMenuButton>
       )}
@@ -138,7 +138,7 @@ function PortalSidebar() {
         <img
           src={LIGHT_LOGO}
           alt="Logo"
-          className="h-8 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
+          className="h-10 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
         />
       </SidebarHeader>
 
