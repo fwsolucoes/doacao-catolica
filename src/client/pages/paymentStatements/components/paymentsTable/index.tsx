@@ -140,7 +140,7 @@ function PaymentsTable() {
           <Input
             leftIcon={Search}
             placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
-            className="h-11 rounded-xl border-transparent bg-muted/50"
+            className="h-11 rounded-xl border-transparent bg-background"
             defaultValue={getParam("search") || ""}
             onChange={(e) =>
               handleChangeTimeoutFilter("search", e.target.value)

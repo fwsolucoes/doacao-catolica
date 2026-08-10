@@ -31,7 +31,7 @@ function DonorsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <Button variant="outline">
+          <Button variant="outline" className="text-foreground">
             <Download size={16} />
             Exportar
           </Button>

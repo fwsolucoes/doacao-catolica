@@ -107,7 +107,7 @@ function DonationsPage() {
         </div>
         <div className="flex items-center gap-3">
           <PeriodSelect />
-          <Button variant="outline">
+          <Button variant="outline" className="text-foreground">
             <Download size={16} />
             Exportar
           </Button>

@@ -119,7 +119,7 @@ function DonorsTable() {
             <Input
               leftIcon={Search}
               placeholder="Buscar por nome, CPF, e-mail ou telefone..."
-              className="h-11 rounded-xl"
+              className="h-11 rounded-xl bg-background"
               defaultValue={searchValue}
               onChange={(e) => handleSearch(e.target.value)}
             />
