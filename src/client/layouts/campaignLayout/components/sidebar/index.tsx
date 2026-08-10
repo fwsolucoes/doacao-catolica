@@ -63,7 +63,10 @@ const sections: NavSection[] = [
       {
         icon: Wallet,
         label: "Financeiro",
-        subItems: [{ label: "Transferências", path: "transfers" }],
+        subItems: [
+          { label: "Transferências", path: "transfers" },
+          { label: "Métodos de pagamento", path: "payment-methods" },
+        ],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },
       {
@@ -80,14 +83,7 @@ const sections: NavSection[] = [
     title: "Sistema",
     items: [
       { icon: Users2, label: "Colaboradores", path: "collaborators" },
-      {
-        icon: Settings,
-        label: "Configurações",
-        subItems: [
-          { label: "Informações Gerais", path: "settings/general-info" },
-          { label: "Métodos de pagamento", path: "payment-methods" },
-        ],
-      },
+      { icon: Settings, label: "Configurações", path: "settings/general-info" },
       { icon: CircleHelp, label: "Ajuda" },
     ],
   },
