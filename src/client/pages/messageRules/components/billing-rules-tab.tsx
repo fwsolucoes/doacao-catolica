@@ -1,5 +1,14 @@
 import { useCallback, useState } from "react";
-import { CheckCircle2, Ellipsis, Pencil, Radio, Send, Trash2, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Ellipsis,
+  Pencil,
+  Plus,
+  Radio,
+  Send,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -16,19 +25,32 @@ import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { BILLING_RULE_TYPES } from "../constants";
 import { ChannelBadge, PaymentBadge } from "./badges";
 import { DeleteNotificationSettingDialog } from "./delete-notification-setting-dialog";
+import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
 import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { StatCard } from "./stat-card";
 
-type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
+type NotificationSettingJson =
+  MessageRulesLoader["notificationSettings"][number];
 
-type Props = {
-  onEdit: (rule: NotificationSettingJson) => void;
-};
-
-function BillingRulesTab({ onEdit }: Props) {
+function BillingRulesTab() {
   const { notificationSettings } = useLoaderData<MessageRulesLoader>();
 
-  const [deletingRule, setDeletingRule] = useState<NotificationSettingJson | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingRule, setEditingRule] =
+    useState<NotificationSettingJson | null>(null);
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setDialogOpen(open);
+    if (!open) setEditingRule(null);
+  }, []);
+
+  const openEdit = useCallback((rule: NotificationSettingJson) => {
+    setEditingRule(rule);
+    setDialogOpen(true);
+  }, []);
+
+  const [deletingRule, setDeletingRule] =
+    useState<NotificationSettingJson | null>(null);
   const closeDeleteDialog = useCallback(() => setDeletingRule(null), []);
 
   const billingRules = notificationSettings.filter((s) =>
@@ -81,13 +103,19 @@ function BillingRulesTab({ onEdit }: Props) {
       </div>
 
       <Card.Root className="gap-0 p-0">
-        <div className="px-7 py-5">
-          <p className="text-base font-semibold text-foreground">
-            Réguas de cobrança
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Mensagens automáticas antes e após o vencimento.
-          </p>
+        <div className="flex flex-wrap items-center justify-between gap-4 px-7 py-5">
+          <div className="flex flex-col gap-0.5">
+            <p className="text-base font-semibold text-foreground">
+              Réguas de cobrança
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Mensagens automáticas antes e após o vencimento.
+            </p>
+          </div>
+          <Button onClick={() => setDialogOpen(true)}>
+            <Plus size={16} />
+            Nova Régua de Cobrança
+          </Button>
         </div>
 
         <div className="overflow-x-auto p-7">
@@ -140,23 +168,33 @@ function BillingRulesTab({ onEdit }: Props) {
                       </div>
                     </Table.Cell>
                     <Table.Cell>
-                      <NotificationSettingSwitch uuid={rule.uuid} active={rule.active} />
+                      <NotificationSettingSwitch
+                        uuid={rule.uuid}
+                        active={rule.active}
+                      />
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex justify-end">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-9 rounded-xl">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-9 rounded-xl"
+                            >
                               <Ellipsis size={18} />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onSelect={() => onEdit(rule)}>
+                            <DropdownMenuItem onSelect={() => openEdit(rule)}>
                               <Pencil />
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem variant="destructive" onSelect={() => setDeletingRule(rule)}>
+                            <DropdownMenuItem
+                              variant="destructive"
+                              onSelect={() => setDeletingRule(rule)}
+                            >
                               <Trash2 />
                               Remover
                             </DropdownMenuItem>
@@ -173,7 +211,16 @@ function BillingRulesTab({ onEdit }: Props) {
         </div>
       </Card.Root>
 
-      <DeleteNotificationSettingDialog rule={deletingRule} onClose={closeDeleteDialog} />
+      <DeleteNotificationSettingDialog
+        rule={deletingRule}
+        onClose={closeDeleteDialog}
+      />
+      <NewBillingRuleDialog
+        key={editingRule?.uuid ?? "new"}
+        open={dialogOpen}
+        onOpenChange={handleOpenChange}
+        rule={editingRule ?? undefined}
+      />
     </div>
   );
 }

@@ -1,5 +1,14 @@
 import { useCallback, useState } from "react";
-import { CheckCircle2, Ellipsis, Pencil, Radio, Send, Trash2, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Ellipsis,
+  Pencil,
+  Plus,
+  Radio,
+  Send,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -20,12 +29,15 @@ import { NewBillingRuleDialog } from "./new-billing-rule-dialog";
 import { NotificationSettingSwitch } from "./notification-setting-switch";
 import { StatCard } from "./stat-card";
 
-type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
+type NotificationSettingJson =
+  MessageRulesLoader["notificationSettings"][number];
 
 function OtherMessagesTab() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingRule, setEditingRule] = useState<NotificationSettingJson | null>(null);
   const { notificationSettings } = useLoaderData<MessageRulesLoader>();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingRule, setEditingRule] =
+    useState<NotificationSettingJson | null>(null);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setDialogOpen(open);
@@ -37,7 +49,8 @@ function OtherMessagesTab() {
     setDialogOpen(true);
   }, []);
 
-  const [deletingRule, setDeletingRule] = useState<NotificationSettingJson | null>(null);
+  const [deletingRule, setDeletingRule] =
+    useState<NotificationSettingJson | null>(null);
   const closeDeleteDialog = useCallback(() => setDeletingRule(null), []);
 
   const otherMessages = notificationSettings.filter(
@@ -99,6 +112,10 @@ function OtherMessagesTab() {
               Mensagens automáticas de confirmação e agradecimento.
             </p>
           </div>
+          <Button onClick={() => setDialogOpen(true)}>
+            <Plus size={16} />
+            Nova Mensagem
+          </Button>
         </div>
 
         <div className="overflow-x-auto p-7">
@@ -150,13 +167,20 @@ function OtherMessagesTab() {
                       </div>
                     </Table.Cell>
                     <Table.Cell>
-                      <NotificationSettingSwitch uuid={rule.uuid} active={rule.active} />
+                      <NotificationSettingSwitch
+                        uuid={rule.uuid}
+                        active={rule.active}
+                      />
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex justify-end">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-9 rounded-xl">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-9 rounded-xl"
+                            >
                               <Ellipsis size={18} />
                             </Button>
                           </DropdownMenuTrigger>
@@ -166,7 +190,10 @@ function OtherMessagesTab() {
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem variant="destructive" onSelect={() => setDeletingRule(rule)}>
+                            <DropdownMenuItem
+                              variant="destructive"
+                              onSelect={() => setDeletingRule(rule)}
+                            >
                               <Trash2 />
                               Remover
                             </DropdownMenuItem>
@@ -182,7 +209,10 @@ function OtherMessagesTab() {
           </Table.Root>
         </div>
       </Card.Root>
-      <DeleteNotificationSettingDialog rule={deletingRule} onClose={closeDeleteDialog} />
+      <DeleteNotificationSettingDialog
+        rule={deletingRule}
+        onClose={closeDeleteDialog}
+      />
       <NewBillingRuleDialog
         key={editingRule?.uuid ?? "new"}
         open={dialogOpen}
