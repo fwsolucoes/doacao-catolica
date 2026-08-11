@@ -36,6 +36,7 @@ function WhatsAppTab({ defaultMessage }: { defaultMessage?: string }) {
               name="whatsappMessage"
               defaultValue={initial}
               onChange={setHtmlContent}
+              formats={["bold"]}
             />
           </FormField>
         </div>

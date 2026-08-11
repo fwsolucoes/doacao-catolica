@@ -7,15 +7,18 @@ type RichTextareaRef = {
   insertAtCursor: (text: string) => void;
 };
 
+type FormatKey = "bold" | "italic" | "underline";
+
 type RichTextareaProps = {
   name: string;
   placeholder?: string;
   defaultValue?: string;
   onChange?: (html: string) => void;
+  formats?: FormatKey[];
 };
 
 const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
-  function RichTextarea({ name, placeholder, defaultValue, onChange }, ref) {
+  function RichTextarea({ name, placeholder, defaultValue, onChange, formats = ["bold", "italic", "underline"] }, ref) {
     const editorRef = useRef<HTMLDivElement>(null);
     const hiddenRef = useRef<HTMLInputElement>(null);
     const savedRangeRef = useRef<Range | null>(null);
@@ -84,15 +87,21 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
             onValueChange={applyFormat}
             className="gap-0.5"
           >
-            <ToggleGroup.Item value="bold" variant="icon" aria-label="Negrito">
-              <Bold size={15} />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value="italic" variant="icon" aria-label="Itálico">
-              <Italic size={15} />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value="underline" variant="icon" aria-label="Sublinhado">
-              <Underline size={15} />
-            </ToggleGroup.Item>
+            {formats.includes("bold") && (
+              <ToggleGroup.Item value="bold" variant="icon" aria-label="Negrito">
+                <Bold size={15} />
+              </ToggleGroup.Item>
+            )}
+            {formats.includes("italic") && (
+              <ToggleGroup.Item value="italic" variant="icon" aria-label="Itálico">
+                <Italic size={15} />
+              </ToggleGroup.Item>
+            )}
+            {formats.includes("underline") && (
+              <ToggleGroup.Item value="underline" variant="icon" aria-label="Sublinhado">
+                <Underline size={15} />
+              </ToggleGroup.Item>
+            )}
           </ToggleGroup.Root>
         </div>
         <div
