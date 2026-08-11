@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Eye, ImageOff, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/client/components/ui/button";
@@ -47,16 +48,18 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
+  const [imageError, setImageError] = useState(false);
   // const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
 
   return (
     <div className="overflow-clip rounded-[1.1rem] border border-border bg-card flex flex-col">
       <div className="relative">
-        {campaign.image ? (
+        {campaign.image && !imageError ? (
           <img
             src={campaign.image}
             alt={campaign.name}
             className="h-44 w-full object-cover"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="flex h-44 w-full items-center justify-center bg-muted">
