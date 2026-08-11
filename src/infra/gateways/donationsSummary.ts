@@ -13,7 +13,7 @@ class DonationsSummaryGateway implements DonationsSummaryGatewayDTO {
     campaignId: string,
     searchParams: DonationsSummarySearchParams,
   ): Promise<DonationsSummaryJson> {
-    let url = `/metrics/donations-summary/${campaignId}`;
+    let url = `/api/metrics/donations-summary/${campaignId}`;
     url += searchParams.toExternal(["page", "pageLimit"]);
 
     const apiResponse = await donationApi.get(url, {
@@ -36,7 +36,8 @@ class DonationsSummaryGateway implements DonationsSummaryGatewayDTO {
       recurringDonationsAmount: data.data.recurring_donations.amount,
       subscriptionsActiveCount: s.active_count,
       subscriptionsActiveAmount: s.active_amount,
-      subscriptionsCreatedInPeriodActiveAmount: s.created_in_period_active_amount,
+      subscriptionsCreatedInPeriodActiveAmount:
+        s.created_in_period_active_amount,
     }).toJson();
   }
 }

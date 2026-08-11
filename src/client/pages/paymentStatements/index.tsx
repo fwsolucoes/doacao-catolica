@@ -23,7 +23,7 @@ import { PaymentsTable } from "./components/paymentsTable";
 import { PERIOD_OPTIONS, PeriodSelect } from "./components/periodSelect";
 
 function DonationsPage() {
-  const { metrics } = useLoaderData<DonationsLoader>();
+  const { metrics, summary } = useLoaderData<DonationsLoader>();
 
   const location = useLocation();
   const matches = useMatches();
@@ -51,26 +51,28 @@ function DonationsPage() {
     },
     {
       label: "Ticket médio",
-      value: "—",
-      subtitle: "vs. período anterior",
+      value: summary.averageTicketPeriod,
+      subtitle: summary.variationPercentage
+        ? `${summary.variationPercentage} vs. mês anterior`
+        : "vs. mês anterior",
       icon: TrendingUp,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-800",
       breakdown: [
-        { icon: Zap, label: "Doações únicas", value: "—" },
-        { icon: RefreshCw, label: "Recorrentes", value: "—" },
+        { icon: Zap, label: "Doações únicas", value: summary.oneTimeDonationsAmount },
+        { icon: RefreshCw, label: "Recorrentes", value: summary.recurringDonationsAmount },
       ],
     },
     {
       label: "Doadores",
-      value: "—",
-      subtitle: "doadores no período",
+      value: summary.subscriptionsActiveCount,
+      subtitle: "assinaturas ativas",
       icon: Users,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-800",
       breakdown: [
-        { icon: UserPlus, label: "Novos", value: "—" },
-        { icon: UserCheck, label: "Fidelizados", value: "—" },
+        { icon: UserCheck, label: "Assinaturas ativas", value: summary.subscriptionsActiveAmount },
+        { icon: UserPlus, label: "Novas no período", value: summary.subscriptionsCreatedInPeriodActiveAmount },
       ],
     },
     {
