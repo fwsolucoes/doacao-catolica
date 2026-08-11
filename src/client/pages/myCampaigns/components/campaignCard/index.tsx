@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, ImageOff, Settings } from "lucide-react";
+import { Eye, Settings } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "~/client/components/ui/button";
 // import { Progress } from "~/client/components/ui/progress";
@@ -44,7 +44,8 @@ const STATUS_BADGE: Record<string, { className: string; label: string }> = {
 // }
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
-  const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
+  const { SANCTON_DONATION_CHECKOUT_URL, CAMPAIGN_DEFAULT_IMAGE } =
+    useRoot().environmentVariables;
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
@@ -54,18 +55,12 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   return (
     <div className="overflow-clip rounded-[1.1rem] border border-border bg-card flex flex-col">
       <div className="relative">
-        {campaign.image && !imageError ? (
-          <img
-            src={campaign.image}
-            alt={campaign.name}
-            className="h-44 w-full object-cover"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="flex h-44 w-full items-center justify-center bg-muted">
-            <ImageOff size={32} className="text-muted-foreground/40" />
-          </div>
-        )}
+        <img
+          src={campaign.image && !imageError ? campaign.image : CAMPAIGN_DEFAULT_IMAGE}
+          alt={campaign.name}
+          className="h-44 w-full object-cover"
+          onError={() => setImageError(true)}
+        />
         <span
           className={`absolute right-3 top-3 rounded-full px-4 py-1 text-sm ${badge?.className ?? "bg-muted text-muted-foreground"}`}
         >

@@ -29,6 +29,7 @@ export async function loader(args: LoaderFunctionArgs) {
       SANCTON_DONATION_CHECKOUT_URL:
         environmentVariables.SANCTON_DONATION_CHECKOUT_URL,
       PLATAFORM_NAME: environmentVariables.PLATAFORM_NAME,
+      CAMPAIGN_DEFAULT_IMAGE: environmentVariables.CAMPAIGN_DEFAULT_IMAGE,
     },
     user,
   };

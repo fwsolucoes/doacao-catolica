@@ -47,6 +47,9 @@ const environmentVariablesSchema = z.object({
   PLATAFORM_NAME: z.string().default("Doação Católica"),
 
   SUB_ACCOUNT_ID: z.string(),
+
+  // Campaign default image (shown when campaign has no image or image fails to load)
+  CAMPAIGN_DEFAULT_IMAGE: z.url(),
 });
 
 function formatErrorMessage(error: z.ZodError) {
