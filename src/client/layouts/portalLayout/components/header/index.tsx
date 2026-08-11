@@ -34,23 +34,31 @@ function PortalHeader() {
           aria-label="Alternar tema"
         >
           {theme === "light" ? (
-            <Moon key="moon" size={18} className="animate-theme-icon-in" />
+            <Moon
+              key="moon"
+              size={18}
+              className="animate-theme-icon-in text-foreground"
+            />
           ) : (
-            <Sun key="sun" size={18} className="animate-theme-icon-in" />
+            <Sun
+              key="sun"
+              size={18}
+              className="animate-theme-icon-in text-foreground"
+            />
           )}
         </Button>
 
         <Button
           size="icon"
           variant="ghost"
-          className="relative size-9"
+          className="relative size-9 text-foreground"
           aria-label="Notificações"
         >
           <Bell size={18} />
           <span className="absolute right-2 top-2 size-2 rounded-full bg-sidebar-primary" />
         </Button>
 
-        <Button variant="outline" className="gap-2 rounded-xl">
+        <Button variant="outline" className="gap-2 rounded-xl text-foreground">
           <LayoutGrid size={18} />
           Aplicações
         </Button>

@@ -134,7 +134,7 @@ function PortalSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-4">
+      <SidebarHeader className="flex flex-row items-center justify-between px-4 py-6">
         <img
           src={LIGHT_LOGO}
           alt="Logo"
