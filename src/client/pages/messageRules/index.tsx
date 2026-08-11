@@ -60,32 +60,32 @@ function MessageRulesPage() {
       </div>
 
       <Tabs.Root defaultValue="billing">
-        <Tabs.List className="mb-5 inline-flex gap-1.5 rounded-2xl border border-border bg-muted/60 p-1.5">
+        <Tabs.List className="mb-5 flex w-full items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5 sm:w-fit">
           <Tabs.Trigger
             value="billing"
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors",
-              "data-[state=active]:bg-secondary data-[state=active]:text-foreground",
-              "hover:text-foreground",
+              "flex h-auto flex-1 items-center gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold text-muted-foreground transition-colors sm:flex-none",
+              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground",
+              "hover:bg-transparent hover:text-muted-foreground",
             )}
           >
-            <Bell size={16} />
+            <Bell size={20} className="shrink-0" />
             Réguas de cobrança
-            <span className="rounded-full bg-foreground/10 px-2 py-0.5 text-xs font-semibold">
+            <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
               {billingRulesCount}
             </span>
           </Tabs.Trigger>
           <Tabs.Trigger
             value="other"
             className={cn(
-              "flex items-center gap-2.5 rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors",
-              "data-[state=active]:bg-secondary data-[state=active]:text-foreground",
-              "hover:text-foreground",
+              "flex h-auto flex-1 items-center gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold text-muted-foreground transition-colors sm:flex-none",
+              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground",
+              "hover:bg-transparent hover:text-muted-foreground",
             )}
           >
-            <MessageSquare size={16} />
+            <MessageSquare size={20} className="shrink-0" />
             Outras mensagens
-            <span className="rounded-full bg-muted-foreground/15 px-2 py-0.5 text-xs font-semibold">
+            <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
               {otherMessagesCount}
             </span>
           </Tabs.Trigger>
