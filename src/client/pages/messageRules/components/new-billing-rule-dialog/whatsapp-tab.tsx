@@ -1,27 +1,28 @@
 import { useRef, useState } from "react";
+import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
+import type { RichTextareaRef } from "~/client/components/campaignSettings/richTextarea";
 import { FormField } from "~/client/components/ui/form-field";
-import { Textarea } from "~/client/components/ui/textarea";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { VariablePopover } from "../variable-popover";
 import { WHATSAPP_DEFAULT } from "../../constants";
 
 function WhatsAppTab({ defaultMessage }: { defaultMessage?: string }) {
   const initial = defaultMessage ?? WHATSAPP_DEFAULT;
-  const [message, setMessage] = useState(initial);
-  const cursorRef = useRef(initial.length);
+  const [htmlContent, setHtmlContent] = useState(initial);
+  const richRef = useRef<RichTextareaRef>(null);
 
   function insertVariable(variable: string) {
-    const pos = cursorRef.current;
-    setMessage((prev) => prev.slice(0, pos) + variable + prev.slice(pos));
-    cursorRef.current = pos + variable.length;
+    richRef.current?.insertAtCursor(variable);
   }
+
+  const hasContent = htmlContent.replace(/<[^>]*>/g, "").trim().length > 0;
 
   return (
     <>
       <input
         type="hidden"
         name="enableWhatsapp"
-        value={message.trim() ? "true" : "false"}
+        value={hasContent ? "true" : "false"}
       />
       <div className="grid grid-cols-5 gap-7">
         <div className="col-span-3 flex flex-col gap-4">
@@ -30,20 +31,11 @@ function WhatsAppTab({ defaultMessage }: { defaultMessage?: string }) {
             <VariablePopover onInsert={insertVariable} />
           </div>
           <FormField name="whatsappMessage" label="Mensagem WhatsApp">
-            <Textarea
+            <RichTextarea
+              ref={richRef}
               name="whatsappMessage"
-              className="min-h-40 font-mono text-xs"
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                cursorRef.current = e.target.selectionStart;
-              }}
-              onSelect={(e) => {
-                cursorRef.current = (e.target as HTMLTextAreaElement).selectionStart;
-              }}
-              onBlur={(e) => {
-                cursorRef.current = e.target.selectionStart;
-              }}
+              defaultValue={initial}
+              onChange={setHtmlContent}
             />
           </FormField>
         </div>
@@ -61,7 +53,10 @@ function WhatsAppTab({ defaultMessage }: { defaultMessage?: string }) {
               <span className="text-sm font-semibold text-white">Empresa Demo</span>
             </div>
             <div className="bg-[#ecfdf5] p-5">
-              <p className="whitespace-pre-wrap text-sm text-[#002c22]">{message}</p>
+              <p
+                className="text-sm text-[#002c22] whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
             </div>
           </div>
         </div>
