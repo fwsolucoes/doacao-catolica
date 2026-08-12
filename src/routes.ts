@@ -7,6 +7,7 @@ export default [
   route("api/file-upload", "./main/routes/api.fileUpload.ts"),
   route("api/auth/token", "./main/routes/api.authToken.ts"),
   route("api/donatorContact", "./main/routes/api.donatorContact.ts"),
+  route("api/whatsapp-templates", "./main/routes/api.whatsappTemplates.ts"),
   
   layout("./main/routes/layout.portalLayout.tsx", [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
