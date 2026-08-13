@@ -56,7 +56,6 @@ const HEADER_TYPES = [
   { value: "image", label: "Imagem" },
   { value: "video", label: "Vídeo" },
   { value: "document", label: "Documento" },
-  { value: "location", label: "Localização" },
 ];
 
 function SectionCard({
@@ -275,22 +274,6 @@ function NewMetaTemplatePage() {
             </div>
           )}
 
-          {headerType === "location" && (
-            <div className="grid grid-cols-2 gap-5">
-              <FormField name="header_latitude" label="Latitude" required>
-                <Input name="header_latitude" placeholder="-23.5505" />
-              </FormField>
-              <FormField name="header_longitude" label="Longitude" required>
-                <Input name="header_longitude" placeholder="-46.6333" />
-              </FormField>
-              <FormField name="header_location_name" label="Nome do local" required>
-                <Input name="header_location_name" placeholder="Ex: Catedral da Sé" />
-              </FormField>
-              <FormField name="header_location_address" label="Endereço" required>
-                <Input name="header_location_address" placeholder="Praça da Sé, São Paulo" />
-              </FormField>
-            </div>
-          )}
         </div>
       </SectionCard>
 
