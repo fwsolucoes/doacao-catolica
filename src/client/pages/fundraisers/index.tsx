@@ -24,15 +24,8 @@ import { Table } from "~/client/components/ui/table";
 import { cn } from "~/lib/utils";
 import { AddFundraiserModal } from "./components/addFundraiserModal";
 import { EditCommissionModal } from "./components/editCommissionModal";
-
-type Fundraiser = {
-  id: string;
-  initials: string;
-  name: string;
-  email: string;
-  commission: string;
-  referrals: number;
-};
+import { FundraiserDetailsModal } from "./components/fundraiserDetailsModal";
+import type { Fundraiser } from "./types";
 
 const MOCK_FUNDRAISERS: Fundraiser[] = [
   {
@@ -73,6 +66,7 @@ function FundraisersPage() {
   const [tab, setTab] = useState<"active" | "pending">("active");
   const [addOpen, setAddOpen] = useState(false);
   const [editCommissionOpen, setEditCommissionOpen] = useState(false);
+  const [detailsFundraiser, setDetailsFundraiser] = useState<Fundraiser | null>(null);
   const isActiveTab = tab === "active";
 
   return (
@@ -96,6 +90,10 @@ function FundraisersPage() {
       <EditCommissionModal
         open={editCommissionOpen}
         onClose={() => setEditCommissionOpen(false)}
+      />
+      <FundraiserDetailsModal
+        fundraiser={detailsFundraiser}
+        onClose={() => setDetailsFundraiser(null)}
       />
 
       <div className="flex flex-col gap-4">
@@ -179,6 +177,7 @@ function FundraisersPage() {
                           variant="outline"
                           size="sm"
                           className="gap-1.5 rounded-xl border-border bg-muted text-xs text-foreground"
+                          onClick={() => setDetailsFundraiser(fundraiser)}
                         >
                           <BarChart2 size={14} />
                           Detalhes
