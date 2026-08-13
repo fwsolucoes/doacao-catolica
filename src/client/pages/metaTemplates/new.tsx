@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -8,11 +8,12 @@ import {
   X,
   Workflow,
 } from "lucide-react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams, useFetcher } from "react-router";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import { FormField } from "~/client/components/ui/form-field";
+import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { FileUploadCompact } from "~/client/components/ui/file-upload-compact";
 import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { Input } from "~/client/components/ui/input";
@@ -81,10 +82,21 @@ function SectionCard({
 function NewMetaTemplatePage() {
   const { campaignId } = useParams<{ campaignId: string }>();
   const backPath = `/campaign/${campaignId}/meta-templates`;
+  const navigate = useNavigate();
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state !== "idle";
 
   const [headerType, setHeaderType] = useState("none");
   const [variables, setVariables] = useState<VariableItem[]>([]);
   const [button, setButton] = useState<ButtonItem | null>(null);
+
+  useActionToast(fetcher.data);
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data?.toast?.type === "success") {
+      navigate(backPath);
+    }
+  }, [fetcher.state, fetcher.data, backPath, navigate]);
 
   function addVariable() {
     setVariables((prev) => [
@@ -109,7 +121,17 @@ function NewMetaTemplatePage() {
     setButton(null);
   }
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    fetcher.submit(new FormData(e.currentTarget), { method: "post", encType: "application/json" });
+  }
+
   return (
+    <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
+    <form onSubmit={handleSubmit}>
+      <input type="hidden" name="header_type" value={headerType} />
+      <input type="hidden" name="variables" value={JSON.stringify(variables)} />
+      <input type="hidden" name="button" value={JSON.stringify(button)} />
     <div className="flex flex-col gap-7">
       {/* Header */}
       <div className="flex items-start gap-4">
@@ -222,7 +244,6 @@ function NewMetaTemplatePage() {
         <div className="flex flex-col gap-5">
           <FormField name="header_type" label="Tipo do cabeçalho">
             <Select.Root
-              name="header_type"
               value={headerType}
               onValueChange={setHeaderType}
             >
@@ -458,9 +479,13 @@ function NewMetaTemplatePage() {
         <Button variant="outline" asChild>
           <Link to={backPath}>Cancelar</Link>
         </Button>
-        <Button type="submit">Salvar template</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Salvando..." : "Salvar template"}
+        </Button>
       </div>
     </div>
+    </form>
+    </FormErrorProvider>
   );
 }
 
