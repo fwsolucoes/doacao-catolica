@@ -3,17 +3,27 @@ import {
   ChevronLeft,
   ChevronRight,
   MoreHorizontal,
+  Pencil,
   Plus,
   Send,
+  Trash2,
   Users,
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/client/components/ui/dropdown-menu";
 import { Table } from "~/client/components/ui/table";
 import { cn } from "~/lib/utils";
 import { AddFundraiserModal } from "./components/addFundraiserModal";
+import { EditCommissionModal } from "./components/editCommissionModal";
 
 type Fundraiser = {
   id: string;
@@ -62,6 +72,7 @@ const MOCK_FUNDRAISERS: Fundraiser[] = [
 function FundraisersPage() {
   const [tab, setTab] = useState<"active" | "pending">("active");
   const [addOpen, setAddOpen] = useState(false);
+  const [editCommissionOpen, setEditCommissionOpen] = useState(false);
   const isActiveTab = tab === "active";
 
   return (
@@ -82,6 +93,10 @@ function FundraisersPage() {
       </div>
 
       <AddFundraiserModal open={addOpen} onClose={() => setAddOpen(false)} />
+      <EditCommissionModal
+        open={editCommissionOpen}
+        onClose={() => setEditCommissionOpen(false)}
+      />
 
       <div className="flex flex-col gap-4">
         <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
@@ -163,18 +178,33 @@ function FundraisersPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="gap-1.5 rounded-xl text-xs"
+                          className="gap-1.5 rounded-xl border-border bg-muted text-xs text-foreground"
                         >
                           <BarChart2 size={14} />
                           Detalhes
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-9 text-muted-foreground"
-                        >
-                          <MoreHorizontal size={18} />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-9 text-muted-foreground"
+                            >
+                              <MoreHorizontal size={18} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-52">
+                            <DropdownMenuItem onSelect={() => setEditCommissionOpen(true)}>
+                              <Pencil size={16} />
+                              Editar comissão
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem variant="destructive">
+                              <Trash2 size={16} />
+                              Remover acesso
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </Table.Cell>
                   </Table.Row>
