@@ -66,6 +66,7 @@ const sections: NavSection[] = [
         subItems: [
           { label: "Transferências", path: "transfers" },
           { label: "Métodos de pagamento", path: "payment-methods" },
+          { label: "Pix Automático", path: "automatic-pix" },
         ],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },

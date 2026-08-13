@@ -44,6 +44,7 @@ export default [
     route("settings/integrations", "./main/routes/route.campaign.integrations.tsx"),
     route("settings/whatsapp", "./main/routes/route.campaign.whatsapp.tsx"),
     route("settings/preferences", "./main/routes/route.campaign.preferences.tsx"),
+    route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
   ]),
 
 ] satisfies RouteConfig;
