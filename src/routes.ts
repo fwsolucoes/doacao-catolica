@@ -32,6 +32,7 @@ export default [
       "./main/routes/route.campaign.overduePayments.tsx",
     ),
     route("collaborators", "./main/routes/route.campaign.collaborators.tsx"),
+    route("fundraisers", "./main/routes/route.campaign.fundraisers.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("donors", "./main/routes/route.campaign.donors.tsx"),

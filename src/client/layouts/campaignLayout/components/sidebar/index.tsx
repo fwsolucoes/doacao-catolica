@@ -81,7 +81,10 @@ const sections: NavSection[] = [
       {
         icon: UserCog,
         label: "Usuários",
-        subItems: [{ label: "Colaboradores", path: "collaborators" }],
+        subItems: [
+          { label: "Colaboradores", path: "collaborators" },
+          { label: "Arrecadadores", path: "fundraisers" },
+        ],
       },
     ],
   },
