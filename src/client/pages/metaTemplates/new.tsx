@@ -121,7 +121,9 @@ function NewMetaTemplatePage() {
     setButton(null);
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  // fetcher.Form não aceita encType="application/json" no seu tipo — usamos form nativo + fetcher.submit
+  // para poder enviar os campos complexos (variables, button) como JSON e não como strings URL-encoded.
+  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     fetcher.submit(new FormData(e.currentTarget), { method: "post", encType: "application/json" });
   }
