@@ -146,14 +146,16 @@ function NewMetaTemplatePage() {
             </FormField>
 
             <FormField name="template_language" label="Idioma" required>
-              <Input
-                name="template_language"
-                placeholder="pt_BR"
-                defaultValue="pt_BR"
-              />
-              <p className="text-xs text-muted-foreground">
-                Código de idioma do template
-              </p>
+              <Select.Root name="template_language" defaultValue="pt_BR">
+                <Select.Trigger>
+                  <Select.Value />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="pt_BR">Português (pt_BR)</Select.Item>
+                  <Select.Item value="es">Espanhol (es)</Select.Item>
+                  <Select.Item value="en_US">Inglês (en_US)</Select.Item>
+                </Select.Content>
+              </Select.Root>
             </FormField>
 
             <FormField name="template_type" label="Categoria" required>
@@ -243,7 +245,17 @@ function NewMetaTemplatePage() {
             </FormField>
           )}
 
-          {(headerType === "image" || headerType === "video" || headerType === "document") && (
+          {headerType === "image" && (
+            <div className="flex flex-col gap-1.5">
+              <p className="text-sm font-semibold text-foreground">Imagem do cabeçalho</p>
+              <ImageUploadCompact
+                name="header_image"
+                description="Imagem exibida no cabeçalho da mensagem WhatsApp."
+              />
+            </div>
+          )}
+
+          {(headerType === "video" || headerType === "document") && (
             <FormField name="header_link" label="URL do arquivo" required>
               <Input
                 name="header_link"
