@@ -13,6 +13,7 @@ import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { FormField } from "~/client/components/ui/form-field";
+import { FileUploadCompact } from "~/client/components/ui/file-upload-compact";
 import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
@@ -255,16 +256,23 @@ function NewMetaTemplatePage() {
             </div>
           )}
 
-          {(headerType === "video" || headerType === "document") && (
-            <FormField name="header_link" label="URL do arquivo" required>
-              <Input
-                name="header_link"
-                placeholder="https://exemplo.com/arquivo.jpg"
-              />
+          {headerType === "video" && (
+            <FormField name="header_link" label="URL do vídeo" required>
+              <Input name="header_link" placeholder="https://exemplo.com/video.mp4" />
               <p className="text-xs text-muted-foreground">
-                Link público para o arquivo do cabeçalho
+                Link público para o vídeo do cabeçalho
               </p>
             </FormField>
+          )}
+
+          {headerType === "document" && (
+            <div className="flex flex-col gap-1.5">
+              <p className="text-sm font-semibold text-foreground">Documento do cabeçalho</p>
+              <FileUploadCompact
+                name="header_document"
+                description="PDF, Word, Excel, PowerPoint, TXT ou CSV."
+              />
+            </div>
           )}
 
           {headerType === "location" && (
