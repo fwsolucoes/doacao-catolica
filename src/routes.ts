@@ -22,6 +22,7 @@ export default [
     route("notifications", "./main/routes/route.campaign.notifications.tsx"),
     route("message-rules", "./main/routes/route.campaign.messageRules.tsx"),
     route("meta-templates", "./main/routes/route.campaign.metaTemplates.tsx"),
+    route("meta-templates/new", "./main/routes/route.campaign.metaTemplates.new.tsx"),
     route("donations", "./main/routes/route.campaign.donations.tsx"),
     route("transfers", "./main/routes/route.campaign.transfers.tsx"),
     route("reports", "./main/routes/route.campaign.reports.tsx"),

@@ -9,7 +9,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData, useParams } from "react-router";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -39,6 +39,7 @@ const HEADER_LABEL: Record<string, string> = {
 
 function MetaTemplatesPage() {
   const { templates } = useLoaderData<MetaTemplatesLoader>();
+  const { campaignId } = useParams<{ campaignId: string }>();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
@@ -69,9 +70,11 @@ function MetaTemplatesPage() {
             variáveis do sistema.
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus size={16} />
-          Novo template
+        <Button className="gap-2" asChild>
+          <Link to={`/campaign/${campaignId}/meta-templates/new`}>
+            <Plus size={16} />
+            Novo template
+          </Link>
         </Button>
       </div>
 
