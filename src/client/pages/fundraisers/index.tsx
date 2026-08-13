@@ -13,6 +13,7 @@ import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
 import { cn } from "~/lib/utils";
+import { AddFundraiserModal } from "./components/addFundraiserModal";
 
 type Fundraiser = {
   id: string;
@@ -60,6 +61,7 @@ const MOCK_FUNDRAISERS: Fundraiser[] = [
 
 function FundraisersPage() {
   const [tab, setTab] = useState<"active" | "pending">("active");
+  const [addOpen, setAddOpen] = useState(false);
   const isActiveTab = tab === "active";
 
   return (
@@ -73,11 +75,13 @@ function FundraisersPage() {
             Gerencie os arrecadadores, suas comissões e as indicações de doadores.
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => setAddOpen(true)}>
           <Plus size={16} />
           Adicionar arrecadador
         </Button>
       </div>
+
+      <AddFundraiserModal open={addOpen} onClose={() => setAddOpen(false)} />
 
       <div className="flex flex-col gap-4">
         <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
