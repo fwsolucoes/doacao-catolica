@@ -6,7 +6,7 @@ const notificationSettingsSchema = z.object({
     z.object({
       uuid: z.string(),
       active: z.number(),
-      // known values: "payment_before_due_date" | "payment_on_due_date" | "payment_after_due_date" | "payment_paid" | "subscription_created_externally" | "instant_reminder"
+      // known values: "payment_before_due_date" | "payment_on_due_date" | "payment_after_due_date" | "payment_paid" | "payment_settled" | "credit_card_failure" | "credit_card_created" | "subscription_created_internally" | "subscription_created_externally" | "default_recovery" | "subscription_canceled" | "donator_birthday" | "manual" | "transfer_unpaid" | "instant_reminder" | "donate_now" | "pending_automatic_pix_authorization" | "inactive_donor"
       type: z.string(),
       name: z.string(),
       days: z.number(),

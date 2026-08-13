@@ -7,7 +7,7 @@ export default [
   route("api/file-upload", "./main/routes/api.fileUpload.ts"),
   route("api/auth/token", "./main/routes/api.authToken.ts"),
   route("api/donatorContact", "./main/routes/api.donatorContact.ts"),
-  route("api/whatsapp-templates", "./main/routes/api.whatsappTemplates.ts"),
+  route("api/client_whatsapp_templates", "./main/routes/api.whatsappTemplates.ts"),
   
   layout("./main/routes/layout.portalLayout.tsx", [
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
@@ -21,6 +21,7 @@ export default [
     route("home", "./main/routes/route.campaign.home.tsx"),
     route("notifications", "./main/routes/route.campaign.notifications.tsx"),
     route("message-rules", "./main/routes/route.campaign.messageRules.tsx"),
+    route("meta-templates", "./main/routes/route.campaign.metaTemplates.tsx"),
     route("donations", "./main/routes/route.campaign.donations.tsx"),
     route("transfers", "./main/routes/route.campaign.transfers.tsx"),
     route("reports", "./main/routes/route.campaign.reports.tsx"),

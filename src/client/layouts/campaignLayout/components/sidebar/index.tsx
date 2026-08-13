@@ -74,6 +74,7 @@ const sections: NavSection[] = [
         label: "Mensagens",
         subItems: [
           { label: "Régua de mensagens", path: "message-rules" },
+          { label: "Templates META", path: "meta-templates" },
           { label: "Mensagens enviadas", path: "notifications" },
         ],
       },

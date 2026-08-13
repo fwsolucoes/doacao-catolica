@@ -12,7 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/client/components/ui/dialog";
-import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
+import {
+  FormErrorProvider,
+  FormField,
+} from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
@@ -22,8 +25,10 @@ import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { EmailTab } from "./email-tab";
 import { WhatsAppTab } from "./whatsapp-tab";
+import type { WhatsappTemplateJson } from "./whatsapp-tab";
 
-type NotificationSettingJson = MessageRulesLoader["notificationSettings"][number];
+type NotificationSettingJson =
+  MessageRulesLoader["notificationSettings"][number];
 
 const CHANNEL_TABS = [
   { value: "whatsapp", label: "WhatsApp", icon: <WhatsAppIcon size={16} /> },
@@ -45,6 +50,8 @@ function NewBillingRuleDialog({
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
+  const templateFetcher = useFetcher<WhatsappTemplateJson[]>();
+
   const [activeChannel, setActiveChannel] = useState("whatsapp");
   const [messageType, setMessageType] = useState(rule?.type ?? "");
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethods>({
@@ -61,6 +68,17 @@ function NewBillingRuleDialog({
     }
   }, [fetcher.state, fetcher.data, onOpenChange]);
 
+  useEffect(() => {
+    if (messageType) {
+      templateFetcher.load(`/api/client_whatsapp_templates?notification_type=${messageType}`);
+    }
+    // templateFetcher omitted intentionally — its reference changes on every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageType]);
+
+  const templates = templateFetcher.data ?? [];
+  const isLoadingTemplates = templateFetcher.state !== "idle";
+
   function togglePayment(method: keyof PaymentMethods) {
     setPaymentMethods((prev) => ({ ...prev, [method]: !prev[method] }));
   }
@@ -69,7 +87,7 @@ function NewBillingRuleDialog({
     messageType === "payment_before_due_date" ||
     messageType === "payment_after_due_date";
 
-return (
+  return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] w-[90vw] max-w-[90vw] sm:max-w-[90vw] flex-col gap-0 p-0">
         <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
@@ -95,7 +113,9 @@ return (
 
             <DialogHeader className="shrink-0 px-7 pb-5 pt-7">
               <DialogTitle>
-                {isEditing ? "Editar régua de cobrança" : "Nova régua de cobrança"}
+                {isEditing
+                  ? "Editar régua de cobrança"
+                  : "Nova régua de cobrança"}
               </DialogTitle>
             </DialogHeader>
 
@@ -109,16 +129,21 @@ return (
                   />
                 </FormField>
                 <FormField name="type" label="Tipo de mensagem" required>
-                  <Select.Root value={messageType} onValueChange={setMessageType}>
+                  <Select.Root
+                    value={messageType}
+                    onValueChange={setMessageType}
+                  >
                     <Select.Trigger>
                       <Select.Value placeholder="Selecione o tipo" />
                     </Select.Trigger>
                     <Select.Content>
-                      {Object.entries(NOTIFICATION_TYPES).map(([value, label]) => (
-                        <Select.Item key={value} value={value}>
-                          {label}
-                        </Select.Item>
-                      ))}
+                      {Object.entries(NOTIFICATION_TYPES).map(
+                        ([value, label]) => (
+                          <Select.Item key={value} value={value}>
+                            {label}
+                          </Select.Item>
+                        ),
+                      )}
                     </Select.Content>
                   </Select.Root>
                 </FormField>
@@ -166,7 +191,9 @@ return (
                         key={method}
                         className={cn(
                           "flex items-center justify-between rounded-xl border bg-muted px-4 py-2.5",
-                          paymentMethods[method] ? "border-primary/40" : "border-border",
+                          paymentMethods[method]
+                            ? "border-primary/40"
+                            : "border-border",
                         )}
                       >
                         <span className="text-sm font-semibold text-foreground">
@@ -187,7 +214,10 @@ return (
                   Mensagens por canal
                 </p>
 
-                <Tabs.Root value={activeChannel} onValueChange={setActiveChannel}>
+                <Tabs.Root
+                  value={activeChannel}
+                  onValueChange={setActiveChannel}
+                >
                   <Tabs.List className="inline-flex gap-1.5 rounded-2xl border border-border bg-muted/60 p-1.5">
                     {CHANNEL_TABS.map((tab) => (
                       <Tabs.Trigger
@@ -210,7 +240,12 @@ return (
                     className="mt-5 data-[state=inactive]:hidden"
                     forceMount
                   >
-                    <WhatsAppTab defaultMessage={rule?.whatsappMessage} />
+                    <WhatsAppTab
+                      defaultMessage={rule?.whatsappMessage}
+                      messageType={messageType}
+                      templates={templates}
+                      isLoadingTemplates={isLoadingTemplates}
+                    />
                   </Tabs.Content>
                   <Tabs.Content
                     value="email"
@@ -233,7 +268,11 @@ return (
               <Button
                 type="submit"
                 name="_action"
-                value={isEditing ? "updateNotificationSetting" : "createNotificationSetting"}
+                value={
+                  isEditing
+                    ? "updateNotificationSetting"
+                    : "createNotificationSetting"
+                }
                 isLoading={isSubmitting}
               >
                 Salvar
