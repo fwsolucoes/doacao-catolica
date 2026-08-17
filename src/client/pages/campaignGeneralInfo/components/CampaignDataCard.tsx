@@ -73,6 +73,11 @@ function CampaignDataCard() {
               <Select.Item value="comunidade">Comunidade</Select.Item>
               <Select.Item value="missao">Missão</Select.Item>
               <Select.Item value="outro">Outro</Select.Item>
+              <Select.Item value="dizimo">Dízimo</Select.Item>
+              <Select.Item value="apostolado">Apostolado</Select.Item>
+              <Select.Item value="obras-e-reformas">Obras e Reformas</Select.Item>
+              <Select.Item value="acao-social">Ação social</Select.Item>
+              <Select.Item value="evento">Evento</Select.Item>
             </Select.Content>
           </Select.Root>
         </FormField>
