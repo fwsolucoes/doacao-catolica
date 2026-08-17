@@ -31,6 +31,11 @@ const MOCK_CATEGORIES = [
   { id: "2", name: "Comunidade" },
   { id: "3", name: "Missão" },
   { id: "4", name: "Outro" },
+  { id: "5", name: "Dízimo" },
+  { id: "6", name: "Apostolado" },
+  { id: "7", name: "Obras e Reformas" },
+  { id: "8", name: "Ação social" },
+  { id: "9", name: "Evento" },
 ];
 
 class ProjectCategoryDal implements ProjectCategoryDalDTO {

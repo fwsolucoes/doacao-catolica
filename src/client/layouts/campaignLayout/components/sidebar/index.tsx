@@ -8,8 +8,8 @@ import {
   LayoutDashboard,
   MessageSquare,
   Settings,
+  UserCog,
   Users,
-  Users2,
   Wallet,
 } from "lucide-react";
 import { NavLink, useLocation, useMatch, useParams } from "react-router";
@@ -66,6 +66,7 @@ const sections: NavSection[] = [
         subItems: [
           { label: "Transferências", path: "transfers" },
           { label: "Métodos de pagamento", path: "payment-methods" },
+          { label: "Pix Automático", path: "automatic-pix" },
         ],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },
@@ -78,12 +79,19 @@ const sections: NavSection[] = [
           { label: "Mensagens enviadas", path: "notifications" },
         ],
       },
+      {
+        icon: UserCog,
+        label: "Usuários",
+        subItems: [
+          { label: "Colaboradores", path: "collaborators" },
+          { label: "Arrecadadores", path: "fundraisers" },
+        ],
+      },
     ],
   },
   {
     title: "Sistema",
     items: [
-      { icon: Users2, label: "Colaboradores", path: "collaborators" },
       { icon: Settings, label: "Configurações", path: "settings/general-info" },
       { icon: CircleHelp, label: "Ajuda" },
     ],

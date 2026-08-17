@@ -9,7 +9,7 @@ const externalCampaignSchema = z.object({
   start_date: z.string().nullable(),
   end_date: z.string().nullable(),
   status: z.boolean(),
-  published: z.boolean(),
+  published: z.boolean().nullable(),
   image: z.string().nullable(),
   image_mobile: z.string().nullable(),
   created_at: z.string(),
@@ -56,9 +56,16 @@ const verifySlugSchema = z.object({
   isSlugInUse: z.boolean(),
 });
 
-const createCampaignResponseSchema = z.object({
-  id: z.string(),
-});
+const createCampaignResponseSchema = z
+  .object({
+    api_donation_public_id: z.string(),
+    project_id: z.string(),
+    project_uuid: z.string(),
+    created_project: z.object({
+      id: z.string(),
+    }),
+  })
+  .transform(({ created_project }) => ({ id: created_project.id }));
 
 export {
   createCampaignResponseSchema,

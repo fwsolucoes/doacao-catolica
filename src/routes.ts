@@ -35,6 +35,7 @@ export default [
       "./main/routes/route.campaign.overduePayments.tsx",
     ),
     route("collaborators", "./main/routes/route.campaign.collaborators.tsx"),
+    route("fundraisers", "./main/routes/route.campaign.fundraisers.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("donors", "./main/routes/route.campaign.donors.tsx"),
@@ -48,6 +49,7 @@ export default [
     route("settings/whatsapp", "./main/routes/route.campaign.whatsapp.tsx"),
     route("settings/preferences", "./main/routes/route.campaign.preferences.tsx"),
     route("api/payment-notifications/:paymentId", "./main/routes/api.campaign.paymentNotifications.ts"),
+    route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
   ]),
 
 ] satisfies RouteConfig;
