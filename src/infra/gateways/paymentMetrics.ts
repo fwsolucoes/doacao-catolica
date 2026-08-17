@@ -78,6 +78,8 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
           id: item.payment_uuid,
           customerName: item.customer.name,
           customerDocument: item.customer.cpf_cnpj,
+          customerEmail: item.customer.email,
+          customerPhone: item.customer.phone,
           amount: item.amount,
           status: item.payment_status,
           origin: item.payment_origin,
@@ -91,6 +93,12 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
           notifiedByWhatsApp: item.notifications.some(
             (n) => n.channel === "whatsapp" && n.notified === 1,
           ),
+          notificationsCount: item.notifications.reduce(
+            (acc, n) => acc + n.notified,
+            0,
+          ),
+          paymentLink: `${environmentVariables.SANCTON_DONATION_CHECKOUT_URL}/pay/${item.payment_uuid}`,
+          alertMessage: null,
         }),
       ),
       meta: {

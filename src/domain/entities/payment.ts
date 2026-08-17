@@ -25,6 +25,8 @@ type PaymentConstructorProps = {
   id: string;
   customerName: string;
   customerDocument: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
   amount: number;
   status: string;
   origin: string;
@@ -34,12 +36,17 @@ type PaymentConstructorProps = {
   confirmedDate: string | null;
   notifiedByEmail: boolean;
   notifiedByWhatsApp: boolean;
+  notificationsCount: number;
+  paymentLink: string;
+  alertMessage: string | null;
 };
 
 class Payment {
   readonly id: string;
   readonly customerName: string;
   readonly customerDocument: string | null;
+  readonly customerEmail: string | null;
+  readonly customerPhone: string | null;
   readonly amount: number;
   readonly status: string;
   readonly origin: string;
@@ -49,11 +56,16 @@ class Payment {
   readonly confirmedDate: string | null;
   readonly notifiedByEmail: boolean;
   readonly notifiedByWhatsApp: boolean;
+  readonly notificationsCount: number;
+  readonly paymentLink: string;
+  readonly alertMessage: string | null;
 
   private constructor(props: PaymentConstructorProps) {
     this.id = props.id;
     this.customerName = props.customerName;
     this.customerDocument = props.customerDocument;
+    this.customerEmail = props.customerEmail;
+    this.customerPhone = props.customerPhone;
     this.amount = props.amount;
     this.status = props.status;
     this.origin = props.origin;
@@ -63,6 +75,9 @@ class Payment {
     this.confirmedDate = props.confirmedDate;
     this.notifiedByEmail = props.notifiedByEmail;
     this.notifiedByWhatsApp = props.notifiedByWhatsApp;
+    this.notificationsCount = props.notificationsCount;
+    this.paymentLink = props.paymentLink;
+    this.alertMessage = props.alertMessage;
   }
 
   static restore(props: PaymentConstructorProps): Payment {
@@ -77,6 +92,8 @@ class Payment {
       id: this.id,
       customerName: this.customerName,
       customerDocument: FormatAdapter.cpfCnpj(this.customerDocument ?? ""),
+      customerEmail: this.customerEmail,
+      customerPhone: this.customerPhone,
       amount: fmt(this.amount),
       status: STATUS_MAP[this.status] ?? this.status,
       origin: this.origin === "subscription" ? "Recorrente" : "Pontual",
@@ -85,6 +102,9 @@ class Payment {
       paidDate: this.paidDate?.split(" ")[0] ?? this.confirmedDate ?? null,
       notifiedByEmail: this.notifiedByEmail,
       notifiedByWhatsApp: this.notifiedByWhatsApp,
+      notificationsCount: this.notificationsCount,
+      paymentLink: this.paymentLink,
+      alertMessage: this.alertMessage,
     };
   }
 }

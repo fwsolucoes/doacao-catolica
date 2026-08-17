@@ -10,8 +10,9 @@ import {
   SlidersHorizontal,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useLoaderData, useParams } from "react-router";
+import { PaymentDetailDialog } from "../paymentDetailDialog";
 import { useFilter } from "~/client/hooks/useFilter";
 import { FilterDrawer } from "../filterDrawer";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -78,7 +79,11 @@ function getInitials(name: string): string {
   return parts.map((w) => w[0].toUpperCase()).join("");
 }
 
-function ActionsPopover() {
+type ActionsPopoverProps = {
+  onViewDetails: () => void;
+};
+
+function ActionsPopover({ onViewDetails }: ActionsPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -94,6 +99,7 @@ function ActionsPopover() {
         <Button
           variant="ghost"
           className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+          onClick={onViewDetails}
         >
           <Eye size={16} />
           Ver detalhes
@@ -129,11 +135,17 @@ function PaymentsTable() {
   const { campaignId } = useParams<{ campaignId: string }>();
   const { payments, donors } = useLoaderData<DonationsLoader>();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<
+    DonationsLoader["payments"]["data"][number] | null
+  >(null);
   const { handleChangeTimeoutFilter, getParam } = useFilter("payments");
+
+  const closeDialog = useCallback(() => setSelectedPayment(null), []);
 
   const { data, meta } = payments;
 
   return (
+    <>
     <Card.Root className="gap-4 p-6">
       <div className="flex items-center gap-2.5">
         <div className="flex-1">
@@ -275,7 +287,7 @@ function PaymentsTable() {
                 {payment.paidDate ?? "—"}
               </Table.Cell>
               <Table.Cell className="text-right">
-                <ActionsPopover />
+                <ActionsPopover onViewDetails={() => setSelectedPayment(payment)} />
               </Table.Cell>
             </Table.Row>
           ))}
@@ -287,6 +299,9 @@ function PaymentsTable() {
         <TablePagination currentPage={meta.page} totalPages={meta.totalPages} />
       </Card.Footer>
     </Card.Root>
+
+    <PaymentDetailDialog payment={selectedPayment} onClose={closeDialog} />
+    </>
   );
 }
 
