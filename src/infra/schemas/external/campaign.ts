@@ -22,7 +22,7 @@ const externalCampaignSchema = z.object({
   email: z.string().nullable(),
   institution_name: z.string().nullable(),
   phone: z.string().nullable(),
-  no_end_date: z.boolean(),
+  no_end_date: z.boolean().nullable(),
   type: z.number(),
   type_donation: z.string(),
   id: z.string(),

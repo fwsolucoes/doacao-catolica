@@ -42,7 +42,7 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       pixEnabled: data.pix_enable,
       boletoEnabled: data.bankslip_enable,
       creditCardEnabled: data.credit_enable,
-      minAmount: data.min_amount,
+      minAmount: data.min_amount ? parseFloat(data.min_amount) : null,
       passFeeToDonor: data.allow_transfer_taxes,
       allowCustomAmount: data.show_custom_amount_option,
       chargeImmediately: data.generate_payment_immediately,

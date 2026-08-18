@@ -48,7 +48,11 @@ class CampaignGateway implements CampaignGatewayDTO {
   }
 
   async getCampaign(id: string, token: string): Promise<Campaign> {
-    const apiResponse = await api.get(`/project/find-one/${id}`, { token });
+    const url = `/project/find-one/${id}`;
+
+    console.log("🚀~ Fetching campaign with URL:", url);
+
+    const apiResponse = await api.get(url, { token });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
