@@ -1,6 +1,7 @@
 import type { AnnualEvolutionData } from "~/domain/gateways/annualEvolution";
 import type { DashboardCampaignsData } from "~/domain/gateways/dashboardCampaigns";
 import type { DashboardPaymentMethodsData } from "~/domain/gateways/dashboardPaymentMethods";
+import type { DashboardRecentDonationsData } from "~/domain/gateways/dashboardRecentDonations";
 import type { DashboardWeeklyData } from "~/domain/gateways/dashboardWeekly";
 import type { CampaignOverviewData } from "~/domain/gateways/campaignOverview";
 
@@ -10,6 +11,7 @@ type DashboardLoader = {
   paymentMethods: DashboardPaymentMethodsData | null;
   weekly: DashboardWeeklyData | null;
   featuredCampaigns: DashboardCampaignsData | null;
+  recentDonations: DashboardRecentDonationsData | null;
   currentMonth: number;
   currentYear: number;
 };

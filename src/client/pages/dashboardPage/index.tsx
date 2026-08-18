@@ -15,6 +15,7 @@ import type { DashboardLoader } from "~/client/types/dashboardLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Table } from "~/client/components/ui/table";
 import { Progress } from "~/client/components/ui/progress";
 import { useRoot } from "~/client/hooks/useRoot";
 import { cn } from "~/lib/utils";
@@ -45,6 +46,7 @@ const donutOptions = {
   },
 };
 
+
 const PAYMENT_METHOD_DISPLAY: Record<
   string,
   { label: string; color: string }
@@ -54,6 +56,7 @@ const PAYMENT_METHOD_DISPLAY: Record<
   credit_card: { label: "Cartão", color: "#6bceff" },
   bank_slip: { label: "Boleto", color: "#ffc800" },
 };
+
 
 const weeklyChartOptions = {
   responsive: true,
@@ -76,43 +79,6 @@ const weeklyChartOptions = {
 
 
 
-const RECENT_DONATIONS = [
-  {
-    initials: "AC",
-    name: "Ana Carolina Silva",
-    campaign: "Escola para Todos",
-    time: "há 2 min",
-    amount: "R$ 250",
-  },
-  {
-    initials: "RL",
-    name: "Roberto Lima",
-    campaign: "Água Potável - Sertão",
-    time: "há 14 min",
-    amount: "R$ 1.000",
-  },
-  {
-    initials: "EV",
-    name: "Empresa Verde Ltda",
-    campaign: "Resgate Animal SP",
-    time: "há 1 h",
-    amount: "R$ 5.000",
-  },
-  {
-    initials: "JM",
-    name: "Juliana M.",
-    campaign: "Natal Solidário 2025",
-    time: "há 2 h",
-    amount: "R$ 75",
-  },
-  {
-    initials: "A",
-    name: "Anônimo",
-    campaign: "Escola para Todos",
-    time: "há 3 h",
-    amount: "R$ 320",
-  },
-];
 
 function StatCard({
   label,
@@ -181,6 +147,7 @@ function DashboardPage() {
     paymentMethods,
     weekly,
     featuredCampaigns,
+    recentDonations,
     currentMonth,
     currentYear,
   } = useLoaderData<DashboardLoader>();
@@ -546,43 +513,45 @@ function DashboardPage() {
           </Button>
         </div>
 
-        <div className="flex flex-col">
-          <div className="mx-7 mb-3 flex items-center justify-between rounded-lg bg-muted px-4 py-3">
-            <span className="text-sm font-semibold text-muted-foreground">
-              Doador
-            </span>
-            <span className="w-32 text-right text-sm text-muted-foreground">
-              Valor doado
-            </span>
-          </div>
-          <div className="flex flex-col pb-5">
-            {RECENT_DONATIONS.map((d, i) => (
-              <div
-                key={d.name + i}
-                className={cn(
-                  "flex items-center justify-between px-11 py-4",
-                  i % 2 === 0 ? "bg-muted/40" : "",
-                )}
-              >
-                <div className="flex items-center gap-3.5">
-                  <Avatar className="size-10">
-                    <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
-                      {d.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-base text-foreground">{d.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {d.campaign} · {d.time}
-                    </p>
+        <div className="px-7 pb-7">
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Doador</Table.Head>
+              <Table.Head className="text-right">Valor doado</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {(recentDonations?.recentDonations ?? []).map((d) => (
+              <Table.Row key={d.paymentUuid}>
+                <Table.Cell>
+                  <div className="flex items-center gap-3.5">
+                    <Avatar size="lg">
+                      <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
+                        {d.customerInitials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm text-foreground">
+                        {d.customerName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {d.campaignName} · {d.elapsed}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <p className="w-32 text-right text-base text-foreground">
-                  {d.amount}
-                </p>
-              </div>
+                </Table.Cell>
+                <Table.Cell className="text-right font-semibold text-secondary-foreground">
+                  {d.amount.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </Table.Cell>
+              </Table.Row>
             ))}
-          </div>
+            {!recentDonations?.recentDonations.length && <Table.Empty />}
+          </Table.Body>
+        </Table.Root>
         </div>
       </Card.Root>
     </div>
