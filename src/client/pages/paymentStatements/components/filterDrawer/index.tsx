@@ -98,6 +98,9 @@ function FilterDrawer({
   function clearFilters() {
     const nextSp = new URLSearchParams(location.search);
     DRAWER_PARAMS.forEach((p) => nextSp.delete(p));
+    nextSp.delete("start_date");
+    nextSp.delete("end_date");
+    nextSp.delete("period");
     nextSp.delete("donor_search");
     navigate(`?${nextSp.toString()}`);
   }

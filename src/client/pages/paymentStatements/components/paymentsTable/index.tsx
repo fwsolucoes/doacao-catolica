@@ -8,6 +8,7 @@ import {
   RefreshCw,
   Search,
   SlidersHorizontal,
+  TriangleAlert,
   Zap,
 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -245,12 +246,24 @@ function PaymentsTable() {
                   {payment.amount}
                 </Table.Cell>
                 <Table.Cell>
-                  <Badge
-                    className="py-3"
-                    variant={STATUS_BADGE[payment.status] ?? "neutral"}
-                  >
-                    {payment.status}
-                  </Badge>
+                  <div className="flex items-center gap-1.5">
+                    <Badge
+                      className="py-3"
+                      variant={STATUS_BADGE[payment.status] ?? "neutral"}
+                    >
+                      {payment.status}
+                    </Badge>
+                    {payment.alertMessage && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-6 min-h-0 shrink-0 text-destructive hover:bg-destructive/15 hover:text-destructive"
+                        onClick={() => setSelectedPayment(payment)}
+                      >
+                        <TriangleAlert size={17} />
+                      </Button>
+                    )}
+                  </div>
                 </Table.Cell>
                 <Table.Cell>
                   <div className="flex items-center justify-center gap-2">

@@ -99,6 +99,8 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
           ),
           paymentLink: `${environmentVariables.SANCTON_DONATION_CHECKOUT_URL}/pay/${item.payment_uuid}`,
           alertMessage: null,
+          subscriptionHasToken: item.subscription_has_token,
+          pixAuthorizationStatus: item.pix_authorization_status,
         }),
       ),
       meta: {

@@ -21,6 +21,18 @@ const PAYMENT_TYPE_MAP: Record<string, string> = {
   credit_card: "Cartão de crédito",
 };
 
+const PIX_ALERT_MESSAGES: Record<string, string> = {
+  REFUSED:
+    "Atenção! Autorização de PIX Automático recusada pelo banco do cliente. Solicite ao cliente para que autorize novamente, acessando o link de sua fatura.",
+  CREATED:
+    "Atenção! Autorização de PIX Automático pendente de autorização. Solicite ao cliente para que faça a autorização, acessando o link de sua fatura.",
+  CANCELLED:
+    "Atenção! Autorização de PIX Automático cancelada pelo banco do cliente. Solicite ao cliente para que autorize novamente, acessando o link de sua fatura.",
+};
+
+const CARD_NO_TOKEN_ALERT =
+  "Atenção! Essa recorrência não possui cartão salvo. Possivelmente o usuário permitiu o cartão somente no primeiro pagamento ou não concluiu o cadastro o cartão. Solicite ao usuário para acessar o link da fatura e preencher com os dados do cartão de crédito.";
+
 type PaymentConstructorProps = {
   id: string;
   customerName: string;
@@ -39,6 +51,8 @@ type PaymentConstructorProps = {
   notificationsCount: number;
   paymentLink: string;
   alertMessage: string | null;
+  subscriptionHasToken: boolean;
+  pixAuthorizationStatus: string | null;
 };
 
 class Payment {
@@ -59,6 +73,8 @@ class Payment {
   readonly notificationsCount: number;
   readonly paymentLink: string;
   readonly alertMessage: string | null;
+  readonly subscriptionHasToken: boolean;
+  readonly pixAuthorizationStatus: string | null;
 
   private constructor(props: PaymentConstructorProps) {
     this.id = props.id;
@@ -78,10 +94,26 @@ class Payment {
     this.notificationsCount = props.notificationsCount;
     this.paymentLink = props.paymentLink;
     this.alertMessage = props.alertMessage;
+    this.subscriptionHasToken = props.subscriptionHasToken;
+    this.pixAuthorizationStatus = props.pixAuthorizationStatus;
   }
 
   static restore(props: PaymentConstructorProps): Payment {
     return new Payment(props);
+  }
+
+  private computeAlertMessage(): string | null {
+    if (this.paymentType === "automatic_pix" && this.pixAuthorizationStatus) {
+      return PIX_ALERT_MESSAGES[this.pixAuthorizationStatus] ?? null;
+    }
+    if (
+      this.paymentType === "credit_card" &&
+      this.status === "awaiting_payment" &&
+      !this.subscriptionHasToken
+    ) {
+      return CARD_NO_TOKEN_ALERT;
+    }
+    return this.alertMessage;
   }
 
   toJson() {
@@ -104,7 +136,9 @@ class Payment {
       notifiedByWhatsApp: this.notifiedByWhatsApp,
       notificationsCount: this.notificationsCount,
       paymentLink: this.paymentLink,
-      alertMessage: this.alertMessage,
+      alertMessage: this.computeAlertMessage(),
+      subscriptionHasToken: this.subscriptionHasToken,
+      pixAuthorizationStatus: this.pixAuthorizationStatus,
     };
   }
 }

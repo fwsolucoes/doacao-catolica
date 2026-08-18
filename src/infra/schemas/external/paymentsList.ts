@@ -19,6 +19,9 @@ const externalPaymentItemSchema = z.object({
   payment_due_date: z.string().nullable(),
   payment_paid_date: z.string().nullable(),
   payment_confirmed_date: z.string().nullable(),
+  subscription_has_token: z.boolean(),
+  // known values: "ACTIVE" | "REFUSED" | "CANCELLED" | "CREATED"
+  pix_authorization_status: z.string().nullable(),
   customer: externalPaymentCustomerSchema,
   notifications: z.array(
     z.object({
