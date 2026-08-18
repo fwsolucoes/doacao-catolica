@@ -318,7 +318,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                   onClick={() => setActiveTab("notifications")}
                   icon={Mail}
                   label="Notificações"
-                  count={payment.notificationsCount}
+                  count={notifications.length}
                 />
               </div>
             </div>
