@@ -6,6 +6,7 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getAnnualEvolution } from "../factories/annualEvolution/getAnnualEvolutionFactory";
 import { getDashboardPaymentMethods } from "../factories/dashboardPaymentMethods/getDashboardPaymentMethodsFactory";
+import { getDashboardWeekly } from "../factories/dashboardWeekly/getDashboardWeeklyFactory";
 import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
 import { getPortalOverview } from "../factories/campaignOverview/getPortalOverviewFactory";
 
@@ -26,6 +27,7 @@ export async function loader(args: Route.LoaderArgs) {
       overview: null,
       annualEvolution: null,
       paymentMethods: null,
+      weekly: null,
       currentMonth,
       currentYear,
     };
@@ -35,13 +37,16 @@ export async function loader(args: Route.LoaderArgs) {
     firstCampaign.apiDonationPublicId ?? firstCampaign.id,
   );
 
-  const [overview, annualEvolution, paymentMethods] = await Promise.all([
-    getPortalOverview.handle(accountUuid),
-    getAnnualEvolution.handle(accountUuid),
-    getDashboardPaymentMethods.handle(accountUuid),
-  ]);
+  const [overview, annualEvolution, paymentMethods, weekly] = await Promise.all(
+    [
+      getPortalOverview.handle(accountUuid),
+      getAnnualEvolution.handle(accountUuid),
+      getDashboardPaymentMethods.handle(accountUuid),
+      getDashboardWeekly.handle(accountUuid),
+    ],
+  );
 
-  return { overview, annualEvolution, paymentMethods, currentMonth, currentYear };
+  return { overview, annualEvolution, paymentMethods, weekly, currentMonth, currentYear };
 }
 
 export function ErrorBoundary() {

@@ -55,18 +55,6 @@ const PAYMENT_METHOD_DISPLAY: Record<
   bank_slip: { label: "Boleto", color: "#ffc800" },
 };
 
-const weeklyChartData = {
-  labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-  datasets: [
-    {
-      data: [1200, 1850, 2100, 980, 2400, 1250, 960],
-      backgroundColor: "#3a64f2",
-      borderRadius: 6,
-      barPercentage: 0.85,
-    },
-  ],
-};
-
 const weeklyChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -217,8 +205,14 @@ function StatCard({
 
 function DashboardPage() {
   const { user } = useRoot();
-  const { overview, annualEvolution, paymentMethods, currentMonth, currentYear } =
-    useLoaderData<DashboardLoader>();
+  const {
+    overview,
+    annualEvolution,
+    paymentMethods,
+    weekly,
+    currentMonth,
+    currentYear,
+  } = useLoaderData<DashboardLoader>();
   const firstName = user?.name?.split(" ")[0] ?? "usuário";
 
   const totalRaisedFormatted = overview
@@ -312,6 +306,28 @@ function DashboardPage() {
       };
     },
   );
+
+  const weeklyChartData = {
+    labels: weekly?.days.map((d) => d.label) ?? [],
+    datasets: [
+      {
+        data: weekly?.days.map((d) => d.totalAmount) ?? [],
+        backgroundColor: "#3a64f2",
+        borderRadius: 6,
+        barPercentage: 0.85,
+      },
+    ],
+  };
+
+  const weeklyTotal = weekly
+    ? `R$ ${Math.round(weekly.totalAmount).toLocaleString("pt-BR")}`
+    : "—";
+  const weeklyGrowthValue =
+    weekly?.growthPercentage != null
+      ? `${weekly.growthPercentage >= 0 ? "+" : ""}${weekly.growthPercentage.toFixed(1)}%`
+      : "—";
+  const weeklyGrowthDir: "up" | "down" =
+    (weekly?.growthPercentage ?? 0) >= 0 ? "up" : "down";
 
   const donutData = {
     labels: paymentMethodsList.map((m) => m.label),
@@ -514,13 +530,24 @@ function DashboardPage() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-2xl font-semibold text-foreground">
-                R$ 10.740
+                {weeklyTotal}
               </p>
               <p className="text-xs text-muted-foreground">Total da semana</p>
             </div>
-            <span className="flex items-center gap-1 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700">
-              <TrendingUp size={12} />
-              +18,2%
+            <span
+              className={cn(
+                "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold",
+                weeklyGrowthDir === "up"
+                  ? "bg-emerald-500/15 text-emerald-700"
+                  : "bg-destructive/15 text-destructive",
+              )}
+            >
+              {weeklyGrowthDir === "up" ? (
+                <TrendingUp size={12} />
+              ) : (
+                <TrendingDown size={12} />
+              )}
+              {weeklyGrowthValue}
             </span>
           </div>
         </Card.Root>
