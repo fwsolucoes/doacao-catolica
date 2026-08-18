@@ -149,7 +149,6 @@ function FilterDrawer({
         <Button
           type="button"
           variant="outline"
-          size="sm"
           onClick={clearFilters}
           className="gap-1.5 text-destructive hover:brightness-100 hover:opacity-75 bg-card"
         >
@@ -275,7 +274,9 @@ function FilterDrawer({
                     Cartão de crédito
                   </Select.Item>
                   <Select.Item value="pix">Pix</Select.Item>
-                  <Select.Item value="automatic_pix">Pix automático</Select.Item>
+                  <Select.Item value="automatic_pix">
+                    Pix automático
+                  </Select.Item>
                   <Select.Item value="bank_slip">Boleto</Select.Item>
                   <Select.Item value="manual_payment">Baixa manual</Select.Item>
                 </Select.Content>

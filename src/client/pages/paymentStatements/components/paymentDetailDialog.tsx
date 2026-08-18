@@ -85,17 +85,17 @@ const LOG_TYPE_CONFIG: Record<
   success: {
     label: "Entregue",
     icon: CheckCircle2,
-    className: "bg-emerald-50 text-emerald-700",
+    className: "bg-[#d4f5e2] text-[#1f7a4d]",
   },
   awaiting_confirmation: {
     label: "Aberto",
     icon: CheckCircle2,
-    className: "bg-emerald-50 text-emerald-700",
+    className: "bg-[#d4f5e2] text-[#1f7a4d]",
   },
   error: {
     label: "Falhou",
     icon: XCircle,
-    className: "bg-red-50 text-red-600",
+    className: "bg-destructive/15 text-destructive",
   },
   not_send: {
     label: "Não enviado",
@@ -167,38 +167,28 @@ function NotificationCard({ item }: { item: NotificationItem }) {
     NOTIFICATION_TYPE_LABEL[item.notificationType] ?? item.notificationType;
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border p-3">
-      <div
-        className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-full",
-          item.channel === "whatsapp"
-            ? "bg-[rgb(var(--spotlight-success))]/10"
-            : "bg-blue-50",
-        )}
-      >
+    <div className="flex items-start gap-3.5 rounded-xl border border-border p-3.5">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted">
         {item.channel === "whatsapp" ? (
-          <WhatsAppIcon
-            size={18}
-            className="text-[rgb(var(--spotlight-success))]"
-          />
+          <WhatsAppIcon size={20} className="text-[#25d366]" />
         ) : (
-          <Mail size={16} className="text-blue-500" />
+          <Mail size={20} className="text-muted-foreground" />
         )}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="text-sm font-medium text-foreground">{label}</span>
+        <span className="text-base font-semibold text-foreground">{label}</span>
         <span className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Clock size={11} />
+          <Clock size={14} />
           {item.createdAt} · {item.createdAtTime}
         </span>
       </div>
 
       {logConfig && (
         <div
-          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${logConfig.className}`}
+          className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${logConfig.className}`}
         >
-          <StatusIcon size={13} />
+          <StatusIcon size={14} />
           {logConfig.label}
         </div>
       )}
@@ -441,16 +431,19 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
             {/* Notificações */}
             {activeTab === "notifications" && (
-              <div className="flex max-h-[65vh] flex-col gap-3 px-7 py-5">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    {filteredNotifications.length} notificações
+              <div className="flex max-h-[65vh] flex-col overflow-y-auto">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border px-7 py-3.5 backdrop-blur-sm">
+                  <span className="text-xs">
+                    <span className="font-semibold text-foreground">
+                      {filteredNotifications.length}
+                    </span>
+                    <span className="text-muted-foreground"> notificações</span>
                   </span>
                   <Select.Root
                     value={channelFilter}
                     onValueChange={setChannelFilter}
                   >
-                    <Select.Trigger className="h-9 min-h-0 w-44 text-sm">
+                    <Select.Trigger className="h-9.5 min-h-0 w-40 text-xs">
                       <Select.Value />
                     </Select.Trigger>
                     <Select.Content>
@@ -462,7 +455,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                   </Select.Root>
                 </div>
 
-                <div className="flex flex-col gap-2 overflow-y-auto pr-1">
+                <div className="flex flex-col gap-3 px-7 py-5">
                   {fetcher.state === "loading" ? (
                     <div className="py-8 text-center text-sm text-muted-foreground">
                       Carregando...

@@ -146,161 +146,168 @@ function PaymentsTable() {
 
   return (
     <>
-    <Card.Root className="gap-4 p-6">
-      <div className="flex items-center gap-2.5">
-        <div className="flex-1">
-          <Input
-            leftIcon={Search}
-            placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
-            className="h-11 rounded-xl border-transparent bg-background"
-            defaultValue={getParam("search") || ""}
-            onChange={(e) =>
-              handleChangeTimeoutFilter("search", e.target.value)
-            }
+      <Card.Root className="gap-4 p-6">
+        <div className="flex items-center gap-2.5">
+          <div className="flex-1">
+            <Input
+              leftIcon={Search}
+              placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
+              className="h-11 rounded-xl border-transparent bg-background"
+              defaultValue={getParam("search") || ""}
+              onChange={(e) =>
+                handleChangeTimeoutFilter("search", e.target.value)
+              }
+            />
+          </div>
+          <Button
+            variant="outline"
+            className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm"
+            onClick={() => setFilterOpen(true)}
+          >
+            <SlidersHorizontal size={16} />
+            Filtros
+          </Button>
+          <FilterDrawer
+            donors={donors.data}
+            open={filterOpen}
+            onOpenChange={setFilterOpen}
           />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm">
+                <Plus size={16} />
+                Adicionar
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link to={`/campaign/${campaignId}/create-recurrence`}>
+                  <RefreshCw size={16} className="text-foreground" />
+                  Criar recorrência
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
+                  <Zap size={16} className="text-foreground" />
+                  Criar pagamento avulso
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <Button
-          variant="outline"
-          className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm"
-          onClick={() => setFilterOpen(true)}
-        >
-          <SlidersHorizontal size={16} />
-          Filtros
-        </Button>
-        <FilterDrawer
-          donors={donors.data}
-          open={filterOpen}
-          onOpenChange={setFilterOpen}
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm">
-              <Plus size={16} />
-              Adicionar
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link to={`/campaign/${campaignId}/create-recurrence`}>
-                <RefreshCw size={16} className="text-foreground" />
-                Criar recorrência
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
-                <Zap size={16} className="text-foreground" />
-                Criar pagamento avulso
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
 
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Doador</Table.Head>
-            <Table.Head>Tipo</Table.Head>
-            <Table.Head>Valor</Table.Head>
-            <Table.Head>Status</Table.Head>
-            <Table.Head className="text-center">Notificado por</Table.Head>
-            <Table.Head>Método</Table.Head>
-            <Table.Head>Vencimento</Table.Head>
-            <Table.Head>Pagamento</Table.Head>
-            <Table.Head className="text-right">Ações</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {data.map((payment) => (
-            <Table.Row key={payment.id}>
-              <Table.Cell>
-                <div className="flex items-center gap-3.5">
-                  <Avatar size="lg">
-                    <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
-                      {getInitials(payment.customerName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-foreground">
-                      {payment.customerName}
-                    </span>
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {payment.customerDocument ?? "—"}
-                    </span>
-                  </div>
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <Badge
-                  className="py-3"
-                  variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
-                >
-                  {payment.origin === "Recorrente" && (
-                    <RefreshCw size={11} className="shrink-0" />
-                  )}
-                  {payment.origin}
-                </Badge>
-              </Table.Cell>
-              <Table.Cell className="text-secondary-foreground font-semibold">
-                {payment.amount}
-              </Table.Cell>
-              <Table.Cell>
-                <Badge
-                  className="py-3"
-                  variant={STATUS_BADGE[payment.status] ?? "neutral"}
-                >
-                  {payment.status}
-                </Badge>
-              </Table.Cell>
-              <Table.Cell>
-                <div className="flex items-center justify-center gap-2">
-                  <Mail
-                    size={16}
-                    className={
-                      payment.notifiedByEmail
-                        ? "text-muted-foreground"
-                        : "text-muted-foreground/30"
-                    }
-                  />
-                  <WhatsAppIcon
-                    size={16}
-                    className={
-                      payment.notifiedByWhatsApp
-                        ? "text-[rgb(var(--spotlight-success))]"
-                        : "text-muted-foreground/30"
-                    }
-                  />
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <Badge
-                  className="py-3"
-                  variant={PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"}
-                >
-                  {payment.paymentType}
-                </Badge>
-              </Table.Cell>
-              <Table.Cell className="text-sm text-muted-foreground">
-                {payment.dueDate}
-              </Table.Cell>
-              <Table.Cell className="text-sm text-muted-foreground">
-                {payment.paidDate ?? "—"}
-              </Table.Cell>
-              <Table.Cell className="text-right">
-                <ActionsPopover onViewDetails={() => setSelectedPayment(payment)} />
-              </Table.Cell>
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Doador</Table.Head>
+              <Table.Head>Tipo</Table.Head>
+              <Table.Head>Valor</Table.Head>
+              <Table.Head>Status</Table.Head>
+              <Table.Head className="text-center">Notificado por</Table.Head>
+              <Table.Head>Método</Table.Head>
+              <Table.Head>Vencimento</Table.Head>
+              <Table.Head>Pagamento</Table.Head>
+              <Table.Head className="text-right">Ações</Table.Head>
             </Table.Row>
-          ))}
-          {!data.length && <Table.Empty />}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {data.map((payment) => (
+              <Table.Row key={payment.id}>
+                <Table.Cell>
+                  <div className="flex items-center gap-3.5">
+                    <Avatar size="lg">
+                      <AvatarFallback className="bg-sidebar-accent-foreground/10 text-xs font-bold text-sidebar-accent-foreground">
+                        {getInitials(payment.customerName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm text-foreground">
+                        {payment.customerName}
+                      </span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {payment.customerDocument ?? "—"}
+                      </span>
+                    </div>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge
+                    className="py-3"
+                    variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
+                  >
+                    {payment.origin === "Recorrente" && (
+                      <RefreshCw size={11} className="shrink-0" />
+                    )}
+                    {payment.origin}
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell className="text-secondary-foreground font-semibold">
+                  {payment.amount}
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge
+                    className="py-3"
+                    variant={STATUS_BADGE[payment.status] ?? "neutral"}
+                  >
+                    {payment.status}
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className="flex items-center justify-center gap-2">
+                    <Mail
+                      size={16}
+                      className={
+                        payment.notifiedByEmail
+                          ? "text-muted-foreground"
+                          : "text-muted-foreground/30"
+                      }
+                    />
+                    <WhatsAppIcon
+                      size={16}
+                      className={
+                        payment.notifiedByWhatsApp
+                          ? "text-[rgb(var(--spotlight-success))]"
+                          : "text-muted-foreground/30"
+                      }
+                    />
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge
+                    className="py-3"
+                    variant={
+                      PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
+                    }
+                  >
+                    {payment.paymentType}
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell className="text-sm text-muted-foreground">
+                  {payment.dueDate}
+                </Table.Cell>
+                <Table.Cell className="text-sm text-muted-foreground">
+                  {payment.paidDate ?? "—"}
+                </Table.Cell>
+                <Table.Cell className="text-right">
+                  <ActionsPopover
+                    onViewDetails={() => setSelectedPayment(payment)}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+            {!data.length && <Table.Empty />}
+          </Table.Body>
+        </Table.Root>
 
-      <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
-        <TablePagination currentPage={meta.page} totalPages={meta.totalPages} />
-      </Card.Footer>
-    </Card.Root>
+        <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <TablePagination
+            currentPage={meta.page}
+            totalPages={meta.totalPages}
+          />
+        </Card.Footer>
+      </Card.Root>
 
-    <PaymentDetailDialog payment={selectedPayment} onClose={closeDialog} />
+      <PaymentDetailDialog payment={selectedPayment} onClose={closeDialog} />
     </>
   );
 }
