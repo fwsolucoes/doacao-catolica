@@ -10,7 +10,7 @@ function ReceivingInstitutionSection() {
       title="Instituição recebedora"
       description="Dados legais da entidade que receberá as doações."
     >
-      <FormField name="image" label="Logo da instituição" required>
+      <FormField name="image" label="Logo da instituição">
         <ImageUploadCompact
           name="image"
           description="Formato PNG ou JPG. Dimensão recomendada: 400x400px."
@@ -20,31 +20,45 @@ function ReceivingInstitutionSection() {
       </FormField>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormField name="cnpj" label="CNPJ / CPF">
+        <FormField name="cnpj" label="CNPJ / CPF" required>
           <Input name="cnpj" placeholder="00.000.000/0000-00" />
         </FormField>
         <FormField name="institutionName" label="Nome / Razão social">
-          <Input name="institutionName" placeholder="Associação Educar Brasil" />
+          <Input
+            name="institutionName"
+            placeholder="Associação Educar Brasil"
+          />
         </FormField>
       </div>
 
       <Separator />
 
       <div className="flex flex-col gap-5 sm:flex-row">
-        <FormField name="institutionCep" label="CEP" className="sm:w-40 sm:shrink-0">
+        <FormField
+          name="institutionCep"
+          label="CEP"
+          className="sm:w-40 sm:shrink-0"
+        >
           <Input name="institutionCep" placeholder="00000-000" />
         </FormField>
         <FormField name="institutionStreet" label="Endereço" className="flex-1">
           <Input name="institutionStreet" placeholder="Rua / Avenida" />
         </FormField>
-        <FormField name="institutionNumber" label="Número" className="sm:w-30 sm:shrink-0">
+        <FormField
+          name="institutionNumber"
+          label="Número"
+          className="sm:w-30 sm:shrink-0"
+        >
           <Input name="institutionNumber" placeholder="Nº" />
         </FormField>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField name="institutionComplement" label="Complemento">
-          <Input name="institutionComplement" placeholder="Sala, andar, bloco..." />
+          <Input
+            name="institutionComplement"
+            placeholder="Sala, andar, bloco..."
+          />
         </FormField>
         <FormField name="institutionNeighborhood" label="Bairro">
           <Input name="institutionNeighborhood" placeholder="Bairro" />

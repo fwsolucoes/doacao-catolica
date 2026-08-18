@@ -15,7 +15,7 @@ function CampaignCreatedPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100dvh-12rem)] py-2 sm:py-8">
-      <div className="w-full max-w-xl bg-background border border-border rounded-[17px] overflow-hidden">
+      <div className="w-full max-w-xl bg-card border border-border rounded-[17px] overflow-hidden">
         <div className="relative flex flex-col items-center gap-4 pb-6 pt-8 px-5 sm:pb-10 sm:pt-12 sm:px-12">
           <div className="absolute top-0 left-0 right-0 h-1.75 bg-primary" />
 
@@ -65,7 +65,7 @@ function CampaignCreatedPage() {
               </Link>
             </Button>
 
-            <Button className="flex-1" asChild>
+            <Button className="flex-1 whitespace-nowrap" asChild>
               <a href={viewUrl} target="_blank" rel="noopener noreferrer">
                 <Eye size={18} />
                 Visualizar campanha
