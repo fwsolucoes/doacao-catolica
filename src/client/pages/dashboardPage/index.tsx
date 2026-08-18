@@ -75,36 +75,6 @@ const weeklyChartOptions = {
 };
 
 
-const FEATURED_CAMPAIGNS = [
-  {
-    name: "Escola para Todos",
-    donors: 1240,
-    raised: 84200,
-    goal: 100000,
-    pct: 84,
-  },
-  {
-    name: "Água Potável - Sertão",
-    donors: 890,
-    raised: 62800,
-    goal: 80000,
-    pct: 79,
-  },
-  {
-    name: "Resgate Animal SP",
-    donors: 532,
-    raised: 28400,
-    goal: 40000,
-    pct: 71,
-  },
-  {
-    name: "Natal Solidário 2025",
-    donors: 412,
-    raised: 19500,
-    goal: 50000,
-    pct: 39,
-  },
-];
 
 const RECENT_DONATIONS = [
   {
@@ -210,6 +180,7 @@ function DashboardPage() {
     annualEvolution,
     paymentMethods,
     weekly,
+    featuredCampaigns,
     currentMonth,
     currentYear,
   } = useLoaderData<DashboardLoader>();
@@ -481,35 +452,41 @@ function DashboardPage() {
             </Button>
           </div>
           <div className="flex flex-col gap-6">
-            {FEATURED_CAMPAIGNS.map((c) => (
-              <div key={c.name} className="flex flex-col gap-2.5">
+            {(featuredCampaigns?.campaigns ?? []).map((c) => (
+              <div key={c.accountReference} className="flex flex-col gap-2.5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <p className="text-base font-semibold text-foreground">
                       {c.name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {c.donors.toLocaleString("pt-BR")} doadores
+                      {c.donorsCount.toLocaleString("pt-BR")} doadores
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-base text-foreground">
                       <span className="font-semibold">
-                        R$ {c.raised.toLocaleString("pt-BR")}{" "}
+                        R$ {Math.round(c.monthRaised).toLocaleString("pt-BR")}{" "}
                       </span>
-                      <span className="text-muted-foreground">
-                        / R$ {c.goal.toLocaleString("pt-BR")}
-                      </span>
+                      {c.totalGoal !== null && (
+                        <span className="text-muted-foreground">
+                          / R$ {Math.round(c.totalGoal).toLocaleString("pt-BR")}
+                        </span>
+                      )}
                     </p>
                     <p className="text-xs text-sidebar-accent-foreground">
-                      {c.pct}% da meta
+                      {c.progressPercentage !== null
+                        ? `${c.progressPercentage.toFixed(1)}% da meta`
+                        : "Sem meta"}
                     </p>
                   </div>
                 </div>
-                <Progress
-                  value={c.pct}
-                  className="h-2.5 [--progress-foreground:var(--color-sidebar-accent-foreground)]"
-                />
+                {c.progressPercentage !== null && (
+                  <Progress
+                    value={c.progressPercentage}
+                    className="h-2.5 [--progress-foreground:var(--color-sidebar-accent-foreground)]"
+                  />
+                )}
               </div>
             ))}
           </div>

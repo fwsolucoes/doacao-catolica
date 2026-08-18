@@ -5,6 +5,7 @@ import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getAnnualEvolution } from "../factories/annualEvolution/getAnnualEvolutionFactory";
+import { getDashboardCampaigns } from "../factories/dashboardCampaigns/getDashboardCampaignsFactory";
 import { getDashboardPaymentMethods } from "../factories/dashboardPaymentMethods/getDashboardPaymentMethodsFactory";
 import { getDashboardWeekly } from "../factories/dashboardWeekly/getDashboardWeeklyFactory";
 import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
@@ -28,6 +29,7 @@ export async function loader(args: Route.LoaderArgs) {
       annualEvolution: null,
       paymentMethods: null,
       weekly: null,
+      featuredCampaigns: null,
       currentMonth,
       currentYear,
     };
@@ -37,16 +39,24 @@ export async function loader(args: Route.LoaderArgs) {
     firstCampaign.apiDonationPublicId ?? firstCampaign.id,
   );
 
-  const [overview, annualEvolution, paymentMethods, weekly] = await Promise.all(
-    [
+  const [overview, annualEvolution, paymentMethods, weekly, featuredCampaigns] =
+    await Promise.all([
       getPortalOverview.handle(accountUuid),
       getAnnualEvolution.handle(accountUuid),
       getDashboardPaymentMethods.handle(accountUuid),
       getDashboardWeekly.handle(accountUuid),
-    ],
-  );
+      getDashboardCampaigns.handle(accountUuid),
+    ]);
 
-  return { overview, annualEvolution, paymentMethods, weekly, currentMonth, currentYear };
+  return {
+    overview,
+    annualEvolution,
+    paymentMethods,
+    weekly,
+    featuredCampaigns,
+    currentMonth,
+    currentYear,
+  };
 }
 
 export function ErrorBoundary() {
