@@ -35,76 +35,6 @@ const MONTHS = [
   "Dez",
 ];
 
-const yearlyChartData = {
-  labels: MONTHS,
-  datasets: [
-    {
-      label: "Meta",
-      data: [
-        40000, 42000, 45000, 48000, 50000, 55000, 58000, 60000, 65000, 68000,
-        72000, 75000,
-      ],
-      borderColor: "#74e7bb",
-      backgroundColor: "rgba(116, 231, 187, 0.08)",
-      fill: true,
-      tension: 0.4,
-      pointRadius: 0,
-      borderWidth: 2,
-    },
-    {
-      label: "Arrecadado",
-      data: [
-        32000,
-        28000,
-        45000,
-        52000,
-        48000,
-        63000,
-        58000,
-        71000,
-        75000,
-        68000,
-        null,
-        null,
-      ],
-      borderColor: "#3a64f2",
-      backgroundColor: "rgba(58, 100, 242, 0.12)",
-      fill: true,
-      tension: 0.4,
-      pointRadius: 3,
-      borderWidth: 2,
-    },
-  ],
-};
-
-const yearlyChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: { mode: "index" as const, intersect: false },
-  },
-  scales: {
-    x: {
-      grid: { display: false },
-      ticks: { font: { size: 11 } },
-    },
-    y: {
-      min: 0,
-      suggestedMax: 80000,
-      grid: { color: "rgba(0,0,0,0.05)" },
-      ticks: {
-        font: { size: 11 },
-        callback: (v: number | string) => {
-          const val = Number(v);
-          if (val === 0) return "R$0k";
-          return `R$${val / 1000}k`;
-        },
-      },
-    },
-  },
-};
-
 const donutData = {
   labels: ["Pix", "Pix Automático", "Cartão", "Boleto"],
   datasets: [
@@ -295,7 +225,8 @@ function StatCard({
 
 function DashboardPage() {
   const { user } = useRoot();
-  const { overview } = useLoaderData<DashboardLoader>();
+  const { overview, annualEvolution, currentMonth, currentYear } =
+    useLoaderData<DashboardLoader>();
   const firstName = user?.name?.split(" ")[0] ?? "usuário";
 
   const totalRaisedFormatted = overview
@@ -312,6 +243,72 @@ function DashboardPage() {
     ? overview.supporters.toLocaleString("pt-BR")
     : "—";
   const newSupporters = overview?.newSupportersLast7Days ?? 0;
+
+  const hasGoal = (annualEvolution?.monthlyGoal ?? 0) > 0;
+  const isCurrentYear = annualEvolution?.year === currentYear;
+
+  const yearlyChartData = {
+    labels: MONTHS,
+    datasets: [
+      ...(hasGoal
+        ? [
+            {
+              label: "Meta",
+              data: annualEvolution!.months.map((m) => m.goalAmount),
+              borderColor: "#74e7bb",
+              backgroundColor: "rgba(116, 231, 187, 0.08)",
+              fill: true,
+              tension: 0.4,
+              pointRadius: 0,
+              borderWidth: 2,
+            },
+          ]
+        : []),
+      {
+        label: "Arrecadado",
+        data: annualEvolution
+          ? annualEvolution.months.map((m) =>
+              isCurrentYear && m.month > currentMonth ? null : m.totalAmount,
+            )
+          : [],
+        borderColor: "#3a64f2",
+        backgroundColor: "rgba(58, 100, 242, 0.12)",
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const yearlyChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { mode: "index" as const, intersect: false },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 11 } },
+      },
+      y: {
+        min: 0,
+        grid: { color: "rgba(0,0,0,0.05)" },
+        ticks: {
+          font: { size: 11 },
+          callback: (v: number | string) => {
+            const val = Number(v);
+            if (val === 0) return "R$0k";
+            return `R$${val / 1000}k`;
+          },
+        },
+      },
+    },
+  };
+
+  const chartYear = annualEvolution?.year ?? currentYear;
 
   return (
     <div className="flex flex-col gap-7">
@@ -390,7 +387,7 @@ function DashboardPage() {
               </p>
             </div>
             <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-              2025 <ChevronDown size={14} />
+              {chartYear} <ChevronDown size={14} />
             </Button>
           </Card.Header>
           <div className="h-72">
