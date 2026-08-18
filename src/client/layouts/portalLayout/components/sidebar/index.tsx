@@ -2,7 +2,7 @@ import {
   // BarChart2,
   // CircleHelp,
   ChevronsUpDown,
-  // LayoutDashboard,
+  LayoutDashboard,
   Megaphone,
   // Settings,
 } from "lucide-react";
@@ -40,7 +40,7 @@ const sections: NavSection[] = [
   {
     title: "Principal",
     items: [
-      // { icon: LayoutDashboard, label: "Dashboard" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
       { icon: Megaphone, label: "Campanhas", path: "/my-campaigns" },
       // { icon: BarChart2, label: "Relatórios" },
     ],

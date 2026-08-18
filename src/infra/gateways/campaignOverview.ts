@@ -15,6 +15,7 @@ class CampaignOverviewGateway implements CampaignOverviewGatewayDTO {
     searchParams: CampaignOverviewSearchParams,
   ): Promise<CampaignOverviewData> {
     let url = `/api/campaign/overview/${campaignId}`;
+
     url += searchParams.toExternal(["page", "pageLimit"]);
 
     const apiResponse = await donationApi.get(url, {
