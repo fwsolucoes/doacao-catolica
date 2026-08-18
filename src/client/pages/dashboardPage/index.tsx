@@ -35,18 +35,6 @@ const MONTHS = [
   "Dez",
 ];
 
-const donutData = {
-  labels: ["Pix", "Pix Automático", "Cartão", "Boleto"],
-  datasets: [
-    {
-      data: [42, 24, 21, 13],
-      backgroundColor: ["#5b4eff", "#74e7bb", "#6bceff", "#ffc800"],
-      borderWidth: 0,
-      hoverOffset: 4,
-    },
-  ],
-};
-
 const donutOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -55,6 +43,16 @@ const donutOptions = {
     legend: { display: false },
     tooltip: { mode: "index" as const, intersect: false },
   },
+};
+
+const PAYMENT_METHOD_DISPLAY: Record<
+  string,
+  { label: string; color: string }
+> = {
+  pix: { label: "Pix", color: "#5b4eff" },
+  automatic_pix: { label: "Pix Automático", color: "#74e7bb" },
+  credit_card: { label: "Cartão", color: "#6bceff" },
+  bank_slip: { label: "Boleto", color: "#ffc800" },
 };
 
 const weeklyChartData = {
@@ -88,12 +86,6 @@ const weeklyChartOptions = {
   },
 };
 
-const PAYMENT_METHODS = [
-  { label: "Pix", pct: 42, color: "#5b4eff" },
-  { label: "Pix Automático", pct: 24, color: "#74e7bb" },
-  { label: "Cartão", pct: 21, color: "#6bceff" },
-  { label: "Boleto", pct: 13, color: "#ffc800" },
-];
 
 const FEATURED_CAMPAIGNS = [
   {
@@ -225,7 +217,7 @@ function StatCard({
 
 function DashboardPage() {
   const { user } = useRoot();
-  const { overview, annualEvolution, currentMonth, currentYear } =
+  const { overview, annualEvolution, paymentMethods, currentMonth, currentYear } =
     useLoaderData<DashboardLoader>();
   const firstName = user?.name?.split(" ")[0] ?? "usuário";
 
@@ -309,6 +301,29 @@ function DashboardPage() {
   };
 
   const chartYear = annualEvolution?.year ?? currentYear;
+
+  const paymentMethodsList = (paymentMethods?.paymentMethods ?? []).map(
+    (m) => {
+      const display = PAYMENT_METHOD_DISPLAY[m.paymentMethod];
+      return {
+        label: display?.label ?? m.paymentMethod,
+        color: display?.color ?? "#9ca3af",
+        pct: m.percentage,
+      };
+    },
+  );
+
+  const donutData = {
+    labels: paymentMethodsList.map((m) => m.label),
+    datasets: [
+      {
+        data: paymentMethodsList.map((m) => m.pct),
+        backgroundColor: paymentMethodsList.map((m) => m.color),
+        borderWidth: 0,
+        hoverOffset: 4,
+      },
+    ],
+  };
 
   return (
     <div className="flex flex-col gap-7">
@@ -408,7 +423,7 @@ function DashboardPage() {
             <Doughnut data={donutData} options={donutOptions} />
           </div>
           <div className="flex flex-col gap-2">
-            {PAYMENT_METHODS.map((m) => (
+            {paymentMethodsList.map((m) => (
               <div key={m.label} className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <span

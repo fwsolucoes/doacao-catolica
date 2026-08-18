@@ -5,6 +5,7 @@ import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getAnnualEvolution } from "../factories/annualEvolution/getAnnualEvolutionFactory";
+import { getDashboardPaymentMethods } from "../factories/dashboardPaymentMethods/getDashboardPaymentMethodsFactory";
 import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
 import { getPortalOverview } from "../factories/campaignOverview/getPortalOverviewFactory";
 
@@ -21,17 +22,26 @@ export async function loader(args: Route.LoaderArgs) {
   const firstCampaign = campaigns.data[0];
 
   if (!firstCampaign) {
-    return { overview: null, annualEvolution: null, currentMonth, currentYear };
+    return {
+      overview: null,
+      annualEvolution: null,
+      paymentMethods: null,
+      currentMonth,
+      currentYear,
+    };
   }
 
-  const accountUuid = firstCampaign.apiDonationPublicId ?? firstCampaign.id;
+  const accountUuid = String(
+    firstCampaign.apiDonationPublicId ?? firstCampaign.id,
+  );
 
-  const [overview, annualEvolution] = await Promise.all([
-    getPortalOverview.handle(String(accountUuid)),
-    getAnnualEvolution.handle(String(accountUuid)),
+  const [overview, annualEvolution, paymentMethods] = await Promise.all([
+    getPortalOverview.handle(accountUuid),
+    getAnnualEvolution.handle(accountUuid),
+    getDashboardPaymentMethods.handle(accountUuid),
   ]);
 
-  return { overview, annualEvolution, currentMonth, currentYear };
+  return { overview, annualEvolution, paymentMethods, currentMonth, currentYear };
 }
 
 export function ErrorBoundary() {
