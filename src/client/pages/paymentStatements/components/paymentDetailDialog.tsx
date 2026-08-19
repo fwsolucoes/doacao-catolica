@@ -13,6 +13,7 @@ import type { LucideIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
+import { ManualPaymentDialog } from "./manualPaymentDialog";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -205,6 +206,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   const [copied, setCopied] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const closeCancelDialog = useCallback(() => setShowCancelDialog(false), []);
+  const [showManualPaymentDialog, setShowManualPaymentDialog] = useState(false);
+  const closeManualPaymentDialog = useCallback(() => setShowManualPaymentDialog(false), []);
+
+  const canShowPendingActions =
+    payment?.status === "Aguardando pagamento" ||
+    payment?.status === "Vencido";
 
   useEffect(() => {
     if (payment && campaignId) {
@@ -479,23 +486,26 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
         {/* Footer */}
         <div className="flex flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-7 py-3.5">
-          {payment?.status !== "Excluído" && (
-            <Button
-              variant="outline"
-              className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
-              onClick={() => setShowCancelDialog(true)}
-            >
-              <XCircle className="h-5 w-5" />
-              Cancelar pagamento
-            </Button>
+          {canShowPendingActions && (
+            <>
+              <Button
+                variant="outline"
+                className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
+                onClick={() => setShowCancelDialog(true)}
+              >
+                <XCircle className="h-5 w-5" />
+                Cancelar pagamento
+              </Button>
+              <Button
+                variant="outline"
+                className="h-10 gap-2 rounded-xl px-3.5 text-xs"
+                onClick={() => setShowManualPaymentDialog(true)}
+              >
+                <CheckCircle2 className="h-5 w-5" />
+                Baixa manual
+              </Button>
+            </>
           )}
-          <Button
-            variant="outline"
-            className="h-10 gap-2 rounded-xl px-3.5 text-xs"
-          >
-            <CheckCircle2 className="h-5 w-5" />
-            Baixa manual
-          </Button>
           <Button className="h-10 gap-2 rounded-xl bg-[#25d366] px-3.5 text-xs text-white hover:bg-[#20bd5a]">
             <WhatsAppIcon size={20} />
             Enviar lembrete
@@ -510,6 +520,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <CancelPaymentDialog
       payment={showCancelDialog ? payment : null}
       onClose={closeCancelDialog}
+      onSuccess={onClose}
+    />
+
+    <ManualPaymentDialog
+      payment={showManualPaymentDialog ? payment : null}
+      onClose={closeManualPaymentDialog}
       onSuccess={onClose}
     />
     </>

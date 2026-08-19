@@ -7,7 +7,8 @@ import { AuthService } from "~/infra/services/authService";
 import { getPaymentMetrics, listPayments } from "../factories/paymentMetrics/getPaymentMetricsFactory";
 import { listDonorsByCampaign } from "../factories/donor/listDonorsByCampaignFactory";
 import { getDonationsSummary } from "../factories/donationsSummary/getDonationsSummaryFactory";
-import { cancelPayment } from "../factories/payment/cancelPaymentFactory";
+import { paymentFactory } from "../factories/payment/paymentFactory";
+import { paymentMethodFactory } from "../factories/paymentMethod/paymentMethodFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -15,19 +16,20 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const [metrics, payments, donors, summary] = await Promise.all([
+  const [metrics, payments, donors, summary, { paymentMethods }] = await Promise.all([
     getPaymentMetrics.handle(adaptedRoute),
     listPayments.handle(adaptedRoute),
     listDonorsByCampaign.handle(adaptedRoute),
     getDonationsSummary.handle(adaptedRoute),
+    paymentMethodFactory.handleLoader(adaptedRoute),
   ]);
 
-  return { metrics, payments, donors, summary };
+  return { metrics, payments, donors, summary, paymentMethods };
 }
 
 export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
-  return cancelPayment.handle(adaptedRoute);
+  return paymentFactory.handleAction(adaptedRoute);
 }
 
 export function ErrorBoundary() {
