@@ -50,6 +50,7 @@ export default [
     route("settings/whatsapp", "./main/routes/route.campaign.whatsapp.tsx"),
     route("settings/preferences", "./main/routes/route.campaign.preferences.tsx"),
     route("api/payment-notifications/:paymentId", "./main/routes/api.campaign.paymentNotifications.ts"),
+    route("api/pix-authorization-history/:subscriptionUuid", "./main/routes/api.campaign.pixAuthorizationHistory.ts"),
     route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
   ]),
 

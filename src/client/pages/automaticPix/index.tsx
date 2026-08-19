@@ -90,6 +90,7 @@ function AutomaticPixPage() {
   const [searchValue, setSearchValue] = useState(() => sp.get("search") ?? "");
   const [historyTarget, setHistoryTarget] = useState<{
     customerName: string;
+    customerCpfCnpj: string | null;
     subscriptionUuid: string;
   } | null>(null);
   const closeHistory = useCallback(() => setHistoryTarget(null), []);
@@ -267,6 +268,7 @@ function AutomaticPixPage() {
                         onClick={() =>
                           setHistoryTarget({
                             customerName: item.customerName,
+                            customerCpfCnpj: item.customerCpfCnpj,
                             subscriptionUuid: item.subscriptionUuid,
                           })
                         }
@@ -293,6 +295,7 @@ function AutomaticPixPage() {
 
       <PixAuthorizationHistoryDialog
         customerName={historyTarget?.customerName ?? null}
+        customerCpfCnpj={historyTarget?.customerCpfCnpj ?? null}
         subscriptionUuid={historyTarget?.subscriptionUuid ?? null}
         onClose={closeHistory}
       />
