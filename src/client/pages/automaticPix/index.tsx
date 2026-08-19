@@ -8,8 +8,9 @@ import {
   History,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { PixAuthorizationHistoryDialog } from "./components/pixAuthorizationHistoryDialog";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -87,6 +88,11 @@ function AutomaticPixPage() {
 
   const sp = new URLSearchParams(location.search);
   const [searchValue, setSearchValue] = useState(() => sp.get("search") ?? "");
+  const [historyTarget, setHistoryTarget] = useState<{
+    customerName: string;
+    subscriptionUuid: string;
+  } | null>(null);
+  const closeHistory = useCallback(() => setHistoryTarget(null), []);
 
   useEffect(() => {
     setSearchValue(new URLSearchParams(location.search).get("search") ?? "");
@@ -258,6 +264,12 @@ function AutomaticPixPage() {
                         size="sm"
                         className="gap-1.5 text-xs text-foreground"
                         disabled={item.authorizationsCount <= 1}
+                        onClick={() =>
+                          setHistoryTarget({
+                            customerName: item.customerName,
+                            subscriptionUuid: item.subscriptionUuid,
+                          })
+                        }
                       >
                         <History size={14} />
                         Histórico
@@ -278,6 +290,12 @@ function AutomaticPixPage() {
           />
         </Card.Footer>
       </Card.Root>
+
+      <PixAuthorizationHistoryDialog
+        customerName={historyTarget?.customerName ?? null}
+        subscriptionUuid={historyTarget?.subscriptionUuid ?? null}
+        onClose={closeHistory}
+      />
     </div>
   );
 }
