@@ -23,7 +23,7 @@ function WhatsAppTab({
   templates = [],
   isLoadingTemplates = false,
 }: {
-  defaultMessage?: string;
+  defaultMessage?: string | null;
   messageType?: string;
   templates?: WhatsappTemplateJson[];
   isLoadingTemplates?: boolean;

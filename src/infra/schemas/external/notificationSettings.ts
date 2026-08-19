@@ -10,7 +10,7 @@ const notificationSettingsSchema = z.object({
       type: z.string(),
       name: z.string(),
       days: z.number(),
-      whatsapp_message: z.string(),
+      whatsapp_message: z.string().nullable(),
       mail_subject: z.string(),
       mail_message: z.string(),
       enable_whatsapp: z.number(),

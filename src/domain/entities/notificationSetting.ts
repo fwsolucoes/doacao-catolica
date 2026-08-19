@@ -5,7 +5,7 @@ type NotificationSettingProps = {
   type: string;
   name: string;
   days: number;
-  whatsappMessage: string;
+  whatsappMessage: string | null;
   mailSubject: string;
   mailMessage: string;
   enableWhatsapp: number;
@@ -28,7 +28,7 @@ class NotificationSetting {
   readonly type: string;
   readonly name: string;
   readonly days: number;
-  readonly whatsappMessage: string;
+  readonly whatsappMessage: string | null;
   readonly mailSubject: string;
   readonly mailMessage: string;
   readonly enableWhatsapp: number;
