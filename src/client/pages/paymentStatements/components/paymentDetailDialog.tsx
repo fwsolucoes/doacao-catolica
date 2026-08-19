@@ -237,7 +237,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
   return (
     <Dialog open={!!payment} onOpenChange={handleOpenChange}>
-      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-3xl">
+      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-4xl">
         {/* Header */}
         <div className="flex flex-col border-b border-border px-7 py-6 pr-16 text-center sm:text-left">
           <div className="flex items-start justify-between gap-4">
@@ -279,7 +279,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               </div>
               {payment && (
                 <Badge
-                  className="mt-1 rounded-full"
+                  className="mt-1 py-3"
                   variant={STATUS_BADGE[payment.status] ?? "neutral"}
                 >
                   {payment.status}
@@ -333,7 +333,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     </div>
                     <div className="pt-0.5">
                       <Badge
-                        className="rounded-full"
+                        className="rounded-full py-3"
                         variant={
                           PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
                         }
@@ -348,11 +348,11 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     </div>
                     <div className="pt-0.5">
                       <Badge
-                        className="rounded-full"
+                        className="rounded-full py-3"
                         variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
                       >
                         {payment.origin === "Recorrente" && (
-                          <RefreshCw className="mr-1 h-3 w-3" />
+                          <RefreshCw size={11} className="shrink-0" />
                         )}
                         {payment.origin}
                       </Badge>
