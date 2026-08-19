@@ -78,7 +78,7 @@ function ActionsPopover({
   const contactFetcher = useFetcher<{ contactId: string }>();
   const prevFetcherState = useRef<string>("idle");
 
-  const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}`;
+  const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}&start_date=1980-01-01&end_date=2099-12-31&period=custom`;
   const whatsAppHref = buildWhatsAppHref(donor.phone);
 
   useEffect(() => {
@@ -91,7 +91,13 @@ function ActionsPopover({
       window.location.href = href;
     }
     prevFetcherState.current = contactFetcher.state;
-  }, [contactFetcher.state, contactFetcher.data, environmentVariables.SANCTON_CRM_PANEL_URL, user?.token, currentUrl]);
+  }, [
+    contactFetcher.state,
+    contactFetcher.data,
+    environmentVariables.SANCTON_CRM_PANEL_URL,
+    user?.token,
+    currentUrl,
+  ]);
 
   function openDialog(fn: () => void) {
     setOpen(false);
@@ -245,7 +251,7 @@ function RecurringDonorRow({
         {formatApiDate(donor.lastDonationAt)}
       </Table.Cell>
       <Table.Cell>
-        <Badge variant={donor.status ? "success" : "danger"}>
+        <Badge variant={donor.status ? "success" : "danger"} className=" py-3">
           {donor.status ? "Ativo" : "Inativo"}
         </Badge>
       </Table.Cell>
