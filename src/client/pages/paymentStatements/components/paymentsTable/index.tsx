@@ -266,7 +266,7 @@ function PaymentsTable() {
                 <Table.Cell>
                   <div className="flex items-center justify-center gap-2">
                     <Mail
-                      size={16}
+                      size={18}
                       className={
                         payment.notifiedByEmail
                           ? "text-blue-500"
@@ -274,7 +274,7 @@ function PaymentsTable() {
                       }
                     />
                     <WhatsAppIcon
-                      size={16}
+                      size={18}
                       className={
                         payment.notifiedByWhatsApp
                           ? "text-[rgb(var(--spotlight-success))]"
