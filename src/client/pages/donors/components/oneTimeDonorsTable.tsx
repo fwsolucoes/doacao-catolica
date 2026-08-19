@@ -199,7 +199,7 @@ function OneTimeDonorsTable({
 }: OneTimeDonorsTableProps) {
   return (
     <>
-      <Table.Root>
+      <Table.Root className="[&_th]:px-2 [&_td]:px-2">
         <Table.Header>
           <Table.Row>
             <Table.Head>Doador</Table.Head>
