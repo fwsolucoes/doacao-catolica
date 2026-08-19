@@ -123,3 +123,19 @@ Para adicionar um componente do catálogo shadcn/ui:
 Se o componente gerado não usa `cva()`, manter `cn()` de `~/lib/utils` para merge de classes.
 
 **`asChild` no Button:** use `<Button asChild><Link to="...">Texto</Link></Button>` para renderizar o botão como elemento filho sem perder variantes.
+
+**Ícones dentro de `Badge`:** usar o atributo `data-icon` no ícone — o componente aplica `shrink-0` automaticamente via CSS e o `gap-1.5` do base garante o espaçamento. Nunca adicionar `className="shrink-0"` nem `gap` manualmente.
+
+```tsx
+// correto
+<Badge variant="neutral">
+  <RefreshCw size={11} data-icon="inline-start" />
+  Recorrente
+</Badge>
+
+// errado — shrink-0 manual desnecessário
+<Badge variant="neutral">
+  <RefreshCw size={11} className="shrink-0" />
+  Recorrente
+</Badge>
+```

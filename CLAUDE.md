@@ -84,8 +84,12 @@ Ver `src/client/components/ui/CLAUDE.md` para todas as regras de implementação
 
 Todo mapeamento de valor de API para badge **deve** ser resiliente: se a API retornar um valor não previsto, o badge exibe o valor bruto sem tradução e usa cor neutra — nunca quebra a tela.
 
+Sempre usar o componente `<Badge>` de `~/client/components/ui/badge` — nunca `<span>` nativo. Espaçamento, tipografia e forma já estão no componente; passar apenas a cor via `className`.
+
 Padrão obrigatório:
 ```tsx
+import { Badge } from "~/client/components/ui/badge";
+
 // mapa tipado como Record<string, ...> para aceitar qualquer chave
 const STATUS_BADGE: Record<string, { className: string; label: string }> = {
   active: { className: "bg-emerald-100 text-emerald-700", label: "Ativo" },
@@ -94,9 +98,17 @@ const STATUS_BADGE: Record<string, { className: string; label: string }> = {
 
 // fallback explícito para chave ausente
 const badge = STATUS_BADGE[value];
-<span className={badge?.className ?? "bg-muted text-muted-foreground"}>
+<Badge className={badge?.className ?? "bg-muted text-muted-foreground"}>
   {badge?.label ?? value}
-</span>
+</Badge>
+```
+
+Quando o badge contém ícone, usar `data-icon` no ícone — o componente aplica `shrink-0` e `gap-1.5` automaticamente:
+```tsx
+<Badge className={badge?.className ?? "bg-muted text-muted-foreground"}>
+  <RefreshCw size={11} data-icon="inline-start" />
+  {badge?.label ?? value}
+</Badge>
 ```
 
 No schema Zod, use `z.string()` em vez de `z.enum([...])` para campos exibidos em badge, evitando que a validação rejeite valores novos antes de chegar ao componente. Documente os valores conhecidos em comentário:

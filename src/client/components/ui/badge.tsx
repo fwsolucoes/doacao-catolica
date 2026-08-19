@@ -2,7 +2,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 import type { ComponentProps } from "react";
 
 const badge = tv({
-  base: "inline-flex h-5 items-center gap-1 justify-center rounded-full px-3 text-xs font-normal",
+  base: "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap [&>[data-icon]]:shrink-0",
   variants: {
     variant: {
       success:

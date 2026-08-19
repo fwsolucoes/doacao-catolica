@@ -233,11 +233,10 @@ function PaymentsTable() {
                 </Table.Cell>
                 <Table.Cell>
                   <Badge
-                    className="py-3"
                     variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
                   >
                     {payment.origin === "Recorrente" && (
-                      <RefreshCw size={11} className="shrink-0" />
+                      <RefreshCw size={11} data-icon="inline-start" />
                     )}
                     {payment.origin}
                   </Badge>
@@ -248,7 +247,6 @@ function PaymentsTable() {
                 <Table.Cell>
                   <div className="flex items-center gap-1.5">
                     <Badge
-                      className="py-3"
                       variant={STATUS_BADGE[payment.status] ?? "neutral"}
                     >
                       {payment.status}
@@ -287,7 +285,6 @@ function PaymentsTable() {
                 </Table.Cell>
                 <Table.Cell>
                   <Badge
-                    className="py-3"
                     variant={
                       PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
                     }

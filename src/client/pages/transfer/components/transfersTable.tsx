@@ -50,7 +50,6 @@ function TransfersTable({ transfers }: TransfersTableProps) {
               <Table.Cell className="text-muted-foreground">—</Table.Cell>
               <Table.Cell>
                 <Badge
-                  className="py-3"
                   variant={getStatusVariant(transfer.status)}
                 >
                   {formatStatus(transfer.status)}

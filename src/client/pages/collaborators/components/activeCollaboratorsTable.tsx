@@ -71,7 +71,7 @@ function ActiveCollaboratorsTable() {
                 {collaborator.email}
               </Table.Cell>
               <Table.Cell>
-                <Badge className="py-3" variant={collaborator.role.tone}>
+                <Badge variant={collaborator.role.tone}>
                   {collaborator.role.name}
                 </Badge>
               </Table.Cell>

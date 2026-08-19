@@ -279,7 +279,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               </div>
               {payment && (
                 <Badge
-                  className="mt-1 py-3"
+                  className="mt-1"
                   variant={STATUS_BADGE[payment.status] ?? "neutral"}
                 >
                   {payment.status}
@@ -333,7 +333,6 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     </div>
                     <div className="pt-0.5">
                       <Badge
-                        className="rounded-full py-3"
                         variant={
                           PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
                         }
@@ -348,11 +347,10 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     </div>
                     <div className="pt-0.5">
                       <Badge
-                        className="rounded-full py-3"
                         variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
                       >
                         {payment.origin === "Recorrente" && (
-                          <RefreshCw size={11} className="shrink-0" />
+                          <RefreshCw size={11} data-icon="inline-start" />
                         )}
                         {payment.origin}
                       </Badge>

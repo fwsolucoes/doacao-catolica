@@ -28,7 +28,6 @@ import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { formatCurrency } from "~/lib/formatCurrency";
 import { getInitials } from "~/lib/getInitials";
 import { buildWhatsAppHref } from "~/lib/buildWhatsAppHref";
-import { cn } from "~/lib/utils";
 import { useRoot } from "~/client/hooks/useRoot";
 import type { DialogState, DonorRow } from "./donorsTable";
 
@@ -251,7 +250,7 @@ function RecurringDonorRow({
         {formatApiDate(donor.lastDonationAt)}
       </Table.Cell>
       <Table.Cell>
-        <Badge variant={donor.status ? "success" : "danger"} className=" py-3">
+        <Badge variant={donor.status ? "success" : "danger"}>
           {donor.status ? "Ativo" : "Inativo"}
         </Badge>
       </Table.Cell>
@@ -278,14 +277,11 @@ function RecurringDonorRow({
         {(() => {
           const badge = PAYMENT_METHOD_BADGE[donor.paymentMethod];
           return (
-            <span
-              className={cn(
-                "rounded-full px-3 py-1 text-xs",
-                badge?.className ?? "bg-muted text-muted-foreground",
-              )}
+            <Badge
+              className={badge?.className ?? "bg-muted text-muted-foreground"}
             >
               {badge?.label ?? donor.paymentMethod}
-            </span>
+            </Badge>
           );
         })()}
       </Table.Cell>
