@@ -479,14 +479,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
         {/* Footer */}
         <div className="flex flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-7 py-3.5">
-          <Button
-            variant="outline"
-            className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
-            onClick={() => setShowCancelDialog(true)}
-          >
-            <XCircle className="h-5 w-5" />
-            Cancelar pagamento
-          </Button>
+          {payment?.status !== "Excluído" && (
+            <Button
+              variant="outline"
+              className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
+              onClick={() => setShowCancelDialog(true)}
+            >
+              <XCircle className="h-5 w-5" />
+              Cancelar pagamento
+            </Button>
+          )}
           <Button
             variant="outline"
             className="h-10 gap-2 rounded-xl px-3.5 text-xs"
