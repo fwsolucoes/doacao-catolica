@@ -8,6 +8,7 @@ import {
   History,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -15,6 +16,7 @@ import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
+import type { AutomaticPixLoader } from "~/client/types/automaticPixLoader";
 import { cn } from "~/lib/utils";
 
 type BadgeVariant =
@@ -43,41 +45,6 @@ type StatCardItem = {
   iconBg: string;
   iconColor: string;
 };
-
-const STAT_CARDS: StatCardItem[] = [
-  {
-    label: "Autorizados",
-    value: 2,
-    subtitle: "cobranças ativas",
-    icon: CheckCircle2,
-    iconBg: "bg-emerald-100",
-    iconColor: "text-emerald-700",
-  },
-  {
-    label: "Pendentes",
-    value: 1,
-    subtitle: "aguardando confirmação",
-    icon: Clock,
-    iconBg: "bg-amber-100",
-    iconColor: "text-amber-700",
-  },
-  {
-    label: "Cancelados",
-    value: 1,
-    subtitle: "encerrados pelo doador",
-    icon: Ban,
-    iconBg: "bg-slate-100",
-    iconColor: "text-slate-500",
-  },
-  {
-    label: "Recusados",
-    value: 1,
-    subtitle: "negados pelo banco",
-    icon: CircleX,
-    iconBg: "bg-red-100",
-    iconColor: "text-red-700",
-  },
-];
 
 const MOCK_AUTHORIZATIONS = [
   {
@@ -161,6 +128,43 @@ function StatCard({
 }
 
 function AutomaticPixPage() {
+  const { summary } = useLoaderData<AutomaticPixLoader>();
+
+  const statCards: StatCardItem[] = [
+    {
+      label: "Autorizados",
+      value: summary.active,
+      subtitle: "cobranças ativas",
+      icon: CheckCircle2,
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-700",
+    },
+    {
+      label: "Pendentes",
+      value: summary.awaitingAuthorization,
+      subtitle: "aguardando confirmação",
+      icon: Clock,
+      iconBg: "bg-amber-100",
+      iconColor: "text-amber-700",
+    },
+    {
+      label: "Cancelados",
+      value: summary.cancelled,
+      subtitle: "encerrados pelo doador",
+      icon: Ban,
+      iconBg: "bg-slate-100",
+      iconColor: "text-slate-500",
+    },
+    {
+      label: "Recusados",
+      value: summary.refused,
+      subtitle: "negados pelo banco",
+      icon: CircleX,
+      iconBg: "bg-red-100",
+      iconColor: "text-red-700",
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0.5">
@@ -174,7 +178,7 @@ function AutomaticPixPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {STAT_CARDS.map((card) => (
+        {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
