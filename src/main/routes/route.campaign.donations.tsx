@@ -7,6 +7,7 @@ import { AuthService } from "~/infra/services/authService";
 import { getPaymentMetrics, listPayments } from "../factories/paymentMetrics/getPaymentMetricsFactory";
 import { listDonorsByCampaign } from "../factories/donor/listDonorsByCampaignFactory";
 import { getDonationsSummary } from "../factories/donationsSummary/getDonationsSummaryFactory";
+import { cancelPayment } from "../factories/payment/cancelPaymentFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -22,6 +23,11 @@ export async function loader(args: Route.LoaderArgs) {
   ]);
 
   return { metrics, payments, donors, summary };
+}
+
+export async function action(args: Route.ActionArgs) {
+  const adaptedRoute = await RouteAdapter.adaptRoute(args);
+  return cancelPayment.handle(adaptedRoute);
 }
 
 export function ErrorBoundary() {

@@ -10,8 +10,9 @@ import {
   XCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
+import { CancelPaymentDialog } from "./cancelPaymentDialog";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -202,6 +203,8 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   const [activeTab, setActiveTab] = useState<Tab>("details");
   const [channelFilter, setChannelFilter] = useState("all");
   const [copied, setCopied] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const closeCancelDialog = useCallback(() => setShowCancelDialog(false), []);
 
   useEffect(() => {
     if (payment && campaignId) {
@@ -236,6 +239,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   }
 
   return (
+    <>
     <Dialog open={!!payment} onOpenChange={handleOpenChange}>
       <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-4xl">
         {/* Header */}
@@ -478,6 +482,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
           <Button
             variant="outline"
             className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
+            onClick={() => setShowCancelDialog(true)}
           >
             <XCircle className="h-5 w-5" />
             Cancelar pagamento
@@ -499,6 +504,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
         </div>
       </DialogContent>
     </Dialog>
+
+    <CancelPaymentDialog
+      payment={showCancelDialog ? payment : null}
+      onClose={closeCancelDialog}
+    />
+    </>
   );
 }
 
