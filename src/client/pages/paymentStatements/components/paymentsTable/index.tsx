@@ -269,7 +269,7 @@ function PaymentsTable() {
                       size={16}
                       className={
                         payment.notifiedByEmail
-                          ? "text-muted-foreground"
+                          ? "text-blue-500"
                           : "text-muted-foreground/30"
                       }
                     />
