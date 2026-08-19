@@ -8,7 +8,8 @@ import {
   History,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -27,14 +28,13 @@ type BadgeVariant =
   | "emerald"
   | "amber";
 
-const STATUS_BADGE: Record<
-  string,
-  { variant: BadgeVariant; label: string }
-> = {
-  authorized: { variant: "emerald", label: "Autorizado" },
-  pending: { variant: "amber", label: "Pendente" },
-  canceled: { variant: "neutral", label: "Cancelado" },
-  rejected: { variant: "danger", label: "Recusado" },
+// known values: "ACTIVE" | "CREATED" | "REFUSED" | "EXPIRED" | "CANCELLED"
+const STATUS_BADGE: Record<string, BadgeVariant> = {
+  ACTIVE: "emerald",
+  CREATED: "amber",
+  REFUSED: "danger",
+  EXPIRED: "neutral",
+  CANCELLED: "neutral",
 };
 
 type StatCardItem = {
@@ -45,54 +45,6 @@ type StatCardItem = {
   iconBg: string;
   iconColor: string;
 };
-
-const MOCK_AUTHORIZATIONS = [
-  {
-    id: "1",
-    name: "Ana Paula Ribeiro",
-    phone: "+55 11 98765-4321",
-    cpf: "123.456.789-01",
-    status: "authorized",
-    authorization: "02/07/2026 09:14",
-    lastUpdated: "02/07/2026 09:15",
-  },
-  {
-    id: "2",
-    name: "Carlos Eduardo Souza",
-    phone: "+55 21 99123-4567",
-    cpf: "987.654.321-00",
-    status: "pending",
-    authorization: null,
-    lastUpdated: "06/07/2026 18:02",
-  },
-  {
-    id: "3",
-    name: "Mariana Costa Lima",
-    phone: "+55 31 98888-1122",
-    cpf: "456.789.123-22",
-    status: "canceled",
-    authorization: "18/05/2026 14:20",
-    lastUpdated: "28/06/2026 10:05",
-  },
-  {
-    id: "4",
-    name: "Roberto Nogueira",
-    phone: "+55 41 97777-3344",
-    cpf: "321.654.987-45",
-    status: "rejected",
-    authorization: null,
-    lastUpdated: "24/06/2026 16:48",
-  },
-  {
-    id: "5",
-    name: "Juliana Martins",
-    phone: "+55 51 96666-9090",
-    cpf: "159.753.486-10",
-    status: "authorized",
-    authorization: "11/06/2026 08:31",
-    lastUpdated: "01/07/2026 08:00",
-  },
-];
 
 function StatCard({
   label,
@@ -128,7 +80,37 @@ function StatCard({
 }
 
 function AutomaticPixPage() {
-  const { summary } = useLoaderData<AutomaticPixLoader>();
+  const { summary, authorizations } = useLoaderData<AutomaticPixLoader>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const sp = new URLSearchParams(location.search);
+  const [searchValue, setSearchValue] = useState(() => sp.get("search") ?? "");
+
+  useEffect(() => {
+    setSearchValue(new URLSearchParams(location.search).get("search") ?? "");
+  }, [location.search]);
+
+  function handleSearch(value: string) {
+    setSearchValue(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const next = new URLSearchParams(location.search);
+      if (value) next.set("search", value);
+      else next.delete("search");
+      next.delete("page");
+      navigate(`?${next.toString()}`);
+    }, 400);
+  }
+
+  function handleStatusChange(value: string) {
+    const next = new URLSearchParams(location.search);
+    if (value) next.set("status", value);
+    else next.delete("status");
+    next.delete("page");
+    navigate(`?${next.toString()}`);
+  }
 
   const statCards: StatCardItem[] = [
     {
@@ -165,6 +147,8 @@ function AutomaticPixPage() {
     },
   ];
 
+  const { data, meta } = authorizations;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0.5">
@@ -192,21 +176,29 @@ function AutomaticPixPage() {
             <div className="w-80">
               <Input
                 leftIcon={Search}
-                placeholder="Buscar por nome, CPF, e-mail..."
+                placeholder="Buscar por nome ou CPF..."
                 className="h-11 rounded-xl border-transparent bg-background"
+                value={searchValue}
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
             <div className="w-48">
-              <Select.Root defaultValue="all">
+              <Select.Root
+                value={sp.get("status") ?? ""}
+                onValueChange={handleStatusChange}
+              >
                 <Select.Trigger className="h-11 rounded-xl">
-                  <Select.Value />
+                  <Select.Value placeholder="Todos os status" />
                 </Select.Trigger>
                 <Select.Content>
-                  <Select.Item value="all">Todos os status</Select.Item>
-                  <Select.Item value="authorized">Autorizado</Select.Item>
-                  <Select.Item value="pending">Pendente</Select.Item>
-                  <Select.Item value="canceled">Cancelado</Select.Item>
-                  <Select.Item value="rejected">Recusado</Select.Item>
+                  <Select.Item value="">Todos os status</Select.Item>
+                  <Select.Item value="ACTIVE">Ativa</Select.Item>
+                  <Select.Item value="CREATED">
+                    Aguardando autorização
+                  </Select.Item>
+                  <Select.Item value="REFUSED">Recusada</Select.Item>
+                  <Select.Item value="EXPIRED">Expirada</Select.Item>
+                  <Select.Item value="CANCELLED">Cancelada</Select.Item>
                 </Select.Content>
               </Select.Root>
             </div>
@@ -225,33 +217,31 @@ function AutomaticPixPage() {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {MOCK_AUTHORIZATIONS.map((item) => {
-              const badge = STATUS_BADGE[item.status];
+            {data.map((item) => {
+              const badgeVariant = STATUS_BADGE[item.status] ?? "neutral";
               return (
-                <Table.Row key={item.id}>
+                <Table.Row key={item.authorizationUuid}>
                   <Table.Cell>
                     <div className="flex flex-col">
                       <span className="text-sm text-foreground">
-                        {item.name}
+                        {item.customerName}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {item.phone}
+                        {item.customerPhone ?? "—"}
                       </span>
                     </div>
                   </Table.Cell>
                   <Table.Cell className="text-muted-foreground">
-                    {item.cpf}
+                    {item.customerCpfCnpj ?? "—"}
                   </Table.Cell>
                   <Table.Cell>
-                    <Badge variant={badge?.variant ?? "neutral"}>
-                      {badge?.label ?? item.status}
-                    </Badge>
+                    <Badge variant={badgeVariant}>{item.statusLabel}</Badge>
                   </Table.Cell>
                   <Table.Cell className="text-muted-foreground">
-                    {item.authorization ?? "—"}
+                    {item.authorizationCreatedAt ?? "—"}
                   </Table.Cell>
                   <Table.Cell className="text-muted-foreground">
-                    {item.lastUpdated}
+                    {item.statusUpdatedAt}
                   </Table.Cell>
                   <Table.Cell className="text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -267,6 +257,7 @@ function AutomaticPixPage() {
                         variant="outline"
                         size="sm"
                         className="gap-1.5 text-xs text-foreground"
+                        disabled={item.authorizationsCount <= 1}
                       >
                         <History size={14} />
                         Histórico
@@ -276,12 +267,15 @@ function AutomaticPixPage() {
                 </Table.Row>
               );
             })}
-            {!MOCK_AUTHORIZATIONS.length && <Table.Empty />}
+            {!data.length && <Table.Empty />}
           </Table.Body>
         </Table.Root>
 
         <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
-          <TablePagination currentPage={1} totalPages={1} />
+          <TablePagination
+            currentPage={meta.page}
+            totalPages={meta.totalPages}
+          />
         </Card.Footer>
       </Card.Root>
     </div>
