@@ -510,6 +510,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <CancelPaymentDialog
       payment={showCancelDialog ? payment : null}
       onClose={closeCancelDialog}
+      onSuccess={onClose}
     />
     </>
   );

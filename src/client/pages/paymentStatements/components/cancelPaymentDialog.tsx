@@ -19,9 +19,10 @@ type Payment = DonationsLoader["payments"]["data"][number];
 type CancelPaymentDialogProps = {
   payment: Payment | null;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-function CancelPaymentDialog({ payment, onClose }: CancelPaymentDialogProps) {
+function CancelPaymentDialog({ payment, onClose, onSuccess }: CancelPaymentDialogProps) {
   const fetcher = useFetcher();
   useActionToast(fetcher.data);
   const isSubmitting = fetcher.state !== "idle";
@@ -29,8 +30,9 @@ function CancelPaymentDialog({ payment, onClose }: CancelPaymentDialogProps) {
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast) {
       onClose();
+      onSuccess?.();
     }
-  }, [fetcher.state, fetcher.data, onClose]);
+  }, [fetcher.state, fetcher.data, onClose, onSuccess]);
 
   return (
     <Dialog open={!!payment} onOpenChange={(o) => !o && onClose()}>
