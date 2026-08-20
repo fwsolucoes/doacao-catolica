@@ -76,10 +76,10 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
       data: data.data.map((item) =>
         Payment.restore({
           id: item.payment_uuid,
-          customerName: item.customer.name,
-          customerDocument: item.customer.cpf_cnpj,
-          customerEmail: item.customer.email,
-          customerPhone: item.customer.phone,
+          customerName: item.customer?.name ?? "",
+          customerDocument: item.customer?.cpf_cnpj ?? null,
+          customerEmail: item.customer?.email ?? null,
+          customerPhone: item.customer?.phone ?? null,
           amount: item.amount,
           status: item.payment_status,
           origin: item.payment_origin,

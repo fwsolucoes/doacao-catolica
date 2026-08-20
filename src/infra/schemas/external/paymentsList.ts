@@ -23,7 +23,7 @@ const externalPaymentItemSchema = z.object({
   // known values: "ACTIVE" | "REFUSED" | "CANCELLED" | "CREATED"
   pix_authorization_status: z.string().nullable(),
   operator_reference: z.string().nullable(),
-  customer: externalPaymentCustomerSchema,
+  customer: externalPaymentCustomerSchema.nullable(),
   notifications: z.array(
     z.object({
       channel: z.string(),
