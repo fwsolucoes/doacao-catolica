@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { Link, useLoaderData, useLocation, useNavigate, useParams } from "react-router";
 import { PixAuthorizationHistoryDialog } from "./components/pixAuthorizationHistoryDialog";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -82,6 +82,7 @@ function StatCard({
 
 function AutomaticPixPage() {
   const { summary, authorizations } = useLoaderData<AutomaticPixLoader>();
+  const { campaignId } = useParams<{ campaignId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -256,9 +257,14 @@ function AutomaticPixPage() {
                         variant="outline"
                         size="sm"
                         className="gap-1.5 text-xs text-foreground"
+                        asChild
                       >
-                        <ExternalLink size={14} />
-                        Autorização
+                        <Link
+                          to={`/campaign/${campaignId}/donations?payments%3Asearch=${item.customerCpfCnpj?.replace(/\D/g, "") ?? ""}&payments%3Apage=1`}
+                        >
+                          <ExternalLink size={14} />
+                          Extrato
+                        </Link>
                       </Button>
                       <Button
                         variant="outline"
