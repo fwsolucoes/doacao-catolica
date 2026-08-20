@@ -1,5 +1,6 @@
 import {
   Eye,
+  ExternalLink,
   FileText,
   Mail,
   MoreHorizontal,
@@ -14,6 +15,7 @@ import {
 import { useCallback, useState } from "react";
 import { Link, useLoaderData, useParams } from "react-router";
 import { PaymentDetailDialog } from "../paymentDetailDialog";
+import { SendReminderNotificationDialog } from "../sendReminderNotificationDialog";
 import { useFilter } from "~/client/hooks/useFilter";
 import { FilterDrawer } from "../filterDrawer";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -82,9 +84,11 @@ function getInitials(name: string): string {
 
 type ActionsPopoverProps = {
   onViewDetails: () => void;
+  onSendReminder: () => void;
+  paymentLink: string;
 };
 
-function ActionsPopover({ onViewDetails }: ActionsPopoverProps) {
+function ActionsPopover({ onViewDetails, onSendReminder, paymentLink }: ActionsPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -108,9 +112,12 @@ function ActionsPopover({ onViewDetails }: ActionsPopoverProps) {
         <Button
           variant="ghost"
           className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+          asChild
         >
-          <FileText size={16} />
-          Acessar fatura
+          <a href={paymentLink} target="_blank" rel="noopener noreferrer">
+            <ExternalLink size={16} />
+            Acessar fatura
+          </a>
         </Button>
         <Button
           variant="ghost"
@@ -123,6 +130,7 @@ function ActionsPopover({ onViewDetails }: ActionsPopoverProps) {
         <Button
           variant="ghost"
           className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+          onClick={onSendReminder}
         >
           <WhatsAppIcon size={16} />
           Enviar Lembrete
@@ -142,6 +150,10 @@ function PaymentsTable() {
   const { handleChangeTimeoutFilter, getParam } = useFilter("payments");
 
   const closeDialog = useCallback(() => setSelectedPayment(null), []);
+  const [selectedReminderPayment, setSelectedReminderPayment] = useState<
+    DonationsLoader["payments"]["data"][number] | null
+  >(null);
+  const closeReminderDialog = useCallback(() => setSelectedReminderPayment(null), []);
 
   const { data, meta } = payments;
 
@@ -301,6 +313,8 @@ function PaymentsTable() {
                 <Table.Cell className="text-right">
                   <ActionsPopover
                     onViewDetails={() => setSelectedPayment(payment)}
+                    onSendReminder={() => setSelectedReminderPayment(payment)}
+                    paymentLink={payment.paymentLink}
                   />
                 </Table.Cell>
               </Table.Row>
@@ -318,6 +332,10 @@ function PaymentsTable() {
       </Card.Root>
 
       <PaymentDetailDialog payment={selectedPayment} onClose={closeDialog} />
+      <SendReminderNotificationDialog
+        payment={selectedReminderPayment}
+        onClose={closeReminderDialog}
+      />
     </>
   );
 }
