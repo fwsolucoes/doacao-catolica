@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
 import { ManualPaymentDialog } from "./manualPaymentDialog";
+import { SendReminderNotificationDialog } from "./sendReminderNotificationDialog";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -208,6 +209,8 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   const closeCancelDialog = useCallback(() => setShowCancelDialog(false), []);
   const [showManualPaymentDialog, setShowManualPaymentDialog] = useState(false);
   const closeManualPaymentDialog = useCallback(() => setShowManualPaymentDialog(false), []);
+  const [showReminderDialog, setShowReminderDialog] = useState(false);
+  const closeReminderDialog = useCallback(() => setShowReminderDialog(false), []);
 
   const canShowPendingActions =
     payment?.status === "Aguardando pagamento" ||
@@ -506,7 +509,10 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               </Button>
             </>
           )}
-          <Button className="h-10 gap-2 rounded-xl bg-[#25d366] px-3.5 text-xs text-white hover:bg-[#20bd5a]">
+          <Button
+            className="h-10 gap-2 rounded-xl bg-[#25d366] px-3.5 text-xs text-white hover:bg-[#20bd5a]"
+            onClick={() => setShowReminderDialog(true)}
+          >
             <WhatsAppIcon size={20} />
             Enviar lembrete
           </Button>
@@ -527,6 +533,11 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
       payment={showManualPaymentDialog ? payment : null}
       onClose={closeManualPaymentDialog}
       onSuccess={onClose}
+    />
+
+    <SendReminderNotificationDialog
+      payment={showReminderDialog ? payment : null}
+      onClose={closeReminderDialog}
     />
     </>
   );

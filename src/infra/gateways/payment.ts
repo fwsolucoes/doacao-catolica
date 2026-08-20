@@ -17,6 +17,17 @@ class PaymentGateway implements PaymentGatewayDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
+  async sendReminderNotification(paymentUuid: string): Promise<string> {
+    const apiResponse = await donationApi.post(
+      `/api/notifications/instant-reminder/${paymentUuid}`,
+      { body: {}, headers: this.headers },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    return apiResponse.response?.message ?? "Lembrete enviado com sucesso!";
+  }
+
   async manualPayment(accountUuid: string, data: ManualPaymentData): Promise<void> {
     const body: Record<string, unknown> = {
       payment_uuid: data.paymentId,

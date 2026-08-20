@@ -1,11 +1,13 @@
 import type { CancelPaymentUseCase } from "~/app/useCases/payment/cancelPaymentUseCase";
 import type { ManualPaymentUseCase } from "~/app/useCases/payment/manualPaymentUseCase";
+import type { SendReminderNotificationUseCase } from "~/app/useCases/payment/sendReminderNotificationUseCase";
 import { DecodeRequestBodyAdapter } from "~/infra/adapters/decodeRequestBodyAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
 import {
   cancelPaymentBodySchema,
   manualPaymentBodySchema,
+  sendReminderNotificationBodySchema,
 } from "~/infra/schemas/internal/payment";
 import type { RouteDTO } from "~/main/types/route";
 
@@ -13,6 +15,7 @@ class PaymentController {
   constructor(
     private cancelPaymentUseCase: CancelPaymentUseCase,
     private manualPaymentUseCase: ManualPaymentUseCase,
+    private sendReminderNotificationUseCase: SendReminderNotificationUseCase,
   ) {}
 
   async handleAction(route: RouteDTO) {
@@ -41,6 +44,13 @@ class PaymentController {
         });
         return {
           toast: { message: "Baixa manual realizada com sucesso!", type: "success" as const },
+        };
+      }
+      case "sendReminderNotification": {
+        const validated = new SchemaValidatorAdapter(sendReminderNotificationBodySchema).validate(body);
+        const message = await this.sendReminderNotificationUseCase.execute(validated.paymentId);
+        return {
+          toast: { message, type: "success" as const },
         };
       }
       default:
