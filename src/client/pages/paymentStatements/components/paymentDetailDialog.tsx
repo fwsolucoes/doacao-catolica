@@ -23,6 +23,7 @@ import { Select } from "~/client/components/ui/select";
 import { Separator } from "~/client/components/ui/separator";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { cn } from "~/lib/utils";
+import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 
 type Payment = DonationsLoader["payments"]["data"][number];
@@ -69,47 +70,16 @@ const PAYMENT_TYPE_BADGE: Record<string, BadgeVariant> = {
   "Cartão de crédito": "navy",
 };
 
-const NOTIFICATION_TYPE_LABEL: Record<string, string> = {
-  payment_before_due_date: "Lembrete de vencimento",
-  payment_after_due_date: "Aviso de atraso",
-  payment_confirmed: "Confirmação da doação",
-  donation_confirmed: "Confirmação da doação",
-  invoice_generated: "Fatura gerada",
-  payment_received: "Aviso de recebimento",
-  receipt_sent: "Recibo enviado",
-  second_charge_attempt: "Segunda tentativa de cobrança",
-  third_charge_attempt: "Terceira tentativa de cobrança",
-};
 
 const LOG_TYPE_CONFIG: Record<
   string,
-  { label: string; icon: typeof CheckCircle2; className: string }
+  { label: string; icon: typeof CheckCircle2; variant: BadgeVariant }
 > = {
-  success: {
-    label: "Entregue",
-    icon: CheckCircle2,
-    className: "bg-[#d4f5e2] text-[#1f7a4d]",
-  },
-  awaiting_confirmation: {
-    label: "Aberto",
-    icon: CheckCircle2,
-    className: "bg-[#d4f5e2] text-[#1f7a4d]",
-  },
-  error: {
-    label: "Falhou",
-    icon: XCircle,
-    className: "bg-destructive/15 text-destructive",
-  },
-  not_send: {
-    label: "Não enviado",
-    icon: XCircle,
-    className: "bg-muted text-muted-foreground",
-  },
-  blocked: {
-    label: "Bloqueado",
-    icon: XCircle,
-    className: "bg-muted text-muted-foreground",
-  },
+  success: { label: "Entregue", icon: CheckCircle2, variant: "emerald" },
+  awaiting_confirmation: { label: "Enviado", icon: CheckCircle2, variant: "info" },
+  error: { label: "Falhou", icon: XCircle, variant: "danger" },
+  not_send: { label: "Não enviado", icon: XCircle, variant: "neutral" },
+  blocked: { label: "Bloqueado", icon: XCircle, variant: "warning" },
 };
 
 function getInitials(name: string): string {
@@ -159,6 +129,7 @@ type NotificationItem = {
   channel: string;
   notificationType: string;
   logType: string;
+  response: string;
   createdAt: string;
   createdAtTime: string;
 };
@@ -166,8 +137,7 @@ type NotificationItem = {
 function NotificationCard({ item }: { item: NotificationItem }) {
   const logConfig = LOG_TYPE_CONFIG[item.logType];
   const StatusIcon = logConfig?.icon ?? CheckCircle2;
-  const label =
-    NOTIFICATION_TYPE_LABEL[item.notificationType] ?? item.notificationType;
+  const label = NOTIFICATION_TYPES[item.notificationType] ?? item.notificationType;
 
   return (
     <div className="flex items-start gap-3.5 rounded-xl border border-border p-3.5">
@@ -181,6 +151,9 @@ function NotificationCard({ item }: { item: NotificationItem }) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="text-base font-semibold text-foreground">{label}</span>
+        {item.logType === "error" && item.response && (
+          <span className="text-xs text-destructive">{item.response}</span>
+        )}
         <span className="flex items-center gap-1 text-xs text-muted-foreground">
           <Clock size={14} />
           {item.createdAt} · {item.createdAtTime}
@@ -188,12 +161,10 @@ function NotificationCard({ item }: { item: NotificationItem }) {
       </div>
 
       {logConfig && (
-        <div
-          className={`flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${logConfig.className}`}
-        >
-          <StatusIcon size={14} />
+        <Badge variant={logConfig.variant}>
+          <StatusIcon size={14} data-icon="inline-start" />
           {logConfig.label}
-        </div>
+        </Badge>
       )}
     </div>
   );
