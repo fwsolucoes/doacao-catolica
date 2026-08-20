@@ -101,6 +101,7 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
           alertMessage: null,
           subscriptionHasToken: item.subscription_has_token,
           pixAuthorizationStatus: item.pix_authorization_status,
+          operatorReference: item.operator_reference,
         }),
       ),
       meta: {

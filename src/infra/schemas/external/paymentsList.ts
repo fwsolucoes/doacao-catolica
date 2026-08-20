@@ -22,6 +22,7 @@ const externalPaymentItemSchema = z.object({
   subscription_has_token: z.boolean(),
   // known values: "ACTIVE" | "REFUSED" | "CANCELLED" | "CREATED"
   pix_authorization_status: z.string().nullable(),
+  operator_reference: z.string().nullable(),
   customer: externalPaymentCustomerSchema,
   notifications: z.array(
     z.object({

@@ -398,10 +398,20 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
                       ID da transação
                     </div>
-                    <div className="pt-1.5">
+                    <div className="flex items-center gap-1.5 pt-1.5">
                       <span className="font-mono text-xs font-semibold text-foreground">
-                        {payment.id}
+                        {payment.operatorReference ?? "—"}
                       </span>
+                      {payment.operatorReference && (
+                        <a
+                          href={`https://www.asaas.com/i/${payment.operatorReference}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center text-blue-500 hover:text-blue-600"
+                        >
+                          <ExternalLink size={16} className="text-blue-500" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </section>

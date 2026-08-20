@@ -53,6 +53,7 @@ type PaymentConstructorProps = {
   alertMessage: string | null;
   subscriptionHasToken: boolean;
   pixAuthorizationStatus: string | null;
+  operatorReference: string | null;
 };
 
 class Payment {
@@ -75,6 +76,7 @@ class Payment {
   readonly alertMessage: string | null;
   readonly subscriptionHasToken: boolean;
   readonly pixAuthorizationStatus: string | null;
+  readonly operatorReference: string | null;
 
   private constructor(props: PaymentConstructorProps) {
     this.id = props.id;
@@ -96,6 +98,7 @@ class Payment {
     this.alertMessage = props.alertMessage;
     this.subscriptionHasToken = props.subscriptionHasToken;
     this.pixAuthorizationStatus = props.pixAuthorizationStatus;
+    this.operatorReference = props.operatorReference;
   }
 
   static restore(props: PaymentConstructorProps): Payment {
@@ -140,6 +143,7 @@ class Payment {
       alertMessage: this.computeAlertMessage(),
       subscriptionHasToken: this.subscriptionHasToken,
       pixAuthorizationStatus: this.pixAuthorizationStatus,
+      operatorReference: this.operatorReference?.replace(/^pay_/, "") ?? null,
     };
   }
 }
