@@ -222,9 +222,9 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   return (
     <>
     <Dialog open={!!payment} onOpenChange={handleOpenChange}>
-      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-4xl">
+      <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
         {/* Header */}
-        <div className="flex flex-col border-b border-border px-7 py-6 pr-16 text-center sm:text-left">
+        <div className="flex shrink-0 flex-col border-b border-border px-7 py-6 pr-16 text-center sm:text-left">
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3.5">
               <Avatar className="h-13 w-13 shrink-0">
@@ -278,7 +278,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
           <>
             {/* Alert banner */}
             {payment.alertMessage && (
-              <div className="flex items-start gap-3.5 border-b border-destructive/30 bg-destructive/10 px-7 py-3.5">
+              <div className="flex shrink-0 items-start gap-3.5 border-b border-destructive/30 bg-destructive/10 px-7 py-3.5">
                 <AlertTriangle
                   size={24}
                   className="mt-0.5 shrink-0 text-destructive"
@@ -290,7 +290,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
             )}
 
             {/* Tab buttons */}
-            <div className="px-7 pt-5">
+            <div className="shrink-0 px-7 pt-5">
               <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
                 <TabButton
                   active={activeTab === "details"}
@@ -310,7 +310,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
             {/* Detalhes */}
             {activeTab === "details" && (
-              <div className="max-h-[65vh] space-y-7 overflow-y-auto px-7 py-6">
+              <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-7 py-6">
                 <section className="grid grid-cols-2 gap-x-7 gap-y-5 sm:grid-cols-3">
                   <div className="space-y-1">
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
@@ -424,7 +424,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
             {/* Notificações */}
             {activeTab === "notifications" && (
-              <div className="flex max-h-[65vh] flex-col overflow-y-auto">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
                 <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border px-7 py-3.5 backdrop-blur-sm">
                   <span className="text-xs">
                     <span className="font-semibold text-foreground">
@@ -469,7 +469,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
         )}
 
         {/* Footer */}
-        <div className="flex flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-7 py-3.5">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-7 py-3.5">
           {canShowPendingActions && (
             <>
               <Button
