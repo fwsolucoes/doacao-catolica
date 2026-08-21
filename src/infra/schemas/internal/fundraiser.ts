@@ -6,10 +6,6 @@ const createFundraiserSchema = z.object({
     .min(1, "E-mail obrigatório")
     .email("E-mail inválido")
     .max(100, "E-mail deve ter no máximo 100 caracteres"),
-  percentageCommission: z
-    .string()
-    .optional()
-    .transform((v) => (v ? parseFloat(v) : null)),
 });
 
 const cancelInviteFundraiserSchema = z.object({

@@ -1,7 +1,8 @@
 import { Send } from "lucide-react";
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import {
   Dialog,
   DialogClose,
@@ -12,7 +13,6 @@ import {
 } from "~/client/components/ui/dialog";
 import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
-import { InputGroup } from "~/client/components/ui/input-group";
 
 type AddFundraiserModalProps = {
   open: boolean;
@@ -22,34 +22,23 @@ type AddFundraiserModalProps = {
 function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
   const fetcher = useFetcher();
   const formRef = useRef<HTMLFormElement>(null);
-  const [commission, setCommission] = useState("");
   const isSubmitting = fetcher.state !== "idle";
-
-  const commissionValue = parseFloat(commission);
-  const commissionErrors =
-    !isNaN(commissionValue) && commissionValue > 100
-      ? ["O percentual não pode ser maior que 100."]
-      : undefined;
+  useActionToast(fetcher.data);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast) {
-      setCommission("");
       formRef.current?.reset();
       onClose();
     }
   }, [fetcher.state, fetcher.data, onClose]);
 
-  function handleOpenChange(next: boolean) {
-    if (!next) onClose();
-  }
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="shrink-0 px-8 pb-5 pt-8">
           <DialogTitle className="text-xl">Adicionar arrecadador</DialogTitle>
           <p className="text-base text-muted-foreground">
-            Envie um convite por e-mail e defina a comissão (opcional).
+            Envie um convite por e-mail para adicionar um arrecadador.
           </p>
         </DialogHeader>
 
@@ -67,31 +56,6 @@ function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
                   placeholder="arrecadador@exemplo.com"
                 />
               </FormField>
-
-              <FormField
-                name="percentageCommission"
-                label="Percentual de comissão"
-                optional
-              >
-                <InputGroup.Root>
-                  <InputGroup.Input
-                    name="percentageCommission"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    placeholder="0"
-                    value={commission}
-                    onChange={(e) => setCommission(e.target.value)}
-                  />
-                  <InputGroup.Side side="end">%</InputGroup.Side>
-                </InputGroup.Root>
-                {!commissionErrors && (
-                  <p className="text-xs text-muted-foreground">
-                    Percentual aplicado sobre as doações indicadas por este
-                    arrecadador.
-                  </p>
-                )}
-              </FormField>
             </div>
 
             <DialogFooter className="shrink-0 border-t border-border px-8 py-5">
@@ -104,7 +68,7 @@ function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
                 type="submit"
                 name="_action"
                 value="createFundraiser"
-                disabled={isSubmitting || !!commissionErrors}
+                disabled={isSubmitting}
                 isLoading={isSubmitting}
                 className="gap-2"
               >

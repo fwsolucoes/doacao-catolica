@@ -24,7 +24,9 @@ class FundraiserGateway implements FundraiserGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(externalFundraisersSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalFundraisersSchema,
+    );
     const externalFundraisers = schemaValidator.validate(apiResponse.response);
 
     return new SearchResult({

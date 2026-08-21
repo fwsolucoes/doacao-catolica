@@ -27,7 +27,7 @@ class CreateFundraiserController {
       {
         projectId: campaignId,
         userEmail: validated.userEmail,
-        percentageCommission: validated.percentageCommission,
+        percentageCommission: 0,
         code: generateCode(),
       },
       user.token,
