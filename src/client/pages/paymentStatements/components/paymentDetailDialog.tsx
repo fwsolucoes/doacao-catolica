@@ -224,7 +224,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <Dialog open={!!payment} onOpenChange={handleOpenChange}>
       <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
         {/* Header */}
-        <div className="flex shrink-0 flex-col border-b border-border px-7 py-6 pr-16 text-center sm:text-left">
+        <div className="flex shrink-0 flex-col border-b border-border px-4 py-5 pr-12 text-center sm:px-7 sm:py-6 sm:pr-16 sm:text-left">
           <div className="flex items-start justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3.5">
               <Avatar className="h-13 w-13 shrink-0">
@@ -259,7 +259,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
             </div>
 
             <div className="shrink-0 text-right">
-              <div className="text-2xl font-semibold tracking-tight text-foreground">
+              <div className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
                 {payment?.amount}
               </div>
               {payment && (
@@ -276,41 +276,43 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
         {payment && (
           <>
-            {/* Alert banner */}
-            {payment.alertMessage && (
-              <div className="flex shrink-0 items-start gap-3.5 border-b border-destructive/30 bg-destructive/10 px-7 py-3.5">
-                <AlertTriangle
-                  size={24}
-                  className="mt-0.5 shrink-0 text-destructive"
-                />
-                <p className="text-sm font-semibold leading-6 text-destructive">
-                  {payment.alertMessage}
-                </p>
-              </div>
-            )}
+            {/* Scrollable area: alert banner + tabs + tab content */}
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              {/* Alert banner */}
+              {payment.alertMessage && (
+                <div className="flex items-start gap-3.5 border-b border-destructive/30 bg-destructive/10 px-4 py-3 sm:px-7 sm:py-3.5">
+                  <AlertTriangle
+                    size={24}
+                    className="mt-0.5 shrink-0 text-destructive"
+                  />
+                  <p className="text-sm font-semibold leading-6 text-destructive">
+                    {payment.alertMessage}
+                  </p>
+                </div>
+              )}
 
-            {/* Tab buttons */}
-            <div className="shrink-0 px-7 pt-5">
-              <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
-                <TabButton
-                  active={activeTab === "details"}
-                  onClick={() => setActiveTab("details")}
-                  icon={FileText}
-                  label="Detalhes"
-                />
-                <TabButton
-                  active={activeTab === "notifications"}
-                  onClick={() => setActiveTab("notifications")}
-                  icon={Mail}
-                  label="Notificações"
-                  count={notifications.length}
-                />
+              {/* Tab buttons */}
+              <div className="px-4 pt-4 sm:px-7 sm:pt-5">
+                <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
+                  <TabButton
+                    active={activeTab === "details"}
+                    onClick={() => setActiveTab("details")}
+                    icon={FileText}
+                    label="Detalhes"
+                  />
+                  <TabButton
+                    active={activeTab === "notifications"}
+                    onClick={() => setActiveTab("notifications")}
+                    icon={Mail}
+                    label="Notificações"
+                    count={notifications.length}
+                  />
+                </div>
               </div>
-            </div>
 
             {/* Detalhes */}
             {activeTab === "details" && (
-              <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-7 py-6">
+              <div className="space-y-7 px-4 py-5 sm:px-7 sm:py-6">
                 <section className="grid grid-cols-2 gap-x-7 gap-y-5 sm:grid-cols-3">
                   <div className="space-y-1">
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
@@ -424,8 +426,8 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
             {/* Notificações */}
             {activeTab === "notifications" && (
-              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border px-7 py-3.5 backdrop-blur-sm">
+              <div className="flex flex-col">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border px-4 py-3 backdrop-blur-sm sm:px-7 sm:py-3.5">
                   <span className="text-xs">
                     <span className="font-semibold text-foreground">
                       {filteredNotifications.length}
@@ -448,7 +450,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                   </Select.Root>
                 </div>
 
-                <div className="flex flex-col gap-3 px-7 py-5">
+                <div className="flex flex-col gap-3 px-4 py-4 sm:px-7 sm:py-5">
                   {fetcher.state === "loading" ? (
                     <div className="py-8 text-center text-sm text-muted-foreground">
                       Carregando...
@@ -465,11 +467,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                 </div>
               </div>
             )}
+            </div>{/* end scrollable area */}
           </>
         )}
 
         {/* Footer */}
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-7 py-3.5">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2.5 border-t border-border bg-muted/30 px-4 py-3 sm:px-7 sm:py-3.5">
           {canShowPendingActions && (
             <>
               <Button

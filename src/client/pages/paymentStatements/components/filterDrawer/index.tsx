@@ -153,7 +153,7 @@ function FilterDrawer({
           type="button"
           variant="outline"
           onClick={clearFilters}
-          className="gap-1.5 text-destructive hover:brightness-100 hover:opacity-75 bg-card"
+          className="h-11 min-h-0 shrink-0 gap-1.5 bg-card text-destructive hover:brightness-100 hover:opacity-75"
         >
           <XCircle size={16} />
           Limpar filtros

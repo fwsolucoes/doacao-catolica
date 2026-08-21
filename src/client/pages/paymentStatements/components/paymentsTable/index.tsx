@@ -160,8 +160,8 @@ function PaymentsTable() {
   return (
     <>
       <Card.Root className="gap-4 p-6">
-        <div className="flex items-center gap-2.5">
-          <div className="flex-1">
+        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
+          <div className="lg:flex-1">
             <Input
               leftIcon={Search}
               placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
@@ -172,6 +172,7 @@ function PaymentsTable() {
               }
             />
           </div>
+          <div className="flex items-center gap-2.5">
           <Button
             variant="outline"
             className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm"
@@ -207,6 +208,7 @@ function PaymentsTable() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
 
         <Table.Root>
