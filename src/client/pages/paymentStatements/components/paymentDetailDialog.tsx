@@ -224,16 +224,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <Dialog open={!!payment} onOpenChange={handleOpenChange}>
       <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
         {/* Header */}
-        <div className="flex shrink-0 flex-col border-b border-border px-4 py-5 pr-12 text-center sm:px-7 sm:py-6 sm:pr-16 sm:text-left">
-          <div className="flex items-start justify-between gap-4">
+        <div className="flex shrink-0 flex-col border-b border-border px-4 py-5 pr-12 sm:px-7 sm:py-6 sm:pr-16">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="flex min-w-0 items-center gap-3.5">
-              <Avatar className="h-13 w-13 shrink-0">
+              <Avatar className="h-11 w-11 shrink-0 sm:h-13 sm:w-13">
                 <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
                   {payment ? getInitials(payment.customerName) : ""}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 space-y-0.5">
-                <h2 className="truncate text-xl font-semibold tracking-tight">
+                <h2 className="text-xl font-semibold tracking-tight sm:truncate">
                   {payment?.customerName}
                 </h2>
                 <div className="flex flex-wrap items-center gap-x-3.5 gap-y-0.5 text-xs text-muted-foreground">
@@ -258,13 +258,13 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               </div>
             </div>
 
-            <div className="shrink-0 text-right">
+            <div className="flex shrink-0 items-center gap-2.5 sm:flex-col sm:items-end sm:gap-0">
               <div className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
                 {payment?.amount}
               </div>
               {payment && (
                 <Badge
-                  className="mt-1"
+                  className="sm:mt-1"
                   variant={STATUS_BADGE[payment.status] ?? "neutral"}
                 >
                   {payment.status}

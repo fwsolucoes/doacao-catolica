@@ -172,42 +172,42 @@ function PaymentsTable() {
               }
             />
           </div>
-          <div className="flex items-center gap-2.5">
-          <Button
-            variant="outline"
-            className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm"
-            onClick={() => setFilterOpen(true)}
-          >
-            <SlidersHorizontal size={16} />
-            Filtros
-          </Button>
-          <FilterDrawer
-            donors={donors.data}
-            open={filterOpen}
-            onOpenChange={setFilterOpen}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="h-11 min-h-0 shrink-0 gap-2 px-4 text-sm">
-                <Plus size={16} />
-                Adicionar
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link to={`/campaign/${campaignId}/create-recurrence`}>
-                  <RefreshCw size={16} className="text-foreground" />
-                  Criar recorrência
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
-                  <Zap size={16} className="text-foreground" />
-                  Criar pagamento avulso
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <Button
+              variant="outline"
+              className="h-11 min-h-0 w-full gap-2 px-4 text-sm sm:w-auto"
+              onClick={() => setFilterOpen(true)}
+            >
+              <SlidersHorizontal size={16} />
+              Filtros
+            </Button>
+            <FilterDrawer
+              donors={donors.data}
+              open={filterOpen}
+              onOpenChange={setFilterOpen}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="h-11 min-h-0 w-full gap-2 px-4 text-sm sm:w-auto">
+                  <Plus size={16} />
+                  Adicionar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link to={`/campaign/${campaignId}/create-recurrence`}>
+                    <RefreshCw size={16} className="text-foreground" />
+                    Criar recorrência
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
+                    <Zap size={16} className="text-foreground" />
+                    Criar pagamento avulso
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
