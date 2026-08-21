@@ -111,7 +111,7 @@ class Payment {
     }
     if (
       this.paymentType === "credit_card" &&
-      this.status === "awaiting_payment" &&
+      (this.status === "awaiting_payment" || this.status === "created") &&
       !this.subscriptionHasToken
     ) {
       return CARD_NO_TOKEN_ALERT;
