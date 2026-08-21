@@ -1,4 +1,4 @@
-import { BarChart2, MoreHorizontal, Trash2 } from "lucide-react";
+import { BarChart2, LayoutDashboard, MoreHorizontal, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -25,8 +25,12 @@ function getInitials(name: string, email: string): string {
 
 function ActiveFundraisersTable() {
   const { fundraisers } = useLoaderData<FundraisersLoader>();
-  const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(null);
-  const [detailsTarget, setDetailsTarget] = useState<ActiveFundraiser | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(
+    null,
+  );
+  const [detailsTarget, setDetailsTarget] = useState<ActiveFundraiser | null>(
+    null,
+  );
   const closeRemove = useCallback(() => setRemoveTarget(null), []);
   const closeDetails = useCallback(() => setDetailsTarget(null), []);
 
@@ -46,7 +50,7 @@ function ActiveFundraisersTable() {
           <Table.Row>
             <Table.Head>Nome</Table.Head>
             <Table.Head>E-mail</Table.Head>
-            <Table.Head className="text-right">Ações</Table.Head>
+            <Table.Head>Ações</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -59,14 +63,16 @@ function ActiveFundraisersTable() {
                       {fundraiser.initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm text-foreground">{fundraiser.name}</span>
+                  <span className="text-sm text-foreground">
+                    {fundraiser.name}
+                  </span>
                 </div>
               </Table.Cell>
               <Table.Cell className="font-mono text-xs text-muted-foreground">
                 {fundraiser.email}
               </Table.Cell>
-              <Table.Cell className="text-right">
-                <div className="flex items-center justify-end gap-1">
+              <Table.Cell className="">
+                <div className="flex items-center  gap-1">
                   <Button
                     variant="outline"
                     size="sm"
@@ -86,7 +92,19 @@ function ActiveFundraisersTable() {
                         <MoreHorizontal size={18} />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuContent align="end" className="w-52">
+                      <DropdownMenuItem
+                        className="whitespace-nowrap"
+                        onSelect={() =>
+                          window.open(
+                            `https://indique.doacaocatolica.com/${fundraiser.id}`,
+                            "_blank",
+                          )
+                        }
+                      >
+                        <LayoutDashboard size={16} />
+                        Ver dashboard doador
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         variant="destructive"
                         onSelect={() => setRemoveTarget(fundraiser)}
@@ -107,7 +125,10 @@ function ActiveFundraisersTable() {
       </Table.Root>
 
       <RemoveAccessModal fundraiser={removeTarget} onClose={closeRemove} />
-      <FundraiserDetailsModal fundraiser={detailsTarget} onClose={closeDetails} />
+      <FundraiserDetailsModal
+        fundraiser={detailsTarget}
+        onClose={closeDetails}
+      />
     </>
   );
 }
