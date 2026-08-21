@@ -1,4 +1,4 @@
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { BarChart2, MoreHorizontal, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -12,6 +12,7 @@ import {
 import { Table } from "~/client/components/ui/table";
 import type { FundraisersLoader } from "~/client/types/fundraisersLoader";
 import type { ActiveFundraiser } from "../types";
+import { FundraiserDetailsModal } from "./fundraiserDetailsModal";
 import { RemoveAccessModal } from "./removeAccessModal";
 
 function getInitials(name: string, email: string): string {
@@ -25,7 +26,9 @@ function getInitials(name: string, email: string): string {
 function ActiveFundraisersTable() {
   const { fundraisers } = useLoaderData<FundraisersLoader>();
   const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(null);
+  const [detailsTarget, setDetailsTarget] = useState<ActiveFundraiser | null>(null);
   const closeRemove = useCallback(() => setRemoveTarget(null), []);
+  const closeDetails = useCallback(() => setDetailsTarget(null), []);
 
   const activeFundraisers: ActiveFundraiser[] = fundraisers.data
     .filter((f) => f.inviteStatus.trim().toLowerCase() === "accepted")
@@ -63,26 +66,37 @@ function ActiveFundraisersTable() {
                 {fundraiser.email}
               </Table.Cell>
               <Table.Cell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-9 text-muted-foreground"
-                    >
-                      <MoreHorizontal size={18} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onSelect={() => setRemoveTarget(fundraiser)}
-                    >
-                      <Trash2 size={16} />
-                      Remover acesso
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex items-center justify-end gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs"
+                    onClick={() => setDetailsTarget(fundraiser)}
+                  >
+                    <BarChart2 size={14} />
+                    Detalhes
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-9 text-muted-foreground"
+                      >
+                        <MoreHorizontal size={18} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onSelect={() => setRemoveTarget(fundraiser)}
+                      >
+                        <Trash2 size={16} />
+                        Remover acesso
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </Table.Cell>
             </Table.Row>
           ))}
@@ -93,6 +107,7 @@ function ActiveFundraisersTable() {
       </Table.Root>
 
       <RemoveAccessModal fundraiser={removeTarget} onClose={closeRemove} />
+      <FundraiserDetailsModal fundraiser={detailsTarget} onClose={closeDetails} />
     </>
   );
 }

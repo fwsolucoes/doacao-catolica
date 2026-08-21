@@ -1,13 +1,19 @@
 import { SearchResult } from "~/app/shared/searchResult";
 import { Fundraiser } from "~/domain/entities/fundraiser";
+import { FundraiserDetails } from "~/domain/entities/fundraiserDetails";
 import type {
   CreateFundraiserInput,
   FundraiserGatewayDTO,
 } from "~/domain/gateways/fundraiser";
+import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
-import { externalFundraisersSchema } from "../schemas/external/fundraiser";
+import { webworkerApi } from "../http/webworkerApi";
+import {
+  externalFundraiserDetailsSchema,
+  externalFundraisersSchema,
+} from "../schemas/external/fundraiser";
 
 class FundraiserGateway implements FundraiserGatewayDTO {
   async listFundraisers(
@@ -93,6 +99,30 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async getFundraiserDetails(id: string): Promise<FundraiserDetails> {
+    const headers = { "api-key": environmentVariables.API_KEY_DONATION };
+    const apiResponse = await webworkerApi.get(`/donation/fundraisers/${id}`, {
+      headers,
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalFundraiserDetailsSchema,
+    );
+    const validated = schemaValidator.validate(apiResponse.response);
+    const { data } = validated;
+
+    return FundraiserDetails.restore({
+      affiliateReference: data.affiliate_reference,
+      totalIndications: data.total_indications,
+      periodTotalRaisedAmount: data.period.total_raised_amount ?? null,
+      last30DaysTotalIndications: data.last_30_days.total_indications,
+      last30DaysTotalRaisedAmount: data.last_30_days.total_raised_amount,
+      totalRecurringAmount: data.total_recurring_amount,
+    });
   }
 }
 

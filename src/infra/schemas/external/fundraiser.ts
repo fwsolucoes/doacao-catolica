@@ -22,4 +22,26 @@ const externalFundraisersSchema = z.object({
   last_page: z.number(),
 });
 
-export { externalFundraisersSchema, type ExternalFundraiser };
+const externalFundraiserDetailsSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    affiliate_reference: z.string(),
+    total_indications: z.number(),
+    period: z.object({
+      start_date: z.string().nullable(),
+      end_date: z.string().nullable(),
+      total_indications: z.number().nullable(),
+      total_raised_amount: z.number().nullable().optional(),
+    }),
+    last_30_days: z.object({
+      start_date: z.string(),
+      end_date: z.string(),
+      total_indications: z.number(),
+      total_raised_amount: z.number(),
+    }),
+    total_recurring_amount: z.number(),
+    donors: z.array(z.unknown()),
+  }),
+});
+
+export { externalFundraisersSchema, externalFundraiserDetailsSchema, type ExternalFundraiser };

@@ -1,5 +1,6 @@
 import { SearchResult } from "~/app/shared/searchResult";
 import type { Fundraiser } from "../entities/fundraiser";
+import type { FundraiserDetails } from "../entities/fundraiserDetails";
 
 type CreateFundraiserInput = {
   projectId: string;
@@ -20,6 +21,7 @@ type FundraiserGatewayDTO = {
   cancelInviteFundraiser: (id: string, token: string) => Promise<void>;
   resendInviteFundraiser: (id: string, token: string) => Promise<void>;
   removeFundraiser: (id: string, token: string) => Promise<void>;
+  getFundraiserDetails: (id: string) => Promise<FundraiserDetails>;
 };
 
 export type { CreateFundraiserInput, FundraiserGatewayDTO };
