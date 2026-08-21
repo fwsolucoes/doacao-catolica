@@ -1,10 +1,16 @@
-type Fundraiser = {
+type ActiveFundraiser = {
   id: string;
   initials: string;
   name: string;
   email: string;
-  commission: string;
-  referrals: number;
 };
 
-export type { Fundraiser };
+type PendingFundraiser = {
+  id: string;
+  initials: string;
+  name: string;
+  email: string;
+  status: string;
+};
+
+export type { ActiveFundraiser, PendingFundraiser };
