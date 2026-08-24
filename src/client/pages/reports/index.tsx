@@ -1,7 +1,14 @@
-import { Cake, HeartHandshake, Repeat2, UserMinus } from "lucide-react";
+import { Cake, HeartHandshake, Repeat2, UserMinus, Users } from "lucide-react";
 import { ReportCard } from "./components/reportCard";
 
 const REPORTS = [
+  {
+    title: "Embaixadores",
+    description:
+      "Indicações por embaixador no período, evolução diária, faixas de valores e formas de pagamento.",
+    icon: Users,
+    tone: "blue" as const,
+  },
   {
     title: "Aniversariantes",
     description:
@@ -18,20 +25,20 @@ const REPORTS = [
     tone: "rose" as const,
     navigateTo: "../overdue-payments",
   },
-  // {
-  //   title: "Relatório de Doações",
-  //   description:
-  //     "Consolidado de todas as doações realizadas com filtros por período, método e status.",
-  //   icon: HeartHandshake,
-  //   tone: "green" as const,
-  // },
-  // {
-  //   title: "Relatório de Recorrências",
-  //   description:
-  //     "Panorama completo dos doadores recorrentes ativos, previsão mensal e churn.",
-  //   icon: Repeat2,
-  //   tone: "violet" as const,
-  // },
+  {
+    title: "Relatório de doações",
+    description:
+      "Consolidado de todas as doações realizadas com filtros por período, método e status.",
+    icon: HeartHandshake,
+    tone: "green" as const,
+  },
+  {
+    title: "Relatório de recorrências",
+    description:
+      "Panorama completo dos doadores recorrentes ativos, previsão mensal e churn.",
+    icon: Repeat2,
+    tone: "violet" as const,
+  },
 ];
 
 function ReportsPage() {

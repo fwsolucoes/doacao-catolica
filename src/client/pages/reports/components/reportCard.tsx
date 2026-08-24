@@ -9,7 +9,7 @@ type ReportCardProps = {
   title: string;
   description: string;
   icon: LucideIcon;
-  tone: "amber" | "rose" | "green" | "violet";
+  tone: "amber" | "rose" | "green" | "violet" | "blue";
   navigateTo?: string;
 };
 
@@ -25,6 +25,7 @@ function ReportCard({
     rose: "bg-[rgba(var(--spotlight-danger),0.16)] text-[rgb(var(--spotlight-danger))]",
     green: "bg-[rgba(var(--spotlight-success),0.18)] text-[rgb(var(--spotlight-success))]",
     violet: "bg-(--badge-violet-bg) text-(--badge-violet-text)",
+    blue: "bg-[rgba(var(--spotlight-primary),0.12)] text-[rgb(var(--spotlight-primary))]",
   }[tone];
 
   const content = (
