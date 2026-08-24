@@ -36,9 +36,9 @@ function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="shrink-0 px-8 pb-5 pt-8">
-          <DialogTitle className="text-xl">Adicionar arrecadador</DialogTitle>
+          <DialogTitle className="text-xl">Adicionar embaixador</DialogTitle>
           <p className="text-base text-muted-foreground">
-            Envie um convite por e-mail para adicionar um arrecadador.
+            Envie um convite por e-mail para adicionar um embaixador.
           </p>
         </DialogHeader>
 
@@ -53,7 +53,7 @@ function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
                 <Input
                   name="userEmail"
                   type="email"
-                  placeholder="arrecadador@exemplo.com"
+                  placeholder="embaixador@exemplo.com"
                 />
               </FormField>
             </div>

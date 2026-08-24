@@ -119,7 +119,7 @@ function ActiveFundraisersTable() {
             </Table.Row>
           ))}
           {!activeFundraisers.length && (
-            <Table.Empty title="Nenhum arrecadador ativo encontrado." />
+            <Table.Empty title="Nenhum embaixador ativo encontrado." />
           )}
         </Table.Body>
       </Table.Root>

@@ -8,6 +8,7 @@ const REPORTS = [
       "Indicações por embaixador no período, evolução diária, faixas de valores e formas de pagamento.",
     icon: Users,
     tone: "blue" as const,
+    navigateTo: "../ambassadors-report",
   },
   {
     title: "Aniversariantes",

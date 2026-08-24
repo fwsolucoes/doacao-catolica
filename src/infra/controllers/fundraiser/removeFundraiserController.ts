@@ -20,7 +20,7 @@ class RemoveFundraiserController {
 
     return {
       toast: {
-        message: "Arrecadador removido com sucesso!",
+        message: "Embaixador removido com sucesso!",
         type: "success" as const,
       },
     };

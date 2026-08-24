@@ -28,6 +28,10 @@ export default [
     route("transfers", "./main/routes/route.campaign.transfers.tsx"),
     route("reports", "./main/routes/route.campaign.reports.tsx"),
     route(
+      "ambassadors-report",
+      "./main/routes/route.campaign.ambassadorsReport.tsx",
+    ),
+    route(
       "birthday-report",
       "./main/routes/route.campaign.birthdayReport.tsx",
     ),

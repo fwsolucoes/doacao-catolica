@@ -29,15 +29,15 @@ function FundraisersPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight text-(--text-heading)">
-            Arrecadadores
+            Embaixadores
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie os arrecadadores, suas comissões e as indicações de doadores.
+            Gerencie os embaixadores, suas comissões e as indicações de doadores.
           </p>
         </div>
         <Button className="gap-2" onClick={() => setAddOpen(true)}>
           <Plus size={16} />
-          Adicionar arrecadador
+          Adicionar embaixador
         </Button>
       </div>
 

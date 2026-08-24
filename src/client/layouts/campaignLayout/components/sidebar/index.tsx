@@ -84,7 +84,7 @@ const sections: NavSection[] = [
         label: "Usuários",
         subItems: [
           { label: "Colaboradores", path: "collaborators" },
-          { label: "Arrecadadores", path: "fundraisers" },
+          { label: "Embaixadores", path: "fundraisers" },
         ],
       },
     ],
