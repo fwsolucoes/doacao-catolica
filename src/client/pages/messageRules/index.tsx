@@ -33,7 +33,7 @@ function MessageRulesPage() {
             value="billing"
             className={cn(
               "flex h-auto flex-1 items-center gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold text-muted-foreground transition-colors sm:flex-none",
-              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground",
+              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground dark:data-[state=active]:bg-card dark:data-[state=active]:hover:bg-card",
               "hover:bg-transparent hover:text-muted-foreground",
             )}
           >
@@ -47,7 +47,7 @@ function MessageRulesPage() {
             value="other"
             className={cn(
               "flex h-auto flex-1 items-center gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold text-muted-foreground transition-colors sm:flex-none",
-              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground",
+              "data-[state=active]:bg-[#e6e6ed] data-[state=active]:text-foreground data-[state=active]:hover:bg-[#e6e6ed] data-[state=active]:hover:text-foreground dark:data-[state=active]:bg-card dark:data-[state=active]:hover:bg-card",
               "hover:bg-transparent hover:text-muted-foreground",
             )}
           >

@@ -1,12 +1,14 @@
-import { ArrowLeft, Bell, Eye, Moon } from "lucide-react";
+import { ArrowLeft, Bell, Eye, Moon, Sun } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
+import { useTheme } from "~/client/hooks/useTheme";
 import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 
 function CampaignBanner() {
   const { campaign, overview } = useLoaderData<CampaignLayoutLoader>();
+  const { theme, toggle } = useTheme();
 
   return (
     <header className="sticky top-0 z-30 flex min-h-14 w-full items-center gap-3 border-b border-border bg-background px-7 py-4">
@@ -48,8 +50,12 @@ function CampaignBanner() {
       <div className="flex-1" />
 
       <div className="flex shrink-0 items-center gap-1.5">
-        <Button variant="ghost" size="icon" className="size-10">
-          <Moon size={16} className="text-foreground" />
+        <Button variant="ghost" size="icon" className="size-10" onClick={toggle} aria-label="Alternar tema">
+          {theme === "light" ? (
+            <Moon key="moon" size={16} className="animate-theme-icon-in text-foreground" />
+          ) : (
+            <Sun key="sun" size={16} className="animate-theme-icon-in text-foreground" />
+          )}
         </Button>
         <Button variant="ghost" size="icon" className="relative size-10">
           <Bell size={16} className="text-foreground" />
