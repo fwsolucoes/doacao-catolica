@@ -31,7 +31,7 @@ const PIX_ALERT_MESSAGES: Record<string, string> = {
 };
 
 const CARD_NO_TOKEN_ALERT =
-  "Atenção! Essa recorrência não possui cartão salvo. Possivelmente o usuário permitiu o cartão somente no primeiro pagamento ou não concluiu o cadastro o cartão. Solicite ao usuário para acessar o link da fatura e preencher com os dados do cartão de crédito.";
+  "Atenção! Essa recorrência não possui cartão salvo. Possivelmente o usuário permitiu o cartão somente no primeiro pagamento ou não concluiu o cadastro do cartão. Solicite ao usuário para acessar o link da fatura e preencher com os dados do cartão de crédito.";
 
 type PaymentConstructorProps = {
   id: string;
