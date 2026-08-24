@@ -17,12 +17,12 @@ import { ResendInviteModal } from "./resendInviteModal";
 import type { PendingCollaborator } from "./types";
 import { buildRolesById, formatStatus, getInitials } from "./utils";
 
-const STATUS_BADGE: Record<string, { variant: "warning" | "success" | "danger" | "neutral"; label: string }> = {
+const STATUS_BADGE: Record<string, { variant: "warning" | "success" | "danger" | "neutral" | "violet"; label: string }> = {
   Pendente: { variant: "warning", label: "Pendente" },
   Aceito: { variant: "success", label: "Aceito" },
   Recusado: { variant: "danger", label: "Recusado" },
   cancelled: { variant: "danger", label: "Recusado" },
-  revoked: { variant: "neutral", label: "Acesso removido" },
+  revoked: { variant: "violet", label: "Acesso removido" },
 };
 
 function PendingCollaboratorsTable() {
