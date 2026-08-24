@@ -1,4 +1,4 @@
-import { ArrowLeft, Bell, Eye, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Eye, Moon, Sun } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
@@ -57,10 +57,10 @@ function CampaignBanner() {
             <Sun key="sun" size={16} className="animate-theme-icon-in text-foreground" />
           )}
         </Button>
-        <Button variant="ghost" size="icon" className="relative size-10">
+        {/* <Button variant="ghost" size="icon" className="relative size-10">
           <Bell size={16} className="text-foreground" />
           <span className="absolute right-2 top-2 size-2.5 rounded-full bg-[#3a64f2]" />
-        </Button>
+        </Button> */}
         <Button variant="ghost" size="icon" className="size-10">
           <Eye size={16} className="text-foreground" />
         </Button>
