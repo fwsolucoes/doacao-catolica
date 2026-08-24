@@ -4,8 +4,10 @@ import {
   ChevronDown,
   ChevronsUpDown,
   CircleHelp,
+  CircleUser,
   Heart,
   LayoutDashboard,
+  LogOut,
   MessageSquare,
   Settings,
   UserCog,
@@ -13,6 +15,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { NavLink, useLocation, useMatch, useParams } from "react-router";
+import { useFetcher } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { cn } from "~/lib/utils";
 import {
@@ -20,6 +23,14 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/client/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/client/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -34,6 +45,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarTrigger,
+  useSidebar,
 } from "~/client/components/ui/sidebar";
 
 type SubNavItem = {
@@ -210,35 +222,104 @@ function CollapsibleNavItem({
 }
 
 function UserProfile() {
-  const { user } = useRoot();
+  const { user, environmentVariables } = useRoot();
+  const { isMobile } = useSidebar();
+  const fetcher = useFetcher();
   const initials = user ? getInitials(user.name) : "";
+
+  function toSanctonPanel(redirect: string) {
+    return `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token}&redirect=${redirect}`;
+  }
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton
-          size="lg"
-          className="cursor-default bg-sidebar-accent/50 hover:bg-sidebar-accent/70 rounded-lg"
-        >
-          <Avatar>
-            <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback className="bg-sidebar-primary text-[0.7rem] font-extrabold text-white">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold text-sidebar-foreground">
-              {user?.name}
-            </span>
-            <span className="truncate text-xs text-sidebar-foreground/60">
-              {user?.email}
-            </span>
-          </div>
-          <ChevronsUpDown
-            size={14}
-            className="ml-auto shrink-0 text-sidebar-foreground/40"
-          />
-        </SidebarMenuButton>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="bg-sidebar-accent/50 hover:bg-sidebar-accent/70 rounded-lg data-[state=open]:bg-sidebar-accent"
+            >
+              <Avatar>
+                <AvatarImage src={user?.avatar} alt={user?.name} />
+                <AvatarFallback className="bg-sidebar-primary text-[0.7rem] font-extrabold text-white">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold text-sidebar-foreground">
+                  {user?.name}
+                </span>
+                <span className="truncate text-xs text-sidebar-foreground/60">
+                  {user?.email}
+                </span>
+              </div>
+              <ChevronsUpDown
+                size={14}
+                className="ml-auto shrink-0 text-sidebar-foreground/40"
+              />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "top"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user?.avatar} alt={user?.name} />
+                  <AvatarFallback className="rounded-lg bg-sidebar-primary text-[0.7rem] font-extrabold text-white">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user?.name}</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user?.email}
+                  </span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <a
+                href={toSanctonPanel("/profile/settings")}
+                target="_blank"
+                rel="noreferrer"
+                className="cursor-pointer"
+              >
+                <CircleUser size={16} />
+                Minha conta
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a
+                href={toSanctonPanel("/sub-accounts")}
+                target="_blank"
+                rel="noreferrer"
+                className="cursor-pointer"
+              >
+                <Wallet size={16} />
+                Carteira digital
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() =>
+                fetcher.submit(null, {
+                  method: "post",
+                  action: "/api/logout-user",
+                })
+              }
+              className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+            >
+              <LogOut size={16} />
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
   );
