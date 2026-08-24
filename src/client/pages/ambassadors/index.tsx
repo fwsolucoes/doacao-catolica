@@ -3,14 +3,14 @@ import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import type { FundraisersLoader } from "~/client/types/fundraisersLoader";
+import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import { cn } from "~/lib/utils";
-import { AddFundraiserModal } from "./components/addFundraiserModal";
-import { ActiveFundraisersTable } from "./components/activeFundraisersTable";
-import { PendingFundraisersTable } from "./components/pendingFundraisersTable";
+import { AddAmbassadorModal } from "./components/addAmbassadorModal";
+import { ActiveAmbassadorsTable } from "./components/activeAmbassadorsTable";
+import { PendingAmbassadorsTable } from "./components/pendingAmbassadorsTable";
 
-function FundraisersPage() {
-  const { fundraisers } = useLoaderData<FundraisersLoader>();
+function AmbassadorsPage() {
+  const { fundraisers } = useLoaderData<AmbassadorsLoader>();
   const [tab, setTab] = useState<"active" | "pending">("active");
   const [addOpen, setAddOpen] = useState(false);
   const closeAdd = useCallback(() => setAddOpen(false), []);
@@ -41,7 +41,7 @@ function FundraisersPage() {
         </Button>
       </div>
 
-      <AddFundraiserModal open={addOpen} onClose={closeAdd} />
+      <AddAmbassadorModal open={addOpen} onClose={closeAdd} />
 
       <div className="flex flex-col gap-4">
         <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
@@ -82,11 +82,11 @@ function FundraisersPage() {
         </div>
 
         <Card.Root className="gap-4 p-6">
-          {isActiveTab ? <ActiveFundraisersTable /> : <PendingFundraisersTable />}
+          {isActiveTab ? <ActiveAmbassadorsTable /> : <PendingAmbassadorsTable />}
         </Card.Root>
       </div>
     </div>
   );
 }
 
-export { FundraisersPage };
+export { AmbassadorsPage };

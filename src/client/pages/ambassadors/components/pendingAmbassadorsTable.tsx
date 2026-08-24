@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
 import { Table } from "~/client/components/ui/table";
-import type { FundraisersLoader } from "~/client/types/fundraisersLoader";
+import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import type { PendingFundraiser } from "../types";
 import { CancelInviteModal } from "./cancelInviteModal";
 import { ResendInviteModal } from "./resendInviteModal";
@@ -37,8 +37,8 @@ function formatStatus(status: string): string {
   return status;
 }
 
-function PendingFundraisersTable() {
-  const { fundraisers } = useLoaderData<FundraisersLoader>();
+function PendingAmbassadorsTable() {
+  const { fundraisers } = useLoaderData<AmbassadorsLoader>();
   const [cancelTarget, setCancelTarget] = useState<PendingFundraiser | null>(null);
   const [resendTarget, setResendTarget] = useState<PendingFundraiser | null>(null);
   const closeCancel = useCallback(() => setCancelTarget(null), []);
@@ -129,4 +129,4 @@ function PendingFundraisersTable() {
   );
 }
 
-export { PendingFundraisersTable };
+export { PendingAmbassadorsTable };

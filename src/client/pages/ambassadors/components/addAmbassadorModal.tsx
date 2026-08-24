@@ -14,12 +14,12 @@ import {
 import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 
-type AddFundraiserModalProps = {
+type AddAmbassadorModalProps = {
   open: boolean;
   onClose: () => void;
 };
 
-function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
+function AddAmbassadorModal({ open, onClose }: AddAmbassadorModalProps) {
   const fetcher = useFetcher();
   const formRef = useRef<HTMLFormElement>(null);
   const isSubmitting = fetcher.state !== "idle";
@@ -83,4 +83,4 @@ function AddFundraiserModal({ open, onClose }: AddFundraiserModalProps) {
   );
 }
 
-export { AddFundraiserModal };
+export { AddAmbassadorModal };

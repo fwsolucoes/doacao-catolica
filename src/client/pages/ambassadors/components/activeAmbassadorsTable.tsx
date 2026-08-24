@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
 import { Table } from "~/client/components/ui/table";
-import type { FundraisersLoader } from "~/client/types/fundraisersLoader";
+import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import type { ActiveFundraiser } from "../types";
-import { FundraiserDetailsModal } from "./fundraiserDetailsModal";
+import { AmbassadorDetailsModal } from "./ambassadorDetailsModal";
 import { RemoveAccessModal } from "./removeAccessModal";
 
 function getInitials(name: string, email: string): string {
@@ -23,8 +23,8 @@ function getInitials(name: string, email: string): string {
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
-function ActiveFundraisersTable() {
-  const { fundraisers } = useLoaderData<FundraisersLoader>();
+function ActiveAmbassadorsTable() {
+  const { fundraisers } = useLoaderData<AmbassadorsLoader>();
   const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(
     null,
   );
@@ -125,7 +125,7 @@ function ActiveFundraisersTable() {
       </Table.Root>
 
       <RemoveAccessModal fundraiser={removeTarget} onClose={closeRemove} />
-      <FundraiserDetailsModal
+      <AmbassadorDetailsModal
         fundraiser={detailsTarget}
         onClose={closeDetails}
       />
@@ -133,4 +133,4 @@ function ActiveFundraisersTable() {
   );
 }
 
-export { ActiveFundraisersTable };
+export { ActiveAmbassadorsTable };

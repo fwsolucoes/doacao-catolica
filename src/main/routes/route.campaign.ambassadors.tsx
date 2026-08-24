@@ -1,6 +1,6 @@
-import type { Route } from "+/route.campaign.fundraisers";
+import type { Route } from "+/route.campaign.ambassadors";
 import { redirect } from "react-router";
-import { FundraisersPage } from "~/client/pages/fundraisers";
+import { AmbassadorsPage } from "~/client/pages/ambassadors";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { DecodeActionAdapter } from "~/infra/adapters/decodeAction";
 import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
@@ -53,6 +53,6 @@ export function ErrorBoundary() {
   return <ErrorBoundaryPage />;
 }
 
-export default function FundraisersRoute() {
-  return <FundraisersPage />;
+export default function AmbassadorsRoute() {
+  return <AmbassadorsPage />;
 }

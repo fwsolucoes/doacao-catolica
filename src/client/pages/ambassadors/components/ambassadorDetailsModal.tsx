@@ -22,7 +22,7 @@ import type { LucideIcon } from "lucide-react";
 import type { FundraiserDetailsJson } from "~/domain/entities/fundraiserDetails";
 import type { ActiveFundraiser } from "../types";
 
-type FundraiserDetailsModalProps = {
+type AmbassadorDetailsModalProps = {
   fundraiser: ActiveFundraiser | null;
   onClose: () => void;
 };
@@ -59,7 +59,7 @@ function MetricCard({
   );
 }
 
-function FundraiserDetailsModal({ fundraiser, onClose }: FundraiserDetailsModalProps) {
+function AmbassadorDetailsModal({ fundraiser, onClose }: AmbassadorDetailsModalProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher<FundraiserDetailsJson>();
 
@@ -148,4 +148,4 @@ function FundraiserDetailsModal({ fundraiser, onClose }: FundraiserDetailsModalP
   );
 }
 
-export { FundraiserDetailsModal };
+export { AmbassadorDetailsModal };
