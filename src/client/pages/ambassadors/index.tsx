@@ -3,8 +3,8 @@ import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { TabBar } from "~/client/components/ui/tab-button";
 import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
-import { cn } from "~/lib/utils";
 import { AddAmbassadorModal } from "./components/addAmbassadorModal";
 import { ActiveAmbassadorsTable } from "./components/activeAmbassadorsTable";
 import { PendingAmbassadorsTable } from "./components/pendingAmbassadorsTable";
@@ -44,42 +44,22 @@ function AmbassadorsPage() {
       <AddAmbassadorModal open={addOpen} onClose={closeAdd} />
 
       <div className="flex flex-col gap-4">
-        <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "gap-2 rounded-xl",
-              isActiveTab
-                ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground"
-                : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
-            )}
+        <TabBar.List>
+          <TabBar.Button
+            active={isActiveTab}
             onClick={() => setTab("active")}
-          >
-            <Users size={15} />
-            Ativos
-            <span className="rounded-full bg-muted-foreground/15 px-2 text-xs">
-              {activeCount}
-            </span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "gap-2 rounded-xl",
-              !isActiveTab
-                ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground"
-                : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
-            )}
+            icon={Users}
+            label="Ativos"
+            count={activeCount}
+          />
+          <TabBar.Button
+            active={!isActiveTab}
             onClick={() => setTab("pending")}
-          >
-            <Send size={15} />
-            Convites pendentes
-            <span className="rounded-full bg-muted-foreground/15 px-2 text-xs">
-              {pendingCount}
-            </span>
-          </Button>
-        </div>
+            icon={Send}
+            label="Convites pendentes"
+            count={pendingCount}
+          />
+        </TabBar.List>
 
         <Card.Root className="gap-4 p-6">
           {isActiveTab ? <ActiveAmbassadorsTable /> : <PendingAmbassadorsTable />}

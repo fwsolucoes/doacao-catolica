@@ -6,6 +6,7 @@ import type { DonorsLoader } from "~/client/types/donorsLoader";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
+import { TabBar } from "~/client/components/ui/tab-button";
 import { cn } from "~/lib/utils";
 import { DisableRecurrenceDialog } from "./disableRecurrenceDialog";
 import { DonorsFilterDrawer } from "./donorsFilterDrawer";
@@ -28,39 +29,6 @@ type DialogState =
   | { type: "enableRecurrence"; subscriptionUuid: string; name: string }
   | null;
 
-function TabButton({
-  active,
-  onClick,
-  icon: Icon,
-  label,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: LucideIcon;
-  label: string;
-  count: number;
-}) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      onClick={onClick}
-      className={cn(
-        "h-auto flex-1 gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold sm:flex-none",
-        active
-          ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground dark:bg-card dark:hover:bg-card"
-          : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
-      )}
-    >
-      <Icon size={20} className="shrink-0" />
-      <span className="hidden sm:inline">{label}</span>
-      <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
-        {count}
-      </span>
-    </Button>
-  );
-}
 
 function DonorsTable() {
   const { donors, summary, oneTimeDonors, currentUrl } =
@@ -96,22 +64,22 @@ function DonorsTable() {
 
   return (
     <>
-      <div className="flex w-full items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5 sm:w-fit -mb-2">
-        <TabButton
+      <TabBar.List className="w-full sm:w-fit -mb-2">
+        <TabBar.Button
           active={activeTab === "recorrentes"}
           onClick={() => handleTabChange("recorrentes")}
           icon={RefreshCw}
           label="Doadores recorrentes"
           count={summary.recurringDonors}
         />
-        <TabButton
+        <TabBar.Button
           active={activeTab === "pontuais"}
           onClick={() => handleTabChange("pontuais")}
           icon={HandCoins}
           label="Doadores pontuais"
           count={summary.oneTimeDonors}
         />
-      </div>
+      </TabBar.List>
 
       <Card.Root className="gap-4 p-6">
         <div className="flex items-center gap-2.5">
