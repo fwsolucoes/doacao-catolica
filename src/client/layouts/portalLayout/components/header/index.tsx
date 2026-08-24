@@ -1,5 +1,12 @@
-import { Bell, LayoutGrid, Moon, Search, Sun } from "lucide-react";
+import { Bell, CalendarClock, HeartHandshake, LayoutGrid, Moon, Search, Sun } from "lucide-react";
 import { Button } from "~/client/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "~/client/components/ui/dropdown-menu";
 import { Input } from "~/client/components/ui/input";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
 import { useTheme } from "~/client/hooks/useTheme";
@@ -58,10 +65,37 @@ function PortalHeader() {
           <span className="absolute right-2 top-2 size-2 rounded-full bg-sidebar-primary" />
         </Button>
 
-        <Button variant="outline" className="gap-2 rounded-xl text-foreground">
-          <LayoutGrid size={18} />
-          Aplicações
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="gap-2 rounded-xl text-foreground">
+              <LayoutGrid size={18} />
+              Aplicações
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-96 p-3">
+            <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Aplicações
+            </DropdownMenuLabel>
+            <DropdownMenuItem className="gap-3 rounded-lg p-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                <CalendarClock size={20} className="text-blue-600" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-medium">Agenda Católica</span>
+                <span className="text-xs text-muted-foreground">Gestão de Eventos e Inscrições</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-3 rounded-lg p-3 mt-1">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                <HeartHandshake size={20} className="text-blue-600" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-medium">Doação Católica</span>
+                <span className="text-xs text-muted-foreground">Gestão de campanhas e doações</span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
