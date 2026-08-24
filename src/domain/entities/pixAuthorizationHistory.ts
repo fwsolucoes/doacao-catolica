@@ -2,7 +2,7 @@ type AuthorizationItem = {
   authorizationUuid: string;
   status: string;
   statusLabel: string;
-  statusUpdatedAt: string;
+  createdAt: string;
 };
 
 type PixAuthorizationHistoryProps = {
@@ -33,7 +33,7 @@ class PixAuthorizationHistory {
         authorizationUuid: a.authorizationUuid,
         status: a.status,
         statusLabel: a.statusLabel,
-        statusUpdatedAt: stripSeconds(a.statusUpdatedAt),
+        createdAt: stripSeconds(a.createdAt),
       })),
     };
   }

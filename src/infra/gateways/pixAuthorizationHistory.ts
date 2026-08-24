@@ -7,9 +7,7 @@ import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { externalPixAuthorizationHistorySchema } from "../schemas/external/pixAuthorizationHistory";
 
-class PixAuthorizationHistoryGateway
-  implements PixAuthorizationHistoryGatewayDTO
-{
+class PixAuthorizationHistoryGateway implements PixAuthorizationHistoryGatewayDTO {
   async getHistory(
     subscriptionUuid: string,
   ): Promise<PixAuthorizationHistoryJson> {
@@ -32,7 +30,7 @@ class PixAuthorizationHistoryGateway
         authorizationUuid: a.authorization_uuid,
         status: a.status,
         statusLabel: a.status_label,
-        statusUpdatedAt: a.status_updated_at,
+        createdAt: a.authorization_created_at ?? "",
       })),
     }).toJson();
   }
