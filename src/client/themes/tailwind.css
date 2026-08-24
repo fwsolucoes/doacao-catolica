@@ -206,7 +206,7 @@
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.249 0.0056 285.9851);
   --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.1548 0.0021 286.1515);
+  --muted: oklch(0.210 0.003 286);
   --muted-foreground: oklch(0.5606 0.0091 253.8999);
   --accent: oklch(0 0 0);
   --accent-foreground: oklch(1 0 0);
@@ -233,7 +233,7 @@
     Arial, sans-serif;
   --font-serif: Merriweather, ui-serif, serif;
   --font-mono: "Roboto Mono", ui-monospace, monospace;
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
   /* aliases — mantêm compatibilidade com código existente fora dos componentes UI */
   --white: oklch(1 0 0);
