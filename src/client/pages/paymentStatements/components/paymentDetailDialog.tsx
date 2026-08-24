@@ -9,7 +9,6 @@ import {
   RefreshCw,
   XCircle,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
@@ -19,6 +18,7 @@ import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Dialog, DialogContent } from "~/client/components/ui/dialog";
+import { TabBar } from "~/client/components/ui/tab-button";
 import { Select } from "~/client/components/ui/select";
 import { Separator } from "~/client/components/ui/separator";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
@@ -88,41 +88,6 @@ function getInitials(name: string): string {
   return parts.map((w) => w[0].toUpperCase()).join("");
 }
 
-function TabButton({
-  active,
-  onClick,
-  icon: Icon,
-  label,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: LucideIcon;
-  label: string;
-  count?: number;
-}) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      onClick={onClick}
-      className={cn(
-        "h-auto gap-2.5 rounded-xl px-3.5 py-1.5 text-base font-semibold",
-        active
-          ? "bg-[#e6e6ed] text-foreground hover:bg-[#e6e6ed] hover:text-foreground"
-          : "text-muted-foreground hover:bg-transparent hover:text-muted-foreground",
-      )}
-    >
-      <Icon size={20} className="shrink-0" />
-      {label}
-      {count !== undefined && (
-        <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
-          {count}
-        </span>
-      )}
-    </Button>
-  );
-}
 
 type NotificationItem = {
   uuid: string;
@@ -293,21 +258,21 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
 
               {/* Tab buttons */}
               <div className="px-4 pt-4 sm:px-7 sm:pt-5">
-                <div className="flex w-fit items-center gap-1 rounded-[13px] border border-border bg-muted/60 p-1.5">
-                  <TabButton
+                <TabBar.List>
+                  <TabBar.Button
                     active={activeTab === "details"}
                     onClick={() => setActiveTab("details")}
                     icon={FileText}
                     label="Detalhes"
                   />
-                  <TabButton
+                  <TabBar.Button
                     active={activeTab === "notifications"}
                     onClick={() => setActiveTab("notifications")}
                     icon={Mail}
                     label="Notificações"
                     count={notifications.length}
                   />
-                </div>
+                </TabBar.List>
               </div>
 
             {/* Detalhes */}

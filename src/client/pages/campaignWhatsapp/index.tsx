@@ -31,7 +31,7 @@ function BulletItem({ text }: { text: string }) {
 
 function SelectedButton() {
   return (
-    <div className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#e6e6ed] text-sm font-semibold text-foreground">
+    <div className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#e6e6ed] text-sm font-semibold text-foreground dark:bg-card">
       <Check size={15} />
       Selecionado
     </div>
@@ -66,7 +66,7 @@ function OfficialNumberCard({
             <span className="text-sm font-semibold tracking-tight text-foreground">
               Número oficial Doação Católica
             </span>
-            <span className="rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-foreground">
+            <span className="rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-foreground dark:bg-card">
               Recomendado
             </span>
           </div>

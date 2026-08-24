@@ -27,7 +27,7 @@ function TabButton({
   onClick: () => void;
   icon: LucideIcon;
   label: string;
-  count: number;
+  count?: number;
   className?: string;
 }) {
   return (
@@ -45,9 +45,11 @@ function TabButton({
     >
       <Icon size={20} className="shrink-0" />
       {label}
-      <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
-        {count}
-      </span>
+      {count !== undefined && (
+        <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
+          {count}
+        </span>
+      )}
     </Button>
   );
 }

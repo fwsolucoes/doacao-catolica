@@ -21,7 +21,7 @@ function DashboardPage() {
             Aqui está o resumo das doações desta semana.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-[#e6e6ed] px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-full bg-[#e6e6ed] px-3 py-1.5 dark:bg-card">
           <span className="size-2 rounded-full bg-emerald-400" />
           <span className="text-xs font-semibold text-foreground">
             Tudo operando normalmente
