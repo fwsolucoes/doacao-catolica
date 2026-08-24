@@ -7,6 +7,7 @@ const STATUS_BADGE: Record<string, "amber" | "emerald" | "neutral" | "info"> =
     pending: "amber",
     pendent: "amber",
     pendente: "amber",
+    created: "info",
     transferred: "emerald",
     transferido: "emerald",
     paid: "emerald",
@@ -40,6 +41,7 @@ function formatDate(value: string | null | undefined): string {
 function formatStatus(status: string): string {
   const normalized = status.toLowerCase();
   const statusMap: Record<string, string> = {
+    created: "Criado",
     pending: "Pendente",
     pendent: "Pendente",
     pendente: "Pendente",

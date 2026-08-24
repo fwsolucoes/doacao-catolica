@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, ReceiptText } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -32,7 +32,7 @@ function TransfersTable({ transfers }: TransfersTableProps) {
             <Table.Head>Valor</Table.Head>
             <Table.Head>Chave Pix</Table.Head>
             <Table.Head>Status</Table.Head>
-            <Table.Head className="text-right">Recibo</Table.Head>
+            {/* <Table.Head className="text-right">Recibo</Table.Head> */}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -55,7 +55,7 @@ function TransfersTable({ transfers }: TransfersTableProps) {
                   {formatStatus(transfer.status)}
                 </Badge>
               </Table.Cell>
-              <Table.Cell className="text-right">
+              {/* <Table.Cell className="text-right">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -64,7 +64,7 @@ function TransfersTable({ transfers }: TransfersTableProps) {
                   <ReceiptText size={16} />
                   Ver recibo
                 </Button>
-              </Table.Cell>
+              </Table.Cell> */}
             </Table.Row>
           ))}
 

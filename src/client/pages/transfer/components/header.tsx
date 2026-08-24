@@ -88,16 +88,16 @@ function TransferHeader({
           tone="green"
         />
         <MetricCard
-          label="Aguardando liberação (Cartão)"
+          label="Saques solicitados"
           value={formatCurrency(awaitingRelease)}
-          subtitle="liberação em até 30 dias"
+          subtitle="acumulado em todo o período"
           icon={Clock3}
           tone="amber"
         />
         <MetricCard
           label="Total sacado"
           value={formatCurrency(withdrawalsMade)}
-          subtitle="acumulado no período"
+          subtitle="acumulado em todo o período"
           icon={Download}
           tone="blue"
         />
