@@ -72,33 +72,33 @@ function BillingRulesTab() {
           label="Total"
           value={billingRules.length}
           subtitle="Templates cadastrados"
-          iconBg="bg-blue-100"
+          iconBg="bg-[rgba(var(--spotlight-info),0.1)]"
           icon={Send}
-          iconColor="text-blue-600"
+          iconColor="text-[rgb(var(--spotlight-info))]"
         />
         <StatCard
           label="Ativas"
           value={activeCount}
           subtitle="Em operação"
-          iconBg="bg-emerald-100"
+          iconBg="bg-[rgba(var(--spotlight-success),0.1)]"
           icon={CheckCircle2}
-          iconColor="text-emerald-600"
+          iconColor="text-[rgb(var(--spotlight-success))]"
         />
         <StatCard
           label="Inativas"
           value={inactiveCount}
           subtitle="Pausadas"
-          iconBg="bg-rose-100"
+          iconBg="bg-[rgba(var(--spotlight-danger),0.1)]"
           icon={XCircle}
-          iconColor="text-rose-500"
+          iconColor="text-[rgb(var(--spotlight-danger))]"
         />
         <StatCard
           label="Canais"
           value={channelSet.size}
           subtitle="Canais utilizados"
-          iconBg="bg-purple-100"
+          iconBg="bg-[rgba(var(--spotlight-primary),0.1)]"
           icon={Radio}
-          iconColor="text-purple-600"
+          iconColor="text-[rgb(var(--spotlight-primary))]"
         />
       </div>
 

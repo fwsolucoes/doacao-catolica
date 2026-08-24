@@ -42,8 +42,8 @@ function DonationsPage() {
       value: metrics.released,
       subtitle: "doações confirmadas",
       icon: DollarSign,
-      iconBg: "bg-emerald-100",
-      iconColor: "text-emerald-700",
+      iconBg: "bg-[rgba(var(--spotlight-success),0.1)]",
+      iconColor: "text-[rgb(var(--spotlight-success))]",
       breakdown: [
         { icon: Globe, label: "Online", value: metrics.receivedOnline },
         { icon: Banknote, label: "Offline", value: metrics.receivedOffline },
@@ -56,8 +56,8 @@ function DonationsPage() {
         ? `${summary.variationPercentage} vs. mês anterior`
         : "vs. mês anterior",
       icon: TrendingUp,
-      iconBg: "bg-blue-100",
-      iconColor: "text-blue-800",
+      iconBg: "bg-[rgba(var(--spotlight-info),0.1)]",
+      iconColor: "text-[rgb(var(--spotlight-info))]",
       breakdown: [
         { icon: Zap, label: "Doações únicas", value: summary.oneTimeDonationsAmount },
         { icon: RefreshCw, label: "Recorrentes", value: summary.recurringDonationsAmount },
@@ -68,8 +68,8 @@ function DonationsPage() {
       value: summary.subscriptionsActiveCount,
       subtitle: "assinaturas ativas",
       icon: Users,
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-800",
+      iconBg: "bg-[rgba(var(--spotlight-primary),0.1)]",
+      iconColor: "text-[rgb(var(--spotlight-primary))]",
       breakdown: [
         { icon: UserCheck, label: "Assinaturas ativas", value: summary.subscriptionsActiveAmount },
         { icon: UserPlus, label: "Novas no período", value: summary.subscriptionsCreatedInPeriodActiveAmount },
@@ -80,8 +80,8 @@ function DonationsPage() {
       value: metrics.pending,
       subtitle: "exigem atenção",
       icon: AlertTriangle,
-      iconBg: "bg-orange-100",
-      iconColor: "text-orange-700",
+      iconBg: "bg-[rgba(var(--spotlight-warning),0.1)]",
+      iconColor: "text-[rgb(var(--spotlight-warning))]",
       breakdown: [
         {
           icon: Hourglass,

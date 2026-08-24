@@ -53,8 +53,8 @@ function DonorsSummaryCards() {
           </span>
         }
         icon={Users}
-        iconBg="bg-violet-100"
-        iconColor="text-violet-600"
+        iconBg="bg-[rgba(var(--spotlight-primary),0.1)]"
+        iconColor="text-[rgb(var(--spotlight-primary))]"
       />
       <SummaryCard
         label="Novos no mês"
@@ -65,24 +65,24 @@ function DonorsSummaryCards() {
             : `${variationSign}${variation}% vs. mês anterior`
         }
         icon={UserPlus}
-        iconBg="bg-blue-100"
-        iconColor="text-blue-600"
+        iconBg="bg-[rgba(var(--spotlight-info),0.1)]"
+        iconColor="text-[rgb(var(--spotlight-info))]"
       />
       <SummaryCard
         label="Total recorrente"
         value={formatCurrency(String(summary.totalRecurringAmount))}
         subtitle="doações previstas /mês"
         icon={RefreshCw}
-        iconBg="bg-orange-100"
-        iconColor="text-orange-600"
+        iconBg="bg-[rgba(var(--spotlight-warning),0.1)]"
+        iconColor="text-[rgb(var(--spotlight-warning))]"
       />
       <SummaryCard
         label="Valor médio"
         value={formatCurrency(String(summary.averageDonationAmount))}
         subtitle="por doação"
         icon={HandCoins}
-        iconBg="bg-emerald-100"
-        iconColor="text-emerald-600"
+        iconBg="bg-[rgba(var(--spotlight-success),0.1)]"
+        iconColor="text-[rgb(var(--spotlight-success))]"
       />
     </div>
   );
