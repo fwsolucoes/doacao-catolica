@@ -9,8 +9,8 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useLoaderData } from "react-router";
 import type { DashboardLoader } from "~/client/types/dashboardLoader";
+import { Badge } from "~/client/components/ui/badge";
 import { Card } from "~/client/components/ui/card";
-import { cn } from "~/lib/utils";
 
 function StatCard({
   label,
@@ -53,17 +53,10 @@ function StatCard({
           {value}
         </p>
         <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
-              trendDir === "up"
-                ? "bg-emerald-500/15 text-emerald-700"
-                : "bg-destructive/15 text-destructive",
-            )}
-          >
-            <TrendIcon size={12} />
+          <Badge variant={trendDir === "up" ? "success" : "danger"}>
+            <TrendIcon size={12} data-icon="inline-start" />
             {trendValue}
-          </span>
+          </Badge>
           <span className="text-xs text-muted-foreground">{trendNote}</span>
         </div>
       </div>

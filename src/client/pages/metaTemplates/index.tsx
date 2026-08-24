@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link, useLoaderData, useParams } from "react-router";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import {
@@ -24,9 +25,9 @@ import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import type { MetaTemplatesLoader } from "~/client/types/metaTemplatesLoader";
 
-const CATEGORY_BADGE: Record<string, { className: string; label: string }> = {
-  utility: { className: "bg-emerald-100 text-emerald-700", label: "Utility" },
-  marketing: { className: "bg-amber-100 text-amber-700", label: "Marketing" },
+const CATEGORY_BADGE: Record<string, { variant: "success" | "amber"; label: string }> = {
+  utility: { variant: "success", label: "Utility" },
+  marketing: { variant: "amber", label: "Marketing" },
 };
 
 const HEADER_LABEL: Record<string, string> = {
@@ -175,11 +176,9 @@ function MetaTemplatesPage() {
                         </div>
                       </Table.Cell>
                       <Table.Cell>
-                        <span
-                          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badge?.className ?? "bg-muted text-muted-foreground"}`}
-                        >
+                        <Badge variant={badge?.variant ?? "neutral"}>
                           {badge?.label ?? template.templateType}
-                        </span>
+                        </Badge>
                       </Table.Cell>
                       <Table.Cell>
                         <div className="flex flex-col gap-0.5">

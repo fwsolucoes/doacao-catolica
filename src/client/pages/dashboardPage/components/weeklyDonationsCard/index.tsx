@@ -2,8 +2,8 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 import { Bar } from "react-chartjs-2";
 import { useLoaderData } from "react-router";
 import type { DashboardLoader } from "~/client/types/dashboardLoader";
+import { Badge } from "~/client/components/ui/badge";
 import { Card } from "~/client/components/ui/card";
-import { cn } from "~/lib/utils";
 import "../../chart-setup";
 
 const chartOptions = {
@@ -66,21 +66,14 @@ function WeeklyDonationsCard() {
           <p className="text-2xl font-semibold text-foreground">{weeklyTotal}</p>
           <p className="text-xs text-muted-foreground">Total da semana</p>
         </div>
-        <span
-          className={cn(
-            "flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold",
-            growthDir === "up"
-              ? "bg-emerald-500/15 text-emerald-700"
-              : "bg-destructive/15 text-destructive",
-          )}
-        >
+        <Badge variant={growthDir === "up" ? "success" : "danger"}>
           {growthDir === "up" ? (
-            <TrendingUp size={12} />
+            <TrendingUp size={12} data-icon="inline-start" />
           ) : (
-            <TrendingDown size={12} />
+            <TrendingDown size={12} data-icon="inline-start" />
           )}
           {growthValue}
-        </span>
+        </Badge>
       </div>
     </Card.Root>
   );

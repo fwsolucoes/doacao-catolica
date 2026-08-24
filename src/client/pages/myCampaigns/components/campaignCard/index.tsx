@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, Settings } from "lucide-react";
 import { Link } from "react-router";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 // import { Progress } from "~/client/components/ui/progress";
 import { useRoot } from "~/client/hooks/useRoot";
@@ -15,9 +16,9 @@ type Campaign = {
   // totalGoal: string | null;
 };
 
-const STATUS_BADGE: Record<string, { className: string; label: string }> = {
-  ativo: { className: "bg-emerald-100 text-emerald-700", label: "Ativo" },
-  inativo: { className: "bg-muted text-muted-foreground", label: "Inativo" },
+const STATUS_BADGE: Record<string, { variant: "success" | "neutral"; label: string }> = {
+  ativo: { variant: "success", label: "Ativo" },
+  inativo: { variant: "neutral", label: "Inativo" },
 };
 
 // function formatCurrency(value: string | null | undefined): string {
@@ -61,11 +62,12 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           className="h-44 w-full object-cover"
           onError={() => setImageError(true)}
         />
-        <span
-          className={`absolute right-3 top-3 rounded-full px-4 py-1 text-sm ${badge?.className ?? "bg-muted text-muted-foreground"}`}
+        <Badge
+          variant={badge?.variant ?? "neutral"}
+          className="absolute right-3 top-3"
         >
           {badge?.label ?? statusKey}
-        </span>
+        </Badge>
       </div>
 
       <div className="flex flex-1 flex-col gap-5 p-6">

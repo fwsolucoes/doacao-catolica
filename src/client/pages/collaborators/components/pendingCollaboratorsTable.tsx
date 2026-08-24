@@ -17,12 +17,12 @@ import { ResendInviteModal } from "./resendInviteModal";
 import type { PendingCollaborator } from "./types";
 import { buildRolesById, formatStatus, getInitials } from "./utils";
 
-const STATUS_BADGE: Record<string, { className: string; label: string }> = {
-  Pendente: { className: "bg-amber-100 text-amber-700", label: "Pendente" },
-  Aceito: { className: "bg-emerald-100 text-emerald-700", label: "Aceito" },
-  Recusado: { className: "bg-red-100 text-red-700", label: "Recusado" },
-  cancelled: { className: "bg-red-100 text-red-700", label: "Recusado" },
-  revoked: { className: "bg-zinc-100 text-zinc-600", label: "Acesso removido" },
+const STATUS_BADGE: Record<string, { variant: "warning" | "success" | "danger" | "neutral"; label: string }> = {
+  Pendente: { variant: "warning", label: "Pendente" },
+  Aceito: { variant: "success", label: "Aceito" },
+  Recusado: { variant: "danger", label: "Recusado" },
+  cancelled: { variant: "danger", label: "Recusado" },
+  revoked: { variant: "neutral", label: "Acesso removido" },
 };
 
 function PendingCollaboratorsTable() {
@@ -90,9 +90,7 @@ function PendingCollaboratorsTable() {
                   <span>-</span>
                 </Table.Cell> */}
                 <Table.Cell>
-                  <Badge
-                    className={badge?.className ?? "bg-muted text-muted-foreground"}
-                  >
+                  <Badge variant={badge?.variant ?? "neutral"}>
                     {badge?.label ?? invite.status}
                   </Badge>
                 </Table.Cell>

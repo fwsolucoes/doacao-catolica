@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useLoaderData } from "react-router";
-import { cn } from "~/lib/utils";
 import { Badge } from "~/client/components/ui/badge";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
@@ -33,11 +32,11 @@ type StatCardItem = {
 const STATUS_BADGE: Record<
   string,
   {
-    variant: "emerald" | "info" | "danger" | "warning" | "neutral";
+    variant: "success" | "info" | "danger" | "warning" | "neutral";
     label: string;
   }
 > = {
-  success: { variant: "emerald", label: "Entregue" },
+  success: { variant: "success", label: "Entregue" },
   awaiting_confirmation: { variant: "info", label: "Enviado" },
   error: { variant: "danger", label: "Falha" },
   not_send: { variant: "neutral", label: "Não enviado" },
@@ -45,29 +44,24 @@ const STATUS_BADGE: Record<
 };
 
 // known values: "whatsapp" | "sms" | "email"
-const CHANNEL_STYLE: Record<string, { label: string; className: string }> = {
-  whatsapp: { label: "WhatsApp", className: "bg-emerald-100 text-emerald-700" },
-  sms: { label: "SMS", className: "bg-blue-100 text-blue-700" },
-  email: { label: "E-mail", className: "bg-amber-100 text-amber-700" },
+const CHANNEL_BADGE: Record<
+  string,
+  { variant: "success" | "navy" | "amber"; label: string }
+> = {
+  whatsapp: { variant: "success", label: "WhatsApp" },
+  sms: { variant: "navy", label: "SMS" },
+  email: { variant: "amber", label: "E-mail" },
 };
 
 function ChannelBadge({ channel }: { channel: string }) {
-  const style = CHANNEL_STYLE[channel] ?? {
-    label: channel,
-    className: "bg-muted text-muted-foreground",
-  };
+  const config = CHANNEL_BADGE[channel];
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
-        style.className,
-      )}
-    >
-      {channel === "whatsapp" && <WhatsAppIcon size={14} />}
-      {channel === "sms" && <MessageSquare size={14} />}
-      {channel === "email" && <Mail size={14} />}
-      {style.label}
-    </span>
+    <Badge variant={config?.variant ?? "neutral"}>
+      {channel === "whatsapp" && <WhatsAppIcon size={14} data-icon="inline-start" />}
+      {channel === "sms" && <MessageSquare size={14} data-icon="inline-start" />}
+      {channel === "email" && <Mail size={14} data-icon="inline-start" />}
+      {config?.label ?? channel}
+    </Badge>
   );
 }
 
