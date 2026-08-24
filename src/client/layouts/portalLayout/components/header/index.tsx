@@ -55,7 +55,7 @@ function PortalHeader() {
           )}
         </Button>
 
-        <Button
+        {/* <Button
           size="icon"
           variant="ghost"
           className="relative size-9 text-foreground"
@@ -63,7 +63,7 @@ function PortalHeader() {
         >
           <Bell size={18} />
           <span className="absolute right-2 top-2 size-2 rounded-full bg-sidebar-primary" />
-        </Button>
+        </Button> */}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
