@@ -33,18 +33,12 @@ import type { DialogState, DonorRow } from "./donorsTable";
 
 const PAYMENT_METHOD_BADGE: Record<
   string,
-  { className: string; label: string }
+  { variant: "violet" | "success" | "amber" | "navy"; label: string }
 > = {
-  automatic_pix: {
-    className: "bg-violet-100 text-purple-800",
-    label: "Pix Automático",
-  },
-  pix: { className: "bg-emerald-100 text-emerald-700", label: "Pix" },
-  bank_slip: { className: "bg-orange-100 text-orange-700", label: "Boleto" },
-  credit_card: {
-    className: "bg-blue-100 text-blue-800",
-    label: "Cartão de Crédito",
-  },
+  automatic_pix: { variant: "violet", label: "Pix Automático" },
+  pix: { variant: "success", label: "Pix" },
+  bank_slip: { variant: "amber", label: "Boleto" },
+  credit_card: { variant: "navy", label: "Cartão de Crédito" },
 };
 
 function formatApiDate(dateStr: string | null): string {
@@ -277,9 +271,7 @@ function RecurringDonorRow({
         {(() => {
           const badge = PAYMENT_METHOD_BADGE[donor.paymentMethod];
           return (
-            <Badge
-              className={badge?.className ?? "bg-muted text-muted-foreground"}
-            >
+            <Badge variant={badge?.variant ?? "neutral"}>
               {badge?.label ?? donor.paymentMethod}
             </Badge>
           );
