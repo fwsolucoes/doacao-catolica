@@ -23,6 +23,7 @@ import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
+import { Label } from "~/client/components/ui/label";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import type { AmbassadorsDashboardLoader } from "~/client/types/ambassadorsDashboardLoader";
@@ -67,7 +68,6 @@ function AmbassadorsReportPage() {
   const params = new URLSearchParams(location.search);
   const startDate = params.get("start_date");
   const endDate = params.get("end_date");
-  const currentPage = params.get("page") ?? "1";
   const search = params.get("search") ?? "";
   const minIndications = params.get("min_indications") ?? "";
   const maxIndications = params.get("max_indications") ?? "";
@@ -268,8 +268,6 @@ function AmbassadorsReportPage() {
   const displayStart = startDate ?? getMonthDates(0).firstDayOfMonth;
   const displayEnd = endDate ?? getMonthDates(0).lastDayOfMonth;
 
-  void currentPage; // used implicitly via URL params consumed by the loader
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -297,7 +295,7 @@ function AmbassadorsReportPage() {
       <Card.Root className="gap-4 p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold">Período</label>
+            <Label className="text-sm font-semibold">Período</Label>
             <Select.Root value={period} onValueChange={handlePeriodChange}>
               <Select.Trigger>
                 <Select.Value />
@@ -310,7 +308,7 @@ function AmbassadorsReportPage() {
             </Select.Root>
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold">Início</label>
+            <Label className="text-sm font-semibold">Início</Label>
             <Input
               type="date"
               defaultValue={displayStart}
@@ -320,7 +318,7 @@ function AmbassadorsReportPage() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold">Fim</label>
+            <Label className="text-sm font-semibold">Fim</Label>
             <Input
               type="date"
               defaultValue={displayEnd}
