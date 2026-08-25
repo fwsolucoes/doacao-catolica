@@ -105,7 +105,7 @@ const sections: NavSection[] = [
     title: "Sistema",
     items: [
       { icon: Settings, label: "Configurações", path: "settings/general-info" },
-      { icon: CircleHelp, label: "Ajuda" },
+      // { icon: CircleHelp, label: "Ajuda" },
     ],
   },
 ];

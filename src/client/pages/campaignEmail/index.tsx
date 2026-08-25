@@ -84,23 +84,23 @@ function LayoutCard({ layout }: { layout: EmailLayout }) {
 
 function VariablesBanner() {
   return (
-    <div className="flex flex-wrap items-center gap-x-1 gap-y-1 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3.5">
-      <span className="text-sm font-semibold text-blue-900">
+    <div className="flex flex-wrap items-center gap-x-1 gap-y-1 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3.5 dark:border-blue-800/50 dark:bg-blue-950/30">
+      <span className="text-sm font-semibold text-blue-900 dark:text-blue-200">
         Variáveis disponíveis:
       </span>
-      <span className="text-sm text-blue-800">Use</span>
-      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600">
+      <span className="text-sm text-blue-900 dark:text-blue-200">Use</span>
+      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600 dark:bg-blue-950 dark:text-blue-400">
         {"{{imagem_1}}"}
       </code>
-      <span className="text-sm text-blue-800">,</span>
-      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600">
+      <span className="text-sm text-blue-900 dark:text-blue-200">,</span>
+      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600 dark:bg-blue-950 dark:text-blue-400">
         {"{{imagem_2}}"}
       </code>
-      <span className="text-sm text-blue-800">e</span>
-      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600">
+      <span className="text-sm text-blue-900 dark:text-blue-200">e</span>
+      <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-blue-600 dark:bg-blue-950 dark:text-blue-400">
         {"{{corpo_email}}"}
       </code>
-      <span className="text-sm text-blue-800">em seu HTML.</span>
+      <span className="text-sm text-blue-900 dark:text-blue-200">em seu HTML.</span>
     </div>
   );
 }

@@ -26,7 +26,7 @@ function SummaryCard({ label, value, subtitle, icon: Icon, iconBg, iconColor }: 
         </div>
       </div>
       <div className="flex flex-col gap-1 px-7 pb-7">
-        <p className="text-2xl font-semibold tracking-tight">{value}</p>
+        <p className="text-2xl font-semibold tracking-tight text-foreground">{value}</p>
         <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
     </div>

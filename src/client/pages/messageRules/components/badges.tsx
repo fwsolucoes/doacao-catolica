@@ -14,11 +14,11 @@ const CHANNEL_BADGE: Record<
 
 const PAYMENT_BADGE: Record<
   string,
-  { variant: "success" | "neutral" | "violet"; label: string }
+  { variant: "success" | "amber" | "violet"; label: string }
 > = {
   pix: { variant: "success", label: "Pix" },
-  boleto: { variant: "neutral", label: "Boleto" },
-  bank_slip: { variant: "neutral", label: "Boleto" },
+  boleto: { variant: "amber", label: "Boleto" },
+  bank_slip: { variant: "amber", label: "Boleto" },
   cartao: { variant: "violet", label: "Cartão" },
   credit_card: { variant: "violet", label: "Cartão" },
 };

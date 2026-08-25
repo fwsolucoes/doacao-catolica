@@ -212,7 +212,7 @@
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.69 0.1762 22.0665);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.249 0.0056 285.9851);
+  --border: oklch(0.36 0.006 286);
   --input: oklch(0.1735 0.002 286.1849);
   --ring: oklch(0.5607 0.2181 266.5346);
   --chart-1: oklch(0.5538 0.2501 277.67);
@@ -305,6 +305,15 @@
 [data-slot="input-group"]:has([data-align="inline-end"])
   [data-slot="input-group-input"] {
   padding-right: 2.25rem;
+}
+
+/* Ícone de calendário nativo em dark mode */
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"],
+.dark input[type="month"],
+.dark input[type="week"] {
+  color-scheme: dark;
 }
 
 /* FormField: estado de erro */

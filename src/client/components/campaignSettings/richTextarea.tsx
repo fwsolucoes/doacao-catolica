@@ -122,7 +122,7 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
           onMouseUp={updateActiveFormats}
           onSelect={updateActiveFormats}
           className={cn(
-            "min-h-28 p-3 text-sm outline-none",
+            "min-h-28 p-3 text-sm text-foreground outline-none",
             "empty:before:text-muted-foreground empty:before:content-[attr(data-placeholder)]",
           )}
           data-placeholder={placeholder}
