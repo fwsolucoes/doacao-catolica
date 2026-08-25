@@ -20,7 +20,7 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
-import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { useLoaderData, useLocation, useNavigate, useParams } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
@@ -83,6 +83,7 @@ function AmbassadorsReportPage() {
   const { dashboard } = useLoaderData<AmbassadorsDashboardLoader>();
   const navigate = useNavigate();
   const location = useLocation();
+  const { campaignId } = useParams<{ campaignId: string }>();
 
   const params = new URLSearchParams(location.search);
   const startDate = params.get("start_date");
@@ -362,10 +363,15 @@ function AmbassadorsReportPage() {
             Desempenho dos embaixadores, indicações e arrecadação no período selecionado.
           </p>
         </div>
-        {/* <Button variant="outline" className="gap-2">
-          <FileText size={16} />
-          Exportar CSV
-        </Button> */}
+        <Button asChild variant="outline" className="gap-2">
+          <a
+            href={`/campaign/${campaignId}/api/ambassadors-export${location.search}`}
+            download
+          >
+            <FileText size={16} />
+            Exportar CSV
+          </a>
+        </Button>
       </div>
 
       <Card.Root className="gap-4 p-6">
