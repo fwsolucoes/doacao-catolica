@@ -1,5 +1,12 @@
-import { useMemo, useState } from "react";
-import { ArrowLeft, FileText, Repeat2, Search, TrendingUp, Users } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  FileText,
+  Repeat2,
+  Search,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { Bar, Chart, Doughnut } from "react-chartjs-2";
 import {
   ArcElement,
@@ -12,12 +19,14 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
-import { useNavigate } from "react-router";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
+import type { AmbassadorsDashboardLoader } from "~/client/types/ambassadorsDashboardLoader";
+import { getMonthDates } from "~/lib/getMonthDates";
 
 ChartJS.register(
   CategoryScale,
@@ -30,239 +39,236 @@ ChartJS.register(
   Legend,
 );
 
-const DAILY_INDICACOES = [
-  3, 5, 5, 7, 9, 9, 13, 7, 7, 6,
-  3, 3, 5, 11, 8, 8, 8, 8, 8, 6,
-  8, 3, 3, 6, 7, 7, 9, 13, 8, 7,
+const CHART_COLORS = [
+  "#2563eb",
+  "#16a34a",
+  "#f59e0b",
+  "#7c3aed",
+  "#ef4444",
+  "#06b6d4",
+  "#f97316",
+  "#84cc16",
 ];
 
-const DAILY_VALOR = [
-  1200, 1400, 1600, 1600, 1800, 1800, 2000, 1500, 1200, 1000,
-  600, 500, 500, 1800, 1400, 1600, 1500, 1400, 1400, 1200,
-  1500, 600, 500, 800, 1200, 1400, 1600, 2000, 1600, 1400,
-];
+function detectPeriod(startDate: string | null, endDate: string | null) {
+  if (!startDate || !endDate) return "current-month";
+  const { firstDayOfMonth: cm0, lastDayOfMonth: cm1 } = getMonthDates(0);
+  if (startDate === cm0 && endDate === cm1) return "current-month";
+  const { firstDayOfMonth: lm0, lastDayOfMonth: lm1 } = getMonthDates(1);
+  if (startDate === lm0 && endDate === lm1) return "last-month";
+  return "custom";
+}
 
-const AMBASSADORS = [
-  {
-    name: "Ana Beatriz Souza",
-    email: "ana.souza@paroquia.org",
-    phone: "(11) 98812-4471",
-    registeredAt: "12/02/2025",
-    indicacoesPeriodo: 42,
-    indicacoesAcumuladas: 318,
-    recorrencias: "12.480,00",
-  },
-  {
-    name: "Carlos Eduardo Lima",
-    email: "carlos.lima@parceiro.org",
-    phone: "(21) 99715-3320",
-    registeredAt: "03/05/2025",
-    indicacoesPeriodo: 35,
-    indicacoesAcumuladas: 198,
-    recorrencias: "9.240,00",
-  },
-  {
-    name: "Mariana Oliveira Santos",
-    email: "mariana.santos@catedral.org",
-    phone: "(31) 97823-5512",
-    registeredAt: "08/01/2025",
-    indicacoesPeriodo: 28,
-    indicacoesAcumuladas: 245,
-    recorrencias: "8.400,00",
-  },
-  {
-    name: "Ricardo Ferreira Costa",
-    email: "ricardo.costa@diocesan.org",
-    phone: "(41) 98934-7732",
-    registeredAt: "19/03/2025",
-    indicacoesPeriodo: 22,
-    indicacoesAcumuladas: 156,
-    recorrencias: "6.720,00",
-  },
-  {
-    name: "Fernanda Lima Rocha",
-    email: "fernanda.rocha@missao.org",
-    phone: "(61) 99234-5643",
-    registeredAt: "25/04/2025",
-    indicacoesPeriodo: 15,
-    indicacoesAcumuladas: 187,
-    recorrencias: "5.280,00",
-  },
-  {
-    name: "José Paulo Mendes",
-    email: "jose.mendes@caridade.org",
-    phone: "(85) 98456-2234",
-    registeredAt: "07/06/2025",
-    indicacoesPeriodo: 9,
-    indicacoesAcumuladas: 98,
-    recorrencias: "3.960,00",
-  },
-  {
-    name: "Luciana Pereira Alves",
-    email: "luciana.alves@comunidade.org",
-    phone: "(71) 99567-4421",
-    registeredAt: "12/07/2025",
-    indicacoesPeriodo: 5,
-    indicacoesAcumuladas: 75,
-    recorrencias: "4.200,00",
-  },
-];
+function AmbassadorsReportPage() {
+  const { dashboard } = useLoaderData<AmbassadorsDashboardLoader>();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-const PAYMENT_METHODS = [
-  { label: "Cartão", value: "R$ 48.200,00", pct: "(42.3%)", color: "#2563eb", data: 42.3 },
-  { label: "Pix", value: "R$ 31.500,00", pct: "(27.7%)", color: "#16a34a", data: 27.7 },
-  { label: "Boleto", value: "R$ 12.800,00", pct: "(11.2%)", color: "#f59e0b", data: 11.2 },
-  { label: "Pix Automático", value: "R$ 21.400,00", pct: "(18.8%)", color: "#7c3aed", data: 18.8 },
-];
+  const params = new URLSearchParams(location.search);
+  const startDate = params.get("start_date");
+  const endDate = params.get("end_date");
+  const currentPage = params.get("page") ?? "1";
+  const search = params.get("search") ?? "";
+  const minIndications = params.get("min_indications") ?? "";
+  const maxIndications = params.get("max_indications") ?? "";
 
-const DONATION_BRACKETS = {
-  labels: ["Até R$ 25", "R$ 26–50", "R$ 51–100", "R$ 101–250", "R$ 251–500", "Acima de R$ 500"],
-  datasets: [
-    {
-      label: "Doações",
-      data: [190, 365, 490, 278, 100, 32],
-      backgroundColor: "#7c3aed",
-      borderRadius: 4,
-    },
-  ],
-};
+  const period = detectPeriod(startDate, endDate);
+  const [localSearch, setLocalSearch] = useState(search);
+  const [localMin, setLocalMin] = useState(minIndications);
+  const [localMax, setLocalMax] = useState(maxIndications);
 
-const bracketsOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: { mode: "index" as const, intersect: false },
-  },
-  scales: {
-    x: {
-      grid: { display: false },
-      ticks: { font: { size: 10 }, maxRotation: 15 },
-    },
-    y: {
-      min: 0,
-      max: 600,
-      grid: { color: "rgba(0,0,0,0.05)" },
-      ticks: { font: { size: 11 }, stepSize: 150 },
-    },
-  },
-};
+  function updateParams(updates: Record<string, string | null>) {
+    const next = new URLSearchParams(location.search);
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null || value === "") next.delete(key);
+      else next.set(key, value);
+    }
+    next.delete("page");
+    navigate(`?${next.toString()}`);
+  }
 
-const DAYS = Array.from({ length: 30 }, (_, i) => String(i + 1).padStart(2, "0"));
+  function handlePeriodChange(value: string) {
+    if (value === "current-month") {
+      const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
+      updateParams({ start_date: firstDayOfMonth, end_date: lastDayOfMonth });
+    } else if (value === "last-month") {
+      const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(1);
+      updateParams({ start_date: firstDayOfMonth, end_date: lastDayOfMonth });
+    }
+    // "custom" — aguarda edição dos inputs
+  }
 
-const evolutionData = {
-  labels: DAYS,
-  datasets: [
-    {
-      type: "bar" as const,
-      label: "Indicações",
-      data: DAILY_INDICACOES,
-      backgroundColor: "#2563eb",
-      borderRadius: 3,
-      yAxisID: "y",
-    },
-    {
-      type: "line" as const,
-      label: "Valor (R$)",
-      data: DAILY_VALOR,
-      borderColor: "#16a34a",
-      backgroundColor: "transparent",
-      fill: false,
-      tension: 0.4,
-      pointRadius: 3,
-      pointBackgroundColor: "#16a34a",
-      yAxisID: "y1",
-    },
-  ],
-};
+  function handleDateBlur(field: "start_date" | "end_date", value: string) {
+    if (!value) return;
+    const next = new URLSearchParams(location.search);
+    next.set(field, value);
+    next.delete("page");
+    navigate(`?${next.toString()}`);
+  }
 
-const evolutionOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: { mode: "index" as const, intersect: false },
-  plugins: {
-    legend: {
-      display: true,
-      position: "bottom" as const,
-      labels: {
-        usePointStyle: true,
-        padding: 20,
-        font: { size: 13 },
+  function handleSearchCommit() {
+    updateParams({
+      search: localSearch || null,
+      min_indications: localMin || null,
+      max_indications: localMax || null,
+    });
+  }
+
+  function handlePageChange(page: number) {
+    const next = new URLSearchParams(location.search);
+    next.set("page", String(page));
+    navigate(`?${next.toString()}`);
+  }
+
+  const { summary, charts, ambassadors, pagination } = dashboard;
+
+  const chartLabels = charts.indicationsByDay.map((d) => d.label);
+  const chartIndications = charts.indicationsByDay.map((d) => d.totalIndications);
+  const chartAmounts = charts.indicationsByDay.map((d) => d.totalAmount);
+
+  const maxIndic = Math.max(...chartIndications, 1);
+  const maxAmt = Math.max(...chartAmounts, 1);
+  const yMax = Math.ceil((maxIndic * 1.2) / 4) * 4;
+  const y1Max = Math.ceil((maxAmt * 1.2) / 500) * 500;
+
+  const evolutionData = {
+    labels: chartLabels,
+    datasets: [
+      {
+        type: "bar" as const,
+        label: "Indicações",
+        data: chartIndications,
+        backgroundColor: "#2563eb",
+        borderRadius: 3,
+        yAxisID: "y",
       },
+      {
+        type: "line" as const,
+        label: "Valor (R$)",
+        data: chartAmounts,
+        borderColor: "#16a34a",
+        backgroundColor: "transparent",
+        fill: false,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: "#16a34a",
+        yAxisID: "y1",
+      },
+    ],
+  };
+
+  const evolutionOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: "index" as const, intersect: false },
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom" as const,
+        labels: { usePointStyle: true, padding: 20, font: { size: 13 } },
+      },
+      tooltip: { mode: "index" as const, intersect: false },
     },
-    tooltip: { mode: "index" as const, intersect: false },
-  },
-  scales: {
-    x: {
-      grid: { display: false },
-      ticks: { font: { size: 11 } },
-    },
-    y: {
-      position: "left" as const,
-      min: 0,
-      max: 16,
-      grid: { color: "rgba(0,0,0,0.05)" },
-      ticks: { font: { size: 11 }, stepSize: 4 },
-    },
-    y1: {
-      position: "right" as const,
-      min: 0,
-      max: 2000,
-      grid: { drawOnChartArea: false },
-      ticks: {
-        font: { size: 11 },
-        callback: (v: number | string) => {
-          const val = Number(v);
-          if (val === 0) return "R$ 0k";
-          return `R$ ${(val / 1000).toFixed(0)}k`;
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 11 } },
+      },
+      y: {
+        position: "left" as const,
+        min: 0,
+        max: yMax || 4,
+        grid: { color: "rgba(0,0,0,0.05)" },
+        ticks: { font: { size: 11 }, stepSize: Math.max(1, Math.floor(yMax / 4)) },
+      },
+      y1: {
+        position: "right" as const,
+        min: 0,
+        max: y1Max || 500,
+        grid: { drawOnChartArea: false },
+        ticks: {
+          font: { size: 11 },
+          callback: (v: number | string) => {
+            const val = Number(v);
+            if (val === 0) return "R$ 0k";
+            return `R$ ${(val / 1000).toFixed(0)}k`;
+          },
         },
       },
     },
-  },
-};
+  };
 
-const donutData = {
-  labels: PAYMENT_METHODS.map((m) => m.label),
-  datasets: [
-    {
-      data: PAYMENT_METHODS.map((m) => m.data),
-      backgroundColor: PAYMENT_METHODS.map((m) => m.color),
-      borderWidth: 0,
-      hoverOffset: 4,
+  const donationBracketsData = {
+    labels: charts.donationAmountRanges.map((r) => r.label),
+    datasets: [
+      {
+        label: "Doações",
+        data: charts.donationAmountRanges.map((r) => r.totalPayments),
+        backgroundColor: "#7c3aed",
+        borderRadius: 4,
+      },
+    ],
+  };
+
+  const maxBracket = Math.max(...charts.donationAmountRanges.map((r) => r.totalPayments), 1);
+  const bracketsMax = Math.ceil((maxBracket * 1.2) / 50) * 50;
+
+  const bracketsOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { mode: "index" as const, intersect: false },
     },
-  ],
-};
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 10 }, maxRotation: 15 },
+      },
+      y: {
+        min: 0,
+        max: bracketsMax || 10,
+        grid: { color: "rgba(0,0,0,0.05)" },
+        ticks: { font: { size: 11 } },
+      },
+    },
+  };
 
-const donutOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  cutout: "68%",
-  plugins: {
-    legend: { display: false },
-    tooltip: { mode: "index" as const, intersect: false },
-  },
-};
+  const donutData = {
+    labels: charts.paymentMethods.map((m) => m.label),
+    datasets: [
+      {
+        data: charts.paymentMethods.map((m) => m.percentage),
+        backgroundColor: charts.paymentMethods.map((_, i) => CHART_COLORS[i % CHART_COLORS.length]),
+        borderWidth: 0,
+        hoverOffset: 4,
+      },
+    ],
+  };
 
-function AmbassadorsReportPage() {
-  const navigate = useNavigate();
-  const [period, setPeriod] = useState("current-month");
-  const [search, setSearch] = useState("");
-  const [minIndicacoes, setMinIndicacoes] = useState("");
-  const [maxIndicacoes, setMaxIndicacoes] = useState("");
+  const donutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "68%",
+    plugins: {
+      legend: { display: false },
+      tooltip: { mode: "index" as const, intersect: false },
+    },
+  };
 
-  const filteredAmbassadors = useMemo(
-    () =>
-      AMBASSADORS.filter((a) => {
-        const matchesSearch =
-          !search ||
-          a.name.toLowerCase().includes(search.toLowerCase()) ||
-          a.email.toLowerCase().includes(search.toLowerCase());
-        const matchesMin = !minIndicacoes || a.indicacoesPeriodo >= Number(minIndicacoes);
-        const matchesMax = !maxIndicacoes || a.indicacoesPeriodo <= Number(maxIndicacoes);
-        return matchesSearch && matchesMin && matchesMax;
-      }),
-    [search, minIndicacoes, maxIndicacoes],
-  );
+  const fmt = (n: number) =>
+    n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  const variationPct = summary.previousPeriod.variationPercent;
+  const trendValue =
+    variationPct === null
+      ? null
+      : `${variationPct >= 0 ? "+" : ""}${variationPct.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% vs. período anterior (${summary.previousPeriod.periodIndications})`;
+
+  const displayStart = startDate ?? getMonthDates(0).firstDayOfMonth;
+  const displayEnd = endDate ?? getMonthDates(0).lastDayOfMonth;
+
+  void currentPage; // used implicitly via URL params consumed by the loader
 
   return (
     <div className="flex flex-col gap-6">
@@ -292,16 +298,13 @@ function AmbassadorsReportPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold">Período</label>
-            <Select.Root value={period} onValueChange={setPeriod}>
+            <Select.Root value={period} onValueChange={handlePeriodChange}>
               <Select.Trigger>
                 <Select.Value />
               </Select.Trigger>
               <Select.Content>
                 <Select.Item value="current-month">Mês atual</Select.Item>
                 <Select.Item value="last-month">Mês anterior</Select.Item>
-                <Select.Item value="last-30-days">Últimos 30 dias</Select.Item>
-                <Select.Item value="last-60-days">Últimos 60 dias</Select.Item>
-                <Select.Item value="last-90-days">Últimos 90 dias</Select.Item>
                 <Select.Item value="custom">Personalizado</Select.Item>
               </Select.Content>
             </Select.Root>
@@ -309,19 +312,21 @@ function AmbassadorsReportPage() {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold">Início</label>
             <Input
-              type="text"
-              placeholder="DD/MM/AAAA"
-              defaultValue="01/08/2026"
+              type="date"
+              defaultValue={displayStart}
+              key={displayStart}
               disabled={period !== "custom"}
+              onBlur={(e) => handleDateBlur("start_date", e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold">Fim</label>
             <Input
-              type="text"
-              placeholder="DD/MM/AAAA"
-              defaultValue="31/08/2026"
+              type="date"
+              defaultValue={displayEnd}
+              key={displayEnd}
               disabled={period !== "custom"}
+              onBlur={(e) => handleDateBlur("end_date", e.target.value)}
             />
           </div>
         </div>
@@ -330,17 +335,24 @@ function AmbassadorsReportPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card.Root className="gap-3 p-6">
           <Card.MetricHeader label="Indicações no período" icon={TrendingUp} color="primary" />
-          <Card.MetricValue>156</Card.MetricValue>
-          <Card.MetricTrend value="+18.2% vs. mês anterior (132)" direction="up" />
+          <Card.MetricValue>{summary.periodIndications.toLocaleString("pt-BR")}</Card.MetricValue>
+          {trendValue ? (
+            <Card.MetricTrend
+              value={trendValue}
+              direction={variationPct !== null && variationPct >= 0 ? "up" : "down"}
+            />
+          ) : (
+            <span className="text-xs text-muted-foreground">Sem período anterior</span>
+          )}
         </Card.Root>
         <Card.Root className="gap-3 p-6">
           <Card.MetricHeader label="Indicações acumuladas" icon={Users} color="success" />
-          <Card.MetricValue>1.277</Card.MetricValue>
+          <Card.MetricValue>{summary.totalIndications.toLocaleString("pt-BR")}</Card.MetricValue>
           <span className="text-xs text-muted-foreground">Desde o cadastro dos embaixadores</span>
         </Card.Root>
         <Card.Root className="gap-3 p-6">
           <Card.MetricHeader label="Total em recorrências" icon={Repeat2} color="info" />
-          <Card.MetricValue>R$ 50.620,00</Card.MetricValue>
+          <Card.MetricValue>{fmt(summary.totalRecurringAmount)}</Card.MetricValue>
           <span className="text-xs text-muted-foreground">
             Valor recorrente ativo gerado por indicações
           </span>
@@ -360,7 +372,7 @@ function AmbassadorsReportPage() {
         <Card.Root className="gap-4 p-6">
           <p className="text-sm font-semibold text-(--text-heading)">Faixas de valores das doações</p>
           <div className="h-64">
-            <Bar data={DONATION_BRACKETS} options={bracketsOptions} />
+            <Bar data={donationBracketsData} options={bracketsOptions} />
           </div>
         </Card.Root>
 
@@ -371,15 +383,17 @@ function AmbassadorsReportPage() {
               <Doughnut data={donutData} options={donutOptions} />
             </div>
             <div className="flex w-full flex-col gap-3">
-              {PAYMENT_METHODS.map((m) => (
-                <div key={m.label} className="flex items-center gap-3">
+              {charts.paymentMethods.map((m, i) => (
+                <div key={m.type} className="flex items-center gap-3">
                   <span
                     className="size-3 shrink-0 rounded-full"
-                    style={{ backgroundColor: m.color }}
+                    style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                   />
                   <span className="flex-1 text-sm text-(--text-heading)">{m.label}</span>
-                  <span className="text-sm font-semibold text-(--text-heading)">{m.value}</span>
-                  <span className="text-sm text-muted-foreground">{m.pct}</span>
+                  <span className="text-sm font-semibold text-(--text-heading)">
+                    {fmt(m.totalAmount)}
+                  </span>
+                  <span className="text-sm text-muted-foreground">({m.percentage}%)</span>
                 </div>
               ))}
             </div>
@@ -391,7 +405,7 @@ function AmbassadorsReportPage() {
         <div className="flex flex-col gap-4 p-6">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-(--text-heading)">
-              Embaixadores ({filteredAmbassadors.length})
+              Embaixadores ({pagination.total})
             </p>
             <Button variant="outline" size="sm" className="gap-2 text-xs">
               <FileText size={14} />
@@ -403,65 +417,101 @@ function AmbassadorsReportPage() {
               <Input
                 leftIcon={Search}
                 placeholder="Buscar na tabela..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
+                onBlur={handleSearchCommit}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchCommit()}
               />
             </div>
             <div className="w-44">
               <Input
                 type="number"
                 placeholder="Mín. indicações"
-                value={minIndicacoes}
-                onChange={(e) => setMinIndicacoes(e.target.value)}
+                value={localMin}
+                onChange={(e) => setLocalMin(e.target.value)}
+                onBlur={handleSearchCommit}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchCommit()}
               />
             </div>
             <div className="w-44">
               <Input
                 type="number"
                 placeholder="Máx. indicações"
-                value={maxIndicacoes}
-                onChange={(e) => setMaxIndicacoes(e.target.value)}
+                value={localMax}
+                onChange={(e) => setLocalMax(e.target.value)}
+                onBlur={handleSearchCommit}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchCommit()}
               />
             </div>
           </div>
         </div>
         <div className="px-7 pb-6">
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Nome</Table.Head>
-              <Table.Head>E-mail</Table.Head>
-              <Table.Head>Telefone</Table.Head>
-              <Table.Head>Cadastro</Table.Head>
-              <Table.Head className="text-right">Indicações no período</Table.Head>
-              <Table.Head className="text-right">Indicações acumuladas</Table.Head>
-              <Table.Head className="text-right">Recorrências (R$)</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {filteredAmbassadors.length === 0 ? (
-              <Table.Empty
-                title="Nenhum embaixador encontrado."
-                description="Tente ajustar os filtros de busca."
-              />
-            ) : (
-              filteredAmbassadors.map((a) => (
-                <Table.Row key={a.email}>
-                  <Table.Cell className="font-medium">{a.name}</Table.Cell>
-                  <Table.Cell className="text-muted-foreground">{a.email}</Table.Cell>
-                  <Table.Cell className="text-muted-foreground">{a.phone}</Table.Cell>
-                  <Table.Cell className="text-muted-foreground">{a.registeredAt}</Table.Cell>
-                  <Table.Cell className="text-right">{a.indicacoesPeriodo}</Table.Cell>
-                  <Table.Cell className="text-right text-muted-foreground">
-                    {a.indicacoesAcumuladas}
-                  </Table.Cell>
-                  <Table.Cell className="text-right font-medium">{a.recorrencias}</Table.Cell>
-                </Table.Row>
-              ))
-            )}
-          </Table.Body>
-        </Table.Root>
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>#</Table.Head>
+                <Table.Head>Nome</Table.Head>
+                <Table.Head>E-mail</Table.Head>
+                <Table.Head>Telefone</Table.Head>
+                <Table.Head>Cadastro</Table.Head>
+                <Table.Head className="text-right">Indicações no período</Table.Head>
+                <Table.Head className="text-right">Indicações acumuladas</Table.Head>
+                <Table.Head className="text-right">Recorrências (R$)</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {ambassadors.length === 0 ? (
+                <Table.Empty
+                  title="Nenhum embaixador encontrado."
+                  description="Tente ajustar os filtros de busca."
+                />
+              ) : (
+                ambassadors.map((a) => (
+                  <Table.Row key={a.id}>
+                    <Table.Cell className="text-muted-foreground">{a.rank}</Table.Cell>
+                    <Table.Cell className="font-medium">{a.name}</Table.Cell>
+                    <Table.Cell className="text-muted-foreground">{a.email}</Table.Cell>
+                    <Table.Cell className="text-muted-foreground">{a.phone}</Table.Cell>
+                    <Table.Cell className="text-muted-foreground">{a.createdAt}</Table.Cell>
+                    <Table.Cell className="text-right">{a.periodIndications}</Table.Cell>
+                    <Table.Cell className="text-right text-muted-foreground">
+                      {a.totalIndications}
+                    </Table.Cell>
+                    <Table.Cell className="text-right font-medium">
+                      {a.totalRecurringAmount}
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
+            </Table.Body>
+          </Table.Root>
         </div>
+
+        {pagination.lastPage > 1 && (
+          <div className="flex items-center justify-between border-t px-6 py-4">
+            <span className="text-sm text-muted-foreground">
+              Mostrando {pagination.from}–{pagination.to} de {pagination.total}
+            </span>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pagination.currentPage <= 1}
+                onClick={() => handlePageChange(pagination.currentPage - 1)}
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pagination.currentPage >= pagination.lastPage}
+                onClick={() => handlePageChange(pagination.currentPage + 1)}
+              >
+                Próxima
+              </Button>
+            </div>
+          </div>
+        )}
       </Card.Root>
     </div>
   );
