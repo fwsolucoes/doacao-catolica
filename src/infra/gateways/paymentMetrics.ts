@@ -44,7 +44,7 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
 
     return {
       receivedOnline: fmt(received.amount + confirmed.amount),
-      released: fmt(received.amount),
+      released: fmt(received.amount + confirmed.amount + manual.amount),
       awaitingRelease: fmt(confirmed.amount),
       pending: fmt(awaitingPayment.amount + overdue.amount),
       receivedOffline: fmt(manual.amount),
