@@ -117,13 +117,13 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             </Button>
             <Button
               variant="outline"
-              size="icon"
-              className="size-10 rounded-xl"
+              className="h-10 rounded-xl px-3"
               aria-label="Configurar campanha"
               asChild
             >
               <Link to={`/campaign/${campaign.id}/home`}>
                 <Settings size={18} />
+                Gerenciar
               </Link>
             </Button>
           </div>

@@ -2,6 +2,7 @@ import { ArrowLeft, Eye, Moon, Sun } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
+import { useRoot } from "~/client/hooks/useRoot";
 import { useTheme } from "~/client/hooks/useTheme";
 import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
@@ -9,6 +10,8 @@ import { formatCurrency } from "~/lib/formatCurrency";
 function CampaignBanner() {
   const { campaign, overview } = useLoaderData<CampaignLayoutLoader>();
   const { theme, toggle } = useTheme();
+  const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
+  const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
 
   return (
     <header className="sticky top-0 z-30 flex min-h-14 w-full items-center gap-3 border-b border-border bg-background px-7 py-4">
@@ -61,8 +64,10 @@ function CampaignBanner() {
           <Bell size={16} className="text-foreground" />
           <span className="absolute right-2 top-2 size-2.5 rounded-full bg-[#3a64f2]" />
         </Button> */}
-        <Button variant="ghost" size="icon" className="size-10">
-          <Eye size={16} className="text-foreground" />
+        <Button variant="ghost" size="icon" className="size-10" aria-label="Visualizar campanha" asChild>
+          <a href={checkoutUrl} target="_blank" rel="noreferrer">
+            <Eye size={16} className="text-foreground" />
+          </a>
         </Button>
       </div>
     </header>
