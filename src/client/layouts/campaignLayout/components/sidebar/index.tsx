@@ -338,6 +338,11 @@ function AppSidebar() {
           alt="Logo"
           className="h-10 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
         />
+        <img
+          src="/small-logo-icon.svg"
+          alt="Logo"
+          className="h-8 w-auto shrink-0 hidden group-data-[collapsible=icon]:block"
+        />
       </SidebarHeader>
 
       <SidebarContent>
