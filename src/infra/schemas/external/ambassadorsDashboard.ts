@@ -65,8 +65,8 @@ const externalAmbassadorsDashboardSchema = z.object({
       pagination: z.object({
         current_page: z.number(),
         per_page: z.number(),
-        from: z.number(),
-        to: z.number(),
+        from: z.number().nullable(),
+        to: z.number().nullable(),
         total: z.number(),
         last_page: z.number(),
       }),

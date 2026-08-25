@@ -48,8 +48,8 @@ type AmbassadorsDashboardCharts = {
 type AmbassadorsDashboardPagination = {
   currentPage: number;
   perPage: number;
-  from: number;
-  to: number;
+  from: number | null;
+  to: number | null;
   total: number;
   lastPage: number;
 };

@@ -488,7 +488,7 @@ function AmbassadorsReportPage() {
         {pagination.lastPage > 1 && (
           <div className="flex items-center justify-between border-t px-6 py-4">
             <span className="text-sm text-muted-foreground">
-              Mostrando {pagination.from}–{pagination.to} de {pagination.total}
+              Mostrando {pagination.from ?? 0}–{pagination.to ?? 0} de {pagination.total}
             </span>
             <div className="flex gap-2">
               <Button
