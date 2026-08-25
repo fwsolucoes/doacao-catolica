@@ -1,8 +1,10 @@
-import { Button } from "@arkyn/components";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate, useRouteError } from "react-router";
+import { useLocation, useNavigate, useRouteError } from "react-router";
 
 import bulletBoxSvg from "~/client/assets/bullet-box.svg";
+import whatsappLogoSvg from "~/client/assets/whatsapp-logo.svg";
+import { Button } from "~/client/components/ui/button";
+import { useRoot } from "~/client/hooks/useRoot";
 import { Container } from "./styles";
 
 type ErrorProps = {
@@ -20,6 +22,20 @@ function ErrorBoundaryPage() {
 
   const navigate = useNavigate();
   const handleGoBack = () => navigate(-1);
+
+  const location = useLocation();
+  const { environmentVariables } = useRoot();
+
+  function openWhatsappWithError() {
+    const jsonString = JSON.stringify(errorData);
+    const errorMessage = `Projeto: Sancton\nURL: ${location.pathname}\nStatus: ${errorStatus}\nCausa: ${errorCause}\nNome: ${errorData.name}\nMensagem: ${errorData.message || "N/A"}\nErros: ${jsonString}`;
+
+    const whatsappUrl = `https://wa.me/${environmentVariables.WHATSAPP_SUPPORT_NUMBER}?text=${encodeURIComponent(
+      `Olá, estou enfrentando um problema com o sistema. Aqui estão os detalhes do erro:\n\n${errorMessage}`,
+    )}`;
+
+    window.open(whatsappUrl, "_blank");
+  }
 
   return (
     <Container>
@@ -40,13 +56,13 @@ function ErrorBoundaryPage() {
       </p>
 
       <div className="buttonGroup">
-        <Button
-          size="lg"
-          variant="outline"
-          leftIcon={ArrowLeft}
-          onClick={handleGoBack}
-        >
+        <Button variant="outline" size="lg" onClick={handleGoBack}>
+          <ArrowLeft size={20} />
           Voltar
+        </Button>
+        <Button size="lg" onClick={openWhatsappWithError}>
+          <img src={whatsappLogoSvg} width={20} height={20} alt="" />
+          Falar com o suporte
         </Button>
       </div>
     </Container>

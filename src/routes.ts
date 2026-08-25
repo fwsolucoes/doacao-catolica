@@ -10,6 +10,7 @@ export default [
   route("api/client_whatsapp_templates", "./main/routes/api.whatsappTemplates.ts"),
   
   layout("./main/routes/layout.portalLayout.tsx", [
+    route("test-error", "./main/routes/route.testError.tsx"),
     route("dashboard", "./main/routes/route.dashboard.tsx"),
     route("my-campaigns", "./main/routes/route.myCampaigns.tsx"),
     route("my-campaigns/create", "./main/routes/route.createCampaign.tsx"),

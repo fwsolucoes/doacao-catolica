@@ -50,6 +50,9 @@ const environmentVariablesSchema = z.object({
 
   // Campaign default image (shown when campaign has no image or image fails to load)
   CAMPAIGN_DEFAULT_IMAGE: z.url(),
+
+  // Support contact
+  WHATSAPP_SUPPORT_NUMBER: z.string(),
 });
 
 function formatErrorMessage(error: z.ZodError) {
