@@ -41,7 +41,7 @@ const externalAmbassadorsDashboardSchema = z.object({
           total_indications: z.number(),
           total_amount: z.number(),
         }),
-      ),
+      ).nullable(),
       donation_amount_ranges: z.array(
         z.object({
           key: z.string(),
@@ -49,7 +49,7 @@ const externalAmbassadorsDashboardSchema = z.object({
           total_payments: z.number(),
           total_amount: z.number(),
         }),
-      ),
+      ).nullable(),
       payment_methods: z.array(
         z.object({
           type: z.string(),
@@ -58,7 +58,7 @@ const externalAmbassadorsDashboardSchema = z.object({
           total_amount: z.number(),
           percentage: z.number(),
         }),
-      ),
+      ).nullable(),
     }),
     ambassadors: z.object({
       data: z.array(externalAmbassadorItemSchema),
@@ -71,7 +71,7 @@ const externalAmbassadorsDashboardSchema = z.object({
         last_page: z.number(),
       }),
     }),
-  }),
+  }).nullable(),
 });
 
 type ExternalAmbassadorItem = z.infer<typeof externalAmbassadorItemSchema>;

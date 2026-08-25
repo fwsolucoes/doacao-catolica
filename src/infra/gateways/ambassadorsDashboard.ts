@@ -7,7 +7,7 @@ import { Ambassador } from "~/domain/entities/ambassador";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
-import { donationApi } from "../http/donationApi";
+import { webworkerApi } from "../http/webworkerApi";
 import { externalAmbassadorsDashboardSchema } from "../schemas/external/ambassadorsDashboard";
 
 class AmbassadorsDashboardGateway implements AmbassadorsDashboardGatewayDTO {
@@ -18,15 +18,54 @@ class AmbassadorsDashboardGateway implements AmbassadorsDashboardGatewayDTO {
     let url = "/donation/ambassadors/dashboard";
     url += searchParams.toExternal(["pageLimit"]);
 
-    const apiResponse = await donationApi.get(url, {
+    console.log("🚀AmbassadorsDashboardGateway -> getDashboard -> url", url);
+
+    const apiResponse = await webworkerApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
 
+    console.log(
+      "🚀AmbassadorsDashboardGateway -> getDashboard -> apiResponse",
+      apiResponse,
+    );
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    if (!apiResponse.response) {
+      return {
+        summary: {
+          totalAmbassadors: 0,
+          periodIndications: 0,
+          previousPeriod: { startDate: "", endDate: "", periodIndications: 0, variationPercent: null },
+          totalIndications: 0,
+          totalRecurringAmount: 0,
+          totalRaisedAmount: 0,
+        },
+        charts: { indicationsByDay: [], donationAmountRanges: [], paymentMethods: [] },
+        ambassadors: [],
+        pagination: { currentPage: 1, perPage: 15, from: null, to: null, total: 0, lastPage: 1 },
+      };
+    }
 
     const { data } = new SchemaValidatorAdapter(
       externalAmbassadorsDashboardSchema,
     ).validate(apiResponse.response);
+
+    if (!data) {
+      return {
+        summary: {
+          totalAmbassadors: 0,
+          periodIndications: 0,
+          previousPeriod: { startDate: "", endDate: "", periodIndications: 0, variationPercent: null },
+          totalIndications: 0,
+          totalRecurringAmount: 0,
+          totalRaisedAmount: 0,
+        },
+        charts: { indicationsByDay: [], donationAmountRanges: [], paymentMethods: [] },
+        ambassadors: [],
+        pagination: { currentPage: 1, perPage: 15, from: null, to: null, total: 0, lastPage: 1 },
+      };
+    }
 
     const { summary, charts, ambassadors } = data;
 
@@ -45,19 +84,19 @@ class AmbassadorsDashboardGateway implements AmbassadorsDashboardGatewayDTO {
         totalRaisedAmount: summary.total_raised_amount,
       },
       charts: {
-        indicationsByDay: charts.indications_by_day.map((d) => ({
+        indicationsByDay: (charts.indications_by_day ?? []).map((d) => ({
           date: d.date,
           label: d.label,
           totalIndications: d.total_indications,
           totalAmount: d.total_amount,
         })),
-        donationAmountRanges: charts.donation_amount_ranges.map((r) => ({
+        donationAmountRanges: (charts.donation_amount_ranges ?? []).map((r) => ({
           key: r.key,
           label: r.label,
           totalPayments: r.total_payments,
           totalAmount: r.total_amount,
         })),
-        paymentMethods: charts.payment_methods.map((m) => ({
+        paymentMethods: (charts.payment_methods ?? []).map((m) => ({
           type: m.type,
           label: m.label,
           totalPayments: m.total_payments,

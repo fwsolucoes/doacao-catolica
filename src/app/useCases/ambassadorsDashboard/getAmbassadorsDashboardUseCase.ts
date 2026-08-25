@@ -7,6 +7,10 @@ type InputProps = {
   endDate?: string;
   page?: string;
   search?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  status?: string;
   minIndications?: string;
   maxIndications?: string;
 };
@@ -22,6 +26,10 @@ class GetAmbassadorsDashboardUseCase {
         start_date: input.startDate,
         end_date: input.endDate,
         search: input.search,
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        status: input.status,
         min_indications: input.minIndications,
         max_indications: input.maxIndications,
       },

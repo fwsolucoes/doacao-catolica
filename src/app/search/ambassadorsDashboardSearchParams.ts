@@ -5,6 +5,10 @@ type AmbassadorsDashboardFilter = {
   start_date?: string;
   end_date?: string;
   search?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  status?: string;
   min_indications?: string;
   max_indications?: string;
 };

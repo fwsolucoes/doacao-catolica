@@ -24,29 +24,72 @@ class CampaignOverviewGateway implements CampaignOverviewGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const data = new SchemaValidatorAdapter(
+    if (!apiResponse.response) {
+      return {
+        totalRaised: 0,
+        monthRaised: 0,
+        previousMonthRaised: 0,
+        growthPercentage: null,
+        monthlyGoal: null,
+        totalGoal: null,
+        totalGoalProgressPercentage: null,
+        monthlyGoalProgressPercentage: null,
+        totalGoalRemaining: null,
+        monthlyGoalRemaining: null,
+        supporters: 0,
+        newSupportersLast7Days: 0,
+        averageTicketMonth: 0,
+        averageTicketPreviousMonth: 0,
+        averageTicketVariationPercentage: null,
+        oneTimeCustomers: 0,
+        recurringCustomers: 0,
+      };
+    }
+
+    const { data } = new SchemaValidatorAdapter(
       externalCampaignOverviewSchema,
     ).validate(apiResponse.response);
 
+    if (!data) {
+      return {
+        totalRaised: 0,
+        monthRaised: 0,
+        previousMonthRaised: 0,
+        growthPercentage: null,
+        monthlyGoal: null,
+        totalGoal: null,
+        totalGoalProgressPercentage: null,
+        monthlyGoalProgressPercentage: null,
+        totalGoalRemaining: null,
+        monthlyGoalRemaining: null,
+        supporters: 0,
+        newSupportersLast7Days: 0,
+        averageTicketMonth: 0,
+        averageTicketPreviousMonth: 0,
+        averageTicketVariationPercentage: null,
+        oneTimeCustomers: 0,
+        recurringCustomers: 0,
+      };
+    }
+
     return {
-      totalRaised: data.data.total_raised,
-      monthRaised: data.data.month_raised,
-      previousMonthRaised: data.data.previous_month_raised,
-      growthPercentage: data.data.growth_percentage,
-      monthlyGoal: data.data.monthly_goal,
-      totalGoal: data.data.total_goal,
-      totalGoalProgressPercentage: data.data.total_goal_progress_percentage,
-      monthlyGoalProgressPercentage: data.data.monthly_goal_progress_percentage,
-      totalGoalRemaining: data.data.total_goal_remaining,
-      monthlyGoalRemaining: data.data.monthly_goal_remaining,
-      supporters: data.data.supporters,
-      newSupportersLast7Days: data.data.new_supporters_last_7_days,
-      averageTicketMonth: data.data.average_ticket_month,
-      averageTicketPreviousMonth: data.data.average_ticket_previous_month,
-      averageTicketVariationPercentage:
-        data.data.average_ticket_variation_percentage,
-      oneTimeCustomers: data.data.one_time_customers,
-      recurringCustomers: data.data.recurring_customers,
+      totalRaised: data.total_raised,
+      monthRaised: data.month_raised,
+      previousMonthRaised: data.previous_month_raised,
+      growthPercentage: data.growth_percentage,
+      monthlyGoal: data.monthly_goal,
+      totalGoal: data.total_goal,
+      totalGoalProgressPercentage: data.total_goal_progress_percentage,
+      monthlyGoalProgressPercentage: data.monthly_goal_progress_percentage,
+      totalGoalRemaining: data.total_goal_remaining,
+      monthlyGoalRemaining: data.monthly_goal_remaining,
+      supporters: data.supporters,
+      newSupportersLast7Days: data.new_supporters_last_7_days,
+      averageTicketMonth: data.average_ticket_month,
+      averageTicketPreviousMonth: data.average_ticket_previous_month,
+      averageTicketVariationPercentage: data.average_ticket_variation_percentage,
+      oneTimeCustomers: data.one_time_customers,
+      recurringCustomers: data.recurring_customers,
     };
   }
 }

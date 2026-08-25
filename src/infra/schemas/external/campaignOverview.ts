@@ -20,7 +20,7 @@ const externalCampaignOverviewSchema = z.object({
     average_ticket_variation_percentage: z.number().nullable(),
     one_time_customers: z.number(),
     recurring_customers: z.number(),
-  }),
+  }).nullable(),
 });
 
 export { externalCampaignOverviewSchema };

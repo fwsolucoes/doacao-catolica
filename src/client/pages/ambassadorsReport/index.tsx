@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowLeft,
   FileText,
@@ -6,6 +6,7 @@ import {
   Search,
   TrendingUp,
   Users,
+  XCircle,
 } from "lucide-react";
 import { Bar, Chart, Doughnut } from "react-chartjs-2";
 import {
@@ -51,12 +52,30 @@ const CHART_COLORS = [
   "#84cc16",
 ];
 
+function toLocalISODate(d: Date): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getLastNDays(n: number): { startDate: string; endDate: string } {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(start.getDate() - (n - 1));
+  return { startDate: toLocalISODate(start), endDate: toLocalISODate(end) };
+}
+
 function detectPeriod(startDate: string | null, endDate: string | null) {
   if (!startDate || !endDate) return "current-month";
   const { firstDayOfMonth: cm0, lastDayOfMonth: cm1 } = getMonthDates(0);
   if (startDate === cm0 && endDate === cm1) return "current-month";
   const { firstDayOfMonth: lm0, lastDayOfMonth: lm1 } = getMonthDates(1);
   if (startDate === lm0 && endDate === lm1) return "last-month";
+  for (const n of [30, 60, 90]) {
+    const { startDate: s, endDate: e } = getLastNDays(n);
+    if (startDate === s && endDate === e) return `last-${n}-days`;
+  }
   return "custom";
 }
 
@@ -72,8 +91,11 @@ function AmbassadorsReportPage() {
   const minIndications = params.get("min_indications") ?? "";
   const maxIndications = params.get("max_indications") ?? "";
 
-  const period = detectPeriod(startDate, endDate);
+  const urlPeriod = detectPeriod(startDate, endDate);
+  const [isCustom, setIsCustom] = useState(urlPeriod === "custom");
+  const period = isCustom ? "custom" : urlPeriod;
   const [localSearch, setLocalSearch] = useState(search);
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [localMin, setLocalMin] = useState(minIndications);
   const [localMax, setLocalMax] = useState(maxIndications);
 
@@ -84,18 +106,31 @@ function AmbassadorsReportPage() {
       else next.set(key, value);
     }
     next.delete("page");
-    navigate(`?${next.toString()}`);
+    navigate(`?${next.toString()}`, { preventScrollReset: true });
   }
 
   function handlePeriodChange(value: string) {
+    if (value === "custom") {
+      setIsCustom(true);
+      return;
+    }
+    setIsCustom(false);
     if (value === "current-month") {
       const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
       updateParams({ start_date: firstDayOfMonth, end_date: lastDayOfMonth });
     } else if (value === "last-month") {
       const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(1);
       updateParams({ start_date: firstDayOfMonth, end_date: lastDayOfMonth });
+    } else if (value === "last-30-days") {
+      const { startDate, endDate } = getLastNDays(30);
+      updateParams({ start_date: startDate, end_date: endDate });
+    } else if (value === "last-60-days") {
+      const { startDate, endDate } = getLastNDays(60);
+      updateParams({ start_date: startDate, end_date: endDate });
+    } else if (value === "last-90-days") {
+      const { startDate, endDate } = getLastNDays(90);
+      updateParams({ start_date: startDate, end_date: endDate });
     }
-    // "custom" — aguarda edição dos inputs
   }
 
   function handleDateBlur(field: "start_date" | "end_date", value: string) {
@@ -103,21 +138,62 @@ function AmbassadorsReportPage() {
     const next = new URLSearchParams(location.search);
     next.set(field, value);
     next.delete("page");
-    navigate(`?${next.toString()}`);
+    navigate(`?${next.toString()}`, { preventScrollReset: true });
+  }
+
+  function handleSearchChange(value: string) {
+    setLocalSearch(value);
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    if (value.length === 0) {
+      updateParams({ search: null, min_indications: localMin || null, max_indications: localMax || null });
+      return;
+    }
+    if (value.length >= 3) {
+      searchTimer.current = setTimeout(() => {
+        updateParams({ search: value, min_indications: localMin || null, max_indications: localMax || null });
+      }, 400);
+    }
   }
 
   function handleSearchCommit() {
+    let min = Number(localMin) > 0 ? localMin : "";
+    let max = Number(localMax) > 0 ? localMax : "";
+
+    if (min !== localMin) setLocalMin(min);
+    if (max !== localMax) setLocalMax(max);
+
+    if (min && max && Number(max) < Number(min)) {
+      [min, max] = [max, min];
+      setLocalMin(min);
+      setLocalMax(max);
+    }
+
     updateParams({
       search: localSearch || null,
-      min_indications: localMin || null,
-      max_indications: localMax || null,
+      min_indications: min || null,
+      max_indications: max || null,
     });
+  }
+
+  const hasPeriodFilters = startDate !== null || endDate !== null;
+  const hasTableFilters = !!search || !!minIndications || !!maxIndications;
+
+  function clearPeriodFilters() {
+    setIsCustom(false);
+    updateParams({ start_date: null, end_date: null });
+  }
+
+  function clearTableFilters() {
+    setLocalSearch("");
+    setLocalMin("");
+    setLocalMax("");
+    updateParams({ search: null, min_indications: null, max_indications: null });
   }
 
   function handlePageChange(page: number) {
     const next = new URLSearchParams(location.search);
     next.set("page", String(page));
-    navigate(`?${next.toString()}`);
+    navigate(`?${next.toString()}`, { preventScrollReset: true });
   }
 
   const { summary, charts, ambassadors, pagination } = dashboard;
@@ -286,47 +362,63 @@ function AmbassadorsReportPage() {
             Desempenho dos embaixadores, indicações e arrecadação no período selecionado.
           </p>
         </div>
-        <Button variant="outline" className="gap-2">
+        {/* <Button variant="outline" className="gap-2">
           <FileText size={16} />
           Exportar CSV
-        </Button>
+        </Button> */}
       </div>
 
       <Card.Root className="gap-4 p-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="flex flex-col gap-1">
-            <Label className="text-sm font-semibold">Período</Label>
-            <Select.Root value={period} onValueChange={handlePeriodChange}>
-              <Select.Trigger>
-                <Select.Value />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="current-month">Mês atual</Select.Item>
-                <Select.Item value="last-month">Mês anterior</Select.Item>
-                <Select.Item value="custom">Personalizado</Select.Item>
-              </Select.Content>
-            </Select.Root>
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-semibold">Período</Label>
+              <Select.Root value={period} onValueChange={handlePeriodChange}>
+                <Select.Trigger>
+                  <Select.Value />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="current-month">Mês atual</Select.Item>
+                  <Select.Item value="last-month">Mês anterior</Select.Item>
+                  <Select.Item value="last-30-days">Últimos 30 dias</Select.Item>
+                  <Select.Item value="last-60-days">Últimos 60 dias</Select.Item>
+                  <Select.Item value="last-90-days">Últimos 90 dias</Select.Item>
+                  <Select.Item value="custom">Personalizado</Select.Item>
+                </Select.Content>
+              </Select.Root>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-semibold">Início</Label>
+              <Input
+                type="date"
+                defaultValue={displayStart}
+                key={displayStart}
+                disabled={period !== "custom"}
+                onBlur={(e) => handleDateBlur("start_date", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label className="text-sm font-semibold">Fim</Label>
+              <Input
+                type="date"
+                defaultValue={displayEnd}
+                key={displayEnd}
+                disabled={period !== "custom"}
+                onBlur={(e) => handleDateBlur("end_date", e.target.value)}
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-1">
-            <Label className="text-sm font-semibold">Início</Label>
-            <Input
-              type="date"
-              defaultValue={displayStart}
-              key={displayStart}
-              disabled={period !== "custom"}
-              onBlur={(e) => handleDateBlur("start_date", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <Label className="text-sm font-semibold">Fim</Label>
-            <Input
-              type="date"
-              defaultValue={displayEnd}
-              key={displayEnd}
-              disabled={period !== "custom"}
-              onBlur={(e) => handleDateBlur("end_date", e.target.value)}
-            />
-          </div>
+          {hasPeriodFilters && (
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-1.5 bg-card text-destructive hover:brightness-100 hover:opacity-75"
+              onClick={clearPeriodFilters}
+            >
+              <XCircle size={16} />
+              Limpar filtros
+            </Button>
+          )}
         </div>
       </Card.Root>
 
@@ -405,10 +497,10 @@ function AmbassadorsReportPage() {
             <p className="text-sm font-semibold text-(--text-heading)">
               Embaixadores ({pagination.total})
             </p>
-            <Button variant="outline" size="sm" className="gap-2 text-xs">
+            {/* <Button variant="outline" size="sm" className="gap-2 text-xs">
               <FileText size={14} />
               Exportar CSV
-            </Button>
+            </Button> */}
           </div>
           <div className="flex flex-wrap gap-3">
             <div className="w-72">
@@ -416,7 +508,7 @@ function AmbassadorsReportPage() {
                 leftIcon={Search}
                 placeholder="Buscar na tabela..."
                 value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 onBlur={handleSearchCommit}
                 onKeyDown={(e) => e.key === "Enter" && handleSearchCommit()}
               />
@@ -441,6 +533,17 @@ function AmbassadorsReportPage() {
                 onKeyDown={(e) => e.key === "Enter" && handleSearchCommit()}
               />
             </div>
+            {hasTableFilters && (
+              <Button
+                type="button"
+                variant="outline"
+                className="gap-1.5 bg-card text-destructive hover:brightness-100 hover:opacity-75"
+                onClick={clearTableFilters}
+              >
+                <XCircle size={16} />
+                Limpar filtros
+              </Button>
+            )}
           </div>
         </div>
         <div className="px-7 pb-6">

@@ -15,6 +15,10 @@ class GetAmbassadorsDashboardController {
       endDate: route.query.end_date,
       page: route.query.page,
       search: route.query.search,
+      name: route.query.name,
+      email: route.query.email,
+      phone: route.query.phone,
+      status: route.query.status,
       minIndications: route.query.min_indications,
       maxIndications: route.query.max_indications,
     });
