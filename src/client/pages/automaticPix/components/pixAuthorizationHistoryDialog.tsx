@@ -75,7 +75,7 @@ function PixAuthorizationHistoryDialog({
                   history?.authorizations.map((item) => (
                     <Table.Row key={item.authorizationUuid}>
                       <Table.Cell className="text-foreground">
-                        {item.statusUpdatedAt}
+                        {item.createdAt}
                       </Table.Cell>
                       <Table.Cell className="text-foreground">
                         {item.statusLabel}
