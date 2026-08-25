@@ -4,6 +4,7 @@ import {
   ToastProvider,
 } from "@arkyn/components";
 import type { ReactNode } from "react";
+import { ThemeProvider } from "~/client/hooks/useTheme";
 
 type RootProviderArgs = {
   children: ReactNode;
@@ -11,11 +12,13 @@ type RootProviderArgs = {
 
 function RootProviders({ children }: RootProviderArgs) {
   return (
-    <ToastProvider>
-      <DrawerProvider>
-        <ModalProvider>{children}</ModalProvider>
-      </DrawerProvider>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <DrawerProvider>
+          <ModalProvider>{children}</ModalProvider>
+        </DrawerProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 
