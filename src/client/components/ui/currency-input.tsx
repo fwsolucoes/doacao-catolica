@@ -56,7 +56,7 @@ function CurrencyInput({
   return (
     <div
       className={cn(
-        "flex rounded-md border border-border bg-input",
+        "flex rounded-md border border-border bg-muted",
         "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1 ring-offset-background",
         "has-disabled:opacity-50",
       )}

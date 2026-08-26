@@ -30,7 +30,7 @@ function Trigger({
       data-slot="select-trigger"
       aria-invalid={hasError || undefined}
       className={cn(
-        "flex w-full min-h-11 items-center justify-between gap-2 rounded-md border border-border bg-input px-3 py-2 text-sm whitespace-nowrap outline-none",
+        "flex w-full min-h-11 items-center justify-between gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm whitespace-nowrap outline-none",
         "text-foreground data-placeholder:text-muted-foreground",
         "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
         "disabled:cursor-not-allowed disabled:opacity-50",

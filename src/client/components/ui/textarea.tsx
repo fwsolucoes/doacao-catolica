@@ -12,7 +12,7 @@ function Textarea({ className, ...props }: ComponentProps<"textarea">) {
       data-slot="textarea"
       aria-invalid={hasError || undefined}
       className={cn(
-        "w-full min-h-16 rounded-md border border-border bg-input px-3 py-2 text-sm",
+        "w-full min-h-16 rounded-md border border-border bg-muted px-3 py-2 text-sm",
         "text-foreground placeholder:text-muted-foreground",
         "outline-none ring-offset-background",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",

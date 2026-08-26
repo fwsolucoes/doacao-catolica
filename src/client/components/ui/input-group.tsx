@@ -98,7 +98,7 @@ function Input({ className, id, name, ...props }: ComponentProps<"input">) {
       name={resolvedName}
       aria-invalid={hasError || undefined}
       className={cn(
-        "w-full min-h-11 rounded-md border border-border bg-input text-sm",
+        "w-full min-h-11 rounded-md border border-border bg-muted text-sm",
         "px-3 py-2 text-foreground",
         "placeholder:text-muted-foreground",
         "outline-none ring-offset-background",
