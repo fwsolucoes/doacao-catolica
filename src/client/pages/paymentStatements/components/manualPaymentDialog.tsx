@@ -2,6 +2,7 @@ import { Download, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useFetcher, useLoaderData, useParams } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { CurrencyInput } from "~/client/components/ui/currency-input";
 import {
   Dialog,
   DialogContent,
@@ -79,13 +80,7 @@ function ManualPaymentDialog({
               <Separator />
 
               <FormField name="amount" label="Valor recebido:" required>
-                <Input
-                  name="amount"
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  defaultValue={payment?.rawAmount}
-                />
+                <CurrencyInput defaultValue={payment?.rawAmount} />
               </FormField>
 
               <FormField name="paymentDate" label="Data de pagamento:">
