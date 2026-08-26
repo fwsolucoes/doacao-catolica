@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -11,11 +12,8 @@ import {
   getStatusVariant,
 } from "./utils";
 
-type TransfersTableProps = {
-  transfers: TransfersLoader["transfers"];
-};
-
-function TransfersTable({ transfers }: TransfersTableProps) {
+function TransfersTable() {
+  const { transfers } = useLoaderData<TransfersLoader>();
   return (
     <Card.Root className="gap-4 p-6">
       <Card.Header>

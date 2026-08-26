@@ -13,7 +13,9 @@ import { donationApi } from "../http/donationApi";
 import { externalTransferAccountsSchema } from "../schemas/external/transferAccount";
 
 class TransferAccountGateway implements TransferAccountGatewayDTO {
-  async createTransferAccount(input: CreateTransferAccountInput): Promise<void> {
+  async createTransferAccount(
+    input: CreateTransferAccountInput,
+  ): Promise<void> {
     const url = `/${environmentVariables.API_DATABASE}/${input.accountId}/bank_accounts`;
 
     const apiResponse = await api.post(url, {
@@ -35,7 +37,9 @@ class TransferAccountGateway implements TransferAccountGatewayDTO {
     const params = new URLSearchParams();
     params.set("filter[account_id]", String(accountId));
 
-    const apiResponse = await api.get(`/bank-accounts/list?${params.toString()}`, {
+    const url = `/bank-accounts/list?${params.toString()}`;
+
+    const apiResponse = await api.get(url, {
       token,
     });
 

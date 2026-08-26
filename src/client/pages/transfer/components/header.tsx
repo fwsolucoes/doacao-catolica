@@ -1,16 +1,11 @@
 import { Clock3, Download, WalletCards } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
+import type { TransfersLoader } from "~/client/types/transfersLoader";
 import { cn } from "~/lib/utils";
 import { RequestWithdrawalModal } from "./requestWithdrawalModal";
-import { formatCurrency, type TransferAccount } from "./utils";
-
-type TransferHeaderProps = {
-  accounts: TransferAccount[];
-  availableAmount: number;
-  awaitingRelease: number;
-  withdrawalsMade: number;
-};
+import { formatCurrency } from "./utils";
 
 function MetricCard({
   label,
@@ -56,12 +51,16 @@ function MetricCard({
   );
 }
 
-function TransferHeader({
-  accounts,
-  availableAmount,
-  awaitingRelease,
-  withdrawalsMade,
-}: TransferHeaderProps) {
+function TransferHeader() {
+  const { transferMetrics } = useLoaderData<TransfersLoader>();
+
+  const availableAmount = transferMetrics.balanceAvailable;
+  const awaitingRelease = Math.max(
+    transferMetrics.totalReceived - transferMetrics.balanceAvailable,
+    0,
+  );
+  const withdrawalsMade = transferMetrics.withdrawalsMade;
+
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -73,10 +72,7 @@ function TransferHeader({
             Solicite saques e acompanhe as transferências realizadas.
           </p>
         </div>
-        <RequestWithdrawalModal
-          accounts={accounts}
-          availableAmount={availableAmount}
-        />
+        <RequestWithdrawalModal />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

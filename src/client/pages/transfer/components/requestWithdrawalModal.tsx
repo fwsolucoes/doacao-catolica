@@ -1,6 +1,6 @@
 import { AlertTriangle, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useFetcher, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { CurrencyInput } from "~/client/components/ui/currency-input";
 import {
@@ -18,22 +18,21 @@ import {
 } from "~/client/components/ui/form-field";
 import { Select } from "~/client/components/ui/select";
 import { useActionToast } from "~/client/hooks/useActionToast";
-import {
-  formatCurrency,
-  getPixLabel,
-  getTodayISO,
-  type TransferAccount,
-} from "./utils";
+import type { TransfersLoader } from "~/client/types/transfersLoader";
+import { formatCurrency, getPixLabel, getTodayISO } from "./utils";
 
-type RequestWithdrawalModalProps = {
-  accounts: TransferAccount[];
-  availableAmount: number;
-};
+function RequestWithdrawalModal() {
+  const { transferMetrics, transferAccounts } =
+    useLoaderData<TransfersLoader>();
 
-function RequestWithdrawalModal({
-  accounts,
-  availableAmount,
-}: RequestWithdrawalModalProps) {
+  const availableAmount = transferMetrics.balanceAvailable;
+  const accounts = useMemo(
+    () =>
+      transferAccounts.data.filter(
+        (account) => account.pixKey && account.pixType,
+      ),
+    [transferAccounts.data],
+  );
   const fetcher = useFetcher();
   const [open, setOpen] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState("");
