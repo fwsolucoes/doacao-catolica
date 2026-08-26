@@ -33,6 +33,7 @@ const environmentVariablesSchema = z.object({
 
   // CRM panel
   SANCTON_CRM_PANEL_URL: z.string(),
+  SANCTON_PANEL_URL: z.string(),
 
   // Donation checkout
   SANCTON_DONATION_CHECKOUT_URL: z.string(),

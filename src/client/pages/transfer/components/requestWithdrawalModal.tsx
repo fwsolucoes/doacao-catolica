@@ -18,14 +18,20 @@ import {
 } from "~/client/components/ui/form-field";
 import { Select } from "~/client/components/ui/select";
 import { useActionToast } from "~/client/hooks/useActionToast";
+import { useRoot } from "~/client/hooks/useRoot";
 import type { TransfersLoader } from "~/client/types/transfersLoader";
 import { formatCurrency, getPixLabel, getTodayISO } from "./utils";
 
 function RequestWithdrawalModal() {
   const { transferMetrics, transferAccounts } =
     useLoaderData<TransfersLoader>();
+  const { environmentVariables, user } = useRoot();
 
   const availableAmount = transferMetrics.balanceAvailable;
+
+  function toSanctonPanel(redirect: string) {
+    return `${environmentVariables.SANCTON_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=${redirect}`;
+  }
   const accounts = useMemo(
     () =>
       transferAccounts.data.filter(
@@ -134,7 +140,14 @@ function RequestWithdrawalModal() {
                 </FormField>
                 <p className="text-xs text-muted-foreground">
                   Para adicionar uma conta de repasse,{" "}
-                  <span className="font-medium text-primary">clique aqui.</span>
+                  <a
+                    href={toSanctonPanel("/profile/settings")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    clique aqui.
+                  </a>
                 </p>
               </div>
 
