@@ -30,6 +30,7 @@ type ComboboxProps = {
   searchPlaceholder?: string;
   emptyText?: string;
   className?: string;
+  disabled?: boolean;
 };
 
 function Combobox({
@@ -41,6 +42,7 @@ function Combobox({
   searchPlaceholder = "Pesquisar...",
   emptyText = "Nenhum resultado.",
   className,
+  disabled = false,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -53,6 +55,7 @@ function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn(
             "h-9 w-full justify-between px-3 font-normal",
             !value && "text-(--text-muted)",

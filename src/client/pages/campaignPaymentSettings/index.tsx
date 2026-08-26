@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Info, Pencil, Plus, Trash2 } from "lucide-react";
-import { useFetcher, useLoaderData, useParams } from "react-router";
+import {
+  useFetcher,
+  useLoaderData,
+  useParams,
+  useRouteLoaderData,
+} from "react-router";
+import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -27,7 +33,13 @@ type ToggleRowProps = {
   onChange: (value: boolean) => void;
 };
 
-function ToggleRow({ name, title, description, checked, onChange }: ToggleRowProps) {
+function ToggleRow({
+  name,
+  title,
+  description,
+  checked,
+  onChange,
+}: ToggleRowProps) {
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-border p-4">
       <div>
@@ -56,12 +68,12 @@ const DEFAULT_VALUES: SuggestedValue[] = [
   { id: "3", amount: 100, description: "Impacto significativo no projeto." },
 ];
 
-const WALLET_OPTIONS = [
-  { value: "principal", label: "Carteira Principal · R$ 12.480,00" },
-];
-
 function CampaignPaymentSettingsPage() {
-  const { preferences } = useLoaderData<CampaignPaymentSettingsLoader>();
+  const { preferences, subAccounts } =
+    useLoaderData<CampaignPaymentSettingsLoader>();
+  const layoutData = useRouteLoaderData<CampaignLayoutLoader>(
+    "main/routes/layout.campaignLayout",
+  );
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
@@ -69,14 +81,34 @@ function CampaignPaymentSettingsPage() {
 
   const steps = buildSteps(campaignId!);
 
-  const [wallet, setWallet] = useState("principal");
+  const campaignSubAccountId = layoutData?.campaign.subAccountId ?? "";
+  const walletLocked = !!campaignSubAccountId;
+
+  const walletOptions = subAccounts.data.map((sa) => ({
+    value: sa.subAccountId,
+    label: sa.name,
+  }));
+
+  const [wallet, setWallet] = useState(campaignSubAccountId);
   const [pixEnabled, setPixEnabled] = useState(preferences.pixEnabled ?? true);
-  const [boletoEnabled, setBoletoEnabled] = useState(preferences.boletoEnabled ?? true);
-  const [creditCardEnabled, setCreditCardEnabled] = useState(preferences.creditCardEnabled ?? true);
-  const [minAmount, setMinAmount] = useState(String(preferences.minAmount ?? ""));
-  const [passFeeToDonor, setPassFeeToDonor] = useState(preferences.passFeeToDonor ?? false);
-  const [allowCustomAmount, setAllowCustomAmount] = useState(preferences.allowCustomAmount ?? true);
-  const [chargeImmediately, setChargeImmediately] = useState(preferences.chargeImmediately ?? true);
+  const [boletoEnabled, setBoletoEnabled] = useState(
+    preferences.boletoEnabled ?? true,
+  );
+  const [creditCardEnabled, setCreditCardEnabled] = useState(
+    preferences.creditCardEnabled ?? true,
+  );
+  const [minAmount, setMinAmount] = useState(
+    String(preferences.minAmount ?? ""),
+  );
+  const [passFeeToDonor, setPassFeeToDonor] = useState(
+    preferences.passFeeToDonor ?? false,
+  );
+  const [allowCustomAmount, setAllowCustomAmount] = useState(
+    preferences.allowCustomAmount ?? true,
+  );
+  const [chargeImmediately, setChargeImmediately] = useState(
+    preferences.chargeImmediately ?? true,
+  );
   const [suggestedValues] = useState<SuggestedValue[]>(DEFAULT_VALUES);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<SuggestedValue | null>(null);
@@ -108,17 +140,25 @@ function CampaignPaymentSettingsPage() {
               title="Carteira digital"
               description="Selecione a carteira que receberá os valores das doações desta campanha."
             >
-              <FormField name="walletId" label="Carteira para recebimento" required>
+              <FormField
+                name="walletId"
+                label="Carteira para recebimento"
+                required
+              >
                 <Combobox
-                  options={WALLET_OPTIONS}
+                  options={walletOptions}
                   value={wallet}
                   onChange={setWallet}
                   placeholder="Selecione uma carteira"
+                  disabled={walletLocked}
                 />
               </FormField>
 
               <div className="flex gap-3 rounded-xl border border-border bg-muted/40 p-4">
-                <Info size={16} className="mt-0.5 shrink-0 text-muted-foreground" />
+                <Info
+                  size={16}
+                  className="mt-0.5 shrink-0 text-muted-foreground"
+                />
                 <p className="text-sm text-muted-foreground">
                   Todos os pagamentos aprovados desta campanha serão creditados
                   automaticamente na carteira digital selecionada. Você poderá

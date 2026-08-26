@@ -8,13 +8,17 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getCampaignPreferences } from "../factories/campaign/getCampaignPreferencesFactory";
 import { updateCampaignPaymentSettings } from "../factories/campaign/updateCampaignPaymentSettingsFactory";
+import { listSubAccounts } from "../factories/subAccount/listSubAccountsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  const preferences = await getCampaignPreferences.handle(route);
-  return { preferences };
+  const [preferences, subAccounts] = await Promise.all([
+    getCampaignPreferences.handle(route),
+    listSubAccounts.handle(route),
+  ]);
+  return { preferences, subAccounts };
 }
 
 export async function action(args: Route.ActionArgs) {
