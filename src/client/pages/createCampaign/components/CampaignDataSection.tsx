@@ -45,7 +45,7 @@ function CampaignDataSection() {
         </FormField>
 
         <FormField name="status" label="Status">
-          <div className="flex h-10.75 items-center justify-between rounded-[11px] border border-border px-4">
+          <div className="flex h-10.75 items-center justify-between rounded-md border border-border bg-muted px-4">
             <span className="text-sm font-semibold text-foreground">
               {isActive ? "Campanha ativa" : "Campanha inativa"}
             </span>
