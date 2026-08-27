@@ -1,6 +1,8 @@
 import { SearchParams } from "../shared/searchParams";
 
-type Filter = {};
+type Filter = {
+  search?: string;
+};
 
 class CampaignSearchParams extends SearchParams<Filter> {}
 

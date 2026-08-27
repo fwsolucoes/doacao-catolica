@@ -1,4 +1,6 @@
-import { Bell, CalendarClock, HeartHandshake, LayoutGrid, Moon, Search, Sun } from "lucide-react";
+import { CalendarClock, HeartHandshake, LayoutGrid, Moon, Search, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +15,31 @@ import { useTheme } from "~/client/hooks/useTheme";
 
 function PortalHeader() {
   const { theme, toggle } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const [inputValue, setInputValue] = useState(
+    () => new URLSearchParams(location.search).get("search") ?? "",
+  );
+
+  useEffect(() => {
+    setInputValue(new URLSearchParams(location.search).get("search") ?? "");
+  }, [location.pathname]);
+
+  function handleSearchChange(value: string) {
+    setInputValue(value);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const params = new URLSearchParams(location.search);
+      if (value) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+      navigate({ search: params.toString() }, { preventScrollReset: true, replace: true });
+    }, 400);
+  }
 
   return (
     <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-background px-6">
@@ -28,7 +55,8 @@ function PortalHeader() {
         <Input
           className="h-10 rounded-xl bg-muted/50 pl-9"
           placeholder="Buscar doadores, campanhas..."
-          readOnly
+          value={inputValue}
+          onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>
 

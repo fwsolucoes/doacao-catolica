@@ -3,6 +3,7 @@ import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
 
 type InputProps = {
   page?: number | null;
+  search?: string | null;
   token: string;
 };
 
@@ -10,8 +11,11 @@ class ListCampaignsUseCase {
   constructor(private campaignGateway: CampaignGatewayDTO) {}
 
   async execute(input: InputProps) {
-    const { page, token } = input;
-    const searchParams = new CampaignSearchParams({ page });
+    const { page, search, token } = input;
+    const searchParams = new CampaignSearchParams({
+      page,
+      filter: { search: search ?? undefined },
+    });
 
     const campaigns = await this.campaignGateway.listCampaigns(
       searchParams,

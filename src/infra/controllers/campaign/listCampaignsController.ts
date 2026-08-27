@@ -25,6 +25,7 @@ class ListCampaignsController {
 
     return await this.listCampaignsUseCase.execute({
       page: mappedFilter.page,
+      search: route.query.search || null,
       token: user.token,
     });
   }
