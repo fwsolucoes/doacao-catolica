@@ -14,7 +14,11 @@ export const PERIOD_OPTIONS = [
   { label: "Data personalizada", value: "custom" },
 ] as const;
 
-function PeriodSelect() {
+type PeriodSelectProps = {
+  onCustomSelect?: () => void;
+};
+
+function PeriodSelect({ onCustomSelect }: PeriodSelectProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -93,7 +97,7 @@ function PeriodSelect() {
         applyYearFilter(1, value);
         break;
       case "custom":
-        // TODO: abrir drawer de data personalizada
+        onCustomSelect?.();
         break;
     }
   }

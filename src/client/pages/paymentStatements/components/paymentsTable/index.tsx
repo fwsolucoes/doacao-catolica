@@ -140,10 +140,14 @@ function ActionsPopover({ onViewDetails, onSendReminder, paymentLink }: ActionsP
   );
 }
 
-function PaymentsTable() {
+type PaymentsTableProps = {
+  filterDrawerOpen: boolean;
+  onFilterDrawerOpenChange: (open: boolean) => void;
+};
+
+function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsTableProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const { payments, donors } = useLoaderData<DonationsLoader>();
-  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<
     DonationsLoader["payments"]["data"][number] | null
   >(null);
@@ -176,15 +180,15 @@ function PaymentsTable() {
             <Button
               variant="outline"
               className="h-11 min-h-0 w-full gap-2 px-4 text-sm sm:w-auto"
-              onClick={() => setFilterOpen(true)}
+              onClick={() => onFilterDrawerOpenChange(true)}
             >
               <SlidersHorizontal size={16} />
               Filtros
             </Button>
             <FilterDrawer
               donors={donors.data}
-              open={filterOpen}
-              onOpenChange={setFilterOpen}
+              open={filterDrawerOpen}
+              onOpenChange={onFilterDrawerOpenChange}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

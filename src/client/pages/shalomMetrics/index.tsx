@@ -4,13 +4,17 @@ import {
   CircleX,
   Wallet,
 } from "lucide-react";
+import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { ShalomMetricsLoader } from "~/client/types/shalomMetricsLoader";
 import { PeriodSelect } from "~/client/pages/paymentStatements/components/periodSelect";
+import { FilterDrawer } from "./components/filterDrawer";
 import { ShalomStatCard } from "./components/shalomStatCard";
 
 function ShalomMetricsPage() {
   const { metrics } = useLoaderData<ShalomMetricsLoader>();
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const openFilterDrawer = useCallback(() => setFilterDrawerOpen(true), []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -23,8 +27,9 @@ function ShalomMetricsPage() {
             Indicadores financeiros da campanha
           </p>
         </div>
-        <PeriodSelect />
+        <PeriodSelect onCustomSelect={openFilterDrawer} />
       </div>
+      <FilterDrawer open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <ShalomStatCard

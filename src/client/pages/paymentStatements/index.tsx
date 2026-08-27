@@ -14,6 +14,7 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
+import { useCallback, useState } from "react";
 import { useLoaderData, useLocation, useMatches } from "react-router";
 import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 import { Button } from "~/client/components/ui/button";
@@ -24,6 +25,8 @@ import { PERIOD_OPTIONS, PeriodSelect } from "./components/periodSelect";
 
 function DonationsPage() {
   const { metrics, summary } = useLoaderData<DonationsLoader>();
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const openFilterDrawer = useCallback(() => setFilterDrawerOpen(true), []);
 
   const location = useLocation();
   const matches = useMatches();
@@ -108,7 +111,7 @@ function DonationsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <PeriodSelect />
+          <PeriodSelect onCustomSelect={openFilterDrawer} />
           <Button variant="outline" className="text-foreground">
             <Download size={16} />
             Exportar
@@ -122,7 +125,7 @@ function DonationsPage() {
         ))}
       </div>
 
-      <PaymentsTable />
+      <PaymentsTable filterDrawerOpen={filterDrawerOpen} onFilterDrawerOpenChange={setFilterDrawerOpen} />
     </div>
   );
 }
