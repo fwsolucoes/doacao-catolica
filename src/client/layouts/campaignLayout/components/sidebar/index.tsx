@@ -79,7 +79,7 @@ const sections: NavSection[] = [
           { label: "Transferências", path: "transfers" },
           { label: "Métodos de pagamento", path: "payment-methods" },
           { label: "Pix Automático", path: "automatic-pix" },
-          { label: "Métricas Shalón", path: "shalon-metrics" },
+          { label: "Métricas Shalom", path: "shalom-metrics" },
         ],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },

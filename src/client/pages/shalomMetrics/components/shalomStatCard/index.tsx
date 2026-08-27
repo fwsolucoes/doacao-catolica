@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 
-type ShalonStatCardProps = {
+type ShalomStatCardProps = {
   icon: LucideIcon;
   title: string;
   value: string;
@@ -10,14 +10,14 @@ type ShalonStatCardProps = {
   iconColor: string;
 };
 
-function ShalonStatCard({
+function ShalomStatCard({
   icon: Icon,
   title,
   value,
   subtitle,
   iconBg,
   iconColor,
-}: ShalonStatCardProps) {
+}: ShalomStatCardProps) {
   return (
     <div className="flex items-start gap-4 rounded-2xl border border-border bg-card p-5">
       <div
@@ -41,5 +41,5 @@ function ShalonStatCard({
   );
 }
 
-export { ShalonStatCard };
-export type { ShalonStatCardProps };
+export { ShalomStatCard };
+export type { ShalomStatCardProps };

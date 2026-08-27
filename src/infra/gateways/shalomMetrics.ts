@@ -1,19 +1,19 @@
 import type {
-  ShalonMetricsGatewayDTO,
-  ShalonMetricsData,
-} from "~/domain/gateways/shalonMetrics";
-import type { ShalonMetricsSearchParams } from "~/app/search/shalonMetricsSearchParams";
+  ShalomMetricsGatewayDTO,
+  ShalomMetricsData,
+} from "~/domain/gateways/shalomMetrics";
+import type { ShalomMetricsSearchParams } from "~/app/search/shalomMetricsSearchParams";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { externalPaymentMetricsSchema } from "../schemas/external/paymentMetrics";
 
-class ShalonMetricsGateway implements ShalonMetricsGatewayDTO {
-  async getShalonMetrics(
+class ShalomMetricsGateway implements ShalomMetricsGatewayDTO {
+  async getShalomMetrics(
     campaignPublicId: string,
-    searchParams: ShalonMetricsSearchParams,
-  ): Promise<ShalonMetricsData> {
+    searchParams: ShalomMetricsSearchParams,
+  ): Promise<ShalomMetricsData> {
     let url = `/api/metrics/total-payments/${campaignPublicId}`;
     url += searchParams.toExternal(["page", "pageLimit"]);
 
@@ -56,10 +56,10 @@ class ShalonMetricsGateway implements ShalonMetricsGatewayDTO {
       receivedOfflineFee: fmt(manual.amount * 0.24),
       overdue: fmt(overdue.amount),
       appliedFees: fmt(received.fee_amount + confirmed.fee_amount),
-      shalonTransfers: fmt(grandTotal * 0.24),
+      shalomTransfers: fmt(grandTotal * 0.24),
       missionTransfers: fmt(grandTotal * 0.76),
     };
   }
 }
 
-export { ShalonMetricsGateway };
+export { ShalomMetricsGateway };

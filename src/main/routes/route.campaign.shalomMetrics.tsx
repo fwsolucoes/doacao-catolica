@@ -1,10 +1,10 @@
-import type { Route } from "+/route.campaign.shalonMetrics";
+import type { Route } from "+/route.campaign.shalomMetrics";
 import { redirect } from "react-router";
-import { ShalonMetricsPage } from "~/client/pages/shalonMetrics";
+import { ShalomMetricsPage } from "~/client/pages/shalomMetrics";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
-import { getShalonMetrics } from "../factories/shalonMetrics/getShalonMetricsFactory";
+import { getShalomMetrics } from "../factories/shalomMetrics/getShalomMetricsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -12,7 +12,7 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const metrics = await getShalonMetrics.handle(adaptedRoute);
+  const metrics = await getShalomMetrics.handle(adaptedRoute);
 
   return { metrics };
 }
@@ -21,6 +21,6 @@ export function ErrorBoundary() {
   return <ErrorBoundaryPage />;
 }
 
-export default function ShalonMetricsRoute() {
-  return <ShalonMetricsPage />;
+export default function ShalomMetricsRoute() {
+  return <ShalomMetricsPage />;
 }

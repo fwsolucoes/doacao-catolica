@@ -6,6 +6,6 @@ type Filter = {
   date_type: string;
 };
 
-class ShalonMetricsSearchParams extends SearchParams<Filter> {}
+class ShalomMetricsSearchParams extends SearchParams<Filter> {}
 
-export { ShalonMetricsSearchParams };
+export { ShalomMetricsSearchParams };

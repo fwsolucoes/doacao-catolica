@@ -5,19 +5,19 @@ import {
   Wallet,
 } from "lucide-react";
 import { useLoaderData } from "react-router";
-import type { ShalonMetricsLoader } from "~/client/types/shalonMetricsLoader";
+import type { ShalomMetricsLoader } from "~/client/types/shalomMetricsLoader";
 import { PeriodSelect } from "~/client/pages/paymentStatements/components/periodSelect";
-import { ShalonStatCard } from "./components/shalonStatCard";
+import { ShalomStatCard } from "./components/shalomStatCard";
 
-function ShalonMetricsPage() {
-  const { metrics } = useLoaderData<ShalonMetricsLoader>();
+function ShalomMetricsPage() {
+  const { metrics } = useLoaderData<ShalomMetricsLoader>();
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-0.5">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Métricas Shalón
+            Métricas Shalom
           </h1>
           <p className="text-sm text-muted-foreground">
             Indicadores financeiros da campanha
@@ -27,7 +27,7 @@ function ShalonMetricsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleCheck}
           title="Total recebido online (Sistema)"
           value={metrics.receivedOnline}
@@ -35,21 +35,21 @@ function ShalonMetricsPage() {
           iconBg="bg-[rgba(var(--spotlight-success),0.1)]"
           iconColor="text-[rgb(var(--spotlight-success))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={Wallet}
           title="Total liberado"
           value={metrics.totalAvailable}
           iconBg="bg-[rgba(var(--spotlight-info),0.1)]"
           iconColor="text-[rgb(var(--spotlight-info))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={Wallet}
           title="Aguardando liberação"
           value={metrics.pendingAvailability}
           iconBg="bg-[rgba(var(--spotlight-info),0.1)]"
           iconColor="text-[rgb(var(--spotlight-info))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleCheck}
           title="Total recebido offline (Na missão)"
           value={metrics.receivedOffline}
@@ -57,28 +57,28 @@ function ShalonMetricsPage() {
           iconBg="bg-[rgba(var(--spotlight-success),0.1)]"
           iconColor="text-[rgb(var(--spotlight-success))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleAlert}
           title="Em atraso"
           value={metrics.overdue}
           iconBg="bg-[rgba(var(--spotlight-warning),0.1)]"
           iconColor="text-[rgb(var(--spotlight-warning))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleX}
           title="Taxas aplicadas"
           value={metrics.appliedFees}
           iconBg="bg-[rgba(var(--spotlight-danger),0.1)]"
           iconColor="text-[rgb(var(--spotlight-danger))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleCheck}
           title="Total de repasses (24%)"
-          value={metrics.shalonTransfers}
+          value={metrics.shalomTransfers}
           iconBg="bg-[rgba(var(--spotlight-success),0.1)]"
           iconColor="text-[rgb(var(--spotlight-success))]"
         />
-        <ShalonStatCard
+        <ShalomStatCard
           icon={CircleCheck}
           title="Repasses para a Missão (76%)"
           value={metrics.missionTransfers}
@@ -90,4 +90,4 @@ function ShalonMetricsPage() {
   );
 }
 
-export { ShalonMetricsPage };
+export { ShalomMetricsPage };
