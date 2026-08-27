@@ -14,7 +14,13 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { NavLink, useLocation, useMatch, useParams } from "react-router";
+import {
+  NavLink,
+  useLocation,
+  useMatch,
+  useMatches,
+  useParams,
+} from "react-router";
 import { useFetcher } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { cn } from "~/lib/utils";
@@ -47,6 +53,8 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "~/client/components/ui/sidebar";
+
+const SHALOM_ACCOUNT_ID = 94699;
 
 type SubNavItem = {
   label: string;
@@ -330,6 +338,12 @@ function AppSidebar() {
   const { LIGHT_LOGO } = useRoot().environmentVariables;
   const { campaignId } = useParams<{ campaignId: string }>();
   const basePath = `/campaign/${campaignId}`;
+  const matches = useMatches();
+  const campaignData = matches.find(
+    (m) => m.data && typeof m.data === "object" && "campaign" in m.data,
+  )?.data as { campaign: { accountId: number } } | undefined;
+  const campaignAccountId = campaignData?.campaign?.accountId ?? null;
+  const showShalomMetrics = campaignAccountId === SHALOM_ACCOUNT_ID;
 
   return (
     <Sidebar collapsible="icon">
@@ -357,7 +371,10 @@ function AppSidebar() {
                     key={item.label}
                     icon={item.icon}
                     label={item.label}
-                    subItems={item.subItems}
+                    subItems={item.subItems.filter(
+                      (sub) =>
+                        sub.label !== "Métricas Shalom" || showShalomMetrics,
+                    )}
                     basePath={basePath}
                   />
                 ) : (
