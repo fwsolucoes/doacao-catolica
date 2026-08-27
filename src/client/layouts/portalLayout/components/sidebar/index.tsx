@@ -1,13 +1,11 @@
 import {
-  // BarChart2,
-  // CircleHelp,
+  BarChart2,
   CircleUser,
   ChevronsUpDown,
   LayoutDashboard,
   LogOut,
   Megaphone,
   Wallet,
-  // Settings,
 } from "lucide-react";
 import { NavLink, useMatch } from "react-router";
 import { useFetcher } from "react-router";
@@ -55,7 +53,7 @@ const sections: NavSection[] = [
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
       { icon: Megaphone, label: "Campanhas", path: "/my-campaigns" },
-      // { icon: BarChart2, label: "Relatórios" },
+      { icon: BarChart2, label: "Relatórios", path: "/reports" },
     ],
   },
   // {

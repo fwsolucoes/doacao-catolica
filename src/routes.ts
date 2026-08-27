@@ -17,6 +17,8 @@ export default [
     route("campaign/:campaignId/created", "./main/routes/route.campaign.created.tsx"),
     route("pending-invites", "./main/routes/route.pendingInvites.tsx"),
     route("campaigns-groups", "./main/routes/route.campaignsGroups.tsx"),
+    route("reports", "./main/routes/route.reports.tsx"),
+    route("financial-summary", "./main/routes/route.financialSummary.tsx"),
   ]),
 
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
