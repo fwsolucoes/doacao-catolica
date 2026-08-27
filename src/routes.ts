@@ -9,6 +9,7 @@ export default [
   route("api/donatorContact", "./main/routes/api.donatorContact.ts"),
   route("api/client_whatsapp_templates", "./main/routes/api.whatsappTemplates.ts"),
   route("api/campaign-metrics-modal", "./main/routes/api.campaign.metricsModal.ts"),
+  route("api/financial-summary-export", "./main/routes/api.financialSummaryExport.ts"),
   
   layout("./main/routes/layout.portalLayout.tsx", [
     route("test-error", "./main/routes/route.testError.tsx"),

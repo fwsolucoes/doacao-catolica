@@ -125,9 +125,14 @@ function FinancialSummaryPage() {
             Consolidado financeiro de todas as campanhas no período selecionado.
           </p>
         </div>
-        <Button variant="outline" className="gap-2">
-          <Download size={16} />
-          Exportar CSV
+        <Button asChild variant="outline" className="gap-2">
+          <a
+            href={`/api/financial-summary-export?${searchParams.toString()}`}
+            download
+          >
+            <Download size={16} />
+            Exportar
+          </a>
         </Button>
       </div>
 
