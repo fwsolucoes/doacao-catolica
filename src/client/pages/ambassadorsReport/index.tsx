@@ -558,7 +558,6 @@ function AmbassadorsReportPage() {
               <Table.Row>
                 <Table.Head>#</Table.Head>
                 <Table.Head>Nome</Table.Head>
-                <Table.Head>E-mail</Table.Head>
                 <Table.Head>Telefone</Table.Head>
                 <Table.Head>Cadastro</Table.Head>
                 <Table.Head className="text-right">Indicações no período</Table.Head>
@@ -577,7 +576,6 @@ function AmbassadorsReportPage() {
                   <Table.Row key={a.id}>
                     <Table.Cell className="text-muted-foreground">{a.rank}</Table.Cell>
                     <Table.Cell className="font-medium">{a.name}</Table.Cell>
-                    <Table.Cell className="text-muted-foreground">{a.email}</Table.Cell>
                     <Table.Cell className="text-muted-foreground">{a.phone}</Table.Cell>
                     <Table.Cell className="text-muted-foreground">{a.createdAt}</Table.Cell>
                     <Table.Cell className="text-right">{a.periodIndications}</Table.Cell>
