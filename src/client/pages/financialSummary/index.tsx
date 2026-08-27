@@ -12,6 +12,7 @@ import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import type { FinancialSummaryLoader } from "~/client/types/FinancialSummaryLoader";
 import { CampaignMetricsModal } from "./components/campaignMetricsModal";
+import { RequestWithdrawalModal } from "./components/requestWithdrawalModal";
 
 const STATUS_BADGE: Record<string, { className: string; label: string }> = {
   active: { className: "bg-emerald-100 text-emerald-700", label: "Ativo" },
@@ -125,15 +126,18 @@ function FinancialSummaryPage() {
             Consolidado financeiro de todas as campanhas no período selecionado.
           </p>
         </div>
-        <Button asChild variant="outline" className="gap-2">
-          <a
-            href={`/api/financial-summary-export?${searchParams.toString()}`}
-            download
-          >
-            <Download size={16} />
-            Exportar
-          </a>
-        </Button>
+        <div className="flex gap-2">
+          <RequestWithdrawalModal />
+          <Button asChild variant="outline" className="gap-2">
+            <a
+              href={`/api/financial-summary-export?${searchParams.toString()}`}
+              download
+            >
+              <Download size={16} />
+              Exportar
+            </a>
+          </Button>
+        </div>
       </div>
 
       <Card.Root className="gap-4 p-6">

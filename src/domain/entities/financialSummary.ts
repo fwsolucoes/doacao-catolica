@@ -38,6 +38,7 @@ class FinancialSummary {
       onlineAmount: fmt(this.props.onlineAmount),
       offlineAmount: fmt(this.props.offlineAmount),
       availableBalance: fmt(this.props.availableBalance),
+      availableBalanceRaw: this.props.availableBalance,
       averageTicket: fmt(this.props.averageTicket),
       totalPaidPayments: this.props.totalPaidPayments,
       totalCampaigns: this.props.totalCampaigns,
