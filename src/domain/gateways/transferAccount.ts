@@ -19,6 +19,15 @@ type RequestWithdrawalInput = {
   };
 };
 
+type BulkWithdrawalInput = {
+  referenceId: string;
+  pix: {
+    key: string;
+    type: string;
+    scheduleDate: string;
+  };
+};
+
 type TransferAccountGatewayDTO = {
   createTransferAccount(input: CreateTransferAccountInput): Promise<void>;
   listTransferAccounts(
@@ -26,10 +35,12 @@ type TransferAccountGatewayDTO = {
     token: string,
   ): Promise<SearchResult<TransferAccount>>;
   requestWithdrawal(input: RequestWithdrawalInput): Promise<void>;
+  bulkWithdrawal(input: BulkWithdrawalInput): Promise<void>;
 };
 
 export type {
   CreateTransferAccountInput,
   RequestWithdrawalInput,
+  BulkWithdrawalInput,
   TransferAccountGatewayDTO,
 };

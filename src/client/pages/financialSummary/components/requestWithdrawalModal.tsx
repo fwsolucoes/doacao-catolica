@@ -2,7 +2,6 @@ import { AlertTriangle, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useFetcher, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
-import { CurrencyInput } from "~/client/components/ui/currency-input";
 import {
   Dialog,
   DialogClose,
@@ -21,17 +20,21 @@ import { useActionToast } from "~/client/hooks/useActionToast";
 import { useRoot } from "~/client/hooks/useRoot";
 import type { FinancialSummaryLoader } from "~/client/types/FinancialSummaryLoader";
 import {
-  formatCurrency,
   getPixLabel,
   getTodayISO,
 } from "../../transfer/components/utils";
 
-function RequestWithdrawalModal() {
-  const { financialSummary, transferAccounts } =
+type Props = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+function RequestWithdrawalModal({ open: controlledOpen, onOpenChange: controlledOnOpenChange }: Props) {
+  const { transferAccounts } =
     useLoaderData<FinancialSummaryLoader>();
   const { environmentVariables, user } = useRoot();
 
-  const availableAmount = financialSummary.availableBalanceRaw;
+  const isControlled = controlledOpen !== undefined;
 
   function toSanctonPanel(redirect: string) {
     return `${environmentVariables.SANCTON_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=${redirect}`;
@@ -46,15 +49,18 @@ function RequestWithdrawalModal() {
   );
 
   const fetcher = useFetcher();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState("");
   const isSubmitting = fetcher.state !== "idle";
+
+  const open = isControlled ? (controlledOpen ?? false) : internalOpen;
 
   useActionToast(fetcher.data);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast) {
-      setOpen(false);
+      if (!isControlled) setInternalOpen(false);
+      controlledOnOpenChange?.(false);
       setSelectedAccountId("");
     }
   }, [fetcher.state, fetcher.data]);
@@ -64,13 +70,14 @@ function RequestWithdrawalModal() {
   );
 
   function handleOpenChange(nextOpen: boolean) {
-    setOpen(nextOpen);
+    if (!isControlled) setInternalOpen(nextOpen);
+    controlledOnOpenChange?.(nextOpen);
     if (!nextOpen) setSelectedAccountId("");
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      {availableAmount >= 0 && (
+      {!isControlled && (
         <DialogTrigger asChild>
           <Button className="gap-2">
             <Plus size={16} />
@@ -155,16 +162,6 @@ function RequestWithdrawalModal() {
                   </a>
                 </p>
               </div>
-
-              <FormField name="amount" label="Valor" required>
-                <div className="-mt-6 mb-1 self-end text-xs text-muted-foreground">
-                  Saldo disponível:{" "}
-                  <span className="font-semibold text-foreground">
-                    {formatCurrency(availableAmount)}
-                  </span>
-                </div>
-                <CurrencyInput disabled={!accounts.length} />
-              </FormField>
             </div>
 
             <DialogFooter className="px-0 pb-0">
@@ -176,7 +173,7 @@ function RequestWithdrawalModal() {
               <Button
                 type="submit"
                 name="_action"
-                value="requestWithdrawal"
+                value="bulkWithdrawal"
                 disabled={isSubmitting || !accounts.length || !selectedAccount}
                 isLoading={isSubmitting}
               >

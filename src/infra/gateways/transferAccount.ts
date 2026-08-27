@@ -1,6 +1,7 @@
 import { SearchResult } from "~/app/shared/searchResult";
 import { TransferAccount } from "~/domain/entities/transferAccount";
 import type {
+  BulkWithdrawalInput,
   CreateTransferAccountInput,
   RequestWithdrawalInput,
   TransferAccountGatewayDTO,
@@ -10,6 +11,7 @@ import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
 import { donationApi } from "../http/donationApi";
+import { webworkerApi } from "../http/webworkerApi";
 import { externalTransferAccountsSchema } from "../schemas/external/transferAccount";
 
 class TransferAccountGateway implements TransferAccountGatewayDTO {
@@ -87,6 +89,23 @@ class TransferAccountGateway implements TransferAccountGatewayDTO {
         account_uuid: input.accountUuid,
         type: "pix",
         amount: input.amount,
+        pix: {
+          key: input.pix.key,
+          type: input.pix.type,
+          schedule_date: input.pix.scheduleDate,
+        },
+      },
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async bulkWithdrawal(input: BulkWithdrawalInput): Promise<void> {
+    const url = `/donation/financial-summary/${input.referenceId}/bulk-withdrawals`;
+
+    const apiResponse = await webworkerApi.post(url, {
+      body: {
         pix: {
           key: input.pix.key,
           type: input.pix.type,

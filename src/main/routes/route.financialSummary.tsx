@@ -9,6 +9,7 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getFinancialSummary } from "../factories/financialSummary/getFinancialSummaryFactory";
 import { listTransferAccountsByUser } from "../factories/transferAccount/listTransferAccountsByUserFactory";
+import { bulkWithdrawal } from "../factories/transferAccount/bulkWithdrawalFactory";
 import { requestWithdrawal } from "../factories/transferAccount/requestWithdrawalFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -34,6 +35,8 @@ export async function action(args: Route.ActionArgs) {
     switch (_action) {
       case "requestWithdrawal":
         return await requestWithdrawal.handle(adaptedRoute);
+      case "bulkWithdrawal":
+        return await bulkWithdrawal.handle(adaptedRoute);
       default:
         throw HttpAdapter.notImplemented("Action not implemented");
     }

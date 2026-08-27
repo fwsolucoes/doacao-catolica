@@ -1,5 +1,14 @@
 import { useState, useCallback } from "react";
-import { ArrowLeft, BarChart2, Banknote, CreditCard, Download, TrendingUp, Wallet } from "lucide-react";
+import {
+  ArrowLeft,
+  BarChart2,
+  Banknote,
+  CreditCard,
+  Download,
+  EllipsisVertical,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useLocation, useLoaderData, useNavigate } from "react-router";
 import { TablePagination } from "~/client/components/ui/table-pagination";
@@ -8,6 +17,11 @@ import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/client/components/ui/popover";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import type { FinancialSummaryLoader } from "~/client/types/FinancialSummaryLoader";
@@ -49,6 +63,8 @@ function FinancialSummaryPage() {
 
   const [modal, setModal] = useState<ModalState>(null);
   const closeModal = useCallback(() => setModal(null), []);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [withdrawalOpen, setWithdrawalOpen] = useState(false);
 
   function applyParams(updates: Record<string, string>) {
     const sp = new URLSearchParams(location.search);
@@ -100,10 +116,30 @@ function FinancialSummaryPage() {
   );
 
   const METRICS: MetricItem[] = [
-    { label: "Total arrecadado", value: financialSummary.totalRaisedAmount, icon: TrendingUp, color: "success" },
-    { label: "Total online", value: financialSummary.onlineAmount, icon: CreditCard, color: "primary" },
-    { label: "Total offline", value: financialSummary.offlineAmount, icon: Banknote, color: "warning" },
-    { label: "Saldo disponível", value: financialSummary.availableBalance, icon: Wallet, color: "teal" },
+    {
+      label: "Total arrecadado",
+      value: financialSummary.totalRaisedAmount,
+      icon: TrendingUp,
+      color: "success",
+    },
+    {
+      label: "Total online",
+      value: financialSummary.onlineAmount,
+      icon: CreditCard,
+      color: "primary",
+    },
+    {
+      label: "Total offline",
+      value: financialSummary.offlineAmount,
+      icon: Banknote,
+      color: "warning",
+    },
+    {
+      label: "Saldo disponível",
+      value: financialSummary.availableBalance,
+      icon: Wallet,
+      color: "teal",
+    },
   ];
 
   return (
@@ -126,18 +162,15 @@ function FinancialSummaryPage() {
             Consolidado financeiro de todas as campanhas no período selecionado.
           </p>
         </div>
-        <div className="flex gap-2">
-          <RequestWithdrawalModal />
-          <Button asChild variant="outline" className="gap-2">
-            <a
-              href={`/api/financial-summary-export?${searchParams.toString()}`}
-              download
-            >
-              <Download size={16} />
-              Exportar
-            </a>
-          </Button>
-        </div>
+        <Button asChild variant="outline" className="gap-2">
+          <a
+            href={`/api/financial-summary-export?${searchParams.toString()}`}
+            download
+          >
+            <Download size={16} />
+            Exportar
+          </a>
+        </Button>
       </div>
 
       <Card.Root className="gap-4 p-6">
@@ -179,7 +212,9 @@ function FinancialSummaryPage() {
               type="date"
               value={startDate}
               disabled={period !== "custom"}
-              onChange={(e) => applyParams({ start_date: e.target.value, period: "custom" })}
+              onChange={(e) =>
+                applyParams({ start_date: e.target.value, period: "custom" })
+              }
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -188,7 +223,9 @@ function FinancialSummaryPage() {
               type="date"
               value={endDate}
               disabled={period !== "custom"}
-              onChange={(e) => applyParams({ end_date: e.target.value, period: "custom" })}
+              onChange={(e) =>
+                applyParams({ end_date: e.target.value, period: "custom" })
+              }
             />
           </div>
         </div>
@@ -197,16 +234,41 @@ function FinancialSummaryPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {METRICS.map((metric) => (
           <Card.Root key={metric.label} className="gap-3 p-6">
-            <Card.MetricHeader label={metric.label} icon={metric.icon} color={metric.color} />
+            <Card.MetricHeader
+              label={metric.label}
+              icon={metric.icon}
+              color={metric.color}
+            />
             <Card.MetricValue>{metric.value}</Card.MetricValue>
           </Card.Root>
         ))}
       </div>
 
       <Card.Root className="gap-4 overflow-hidden p-6">
-        <p className="text-sm font-semibold text-(--text-heading)">
-          Campanhas ({financialSummary.totalCampaigns})
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-(--text-heading)">
+            Campanhas ({financialSummary.totalCampaigns})
+          </p>
+          <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon">
+                <EllipsisVertical size={16} />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-1" align="end">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-sm"
+                onClick={() => {
+                  setPopoverOpen(false);
+                  setWithdrawalOpen(true);
+                }}
+              >
+                Solicitar saque de todas
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -225,9 +287,15 @@ function FinancialSummaryPage() {
               const badge = STATUS_BADGE[campaign.status];
               return (
                 <Table.Row key={campaign.id}>
-                  <Table.Cell className="font-medium">{campaign.name}</Table.Cell>
+                  <Table.Cell className="font-medium">
+                    {campaign.name}
+                  </Table.Cell>
                   <Table.Cell>
-                    <Badge className={badge?.className ?? "bg-muted text-muted-foreground"}>
+                    <Badge
+                      className={
+                        badge?.className ?? "bg-muted text-muted-foreground"
+                      }
+                    >
                       {badge?.label ?? campaign.status}
                     </Badge>
                   </Table.Cell>
@@ -252,7 +320,10 @@ function FinancialSummaryPage() {
                       size="sm"
                       className="gap-1.5"
                       onClick={() =>
-                        setModal({ campaignId: campaign.uuid, campaignName: campaign.name })
+                        setModal({
+                          campaignId: campaign.uuid,
+                          campaignName: campaign.name,
+                        })
                       }
                     >
                       <BarChart2 size={14} />
@@ -266,7 +337,10 @@ function FinancialSummaryPage() {
         </Table.Root>
         {totalPages > 1 && (
           <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
-            <TablePagination currentPage={currentPage} totalPages={totalPages} />
+            <TablePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </Card.Footer>
         )}
       </Card.Root>
@@ -281,6 +355,10 @@ function FinancialSummaryPage() {
           onClose={closeModal}
         />
       )}
+      <RequestWithdrawalModal
+        open={withdrawalOpen}
+        onOpenChange={setWithdrawalOpen}
+      />
     </div>
   );
 }

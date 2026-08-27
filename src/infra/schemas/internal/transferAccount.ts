@@ -14,14 +14,23 @@ const requestWithdrawalBodySchema = z.object({
   schedule_date: z.string().min(1, "Data de agendamento é obrigatória"),
 });
 
+const bulkWithdrawalBodySchema = z.object({
+  pix_key: z.string().min(1, "Chave Pix é obrigatória"),
+  pix_type: z.string().min(1, "Tipo da chave Pix é obrigatório"),
+  schedule_date: z.string().min(1, "Data de agendamento é obrigatória"),
+});
+
 type CreateTransferAccountBody = z.infer<
   typeof createTransferAccountBodySchema
 >;
 type RequestWithdrawalBody = z.infer<typeof requestWithdrawalBodySchema>;
+type BulkWithdrawalBody = z.infer<typeof bulkWithdrawalBodySchema>;
 
 export {
   createTransferAccountBodySchema,
   requestWithdrawalBodySchema,
+  bulkWithdrawalBodySchema,
   type CreateTransferAccountBody,
   type RequestWithdrawalBody,
+  type BulkWithdrawalBody,
 };
