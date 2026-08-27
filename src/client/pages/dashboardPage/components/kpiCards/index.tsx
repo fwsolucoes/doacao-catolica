@@ -11,6 +11,7 @@ import { useLoaderData } from "react-router";
 import type { DashboardLoader } from "~/client/types/dashboardLoader";
 import { Badge } from "~/client/components/ui/badge";
 import { Card } from "~/client/components/ui/card";
+import { cn } from "~/lib/utils";
 
 function StatCard({
   label,
