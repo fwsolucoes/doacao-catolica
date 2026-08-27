@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { ArrowLeft, BarChart2, Download } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { ArrowLeft, BarChart2, Banknote, CreditCard, Download, TrendingUp, Wallet } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { TablePagination } from "~/client/components/ui/table-pagination";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -17,11 +19,18 @@ const STATUS_BADGE: Record<string, { variant: BadgeVariant; label: string }> = {
   Pausado: { variant: "danger", label: "Pausado" },
 };
 
-const METRICS = [
-  { label: "Total arrecadado", value: "R$ 242.400,00" },
-  { label: "Total online", value: "R$ 190.260,00" },
-  { label: "Total offline", value: "R$ 52.140,00" },
-  { label: "Saldo disponível", value: "R$ 75.144,00" },
+type MetricItem = {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  color: "success" | "primary" | "warning" | "teal";
+};
+
+const METRICS: MetricItem[] = [
+  { label: "Total arrecadado", value: "R$ 242.400,00", icon: TrendingUp, color: "success" },
+  { label: "Total online", value: "R$ 190.260,00", icon: CreditCard, color: "primary" },
+  { label: "Total offline", value: "R$ 52.140,00", icon: Banknote, color: "warning" },
+  { label: "Saldo disponível", value: "R$ 75.144,00", icon: Wallet, color: "teal" },
 ];
 
 const MOCK_CAMPAIGNS = [
@@ -89,8 +98,17 @@ const MOCK_CAMPAIGNS = [
 
 function FinancialSummaryPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [period, setPeriod] = useState("current-month");
   const [dateType, setDateType] = useState("payment-date");
+
+  const currentPage = Number(new URLSearchParams(location.search).get("page") ?? 1);
+  const PAGE_SIZE = 4;
+  const totalPages = Math.ceil(MOCK_CAMPAIGNS.length / PAGE_SIZE);
+  const paginatedCampaigns = MOCK_CAMPAIGNS.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -119,7 +137,7 @@ function FinancialSummaryPage() {
       </div>
 
       <Card.Root className="gap-4 p-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="flex flex-col gap-1">
             <Label className="text-sm font-semibold">Período</Label>
             <Select.Root value={period} onValueChange={setPeriod}>
@@ -150,30 +168,27 @@ function FinancialSummaryPage() {
           </div>
           <div className="flex flex-col gap-1">
             <Label className="text-sm font-semibold">Início</Label>
-            <Input type="date" defaultValue="2026-07-01" />
+            <Input type="date" defaultValue="2026-07-01" disabled={period !== "custom"} />
           </div>
           <div className="flex flex-col gap-1">
             <Label className="text-sm font-semibold">Fim</Label>
-            <Input type="date" defaultValue="2026-07-31" />
+            <Input type="date" defaultValue="2026-07-31" disabled={period !== "custom"} />
           </div>
         </div>
       </Card.Root>
 
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {METRICS.map((metric) => (
           <Card.Root key={metric.label} className="gap-3 p-6">
-            <span className="text-xs text-(--text-muted)">{metric.label}</span>
+            <Card.MetricHeader label={metric.label} icon={metric.icon} color={metric.color} />
             <Card.MetricValue>{metric.value}</Card.MetricValue>
           </Card.Root>
         ))}
       </div>
 
-      <Card.Root className="gap-0 overflow-hidden p-0">
-        <div className="px-6 py-5">
-          <p className="text-sm font-semibold text-(--text-heading)">Campanhas</p>
-        </div>
-        <div className="px-7 pb-6">
-          <Table.Root>
+      <Card.Root className="gap-4 overflow-hidden p-6">
+        <p className="text-sm font-semibold text-(--text-heading)">Campanhas</p>
+        <Table.Root>
             <Table.Header>
               <Table.Row>
                 <Table.Head>Campanha</Table.Head>
@@ -187,7 +202,7 @@ function FinancialSummaryPage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {MOCK_CAMPAIGNS.map((campaign) => {
+              {paginatedCampaigns.map((campaign) => {
                 const badgeConfig = STATUS_BADGE[campaign.status];
                 return (
                   <Table.Row key={campaign.id}>
@@ -230,7 +245,11 @@ function FinancialSummaryPage() {
               })}
             </Table.Body>
           </Table.Root>
-        </div>
+        {totalPages > 1 && (
+          <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+            <TablePagination currentPage={currentPage} totalPages={totalPages} />
+          </Card.Footer>
+        )}
       </Card.Root>
     </div>
   );
