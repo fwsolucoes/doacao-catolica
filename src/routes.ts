@@ -59,6 +59,7 @@ export default [
     route("api/pix-authorization-history/:subscriptionUuid", "./main/routes/api.campaign.pixAuthorizationHistory.ts"),
     route("api/fundraiser-details/:fundraiserId", "./main/routes/api.campaign.fundraiserDetails.ts"),
     route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
+    route("shalon-metrics", "./main/routes/route.campaign.shalonMetrics.tsx"),
   ]),
 
 ] satisfies RouteConfig;
