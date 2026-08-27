@@ -6,6 +6,7 @@ type DonationsSummaryProps = {
   recurringDonationsAmount: number;
   subscriptionsActiveCount: number;
   subscriptionsActiveAmount: number;
+  subscriptionsCreatedInPeriodActiveCount: number;
   subscriptionsCreatedInPeriodActiveAmount: number;
 };
 
@@ -37,6 +38,7 @@ class DonationsSummary {
       recurringDonationsAmount: fmt(this.props.recurringDonationsAmount),
       subscriptionsActiveCount: String(this.props.subscriptionsActiveCount),
       subscriptionsActiveAmount: fmt(this.props.subscriptionsActiveAmount),
+      subscriptionsCreatedInPeriodActiveCount: this.props.subscriptionsCreatedInPeriodActiveCount,
       subscriptionsCreatedInPeriodActiveAmount: fmt(
         this.props.subscriptionsCreatedInPeriodActiveAmount,
       ),

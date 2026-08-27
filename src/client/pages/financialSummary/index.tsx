@@ -1,6 +1,7 @@
+import { useState, useCallback } from "react";
 import { ArrowLeft, BarChart2, Banknote, CreditCard, Download, TrendingUp, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Link, useLocation, useLoaderData, useNavigate } from "react-router";
+import { useLocation, useLoaderData, useNavigate } from "react-router";
 import { TablePagination } from "~/client/components/ui/table-pagination";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -10,6 +11,7 @@ import { Label } from "~/client/components/ui/label";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import type { FinancialSummaryLoader } from "~/client/types/FinancialSummaryLoader";
+import { CampaignMetricsModal } from "./components/campaignMetricsModal";
 
 const STATUS_BADGE: Record<string, { className: string; label: string }> = {
   active: { className: "bg-emerald-100 text-emerald-700", label: "Ativo" },
@@ -25,6 +27,11 @@ type MetricItem = {
   color: "success" | "primary" | "warning" | "teal";
 };
 
+type ModalState = {
+  campaignId: string;
+  campaignName: string;
+} | null;
+
 const PAGE_SIZE = 10;
 
 function FinancialSummaryPage() {
@@ -38,6 +45,9 @@ function FinancialSummaryPage() {
   const endDate = searchParams.get("end_date") ?? "";
   const period = searchParams.get("period") ?? "currentMonth";
   const currentPage = Number(searchParams.get("page") ?? 1);
+
+  const [modal, setModal] = useState<ModalState>(null);
+  const closeModal = useCallback(() => setModal(null), []);
 
   function applyParams(updates: Record<string, string>) {
     const sp = new URLSearchParams(location.search);
@@ -229,15 +239,15 @@ function FinancialSummaryPage() {
                   </Table.Cell>
                   <Table.Cell className="text-right">
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="gap-1.5 text-muted-foreground"
-                      asChild
+                      className="gap-1.5"
+                      onClick={() =>
+                        setModal({ campaignId: campaign.uuid, campaignName: campaign.name })
+                      }
                     >
-                      <Link to={`/campaign/${campaign.uuid}/home`}>
-                        <BarChart2 size={15} />
-                        Ver
-                      </Link>
+                      <BarChart2 size={14} />
+                      Ver
                     </Button>
                   </Table.Cell>
                 </Table.Row>
@@ -251,6 +261,17 @@ function FinancialSummaryPage() {
           </Card.Footer>
         )}
       </Card.Root>
+
+      {modal && (
+        <CampaignMetricsModal
+          campaignId={modal.campaignId}
+          campaignName={modal.campaignName}
+          dateType={dateType}
+          startDate={startDate}
+          endDate={endDate}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }

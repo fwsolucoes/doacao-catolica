@@ -36,6 +36,7 @@ class DonationsSummaryGateway implements DonationsSummaryGatewayDTO {
       recurringDonationsAmount: data.data.recurring_donations.amount,
       subscriptionsActiveCount: s.active_count,
       subscriptionsActiveAmount: s.active_amount,
+      subscriptionsCreatedInPeriodActiveCount: s.created_in_period_active_count,
       subscriptionsCreatedInPeriodActiveAmount:
         s.created_in_period_active_amount,
     }).toJson();
