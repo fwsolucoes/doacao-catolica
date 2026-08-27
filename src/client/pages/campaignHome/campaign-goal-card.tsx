@@ -13,19 +13,25 @@ function CampaignGoalCard() {
     "main/routes/layout.campaignLayout",
   );
 
-  const totalGoal = layoutData?.campaign.totalGoal ?? null;
+  const isMonthly =
+    layoutData?.campaign.typeDonation === "BOTH" ||
+    layoutData?.campaign.typeDonation === "MONTHLY";
 
-  const totalGoalProgressPercentage =
-    overview.totalGoalProgressPercentage ??
-    (totalGoal && totalGoal > 0
-      ? (overview.totalRaised / totalGoal) * 100
-      : null);
+  const goal = isMonthly
+    ? (overview.monthlyGoal ?? null)
+    : (layoutData?.campaign.totalGoal ?? null);
 
-  const totalGoalRemaining =
-    overview.totalGoalRemaining ??
-    (totalGoal !== null ? totalGoal - overview.totalRaised : null);
+  const goalProgressPercentage = isMonthly
+    ? (overview.monthlyGoalProgressPercentage ??
+        (goal && goal > 0 ? (overview.totalRaised / goal) * 100 : null))
+    : (overview.totalGoalProgressPercentage ??
+        (goal && goal > 0 ? (overview.totalRaised / goal) * 100 : null));
 
-  const progress = totalGoalProgressPercentage ?? 0;
+  const goalRemaining = isMonthly
+    ? (overview.monthlyGoalRemaining ?? (goal !== null ? goal - overview.totalRaised : null))
+    : (overview.totalGoalRemaining ?? (goal !== null ? goal - overview.totalRaised : null));
+
+  const progress = goalProgressPercentage ?? 0;
   const GrowthIcon =
     overview.growthPercentage !== null && overview.growthPercentage >= 0
       ? TrendingUp
@@ -42,9 +48,11 @@ function CampaignGoalCard() {
           Meta da campanha
         </p>
         <p className="mt-0.5 text-xs text-muted-foreground">
-          {totalGoalProgressPercentage !== null
-            ? `${Math.round(totalGoalProgressPercentage)}% concluído`
-            : "meta não configurada"}
+          {goalProgressPercentage !== null
+            ? `${Math.round(goalProgressPercentage)}% concluído`
+            : isMonthly
+              ? "meta mensal não configurada"
+              : "meta não configurada"}
         </p>
       </div>
 
@@ -56,11 +64,11 @@ function CampaignGoalCard() {
               {formatCurrency(String(overview.totalRaised))}
             </p>
           </div>
-          {totalGoal !== null && (
+          {goal !== null && (
             <div className="text-right">
               <p className="text-xs text-muted-foreground">Meta</p>
               <p className="text-sm text-muted-foreground">
-                {formatCurrency(String(totalGoal))}
+                {formatCurrency(String(goal))}
               </p>
             </div>
           )}
@@ -81,8 +89,8 @@ function CampaignGoalCard() {
         <div className="flex flex-col gap-1 rounded-xl border border-border p-4">
           <p className="text-xs text-muted-foreground">Faltam</p>
           <p className="text-base font-semibold text-(--text-heading)">
-            {totalGoalRemaining !== null
-              ? formatCurrency(String(totalGoalRemaining))
+            {goalRemaining !== null
+              ? formatCurrency(String(goalRemaining))
               : "–"}
           </p>
         </div>
