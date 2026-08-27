@@ -8,7 +8,7 @@ import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 
 function CampaignBanner() {
-  const { campaign, overview } = useLoaderData<CampaignLayoutLoader>();
+  const { campaign, overview, bannerTotalReceived } = useLoaderData<CampaignLayoutLoader>();
   const { theme, toggle } = useTheme();
   const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
@@ -41,11 +41,17 @@ function CampaignBanner() {
           <span className="truncate text-(--text-muted)">
             {"Arrecadado: "}
             <span className="font-semibold text-foreground">
-              {formatCurrency(String(overview.totalRaised))}
+              {bannerTotalReceived ?? formatCurrency(String(overview.totalRaised))}
             </span>
-            {campaign.totalGoal
-              ? ` de ${formatCurrency(String(campaign.totalGoal))}`
-              : null}
+            {(() => {
+              const isMonthly = campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
+              if (isMonthly) {
+                return overview.monthlyGoal
+                  ? ` de ${formatCurrency(String(overview.monthlyGoal))}`
+                  : " · Meta mensal não definida";
+              }
+              return campaign.totalGoal ? ` de ${formatCurrency(String(campaign.totalGoal))}` : null;
+            })()}
           </span>
         </div>
       </div>

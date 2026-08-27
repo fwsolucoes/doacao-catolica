@@ -8,6 +8,7 @@ import { AuthService } from "~/infra/services/authService";
 import { getCampaignOverview } from "../factories/campaignOverview/getCampaignOverviewFactory";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
 import { getProjectPermissions } from "../factories/projectPermissions/getProjectPermissionsFactory";
+import { getPaymentMetrics } from "../factories/paymentMetrics/getPaymentMetricsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -18,8 +19,9 @@ export async function loader(args: Route.LoaderArgs) {
   const campaign = await getCampaign.handle(adaptedRoute);
   const isOwner = user.accountId === campaign.accountId;
   const isSuperUser = user.id === "14692";
+  const isMonthlyType = campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
 
-  const [overview, permissions] = await Promise.all([
+  const [overview, permissions, metrics] = await Promise.all([
     getCampaignOverview.handle(adaptedRoute),
     isOwner || isSuperUser
       ? Promise.resolve({
@@ -27,9 +29,10 @@ export async function loader(args: Route.LoaderArgs) {
           projectPermissions: [...PROJECT_ALL_PERMISSIONS] as string[],
         })
       : getProjectPermissions.handle(adaptedRoute, campaign.id),
+    isMonthlyType ? getPaymentMetrics.handle(adaptedRoute) : Promise.resolve(null),
   ]);
 
-  return { campaign, overview, ...permissions };
+  return { campaign, overview, ...permissions, bannerTotalReceived: metrics?.released ?? null };
 }
 
 export function ErrorBoundary() {
