@@ -59,7 +59,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
         <img
           src={campaign.image && !imageError ? campaign.image : CAMPAIGN_DEFAULT_IMAGE}
           alt={campaign.name}
-          className="h-44 w-full object-cover"
+          className="aspect-video w-full object-cover"
           onError={() => setImageError(true)}
         />
         <Badge
