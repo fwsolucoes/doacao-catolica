@@ -3,6 +3,7 @@ import type { FundraiserGatewayDTO } from "~/domain/gateways/fundraiser";
 type InputProps = {
   campaignId: string;
   page: number;
+  search?: string;
 };
 
 class ListActiveFundraisersUseCase {
@@ -13,6 +14,7 @@ class ListActiveFundraisersUseCase {
       input.campaignId,
       token,
       input.page,
+      input.search,
     );
     return result.toJson();
   }

@@ -61,21 +61,24 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     campaignId: string,
     token: string,
     page: number,
+    search?: string,
   ): Promise<SearchResult<Fundraiser>> {
     const params = new URLSearchParams();
     params.set("filter[project_id]", campaignId);
     params.set("filter[invite_status]", "accepted");
     params.set("page", String(page));
     params.set("per_page", "20");
+    if (search) params.set("filter[invited_user_name]", search);
 
-    const apiResponse = await api.get(
-      `/project-agent-invite/list?${params.toString()}`,
-      { token },
-    );
+    const url = `/project-agent-invite/list?${params.toString()}`;
+
+    const apiResponse = await api.get(url, { token });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(externalFundraisersSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalFundraisersSchema,
+    );
     const externalFundraisers = schemaValidator.validate(apiResponse.response);
 
     return new SearchResult({

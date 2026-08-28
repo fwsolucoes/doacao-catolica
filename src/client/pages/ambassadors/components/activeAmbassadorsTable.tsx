@@ -2,6 +2,7 @@ import {
   BarChart2,
   LayoutDashboard,
   MoreHorizontal,
+  Search,
   Trash2,
 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -14,7 +15,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/client/components/ui/dropdown-menu";
+import { Input } from "~/client/components/ui/input";
 import { Table } from "~/client/components/ui/table";
+import { useFilter } from "~/client/hooks/useFilter";
 import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import type { ActiveFundraiser } from "../types";
 import { AmbassadorDetailsModal } from "./ambassadorDetailsModal";
@@ -30,6 +33,7 @@ function getInitials(name: string, email: string): string {
 
 function ActiveAmbassadorsTable() {
   const { activeFundraisers } = useLoaderData<AmbassadorsLoader>();
+  const { getParam, handleChangeTimeoutFilter } = useFilter("ambassadors");
   const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(
     null,
   );
@@ -50,6 +54,12 @@ function ActiveAmbassadorsTable() {
 
   return (
     <>
+      <Input
+        leftIcon={Search}
+        placeholder="Buscar por nome..."
+        defaultValue={getParam("search") || ""}
+        onChange={(e) => handleChangeTimeoutFilter("search", e.target.value)}
+      />
       <Table.Root>
         <Table.Header>
           <Table.Row>

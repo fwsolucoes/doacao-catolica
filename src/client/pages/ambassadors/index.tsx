@@ -67,6 +67,7 @@ function AmbassadorsPage() {
               <TablePagination
                 currentPage={activeFundraisers.meta.page}
                 totalPages={activeFundraisers.meta.totalPages}
+                pageParam="ambassadors:page"
               />
             </Card.Footer>
           )}

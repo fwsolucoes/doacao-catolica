@@ -18,6 +18,7 @@ type FundraiserGatewayDTO = {
     campaignId: string,
     token: string,
     page: number,
+    search?: string,
   ) => Promise<SearchResult<Fundraiser>>;
   createFundraiser: (
     input: CreateFundraiserInput,
