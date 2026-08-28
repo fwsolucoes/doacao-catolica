@@ -11,17 +11,25 @@ function KpiCards() {
     "main/routes/layout.campaignLayout",
   );
 
-  const totalGoal = layoutData?.campaign.totalGoal ?? null;
+  const isMonthly =
+    layoutData?.campaign.typeDonation === "BOTH" ||
+    layoutData?.campaign.typeDonation === "MONTHLY";
 
-  const totalGoalProgressPercentage =
-    overview.totalGoalProgressPercentage ??
-    (totalGoal && totalGoal > 0
-      ? (overview.totalRaised / totalGoal) * 100
-      : null);
+  const raised = isMonthly ? overview.monthRaised : overview.totalRaised;
+
+  const goal = isMonthly
+    ? (overview.monthlyGoal ?? null)
+    : (layoutData?.campaign.totalGoal ?? null);
+
+  const goalProgressPercentage = isMonthly
+    ? (overview.monthlyGoalProgressPercentage ??
+        (goal && goal > 0 ? (raised / goal) * 100 : null))
+    : (overview.totalGoalProgressPercentage ??
+        (goal && goal > 0 ? (raised / goal) * 100 : null));
 
   const progressLabel =
-    totalGoalProgressPercentage !== null
-      ? `${Math.round(totalGoalProgressPercentage)}%`
+    goalProgressPercentage !== null
+      ? `${Math.round(goalProgressPercentage)}%`
       : "–";
 
   const variationDirection =
@@ -39,17 +47,17 @@ function KpiCards() {
     <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
       <Card.Root className="gap-4 p-6">
         <Card.MetricHeader
-          label="Total arrecadado"
+          label={isMonthly ? "Arrecadado no mês" : "Total arrecadado"}
           icon={DollarSign}
           color="success"
         />
         <div className="flex flex-col gap-1">
           <Card.MetricValue>
-            {formatCurrency(String(overview.totalRaised))}
+            {formatCurrency(String(raised))}
           </Card.MetricValue>
-          {totalGoal !== null && (
+          {goal !== null && (
             <span className="text-xs text-muted-foreground">
-              Meta: {formatCurrency(String(totalGoal))}
+              Meta: {formatCurrency(String(goal))}
             </span>
           )}
         </div>
@@ -73,8 +81,10 @@ function KpiCards() {
         <div className="flex flex-col gap-1">
           <Card.MetricValue>{progressLabel}</Card.MetricValue>
           <span className="text-xs text-muted-foreground">
-            {totalGoalProgressPercentage !== null
-              ? "da meta total"
+            {goalProgressPercentage !== null
+              ? isMonthly
+                ? "da meta mensal"
+                : "da meta total"
               : "meta não configurada"}
           </span>
         </div>

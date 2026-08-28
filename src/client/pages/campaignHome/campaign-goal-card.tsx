@@ -17,19 +17,21 @@ function CampaignGoalCard() {
     layoutData?.campaign.typeDonation === "BOTH" ||
     layoutData?.campaign.typeDonation === "MONTHLY";
 
+  const raised = isMonthly ? overview.monthRaised : overview.totalRaised;
+
   const goal = isMonthly
     ? (overview.monthlyGoal ?? null)
     : (layoutData?.campaign.totalGoal ?? null);
 
   const goalProgressPercentage = isMonthly
     ? (overview.monthlyGoalProgressPercentage ??
-        (goal && goal > 0 ? (overview.totalRaised / goal) * 100 : null))
+        (goal && goal > 0 ? (raised / goal) * 100 : null))
     : (overview.totalGoalProgressPercentage ??
-        (goal && goal > 0 ? (overview.totalRaised / goal) * 100 : null));
+        (goal && goal > 0 ? (raised / goal) * 100 : null));
 
   const goalRemaining = isMonthly
-    ? (overview.monthlyGoalRemaining ?? (goal !== null ? goal - overview.totalRaised : null))
-    : (overview.totalGoalRemaining ?? (goal !== null ? goal - overview.totalRaised : null));
+    ? (overview.monthlyGoalRemaining ?? (goal !== null ? goal - raised : null))
+    : (overview.totalGoalRemaining ?? (goal !== null ? goal - raised : null));
 
   const progress = goalProgressPercentage ?? 0;
   const GrowthIcon =
@@ -61,7 +63,7 @@ function CampaignGoalCard() {
           <div>
             <p className="text-xs text-muted-foreground">Arrecadado</p>
             <p className="text-2xl font-semibold text-(--text-heading)">
-              {formatCurrency(String(overview.totalRaised))}
+              {formatCurrency(String(raised))}
             </p>
           </div>
           {goal !== null && (
