@@ -14,7 +14,7 @@ class ListCampaignsUseCase {
     const { page, search, token } = input;
     const searchParams = new CampaignSearchParams({
       page,
-      filter: { search: search ?? undefined },
+      filter: { search: search ?? undefined, per_page: 20 },
     });
 
     const campaigns = await this.campaignGateway.listCampaigns(

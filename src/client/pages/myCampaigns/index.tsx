@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
-import { Link, useLoaderData } from "react-router";
+import { Link, useLoaderData, useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Empty } from "~/client/components/ui/empty";
 import { FolderOpen } from "lucide-react";
@@ -8,6 +9,25 @@ import { CampaignCard } from "./components/campaignCard";
 
 function MyCampaignsPage() {
   const { campaigns } = useLoaderData<CampaignsLoader>();
+  const fetcher = useFetcher<CampaignsLoader>();
+
+  const [items, setItems] = useState(campaigns.data);
+  const [meta, setMeta] = useState(campaigns.meta);
+
+  useEffect(() => {
+    if (!fetcher.data) return;
+    setItems((prev) => [...prev, ...fetcher.data!.campaigns.data]);
+    setMeta(fetcher.data!.campaigns.meta);
+  }, [fetcher.data]);
+
+  const hasMore = meta.page < meta.totalPages;
+  const isLoading = fetcher.state !== "idle";
+
+  function loadMore() {
+    fetcher.load(
+      `/my-campaigns?campaigns:page=${meta.page + 1}&skipPendingInvites=true`,
+    );
+  }
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -29,7 +49,7 @@ function MyCampaignsPage() {
         </Button>
       </header>
 
-      {campaigns.data.length === 0 ? (
+      {items.length === 0 ? (
         <Empty.Root>
           <Empty.Header>
             <Empty.Media variant="icon">
@@ -44,11 +64,25 @@ function MyCampaignsPage() {
           </Empty.Content>
         </Empty.Root>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {campaigns.data.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {items.map((campaign) => (
+              <CampaignCard key={campaign.id} campaign={campaign} />
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                onClick={loadMore}
+                disabled={isLoading}
+              >
+                {isLoading ? "Carregando..." : "Carregar mais"}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

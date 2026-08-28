@@ -28,7 +28,7 @@ class CampaignGateway implements CampaignGatewayDTO {
     token: string,
   ): Promise<SearchResult<Campaign>> {
     let url = "/project/summary-list";
-    url += searchParams.toExternal();
+    url += searchParams.toExternal(["pageLimit"]);
 
     const apiResponse = await api.get(url, { token });
 
