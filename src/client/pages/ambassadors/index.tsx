@@ -4,21 +4,20 @@ import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { TabBar } from "~/client/components/ui/tab-button";
+import { TablePagination } from "~/client/components/ui/table-pagination";
 import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import { AddAmbassadorModal } from "./components/addAmbassadorModal";
 import { ActiveAmbassadorsTable } from "./components/activeAmbassadorsTable";
 import { PendingAmbassadorsTable } from "./components/pendingAmbassadorsTable";
 
 function AmbassadorsPage() {
-  const { fundraisers } = useLoaderData<AmbassadorsLoader>();
+  const { fundraisers, activeFundraisers } = useLoaderData<AmbassadorsLoader>();
   const [tab, setTab] = useState<"active" | "pending">("active");
   const [addOpen, setAddOpen] = useState(false);
   const closeAdd = useCallback(() => setAddOpen(false), []);
   const isActiveTab = tab === "active";
 
-  const activeCount = fundraisers.data.filter(
-    (f) => f.inviteStatus.trim().toLowerCase() === "accepted",
-  ).length;
+  const activeCount = activeFundraisers.meta.totalItems;
 
   const pendingCount = fundraisers.data.filter(
     (f) => f.inviteStatus.trim().toLowerCase() !== "accepted",
@@ -63,6 +62,14 @@ function AmbassadorsPage() {
 
         <Card.Root className="gap-4 p-6">
           {isActiveTab ? <ActiveAmbassadorsTable /> : <PendingAmbassadorsTable />}
+          {isActiveTab && activeFundraisers.meta.totalPages > 1 && (
+            <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
+              <TablePagination
+                currentPage={activeFundraisers.meta.page}
+                totalPages={activeFundraisers.meta.totalPages}
+              />
+            </Card.Footer>
+          )}
         </Card.Root>
       </div>
     </div>

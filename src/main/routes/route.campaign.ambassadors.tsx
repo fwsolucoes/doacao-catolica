@@ -7,6 +7,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { listActiveFundraisers } from "../factories/fundraiser/listActiveFundraisersFactory";
 import { listFundraisers } from "../factories/fundraiser/listFundraisersFactory";
 import { createFundraiser } from "../factories/fundraiser/createFundraiserFactory";
 import { cancelInviteFundraiser } from "../factories/fundraiser/cancelInviteFundraiserFactory";
@@ -19,9 +20,12 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const fundraisers = await listFundraisers.handle(adaptedRoute);
+  const [activeFundraisers, fundraisers] = await Promise.all([
+    listActiveFundraisers.handle(adaptedRoute),
+    listFundraisers.handle(adaptedRoute),
+  ]);
 
-  return { fundraisers };
+  return { activeFundraisers, fundraisers };
 }
 
 export async function action(args: Route.ActionArgs) {

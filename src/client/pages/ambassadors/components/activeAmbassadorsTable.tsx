@@ -29,7 +29,7 @@ function getInitials(name: string, email: string): string {
 }
 
 function ActiveAmbassadorsTable() {
-  const { fundraisers } = useLoaderData<AmbassadorsLoader>();
+  const { activeFundraisers } = useLoaderData<AmbassadorsLoader>();
   const [removeTarget, setRemoveTarget] = useState<ActiveFundraiser | null>(
     null,
   );
@@ -39,14 +39,14 @@ function ActiveAmbassadorsTable() {
   const closeRemove = useCallback(() => setRemoveTarget(null), []);
   const closeDetails = useCallback(() => setDetailsTarget(null), []);
 
-  const activeFundraisers: ActiveFundraiser[] = fundraisers.data
-    .filter((f) => f.inviteStatus.trim().toLowerCase() === "accepted")
-    .map((f) => ({
+  const fundraisersList: ActiveFundraiser[] = activeFundraisers.data.map(
+    (f) => ({
       id: f.id,
       initials: getInitials(f.invitedUserName, f.invitedUserEmail),
       name: f.invitedUserName,
       email: f.invitedUserEmail,
-    }));
+    }),
+  );
 
   return (
     <>
@@ -59,7 +59,7 @@ function ActiveAmbassadorsTable() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {activeFundraisers.map((fundraiser) => (
+          {fundraisersList.map((fundraiser) => (
             <Table.Row key={fundraiser.id}>
               <Table.Cell>
                 <div className="flex items-center gap-3.5">
@@ -125,7 +125,7 @@ function ActiveAmbassadorsTable() {
               </Table.Cell>
             </Table.Row>
           ))}
-          {!activeFundraisers.length && (
+          {!fundraisersList.length && (
             <Table.Empty title="Nenhum embaixador ativo encontrado." />
           )}
         </Table.Body>
