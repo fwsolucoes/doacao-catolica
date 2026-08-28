@@ -1,4 +1,9 @@
-import { BarChart2, LayoutDashboard, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  BarChart2,
+  LayoutDashboard,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -68,10 +73,12 @@ function ActiveAmbassadorsTable() {
                   </span>
                 </div>
               </Table.Cell>
-              <Table.Cell className="font-mono text-xs text-muted-foreground">
-                {fundraiser.email}
+              <Table.Cell className="max-w-64">
+                <span className="block truncate font-mono text-xs text-muted-foreground">
+                  {fundraiser.email}
+                </span>
               </Table.Cell>
-              <Table.Cell className="">
+              <Table.Cell>
                 <div className="flex items-center  gap-1">
                   <Button
                     variant="outline"
