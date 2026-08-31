@@ -17,13 +17,9 @@ class ShalomMetricsGateway implements ShalomMetricsGatewayDTO {
     let url = `/api/metrics/total-payments/${campaignPublicId}`;
     url += searchParams.toExternal(["page", "pageLimit"]);
 
-    console.log("🚀url", url);
-
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
-
-    console.log("apiResponse", apiResponse.response.data);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
