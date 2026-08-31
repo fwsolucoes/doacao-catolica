@@ -1,5 +1,5 @@
 import { File, Loader2, RefreshCw, Upload } from "lucide-react";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useState } from "react";
 import { cn } from "~/client/lib/utils";
 import { Button } from "./button";
 import { FormErrorContext, FormFieldContext } from "./form-field";
@@ -94,13 +94,6 @@ function FileUploadCompact({
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const mountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
 
   async function doUpload(file: File): Promise<string> {
     const formData = new FormData();
@@ -129,16 +122,14 @@ function FileUploadCompact({
 
     try {
       const url = await doUpload(file);
-      if (!mountedRef.current) return;
       setValue(url);
       setPendingFile(null);
     } catch (err) {
-      if (!mountedRef.current) return;
       setUploadError(
         err instanceof Error ? err.message : "Erro ao enviar arquivo. Tente novamente.",
       );
     } finally {
-      if (mountedRef.current) setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -148,16 +139,14 @@ function FileUploadCompact({
     setUploadError(null);
     try {
       const url = await doUpload(pendingFile);
-      if (!mountedRef.current) return;
       setValue(url);
       setPendingFile(null);
     } catch (err) {
-      if (!mountedRef.current) return;
       setUploadError(
         err instanceof Error ? err.message : "Erro ao enviar arquivo. Tente novamente.",
       );
     } finally {
-      if (mountedRef.current) setIsLoading(false);
+      setIsLoading(false);
     }
   }
 

@@ -43,7 +43,9 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     );
   }
 
-  async createWhatsappTemplate(data: CreateWhatsappTemplateBody): Promise<void> {
+  async createWhatsappTemplate(
+    data: CreateWhatsappTemplateBody,
+  ): Promise<void> {
     const header = this.buildHeader(data);
     const variables = this.buildVariables(data.variables);
     const buttons = this.buildButtons(data.button);
@@ -55,27 +57,35 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       notification_type: data.notification_type,
     };
 
-    if (data.template_preview_text) body.template_preview_text = data.template_preview_text;
-    if (data.template_preview_image) body.template_preview_image = data.template_preview_image;
+    if (data.template_preview_text)
+      body.template_preview_text = data.template_preview_text;
+    if (data.template_preview_image)
+      body.template_preview_image = data.template_preview_image;
     if (header !== undefined) body.header = header;
     if (variables.length) body.variables = variables;
     if (buttons.length) body.buttons = buttons;
 
-    const apiResponse = await donationApi.post("/api/client_whatsapp_templates", {
-      body,
-      headers: { "api-key": environmentVariables.API_KEY_DONATION },
-    });
+    const apiResponse = await donationApi.post(
+      "/api/client_whatsapp_templates",
+      {
+        body,
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  private buildHeader(data: CreateWhatsappTemplateBody): Record<string, unknown> | null | undefined {
+  private buildHeader(
+    data: CreateWhatsappTemplateBody,
+  ): Record<string, unknown> | null | undefined {
     const type = data.header_type;
     if (!type || type === "none") return null;
     if (type === "text") return { type: "text", text: data.header_text };
     if (type === "image") return { type: "image", link: data.header_image };
     if (type === "video") return { type: "video", link: data.header_link };
-    if (type === "document") return { type: "document", link: data.header_document };
+    if (type === "document")
+      return { type: "document", link: data.header_document };
     return undefined;
   }
 
@@ -87,7 +97,12 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
         const field = v.systemField.slice(dotIndex + 1);
         return { name: field, table, field, description: v.description };
       }
-      return { name: v.fixedValue, table: null, field: v.fixedValue, description: v.description };
+      return {
+        name: v.fixedValue,
+        table: null,
+        field: v.fixedValue,
+        description: v.description,
+      };
     });
   }
 
