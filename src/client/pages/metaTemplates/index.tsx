@@ -205,7 +205,13 @@ function MetaTemplatesPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Editar</DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link
+                                to={`/campaign/${campaignId}/meta-templates/${template.uuid}/edit`}
+                              >
+                                Editar
+                              </Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive focus:text-destructive">
                               Excluir
                             </DropdownMenuItem>

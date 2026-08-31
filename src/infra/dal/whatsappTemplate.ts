@@ -1,11 +1,14 @@
 import type { WhatsappTemplateDalDTO } from "~/domain/dal/whatsappTemplate";
 import { WhatsappTemplate } from "~/domain/views/whatsappTemplate";
+import { WhatsappTemplateDetail } from "~/domain/views/whatsappTemplateDetail";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import type { CreateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplate";
+import type { UpdateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplateUpdate";
 import { listWhatsappTemplatesSchema } from "../schemas/external/whatsappTemplates";
+import { whatsappTemplateDetailSchema } from "../schemas/external/whatsappTemplateDetail";
 
 class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   async listWhatsappTemplates(
@@ -76,9 +79,13 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  private buildHeader(
-    data: CreateWhatsappTemplateBody,
-  ): Record<string, unknown> | null | undefined {
+  private buildHeader(data: {
+    header_type: string;
+    header_text: string;
+    header_image: string;
+    header_link: string;
+    header_document: string;
+  }): Record<string, unknown> | null | undefined {
     const type = data.header_type;
     if (!type || type === "none") return null;
     if (type === "text") return { type: "text", text: data.header_text };
@@ -109,6 +116,76 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   private buildButtons(button: CreateWhatsappTemplateBody["button"]) {
     if (!button) return [];
     return [{ sub_type: button.subType, button_index: 0, value: button.value }];
+  }
+
+  async getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail> {
+    const apiResponse = await donationApi.get(`/api/client_whatsapp_templates/${uuid}`, {
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const validated = new SchemaValidatorAdapter(whatsappTemplateDetailSchema).validate(
+      apiResponse.response,
+    );
+
+    const firstButton = (validated.buttons ?? [])[0] ?? null;
+
+    return WhatsappTemplateDetail.restore({
+      uuid: validated.uuid,
+      templateName: validated.template_name,
+      templateLanguage: validated.template_language ?? "",
+      templateType: validated.template_type,
+      notificationType: validated.notification_type,
+      templatePreviewText: validated.template_preview_text ?? "",
+      templatePreviewImage: validated.template_preview_image ?? "",
+      headerType: validated.header?.type ?? "none",
+      headerText: validated.header?.text ?? "",
+      headerLink: validated.header?.link ?? "",
+      variables: (validated.variables ?? []).map((v) => ({
+        uuid: v.uuid,
+        varType: v.table ? "dynamic" : "fixed",
+        systemField: v.table && v.field ? `${v.table}.${v.field}` : "",
+        fixedValue: !v.table ? (v.field ?? "") : "",
+        name: v.name ?? null,
+        description: v.description ?? null,
+      })),
+      button: firstButton
+        ? {
+            uuid: firstButton.uuid,
+            subType: firstButton.sub_type,
+            value: firstButton.value ?? "",
+          }
+        : null,
+    });
+  }
+
+  async updateWhatsappTemplate(uuid: string, data: UpdateWhatsappTemplateBody): Promise<void> {
+    const header = this.buildHeader(data);
+    const variables = this.buildVariables(data.variables);
+    const buttons = this.buildButtons(data.button);
+
+    const body: Record<string, unknown> = {};
+
+    if (data._action === "save_general") {
+      if (data.template_name) body.template_name = data.template_name;
+      if (data.template_language) body.template_language = data.template_language;
+      if (data.template_type) body.template_type = data.template_type;
+      if (data.notification_type) body.notification_type = data.notification_type;
+      if (data.template_preview_text) body.template_preview_text = data.template_preview_text;
+      if (data.template_preview_image) body.template_preview_image = data.template_preview_image;
+    } else if (data._action === "save_header") {
+      if (header !== undefined) body.header = header;
+    } else if (data._action === "save_button") {
+      body.buttons = buttons;
+    }
+
+    const apiResponse = await donationApi.put(`/api/client_whatsapp_templates/${uuid}`, {
+      body,
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }
 
