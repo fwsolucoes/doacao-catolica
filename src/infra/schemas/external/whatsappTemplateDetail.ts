@@ -40,4 +40,9 @@ const whatsappTemplateDetailSchema = z.object({
     .default([]),
 });
 
-export { whatsappTemplateDetailSchema };
+const whatsappTemplateDetailResponseSchema = z.object({
+  message: z.string().optional(),
+  data: whatsappTemplateDetailSchema,
+});
+
+export { whatsappTemplateDetailSchema, whatsappTemplateDetailResponseSchema };

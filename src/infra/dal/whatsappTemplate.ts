@@ -8,7 +8,7 @@ import { donationApi } from "../http/donationApi";
 import type { CreateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplate";
 import type { UpdateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplateUpdate";
 import { listWhatsappTemplatesSchema } from "../schemas/external/whatsappTemplates";
-import { whatsappTemplateDetailSchema } from "../schemas/external/whatsappTemplateDetail";
+import { whatsappTemplateDetailResponseSchema } from "../schemas/external/whatsappTemplateDetail";
 
 class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   async listWhatsappTemplates(
@@ -119,30 +119,31 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   }
 
   async getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail> {
-    const apiResponse = await donationApi.get(`/api/client_whatsapp_templates/${uuid}`, {
+    const apiResponse = await donationApi.get(`/client_whatsapp_templates/${uuid}`, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const validated = new SchemaValidatorAdapter(whatsappTemplateDetailSchema).validate(
+    const validated = new SchemaValidatorAdapter(whatsappTemplateDetailResponseSchema).validate(
       apiResponse.response,
     );
 
-    const firstButton = (validated.buttons ?? [])[0] ?? null;
+    const item = validated.data;
+    const firstButton = (item.buttons ?? [])[0] ?? null;
 
     return WhatsappTemplateDetail.restore({
-      uuid: validated.uuid,
-      templateName: validated.template_name,
-      templateLanguage: validated.template_language ?? "",
-      templateType: validated.template_type,
-      notificationType: validated.notification_type,
-      templatePreviewText: validated.template_preview_text ?? "",
-      templatePreviewImage: validated.template_preview_image ?? "",
-      headerType: validated.header?.type ?? "none",
-      headerText: validated.header?.text ?? "",
-      headerLink: validated.header?.link ?? "",
-      variables: (validated.variables ?? []).map((v) => ({
+      uuid: item.uuid,
+      templateName: item.template_name,
+      templateLanguage: item.template_language ?? "",
+      templateType: item.template_type,
+      notificationType: item.notification_type,
+      templatePreviewText: item.template_preview_text ?? "",
+      templatePreviewImage: item.template_preview_image ?? "",
+      headerType: item.header?.type ?? "none",
+      headerText: item.header?.text ?? "",
+      headerLink: item.header?.link ?? "",
+      variables: (item.variables ?? []).map((v) => ({
         uuid: v.uuid,
         varType: v.table ? "dynamic" : "fixed",
         systemField: v.table && v.field ? `${v.table}.${v.field}` : "",
@@ -180,7 +181,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       body.buttons = buttons;
     }
 
-    const apiResponse = await donationApi.put(`/api/client_whatsapp_templates/${uuid}`, {
+    const apiResponse = await donationApi.put(`/client_whatsapp_templates/${uuid}`, {
       body,
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
