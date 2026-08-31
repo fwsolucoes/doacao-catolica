@@ -1,4 +1,6 @@
+import type { AccountWhatsappSettingsGatewayDTO } from "~/domain/gateways/accountWhatsappSettings";
 import type { CampaignGatewayDTO } from "~/domain/gateways/campaign";
+import { environmentVariables } from "~/main/config/environmentVariables";
 
 type InputProps = {
   token: string;
@@ -47,7 +49,10 @@ type InputProps = {
 };
 
 class CreateCampaignUseCase {
-  constructor(private campaignGateway: CampaignGatewayDTO) {}
+  constructor(
+    private campaignGateway: CampaignGatewayDTO,
+    private accountWhatsappSettingsGateway: AccountWhatsappSettingsGatewayDTO,
+  ) {}
 
   async execute(input: InputProps) {
     const address = this.buildAddress(input);
@@ -93,6 +98,20 @@ class CreateCampaignUseCase {
       },
       input.token,
     );
+
+    try {
+      await this.accountWhatsappSettingsGateway.createAccountWhatsappSettings({
+        accountReference: id,
+        provider: environmentVariables.DEFAULT_WHATSAPP_SETTINGS_PROVIDER,
+        type: environmentVariables.DEFAULT_WHATSAPP_SETTINGS_TYPE,
+        active: environmentVariables.DEFAULT_WHATSAPP_SETTINGS_ACTIVE !== "false",
+        token: environmentVariables.DEFAULT_WHATSAPP_SETTINGS_TOKEN || undefined,
+        utilityFee: parseFloat(environmentVariables.DEFAULT_WHATSAPP_SETTINGS_UTILITY_FEE || "0"),
+        marketingFee: parseFloat(environmentVariables.DEFAULT_WHATSAPP_SETTINGS_MARKETING_FEE || "0"),
+      });
+    } catch (error) {
+      console.error("[createCampaignUseCase] Failed to create whatsapp settings:", error);
+    }
 
     return { campaignId: id };
   }

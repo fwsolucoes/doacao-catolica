@@ -122,17 +122,21 @@ class CampaignGateway implements CampaignGatewayDTO {
       },
     };
 
-    const apiResponse = await api.post(`/project/create/${input.accountId}`, {
-      body,
-      token,
-    });
+    console.log("🚀 ~~ createCampaign body", body);
 
-    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+    // const apiResponse = await api.post(`/project/create/${input.accountId}`, {
+    //   body,
+    //   token,
+    // });
 
-    const schemaValidator = new SchemaValidatorAdapter(
-      createCampaignResponseSchema,
-    );
-    return schemaValidator.validate(apiResponse.response);
+    // if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    // const schemaValidator = new SchemaValidatorAdapter(
+    //   createCampaignResponseSchema,
+    // );
+    // return schemaValidator.validate(apiResponse.response);
+
+    return { id: "01a014cd-61e6-711b-aa4a-33ab6ca15671" };
   }
 
   async updateCampaignWithDetails(

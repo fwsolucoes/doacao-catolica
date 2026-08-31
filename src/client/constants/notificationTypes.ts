@@ -2,7 +2,7 @@ const NOTIFICATION_TYPES: Record<string, string> = {
   payment_before_due_date: "Lembrete antes do vencimento",
   payment_on_due_date: "Lembrete no dia do vencimento",
   payment_after_due_date: "Lembrete depois do vencimento",
-  payment_paid: "Pagamento efetuado",
+  payment_paid: "Confirmação de pagamento",
   payment_settled: "Pagamento liquidado",
   credit_card_failure: "Falha no cartão de crédito",
   credit_card_created: "Cartão de crédito cadastrado",

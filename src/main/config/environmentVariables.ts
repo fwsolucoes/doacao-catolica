@@ -54,6 +54,14 @@ const environmentVariablesSchema = z.object({
 
   // Support contact
   WHATSAPP_SUPPORT_NUMBER: z.string(),
+
+  // Default WhatsApp settings applied when a campaign is created
+  DEFAULT_WHATSAPP_SETTINGS_PROVIDER: z.string().default(""),
+  DEFAULT_WHATSAPP_SETTINGS_TYPE: z.string().default(""),
+  DEFAULT_WHATSAPP_SETTINGS_ACTIVE: z.string().default("true"),
+  DEFAULT_WHATSAPP_SETTINGS_TOKEN: z.string().default(""),
+  DEFAULT_WHATSAPP_SETTINGS_UTILITY_FEE: z.string().default("0"),
+  DEFAULT_WHATSAPP_SETTINGS_MARKETING_FEE: z.string().default("0"),
 });
 
 function formatErrorMessage(error: z.ZodError) {
