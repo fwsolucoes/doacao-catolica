@@ -7,7 +7,7 @@ type CampaignConstructorProps = {
   name: string;
   description: string | null;
   noEndDate: boolean;
-  monthlyGoal: string | undefined;
+  monthlyGoal: number | null;
   totalGoal: number | null;
   startDate: string | null;
   endDate: string | null;
@@ -41,7 +41,7 @@ class Campaign {
   name: string;
   description: string | null;
   noEndDate: boolean;
-  monthlyGoal: string | undefined;
+  monthlyGoal: number | null;
   totalGoal: number | null;
   startDate: string | null;
   endDate: string | null;

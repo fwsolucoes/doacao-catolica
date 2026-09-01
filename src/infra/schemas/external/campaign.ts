@@ -37,7 +37,7 @@ const externalCampaignSchema = z.object({
   revenue_exists: z.boolean().nullable(),
   already_has_revenue: z.boolean().optional(),
   current_revenue: z.string().optional(),
-  monthly_goal: z.string().optional(),
+  monthly_goal: z.number().nullable(),
   total_goal: z.number().nullable(),
 });
 

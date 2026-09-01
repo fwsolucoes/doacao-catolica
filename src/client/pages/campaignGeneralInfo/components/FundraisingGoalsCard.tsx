@@ -38,11 +38,7 @@ function FundraisingGoalsCard() {
         <FormField name="monthlyGoal" label="Meta mensal">
           <CurrencyInput
             name="monthlyGoal"
-            defaultValue={
-              campaign.monthlyGoal
-                ? parseFloat(campaign.monthlyGoal)
-                : undefined
-            }
+            defaultValue={campaign.monthlyGoal ?? undefined}
             placeholder="0,00"
           />
         </FormField>
