@@ -126,6 +126,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       },
     );
 
+    console.log("🚀~~apiResponse", apiResponse.response.data);
     console.log("🚀~~apiResponse", apiResponse.response.data.variables);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
@@ -194,7 +195,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     }
 
     const apiResponse = await donationApi.put(
-      `/client_whatsapp_templates/${uuid}`,
+      `/api/client_whatsapp_templates/${uuid}`,
       {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },

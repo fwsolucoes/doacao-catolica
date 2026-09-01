@@ -1,6 +1,5 @@
 import { Pencil, Plus, X } from "lucide-react";
 import { useLoaderData } from "react-router";
-import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import type { MetaTemplateEditLoader } from "~/client/types/metaTemplateEditLoader";
 import { SectionCard } from "./SectionCard";
@@ -26,10 +25,8 @@ function VariablesCard() {
     >
       <div className="flex flex-col gap-4">
         {template.variables.map((variable, index) => {
-          const isDynamic = variable.varType === "dynamic";
-          const displayName = isDynamic
-            ? (SYSTEM_FIELDS[variable.systemField] ?? variable.name ?? variable.systemField)
-            : (variable.name ?? variable.fixedValue);
+          const displayName =
+            SYSTEM_FIELDS[variable.systemField] ?? variable.name ?? variable.systemField;
           return (
             <div
               key={variable.uuid}
@@ -38,15 +35,6 @@ function VariablesCard() {
               <div className="flex flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="font-mono text-xs text-muted-foreground">{`{{${index + 1}}}`}</span>
-                  <Badge
-                    className={
-                      isDynamic
-                        ? "bg-[#dbeafe] text-[#1447e6]"
-                        : "bg-muted text-muted-foreground"
-                    }
-                  >
-                    {isDynamic ? "Dinâmica" : "Fixa"}
-                  </Badge>
                   <span className="text-sm font-semibold text-foreground">{displayName}</span>
                 </div>
                 {variable.description && (

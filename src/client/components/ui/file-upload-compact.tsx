@@ -90,7 +90,18 @@ function FileUploadCompact({
   const acceptedExtensions = accept.map((t) => t.extension).join(",");
 
   const [value, setValue] = useState(defaultValue ?? "");
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(() => {
+    if (!defaultValue) return null;
+    try {
+      const pathname = new URL(defaultValue).pathname;
+      const segment = decodeURIComponent(pathname.split("/").pop() ?? "");
+      // New key format: {uuid(36)}-{sanitized-name} — strip the UUID prefix
+      return (segment.length > 37 && segment[36] === "-" ? segment.slice(37) : segment) || null;
+    } catch {
+      const segment = defaultValue.split("/").pop() ?? "";
+      return (segment.length > 37 && segment[36] === "-" ? segment.slice(37) : segment) || null;
+    }
+  });
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);

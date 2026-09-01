@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLoaderData, useFetcher } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
+import { FileUploadCompact } from "~/client/components/ui/file-upload-compact";
 import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { Input } from "~/client/components/ui/input";
@@ -84,13 +85,14 @@ function HeaderCard() {
             )}
 
             {headerType === "document" && (
-              <FormField name="header_link" label="Link do documento" required>
-                <Input
-                  name="header_link"
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-foreground">Documento do cabeçalho</p>
+                <FileUploadCompact
+                  name="header_document"
                   defaultValue={template.headerType === "document" ? template.headerLink : ""}
-                  placeholder="https://exemplo.com/documento.pdf"
+                  description="PDF, Word, Excel, PowerPoint, TXT ou CSV."
                 />
-              </FormField>
+              </div>
             )}
 
             <Separator />

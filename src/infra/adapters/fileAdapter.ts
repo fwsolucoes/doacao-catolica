@@ -4,6 +4,21 @@ import type { FileUpload } from "@mjackson/form-data-parser";
 import sharp from "sharp";
 import { Readable } from "stream";
 
+function sanitizeFilename(original: string): string {
+  const dotIdx = original.lastIndexOf(".");
+  const base = dotIdx > 0 ? original.slice(0, dotIdx) : original;
+  const ext = dotIdx > 0 ? original.slice(dotIdx) : "";
+
+  const sanitizedBase = base
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9._-]/g, "")
+    .slice(0, 100);
+
+  return sanitizedBase + ext;
+}
+
 type ConstructorProps = {
   awsRegion: string;
   awsAccessKeyId: string;
@@ -71,7 +86,7 @@ class FileAdapter {
 
     const uploadParams = {
       Bucket: this.awsS3Bucket,
-      Key: `uploads/${generateId("text", "v4")}`,
+      Key: `uploads/${generateId("text", "v4")}-${sanitizeFilename(file.name)}`,
       Body: uploadBuffer,
       ContentType: contentType,
       ContentLength: uploadBuffer.length,
