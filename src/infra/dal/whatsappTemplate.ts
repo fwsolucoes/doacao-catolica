@@ -119,15 +119,20 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   }
 
   async getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail> {
-    const apiResponse = await donationApi.get(`/client_whatsapp_templates/${uuid}`, {
-      headers: { "api-key": environmentVariables.API_KEY_DONATION },
-    });
+    const apiResponse = await donationApi.get(
+      `/api/client_whatsapp_templates/${uuid}`,
+      {
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
+
+    console.log("🚀~~apiResponse", apiResponse.response.data.variables);
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const validated = new SchemaValidatorAdapter(whatsappTemplateDetailResponseSchema).validate(
-      apiResponse.response,
-    );
+    const validated = new SchemaValidatorAdapter(
+      whatsappTemplateDetailResponseSchema,
+    ).validate(apiResponse.response);
 
     const item = validated.data;
     const firstButton = (item.buttons ?? [])[0] ?? null;
@@ -161,7 +166,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     });
   }
 
-  async updateWhatsappTemplate(uuid: string, data: UpdateWhatsappTemplateBody): Promise<void> {
+  async updateWhatsappTemplate(
+    uuid: string,
+    data: UpdateWhatsappTemplateBody,
+  ): Promise<void> {
     const header = this.buildHeader(data);
     const variables = this.buildVariables(data.variables);
     const buttons = this.buildButtons(data.button);
@@ -170,21 +178,28 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
 
     if (data._action === "save_general") {
       if (data.template_name) body.template_name = data.template_name;
-      if (data.template_language) body.template_language = data.template_language;
+      if (data.template_language)
+        body.template_language = data.template_language;
       if (data.template_type) body.template_type = data.template_type;
-      if (data.notification_type) body.notification_type = data.notification_type;
-      if (data.template_preview_text) body.template_preview_text = data.template_preview_text;
-      if (data.template_preview_image) body.template_preview_image = data.template_preview_image;
+      if (data.notification_type)
+        body.notification_type = data.notification_type;
+      if (data.template_preview_text)
+        body.template_preview_text = data.template_preview_text;
+      if (data.template_preview_image)
+        body.template_preview_image = data.template_preview_image;
     } else if (data._action === "save_header") {
       if (header !== undefined) body.header = header;
     } else if (data._action === "save_button") {
       body.buttons = buttons;
     }
 
-    const apiResponse = await donationApi.put(`/client_whatsapp_templates/${uuid}`, {
-      body,
-      headers: { "api-key": environmentVariables.API_KEY_DONATION },
-    });
+    const apiResponse = await donationApi.put(
+      `/client_whatsapp_templates/${uuid}`,
+      {
+        body,
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
