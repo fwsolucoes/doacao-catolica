@@ -6,7 +6,8 @@ class ListWhatsappTemplatesController {
 
   async handle(route: RouteDTO) {
     const notificationType = route.query.notification_type;
-    const templates = await this.listWhatsappTemplatesUseCase.execute({ notificationType });
+    const templateType = route.query.template_type;
+    const templates = await this.listWhatsappTemplatesUseCase.execute({ notificationType, templateType });
     return templates.map((t) => t.toJson());
   }
 }

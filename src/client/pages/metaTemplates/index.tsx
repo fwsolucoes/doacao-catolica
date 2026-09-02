@@ -9,7 +9,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { Link, useLoaderData, useParams } from "react-router";
+import { Link, useLoaderData, useParams, useSearchParams } from "react-router";
 import { NOTIFICATION_TYPES } from "~/client/constants/notificationTypes";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -41,19 +41,30 @@ const HEADER_LABEL: Record<string, string> = {
 function MetaTemplatesPage() {
   const { templates } = useLoaderData<MetaTemplatesLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
+  const category = searchParams.get("template_type") ?? "all";
 
   const filtered = templates.filter((t) => {
     const notificationLabel = NOTIFICATION_TYPES[t.notificationType] ?? t.notificationType;
-    const matchesSearch =
+    return (
       !search ||
       t.templateName.toLowerCase().includes(search.toLowerCase()) ||
       notificationLabel.toLowerCase().includes(search.toLowerCase()) ||
-      t.notificationType.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category === "all" || t.templateType === category;
-    return matchesSearch && matchesCategory;
+      t.notificationType.toLowerCase().includes(search.toLowerCase())
+    );
   });
+
+  function handleCategoryChange(value: string) {
+    setSearchParams((prev) => {
+      if (value === "all") {
+        prev.delete("template_type");
+      } else {
+        prev.set("template_type", value);
+      }
+      return prev;
+    });
+  }
 
   const utilityCount = templates.filter((t) => t.templateType === "utility").length;
   const marketingCount = templates.filter((t) => t.templateType === "marketing").length;
@@ -127,7 +138,7 @@ function MetaTemplatesPage() {
             />
           </InputGroup.Root>
 
-          <Select.Root value={category} onValueChange={setCategory}>
+          <Select.Root value={category} onValueChange={handleCategoryChange}>
             <Select.Trigger className="w-52">
               <Select.Value />
             </Select.Trigger>

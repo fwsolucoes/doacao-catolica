@@ -18,9 +18,11 @@ import { whatsappTemplateDetailResponseSchema } from "../schemas/external/whatsa
 class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   async listWhatsappTemplates(
     notificationType?: string,
+    templateType?: string,
   ): Promise<WhatsappTemplate[]> {
     const params = new URLSearchParams();
     if (notificationType) params.set("notification_type", notificationType);
+    if (templateType) params.set("template_type", templateType);
     const query = params.toString();
     const url = query
       ? `/api/client_whatsapp_templates?${query}`
