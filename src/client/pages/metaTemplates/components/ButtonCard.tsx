@@ -21,7 +21,9 @@ function ButtonCard() {
   const { template } = useLoaderData<MetaTemplateEditLoader>();
   const fetcher = useFetcher();
   const [button, setButton] = useState(
-    template.button ? { subType: template.button.subType, value: template.button.value } : null,
+    template.button
+      ? { uuid: template.button.uuid, subType: template.button.subType, value: template.button.value }
+      : null,
   );
 
   useActionToast(fetcher.data);
@@ -97,7 +99,13 @@ function ButtonCard() {
                 type="button"
                 variant="outline"
                 className="w-fit gap-2"
-                onClick={() => setButton({ subType: "quick_reply", value: "" })}
+                onClick={() =>
+                  setButton({
+                    uuid: template.button?.uuid ?? "",
+                    subType: "quick_reply",
+                    value: "",
+                  })
+                }
               >
                 <Plus size={16} />
                 Adicionar botão

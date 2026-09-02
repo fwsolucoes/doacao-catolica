@@ -8,6 +8,7 @@ import { donationApi } from "../http/donationApi";
 import type { CreateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplate";
 import type { UpdateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplateUpdate";
 import type { CreateWhatsappTemplateButtonBody } from "../schemas/internal/whatsappTemplateButtonCreate";
+import type { UpdateWhatsappTemplateButtonBody } from "../schemas/internal/whatsappTemplateButtonUpdate";
 import type { CreateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableCreate";
 import type { UpdateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableUpdate";
 import { listWhatsappTemplatesSchema } from "../schemas/external/whatsappTemplates";
@@ -210,6 +211,25 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
 
     const apiResponse = await donationApi.post(
       `/api/client_whatsapp_templates/${templateUuid}/buttons`,
+      { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async updateWhatsappTemplateButton(
+    templateUuid: string,
+    buttonUuid: string,
+    data: UpdateWhatsappTemplateButtonBody,
+  ): Promise<void> {
+    const body: Record<string, unknown> = {
+      sub_type: data.button.subType,
+      button_index: 0,
+    };
+    if (data.button.value) body.value = data.button.value;
+
+    const apiResponse = await donationApi.put(
+      `/api/client_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 

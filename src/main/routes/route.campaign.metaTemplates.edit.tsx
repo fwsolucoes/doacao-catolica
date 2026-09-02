@@ -9,6 +9,7 @@ import { updateWhatsappTemplateVariable } from "../factories/whatsappTemplates/u
 import { createWhatsappTemplateVariable } from "../factories/whatsappTemplates/createWhatsappTemplateVariableFactory";
 import { deleteWhatsappTemplateVariable } from "../factories/whatsappTemplates/deleteWhatsappTemplateVariableFactory";
 import { createWhatsappTemplateButton } from "../factories/whatsappTemplates/createWhatsappTemplateButtonFactory";
+import { updateWhatsappTemplateButton } from "../factories/whatsappTemplates/updateWhatsappTemplateButtonFactory";
 import { EditMetaTemplatePage } from "~/client/pages/metaTemplates/edit";
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -34,6 +35,10 @@ export async function action(args: ActionFunctionArgs) {
     }
     if (peek._action === "create_button") {
       return await createWhatsappTemplateButton.handle(route);
+    }
+    if (peek._action === "save_button") {
+      const buttonData = JSON.parse(peek.button ?? "null");
+      if (buttonData?.uuid) return await updateWhatsappTemplateButton.handle(route);
     }
     return await updateWhatsappTemplate.handle(route);
   } catch (error) {
