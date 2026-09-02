@@ -10,6 +10,7 @@ const whatsappTemplateDetailSchema = z.object({
   template_preview_image: z.string().optional().nullable(),
   header: z
     .object({
+      uuid: z.string().optional().nullable(),
       type: z.string().optional().nullable(),
       text: z.string().optional().nullable(),
       link: z.string().optional().nullable(),

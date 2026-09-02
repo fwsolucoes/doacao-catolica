@@ -29,6 +29,7 @@ function HeaderCard() {
   return (
     <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
       <fetcher.Form method="post">
+        <input type="hidden" name="header_uuid" value={template.headerUuid ?? ""} />
         <input type="hidden" name="header_type" value={headerType} />
         <SectionCard title="Cabeçalho" description="Conteúdo exibido acima da mensagem.">
           <div className="flex flex-col gap-5">

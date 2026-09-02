@@ -9,6 +9,7 @@ import type { CreateWhatsappTemplateBody } from "../schemas/internal/whatsappTem
 import type { UpdateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplateUpdate";
 import type { CreateWhatsappTemplateButtonBody } from "../schemas/internal/whatsappTemplateButtonCreate";
 import type { UpdateWhatsappTemplateButtonBody } from "../schemas/internal/whatsappTemplateButtonUpdate";
+import type { UpdateWhatsappTemplateHeaderBody } from "../schemas/internal/whatsappTemplateHeaderUpdate";
 import type { CreateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableCreate";
 import type { UpdateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableUpdate";
 import { listWhatsappTemplatesSchema } from "../schemas/external/whatsappTemplates";
@@ -142,6 +143,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       notificationType: item.notification_type,
       templatePreviewText: item.template_preview_text ?? "",
       templatePreviewImage: item.template_preview_image ?? "",
+      headerUuid: item.header?.uuid ?? null,
       headerType: item.header?.type ?? "none",
       headerText: item.header?.text ?? "",
       headerLink: item.header?.link ?? "",
@@ -211,6 +213,25 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
 
     const apiResponse = await donationApi.post(
       `/api/client_whatsapp_templates/${templateUuid}/buttons`,
+      { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async updateWhatsappTemplateHeader(
+    templateUuid: string,
+    headerUuid: string,
+    data: UpdateWhatsappTemplateHeaderBody,
+  ): Promise<void> {
+    const body: Record<string, unknown> = { type: data.header_type };
+    if (data.header_type === "text") body.text = data.header_text;
+    if (data.header_type === "image") body.link = data.header_image;
+    if (data.header_type === "video") body.link = data.header_link;
+    if (data.header_type === "document") body.link = data.header_document;
+
+    const apiResponse = await donationApi.put(
+      `/api/client_whatsapp_templates/${templateUuid}/headers/${headerUuid}`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 

@@ -11,6 +11,7 @@ import { deleteWhatsappTemplateVariable } from "../factories/whatsappTemplates/d
 import { createWhatsappTemplateButton } from "../factories/whatsappTemplates/createWhatsappTemplateButtonFactory";
 import { updateWhatsappTemplateButton } from "../factories/whatsappTemplates/updateWhatsappTemplateButtonFactory";
 import { deleteWhatsappTemplateButton } from "../factories/whatsappTemplates/deleteWhatsappTemplateButtonFactory";
+import { updateWhatsappTemplateHeader } from "../factories/whatsappTemplates/updateWhatsappTemplateHeaderFactory";
 import { EditMetaTemplatePage } from "~/client/pages/metaTemplates/edit";
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -39,6 +40,9 @@ export async function action(args: ActionFunctionArgs) {
     }
     if (peek._action === "delete_button") {
       return await deleteWhatsappTemplateButton.handle(route);
+    }
+    if (peek._action === "save_header" && peek.header_uuid) {
+      return await updateWhatsappTemplateHeader.handle(route);
     }
     if (peek._action === "save_button") {
       const buttonData = JSON.parse(peek.button ?? "null");

@@ -19,6 +19,7 @@ type WhatsappTemplateDetailProps = {
   notificationType: string;
   templatePreviewText: string;
   templatePreviewImage: string;
+  headerUuid: string | null;
   headerType: string;
   headerText: string;
   headerLink: string;
@@ -36,6 +37,7 @@ class WhatsappTemplateDetail {
   notificationType: string;
   templatePreviewText: string;
   templatePreviewImage: string;
+  headerUuid: string | null;
   headerType: string;
   headerText: string;
   headerLink: string;
@@ -50,6 +52,7 @@ class WhatsappTemplateDetail {
     this.notificationType = props.notificationType;
     this.templatePreviewText = props.templatePreviewText;
     this.templatePreviewImage = props.templatePreviewImage;
+    this.headerUuid = props.headerUuid;
     this.headerType = props.headerType;
     this.headerText = props.headerText;
     this.headerLink = props.headerLink;
@@ -70,6 +73,7 @@ class WhatsappTemplateDetail {
       notificationType: this.notificationType,
       templatePreviewText: this.templatePreviewText,
       templatePreviewImage: this.templatePreviewImage,
+      headerUuid: this.headerUuid,
       headerType: this.headerType,
       headerText: this.headerText,
       headerLink: this.headerLink,
