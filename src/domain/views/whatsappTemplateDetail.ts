@@ -1,8 +1,6 @@
 type WhatsappTemplateDetailVariable = {
   uuid: string;
-  varType: "dynamic" | "fixed";
   systemField: string;
-  fixedValue: string;
   name: string | null;
   description: string | null;
 };

@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 const variableItemSchema = z.object({
-  varType: z.enum(["dynamic", "fixed"]),
   systemField: z.string().default(""),
-  fixedValue: z.string().default(""),
   description: z.string().default(""),
 });
 

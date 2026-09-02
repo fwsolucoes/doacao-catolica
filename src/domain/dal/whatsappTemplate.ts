@@ -1,5 +1,7 @@
 import type { CreateWhatsappTemplateBody } from "~/infra/schemas/internal/whatsappTemplate";
 import type { UpdateWhatsappTemplateBody } from "~/infra/schemas/internal/whatsappTemplateUpdate";
+import type { CreateWhatsappTemplateVariableBody } from "~/infra/schemas/internal/whatsappTemplateVariableCreate";
+import type { UpdateWhatsappTemplateVariableBody } from "~/infra/schemas/internal/whatsappTemplateVariableUpdate";
 import type { WhatsappTemplate } from "../views/whatsappTemplate";
 import type { WhatsappTemplateDetail } from "../views/whatsappTemplateDetail";
 
@@ -8,6 +10,15 @@ type WhatsappTemplateDalDTO = {
   createWhatsappTemplate(data: CreateWhatsappTemplateBody): Promise<void>;
   getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail>;
   updateWhatsappTemplate(uuid: string, data: UpdateWhatsappTemplateBody): Promise<void>;
+  createWhatsappTemplateVariable(
+    templateUuid: string,
+    data: CreateWhatsappTemplateVariableBody,
+  ): Promise<void>;
+  updateWhatsappTemplateVariable(
+    templateUuid: string,
+    variableUuid: string,
+    data: UpdateWhatsappTemplateVariableBody,
+  ): Promise<void>;
 };
 
 export type { WhatsappTemplateDalDTO };

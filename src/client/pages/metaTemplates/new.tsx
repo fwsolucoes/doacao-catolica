@@ -22,9 +22,7 @@ import { Textarea } from "~/client/components/ui/textarea";
 
 type VariableItem = {
   id: string;
-  varType: "dynamic" | "fixed";
   systemField: string;
-  fixedValue: string;
   description: string;
 };
 
@@ -101,7 +99,7 @@ function NewMetaTemplatePage() {
   function addVariable() {
     setVariables((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), varType: "dynamic", systemField: "", fixedValue: "", description: "" },
+      { id: crypto.randomUUID(), systemField: "", description: "" },
     ]);
   }
 
@@ -319,56 +317,23 @@ function NewMetaTemplatePage() {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField name={`var_type_${index}`} label="Tipo da variável" required>
-                  <Select.Root
-                    value={variable.varType}
-                    onValueChange={(v) =>
-                      updateVariable(variable.id, { varType: v as "dynamic" | "fixed" })
-                    }
-                  >
-                    <Select.Trigger>
-                      <Select.Value />
-                    </Select.Trigger>
-                    <Select.Content>
-                      <Select.Item value="dynamic">Dinâmica</Select.Item>
-                      <Select.Item value="fixed">Fixa</Select.Item>
-                    </Select.Content>
-                  </Select.Root>
-                </FormField>
-
-                {variable.varType === "dynamic" ? (
-                  <FormField name={`var_field_${index}`} label="Dado do sistema" required>
-                    <Select.Root
-                      value={variable.systemField}
-                      onValueChange={(v) =>
-                        updateVariable(variable.id, { systemField: v })
-                      }
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Selecione a variável" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {SYSTEM_FIELDS.map((f) => (
-                          <Select.Item key={f.value} value={f.value}>
-                            {f.label}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select.Root>
-                  </FormField>
-                ) : (
-                  <FormField name={`var_value_${index}`} label="Valor fixo" required>
-                    <Input
-                      placeholder="Ex: Doação Católica"
-                      value={variable.fixedValue}
-                      onChange={(e) =>
-                        updateVariable(variable.id, { fixedValue: e.target.value })
-                      }
-                    />
-                  </FormField>
-                )}
-              </div>
+              <FormField name={`var_field_${index}`} label="Dado do sistema" required>
+                <Select.Root
+                  value={variable.systemField}
+                  onValueChange={(v) => updateVariable(variable.id, { systemField: v })}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Selecione a variável" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    {SYSTEM_FIELDS.map((f) => (
+                      <Select.Item key={f.value} value={f.value}>
+                        {f.label}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Root>
+              </FormField>
 
               <FormField name={`var_desc_${index}`} label="Descrição">
                 <Input

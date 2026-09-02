@@ -7,6 +7,8 @@ import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import type { CreateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplate";
 import type { UpdateWhatsappTemplateBody } from "../schemas/internal/whatsappTemplateUpdate";
+import type { CreateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableCreate";
+import type { UpdateWhatsappTemplateVariableBody } from "../schemas/internal/whatsappTemplateVariableUpdate";
 import { listWhatsappTemplatesSchema } from "../schemas/external/whatsappTemplates";
 import { whatsappTemplateDetailResponseSchema } from "../schemas/external/whatsappTemplateDetail";
 
@@ -98,18 +100,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
 
   private buildVariables(variables: CreateWhatsappTemplateBody["variables"]) {
     return variables.map((v) => {
-      if (v.varType === "dynamic") {
-        const dotIndex = v.systemField.indexOf(".");
-        const table = v.systemField.slice(0, dotIndex);
-        const field = v.systemField.slice(dotIndex + 1);
-        return { name: field, table, field, description: v.description };
-      }
-      return {
-        name: v.fixedValue,
-        table: null,
-        field: v.fixedValue,
-        description: v.description,
-      };
+      const dotIndex = v.systemField.indexOf(".");
+      const table = v.systemField.slice(0, dotIndex);
+      const field = v.systemField.slice(dotIndex + 1);
+      return { name: field, table, field, description: v.description };
     });
   }
 
@@ -151,9 +145,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       headerLink: item.header?.link ?? "",
       variables: (item.variables ?? []).map((v) => ({
         uuid: v.uuid,
-        varType: v.table ? "dynamic" : "fixed",
         systemField: v.table && v.field ? `${v.table}.${v.field}` : "",
-        fixedValue: !v.table ? (v.field ?? "") : "",
         name: v.name ?? null,
         description: v.description ?? null,
       })),
@@ -200,6 +192,44 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
       },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  private buildVariableBody(systemField: string, description: string): Record<string, unknown> {
+    const dotIndex = systemField.indexOf(".");
+    const table = systemField.slice(0, dotIndex);
+    const field = systemField.slice(dotIndex + 1);
+    const body: Record<string, unknown> = { table, field, name: field };
+    if (description) body.description = description;
+    return body;
+  }
+
+  async createWhatsappTemplateVariable(
+    templateUuid: string,
+    data: CreateWhatsappTemplateVariableBody,
+  ): Promise<void> {
+    const body = this.buildVariableBody(data.system_field, data.description);
+
+    const apiResponse = await donationApi.post(
+      `/api/client_whatsapp_templates/${templateUuid}/variables`,
+      { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async updateWhatsappTemplateVariable(
+    templateUuid: string,
+    variableUuid: string,
+    data: UpdateWhatsappTemplateVariableBody,
+  ): Promise<void> {
+    const body = this.buildVariableBody(data.system_field, data.description);
+
+    const apiResponse = await donationApi.put(
+      `/api/client_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
+      { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);

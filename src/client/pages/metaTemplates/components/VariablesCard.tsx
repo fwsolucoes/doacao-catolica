@@ -1,22 +1,20 @@
+import { useCallback, useState } from "react";
 import { Pencil, Plus, X } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import type { MetaTemplateEditLoader } from "~/client/types/metaTemplateEditLoader";
+import type { WhatsappTemplateDetailVariable } from "~/domain/views/whatsappTemplateDetail";
+import { AddVariableModal } from "./AddVariableModal";
+import { EditVariableModal, SYSTEM_FIELDS } from "./EditVariableModal";
 import { SectionCard } from "./SectionCard";
-
-const SYSTEM_FIELDS: Record<string, string> = {
-  "customers.name": "Nome do doador",
-  "customers.email": "E-mail do doador",
-  "customers.phone": "Telefone do doador",
-  "payments.amount": "Valor do pagamento",
-  "payments.due_date": "Vencimento do pagamento",
-  "payments.gross_value": "Valor bruto do pagamento",
-  "subscriptions.start_date": "Data de início da assinatura",
-  "accounts.name": "Nome da organização",
-};
 
 function VariablesCard() {
   const { template } = useLoaderData<MetaTemplateEditLoader>();
+  const [editingVariable, setEditingVariable] = useState<WhatsappTemplateDetailVariable | null>(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
+  const closeEditModal = useCallback(() => setEditingVariable(null), []);
+  const closeAddModal = useCallback(() => setAddModalOpen(false), []);
 
   return (
     <SectionCard
@@ -47,7 +45,7 @@ function VariablesCard() {
                   variant="outline"
                   size="sm"
                   className="h-9 gap-2"
-                  disabled
+                  onClick={() => setEditingVariable(variable)}
                 >
                   <Pencil size={14} />
                   Editar
@@ -66,11 +64,24 @@ function VariablesCard() {
           );
         })}
 
-        <Button type="button" variant="outline" className="w-fit gap-2" disabled>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-fit gap-2"
+          onClick={() => setAddModalOpen(true)}
+        >
           <Plus size={16} />
           Adicionar variável
         </Button>
       </div>
+
+      <EditVariableModal
+        open={editingVariable !== null}
+        variable={editingVariable}
+        onClose={closeEditModal}
+      />
+
+      <AddVariableModal open={addModalOpen} onClose={closeAddModal} />
     </SectionCard>
   );
 }
