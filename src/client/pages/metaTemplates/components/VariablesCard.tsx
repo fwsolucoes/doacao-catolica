@@ -5,15 +5,18 @@ import { Button } from "~/client/components/ui/button";
 import type { MetaTemplateEditLoader } from "~/client/types/metaTemplateEditLoader";
 import type { WhatsappTemplateDetailVariable } from "~/domain/views/whatsappTemplateDetail";
 import { AddVariableModal } from "./AddVariableModal";
+import { DeleteVariableModal } from "./DeleteVariableModal";
 import { EditVariableModal, SYSTEM_FIELDS } from "./EditVariableModal";
 import { SectionCard } from "./SectionCard";
 
 function VariablesCard() {
   const { template } = useLoaderData<MetaTemplateEditLoader>();
   const [editingVariable, setEditingVariable] = useState<WhatsappTemplateDetailVariable | null>(null);
+  const [deletingVariable, setDeletingVariable] = useState<WhatsappTemplateDetailVariable | null>(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
 
   const closeEditModal = useCallback(() => setEditingVariable(null), []);
+  const closeDeleteModal = useCallback(() => setDeletingVariable(null), []);
   const closeAddModal = useCallback(() => setAddModalOpen(false), []);
 
   return (
@@ -55,7 +58,7 @@ function VariablesCard() {
                   variant="ghost"
                   size="icon"
                   className="size-9 text-muted-foreground"
-                  disabled
+                  onClick={() => setDeletingVariable(variable)}
                 >
                   <X size={16} />
                 </Button>
@@ -82,6 +85,8 @@ function VariablesCard() {
       />
 
       <AddVariableModal open={addModalOpen} onClose={closeAddModal} />
+
+      <DeleteVariableModal variable={deletingVariable} onClose={closeDeleteModal} />
     </SectionCard>
   );
 }
