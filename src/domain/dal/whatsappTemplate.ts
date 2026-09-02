@@ -22,6 +22,7 @@ type WhatsappTemplateDalDTO = {
     buttonUuid: string,
     data: UpdateWhatsappTemplateButtonBody,
   ): Promise<void>;
+  deleteWhatsappTemplateButton(templateUuid: string, buttonUuid: string): Promise<void>;
   createWhatsappTemplateVariable(
     templateUuid: string,
     data: CreateWhatsappTemplateVariableBody,

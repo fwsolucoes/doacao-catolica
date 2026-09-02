@@ -236,6 +236,15 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
+  async deleteWhatsappTemplateButton(templateUuid: string, buttonUuid: string): Promise<void> {
+    const apiResponse = await donationApi.delete(
+      `/api/client_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
+      { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
   async deleteWhatsappTemplateVariable(templateUuid: string, variableUuid: string): Promise<void> {
     const apiResponse = await donationApi.delete(
       `/api/client_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
