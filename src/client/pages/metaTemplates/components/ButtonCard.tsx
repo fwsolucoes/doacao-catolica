@@ -109,7 +109,7 @@ function ButtonCard() {
               <Button
                 type="submit"
                 name="_action"
-                value="save_button"
+                value={template.button ? "save_button" : "create_button"}
                 disabled={fetcher.state !== "idle"}
               >
                 {fetcher.state !== "idle" ? "Salvando..." : "Salvar botão"}
