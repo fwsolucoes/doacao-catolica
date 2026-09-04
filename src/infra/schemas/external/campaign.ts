@@ -33,11 +33,10 @@ const externalCampaignSchema = z.object({
   featured_video: z.any(),
   template: z.any(),
   last_revenue: z.any(),
-  monthy_goal: z.any(),
+  monthy_goal: z.number().nullable(), // API typo for monthly_goal
   revenue_exists: z.boolean().nullable(),
   already_has_revenue: z.boolean().optional(),
   current_revenue: z.string().optional(),
-  monthly_goal: z.number().nullable(),
   total_goal: z.number().nullable(),
 });
 

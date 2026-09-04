@@ -12,7 +12,7 @@ class CampaignMapper {
       cnpj: externalCampaign.cnpj,
       email: externalCampaign.email,
       institutionName: externalCampaign.institution_name,
-      monthlyGoal: externalCampaign.monthly_goal,
+      monthlyGoal: externalCampaign.monthy_goal,
       noEndDate: externalCampaign.no_end_date ?? false,
       phone: externalCampaign.phone,
       published: externalCampaign.published ?? false,
