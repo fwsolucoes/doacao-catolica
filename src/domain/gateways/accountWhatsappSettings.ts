@@ -14,6 +14,13 @@ type UpdateAccountWhatsappSettingsInput = {
   type: string;
 };
 
+type AccountWhatsappSettingsData = {
+  type: string | null;
+  provider: string | null;
+  hasToken: boolean;
+  active: boolean;
+};
+
 type AccountWhatsappSettingsGatewayDTO = {
   createAccountWhatsappSettings: (
     input: CreateAccountWhatsappSettingsInput,
@@ -21,10 +28,14 @@ type AccountWhatsappSettingsGatewayDTO = {
   updateAccountWhatsappSettings: (
     input: UpdateAccountWhatsappSettingsInput,
   ) => Promise<void>;
+  getAccountWhatsappSettings: (
+    accountReference: string,
+  ) => Promise<AccountWhatsappSettingsData | null>;
 };
 
 export type {
   AccountWhatsappSettingsGatewayDTO,
+  AccountWhatsappSettingsData,
   CreateAccountWhatsappSettingsInput,
   UpdateAccountWhatsappSettingsInput,
 };

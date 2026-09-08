@@ -10,4 +10,12 @@ const updateAccountWhatsappSettingsSchema = z.object({
   type: z.literal("custom"),
 });
 
-export { testWhatsappConnectionSchema, updateAccountWhatsappSettingsSchema };
+const createDefaultAccountWhatsappSettingsSchema = z.object({
+  accountReference: z.string().min(1),
+});
+
+export {
+  testWhatsappConnectionSchema,
+  updateAccountWhatsappSettingsSchema,
+  createDefaultAccountWhatsappSettingsSchema,
+};

@@ -283,12 +283,7 @@ function OwnNumberConfigDialog({
             <Button
               type="button"
               onClick={handleSave}
-              disabled={
-                !connectionType ||
-                isSaving ||
-                isTesting ||
-                (hasTested && !isConnected)
-              }
+              disabled={!connectionType || isSaving || isTesting || !isConnected}
             >
               {isSaving && <Loader2 size={15} className="animate-spin" />}
               {isSaving ? "Salvando..." : "Salvar configuração"}

@@ -125,9 +125,6 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       },
     );
 
-    console.log("🚀~~apiResponse", apiResponse.response.data);
-    console.log("🚀~~apiResponse", apiResponse.response.data.variables);
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const validated = new SchemaValidatorAdapter(
@@ -259,7 +256,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  async deleteWhatsappTemplateButton(templateUuid: string, buttonUuid: string): Promise<void> {
+  async deleteWhatsappTemplateButton(
+    templateUuid: string,
+    buttonUuid: string,
+  ): Promise<void> {
     const apiResponse = await donationApi.delete(
       `/api/client_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
       { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
@@ -268,7 +268,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  async deleteWhatsappTemplateVariable(templateUuid: string, variableUuid: string): Promise<void> {
+  async deleteWhatsappTemplateVariable(
+    templateUuid: string,
+    variableUuid: string,
+  ): Promise<void> {
     const apiResponse = await donationApi.delete(
       `/api/client_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
       { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
@@ -277,7 +280,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  private buildVariableBody(systemField: string, description: string): Record<string, unknown> {
+  private buildVariableBody(
+    systemField: string,
+    description: string,
+  ): Record<string, unknown> {
     const dotIndex = systemField.indexOf(".");
     const table = systemField.slice(0, dotIndex);
     const field = systemField.slice(dotIndex + 1);

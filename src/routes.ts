@@ -10,6 +10,7 @@ export default [
   route("api/client_whatsapp_templates", "./main/routes/api.whatsappTemplates.ts"),
   route("api/whatsapp/testConnection", "./main/routes/api.whatsapp.testConnection.ts"),
   route("api/whatsapp/accountSettings", "./main/routes/api.whatsapp.accountSettings.ts"),
+  route("api/whatsapp/selectOfficialNumber", "./main/routes/api.whatsapp.selectOfficialNumber.ts"),
   route("api/campaign-metrics-modal", "./main/routes/api.campaign.metricsModal.ts"),
   route("api/financial-summary-export", "./main/routes/api.financialSummaryExport.ts"),
   

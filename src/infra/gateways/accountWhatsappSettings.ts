@@ -1,14 +1,15 @@
 import type {
+  AccountWhatsappSettingsData,
   AccountWhatsappSettingsGatewayDTO,
   CreateAccountWhatsappSettingsInput,
   UpdateAccountWhatsappSettingsInput,
 } from "~/domain/gateways/accountWhatsappSettings";
 import { environmentVariables } from "~/main/config/environmentVariables";
+import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
+import { externalAccountWhatsappSettingsSchema } from "../schemas/external/accountWhatsappSettings";
 
-class AccountWhatsappSettingsGateway
-  implements AccountWhatsappSettingsGatewayDTO
-{
+class AccountWhatsappSettingsGateway implements AccountWhatsappSettingsGatewayDTO {
   async createAccountWhatsappSettings(
     input: CreateAccountWhatsappSettingsInput,
   ): Promise<void> {
@@ -25,7 +26,7 @@ class AccountWhatsappSettingsGateway
     if (input.token) body.token = input.token;
 
     const apiResponse = await donationApi.post(
-      `/account_whatsapp_settings/${input.accountReference}`,
+      `/api/account_whatsapp_settings/${input.accountReference}`,
       { body, headers },
     );
 
@@ -46,7 +47,7 @@ class AccountWhatsappSettingsGateway
     const body = { provider: input.provider, type: input.type };
 
     const apiResponse = await donationApi.put(
-      `/account_whatsapp_settings/${input.accountReference}`,
+      `/api/account_whatsapp_settings/${input.accountReference}`,
       { body, headers },
     );
 
@@ -55,6 +56,38 @@ class AccountWhatsappSettingsGateway
         `Failed to update account whatsapp settings: ${apiResponse.message}`,
       );
     }
+  }
+
+  async getAccountWhatsappSettings(
+    accountReference: string,
+  ): Promise<AccountWhatsappSettingsData | null> {
+    const headers = { "api-key": environmentVariables.API_KEY_DONATION };
+
+    const apiResponse = await donationApi.get(
+      `/api/account_whatsapp_settings/${accountReference}`,
+      { headers },
+    );
+
+    if (!apiResponse.success && apiResponse.status === 404) return null;
+
+    if (!apiResponse.success) {
+      throw new Error(
+        `Failed to get account whatsapp settings: ${apiResponse.message}`,
+      );
+    }
+
+    const validated = new SchemaValidatorAdapter(
+      externalAccountWhatsappSettingsSchema,
+    ).validate(apiResponse.response);
+
+    if (!validated.data) return null;
+
+    return {
+      type: validated.data.type ?? null,
+      provider: validated.data.provider ?? null,
+      hasToken: validated.data.has_token,
+      active: validated.data.active,
+    };
   }
 }
 

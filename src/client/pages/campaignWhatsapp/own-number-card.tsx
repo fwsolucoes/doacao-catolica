@@ -1,7 +1,9 @@
-import { CircleSlash, Phone, Settings2 } from "lucide-react";
+import { CircleCheck, CircleSlash, Phone, Settings2 } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useLoaderData } from "react-router";
 import { cn } from "~/lib/utils";
 import { Button } from "~/client/components/ui/button";
+import type { CampaignWhatsappLoader } from "~/client/types/campaignWhatsappLoader";
 import { ActiveBadge, BulletItem, SelectedButton } from "./card-shared";
 import { OwnNumberConfigDialog } from "./own-number-config-dialog";
 
@@ -12,6 +14,10 @@ function OwnNumberCard({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const settings = useLoaderData<CampaignWhatsappLoader>();
+  const isConfigured =
+    settings?.type === "custom" && settings?.hasToken === true;
+
   const [showConfig, setShowConfig] = useState(false);
   const handleSave = useCallback(() => {
     setShowConfig(false);
@@ -55,10 +61,17 @@ function OwnNumberCard({
           <div className="mt-auto flex flex-col gap-3.5 pt-2.5">
             <div className="flex flex-col gap-3.5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-muted-foreground dark:bg-card">
-                  <CircleSlash size={14} />
-                  Não configurado
-                </div>
+                {isConfigured ? (
+                  <div className="flex items-center gap-1.5 rounded-xl bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700">
+                    <CircleCheck size={14} />
+                    Configurado
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5 rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-muted-foreground dark:bg-card">
+                    <CircleSlash size={14} />
+                    Não configurado
+                  </div>
+                )}
                 <Button
                   type="button"
                   variant="outline"
