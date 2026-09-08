@@ -134,6 +134,7 @@ function CampaignDataCard() {
           <input type="hidden" name="phone" value={phone} />
           <PhoneInput
             defaultCountry="BR"
+            initialValueFormat="national"
             value={phone}
             onChange={(v) => setPhone(v || "")}
           />
