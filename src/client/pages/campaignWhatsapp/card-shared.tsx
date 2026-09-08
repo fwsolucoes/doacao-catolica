@@ -13,7 +13,7 @@ function BulletItem({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-2.5">
       <Check size={16} className="mt-0.5 shrink-0 text-emerald-500" />
-      <span className="text-sm text-muted-foreground">{text}</span>
+      <span className="text-base text-muted-foreground">{text}</span>
     </div>
   );
 }

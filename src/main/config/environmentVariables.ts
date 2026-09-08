@@ -52,6 +52,9 @@ const environmentVariablesSchema = z.object({
   // Campaign default image (shown when campaign has no image or image fails to load)
   CAMPAIGN_DEFAULT_IMAGE: z.url(),
 
+  // WhatsApp own-number connection backend
+  BACKEND_ATENDIMENTO_URL: z.string(),
+
   // Support contact
   WHATSAPP_SUPPORT_NUMBER: z.string(),
 

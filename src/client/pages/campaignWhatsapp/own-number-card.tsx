@@ -1,5 +1,5 @@
-import { Headphones, Phone } from "lucide-react";
-import { useState } from "react";
+import { CircleSlash, Phone, Settings2 } from "lucide-react";
+import { useCallback, useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/client/components/ui/button";
 import { ActiveBadge, BulletItem, SelectedButton } from "./card-shared";
@@ -13,6 +13,10 @@ function OwnNumberCard({
   onSelect: () => void;
 }) {
   const [showConfig, setShowConfig] = useState(false);
+  const handleSave = useCallback(() => {
+    setShowConfig(false);
+    onSelect();
+  }, [onSelect]);
 
   return (
     <>
@@ -31,33 +35,47 @@ function OwnNumberCard({
             <Phone size={22} className="text-blue-600" />
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold tracking-tight text-foreground">
-              Número próprio
+            <span className="text-base font-semibold tracking-tight text-foreground">
+              Número Próprio
             </span>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               Conecte um número exclusivo da sua paróquia ou instituição, com a
               sua identidade nas mensagens.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 px-7 pb-7">
+        <div className="flex flex-1 flex-col gap-5 px-7 pb-7">
           <div className="flex flex-col gap-2.5">
             <BulletItem text="Identidade própria (nome e foto do seu número)" />
             <BulletItem text="Requer contratação de um plano dedicado" />
             <BulletItem text="Atendimento e configuração feitos pelo time comercial" />
           </div>
 
-          <div className="flex flex-col gap-3.5 pt-2.5">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="w-full gap-2"
-            >
-              <Headphones size={15} />
-              Falar com o time comercial
-            </Button>
+          <div className="mt-auto flex flex-col gap-3.5 pt-2.5">
+            <div className="flex flex-col gap-3.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-muted-foreground dark:bg-card">
+                  <CircleSlash size={14} />
+                  Não configurado
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-10 gap-2 text-xs"
+                  onClick={() => setShowConfig(true)}
+                >
+                  <Settings2 size={15} />
+                  Configurações
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Configure a conexão do seu número antes de selecionar esta
+                opção.
+              </p>
+            </div>
+
             {selected ? (
               <SelectedButton />
             ) : (
@@ -76,10 +94,7 @@ function OwnNumberCard({
       <OwnNumberConfigDialog
         open={showConfig}
         onOpenChange={setShowConfig}
-        onSave={() => {
-          setShowConfig(false);
-          onSelect();
-        }}
+        onSave={handleSave}
       />
     </>
   );

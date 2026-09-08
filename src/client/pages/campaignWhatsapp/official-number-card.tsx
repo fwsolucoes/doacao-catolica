@@ -27,21 +27,21 @@ function OfficialNumberCard({
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="text-sm font-semibold tracking-tight text-foreground">
-              Número oficial Doação Católica
+            <span className="text-base font-semibold tracking-tight text-foreground">
+              Número Oficial Doação Católica
             </span>
             <span className="rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-foreground dark:bg-card">
               Recomendado
             </span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             Use o número oficial da plataforma. Sem burocracia, sem precisar de
             chip ou aparelho próprio.
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 px-7 pb-7">
+      <div className="flex flex-1 flex-col gap-5 px-7 pb-7">
         <div className="flex flex-col gap-2.5">
           <BulletItem text="Ativação imediata, sem configuração técnica" />
           <BulletItem text="Entrega garantida pelo WhatsApp Business API" />

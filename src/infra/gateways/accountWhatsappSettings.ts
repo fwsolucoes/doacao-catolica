@@ -1,6 +1,7 @@
 import type {
   AccountWhatsappSettingsGatewayDTO,
   CreateAccountWhatsappSettingsInput,
+  UpdateAccountWhatsappSettingsInput,
 } from "~/domain/gateways/accountWhatsappSettings";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { donationApi } from "../http/donationApi";
@@ -34,6 +35,24 @@ class AccountWhatsappSettingsGateway
     if (!apiResponse.success) {
       throw new Error(
         `Failed to create account whatsapp settings: ${apiResponse.message}`,
+      );
+    }
+  }
+
+  async updateAccountWhatsappSettings(
+    input: UpdateAccountWhatsappSettingsInput,
+  ): Promise<void> {
+    const headers = { "api-key": environmentVariables.API_KEY_DONATION };
+    const body = { provider: input.provider, type: input.type };
+
+    const apiResponse = await donationApi.put(
+      `/account_whatsapp_settings/${input.accountReference}`,
+      { body, headers },
+    );
+
+    if (!apiResponse.success) {
+      throw new Error(
+        `Failed to update account whatsapp settings: ${apiResponse.message}`,
       );
     }
   }
