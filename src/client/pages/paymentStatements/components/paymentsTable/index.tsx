@@ -190,28 +190,30 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
               open={filterDrawerOpen}
               onOpenChange={onFilterDrawerOpenChange}
             />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="h-11 min-h-0 w-full gap-2 px-4 text-sm sm:w-auto">
-                  <Plus size={16} />
-                  Adicionar
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link to={`/campaign/${campaignId}/create-recurrence`}>
-                    <RefreshCw size={16} className="text-foreground" />
-                    Criar recorrência
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
-                    <Zap size={16} className="text-foreground" />
-                    Criar pagamento avulso
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {campaignId && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="h-11 min-h-0 w-full gap-2 px-4 text-sm sm:w-auto">
+                    <Plus size={16} />
+                    Adicionar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to={`/campaign/${campaignId}/create-recurrence`}>
+                      <RefreshCw size={16} className="text-foreground" />
+                      Criar recorrência
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
+                      <Zap size={16} className="text-foreground" />
+                      Criar pagamento avulso
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
 
@@ -219,6 +221,7 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
           <Table.Header>
             <Table.Row>
               <Table.Head>Doador</Table.Head>
+              {!campaignId && <Table.Head>Campanha</Table.Head>}
               <Table.Head>Tipo</Table.Head>
               <Table.Head>Valor</Table.Head>
               <Table.Head>Status</Table.Head>
@@ -249,6 +252,11 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                     </div>
                   </div>
                 </Table.Cell>
+                {!campaignId && (
+                  <Table.Cell className="text-sm text-muted-foreground">
+                    {payment.campaignName ?? "—"}
+                  </Table.Cell>
+                )}
                 <Table.Cell>
                   <Badge
                     variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}

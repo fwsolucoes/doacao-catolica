@@ -2,6 +2,7 @@ import {
   BarChart2,
   CircleUser,
   ChevronsUpDown,
+  Heart,
   LayoutDashboard,
   LogOut,
   Megaphone,
@@ -52,6 +53,7 @@ const sections: NavSection[] = [
     title: "Principal",
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+      { icon: Heart, label: "Doações", path: "/donations" },
       { icon: Megaphone, label: "Campanhas", path: "/my-campaigns" },
       { icon: BarChart2, label: "Relatórios", path: "/reports" },
     ],

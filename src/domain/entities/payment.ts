@@ -54,6 +54,9 @@ type PaymentConstructorProps = {
   subscriptionHasToken: boolean;
   pixAuthorizationStatus: string | null;
   operatorReference: string | null;
+  // Nome da campanha à qual o pagamento pertence — usado na visão "todas as campanhas".
+  // Nulo na visão de uma campanha específica, onde a campanha já está no contexto da rota.
+  campaignName?: string | null;
 };
 
 class Payment {
@@ -77,6 +80,7 @@ class Payment {
   readonly subscriptionHasToken: boolean;
   readonly pixAuthorizationStatus: string | null;
   readonly operatorReference: string | null;
+  readonly campaignName: string | null;
 
   private constructor(props: PaymentConstructorProps) {
     this.id = props.id;
@@ -99,6 +103,7 @@ class Payment {
     this.subscriptionHasToken = props.subscriptionHasToken;
     this.pixAuthorizationStatus = props.pixAuthorizationStatus;
     this.operatorReference = props.operatorReference;
+    this.campaignName = props.campaignName ?? null;
   }
 
   static restore(props: PaymentConstructorProps): Payment {
@@ -144,6 +149,7 @@ class Payment {
       subscriptionHasToken: this.subscriptionHasToken,
       pixAuthorizationStatus: this.pixAuthorizationStatus,
       operatorReference: this.operatorReference?.replace(/^pay_/, "") ?? null,
+      campaignName: this.campaignName,
     };
   }
 }
