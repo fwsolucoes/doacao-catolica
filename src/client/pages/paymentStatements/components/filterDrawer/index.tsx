@@ -1,6 +1,6 @@
 import { ListFilter, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Combobox } from "~/client/components/ui/combobox";
 import { Input } from "~/client/components/ui/input";
@@ -24,6 +24,7 @@ const DRAWER_PARAMS = [
   "notified_email",
   "notified_whatsapp",
   "customer_reference",
+  "account_reference",
 ] as const;
 
 type DateType = "due" | "paid";
@@ -38,6 +39,7 @@ type FilterDraft = {
   notifiedEmail: string;
   notifiedWhatsapp: string;
   donorId: string;
+  campaignId: string;
 };
 
 function draftFromParams(sp: URLSearchParams): FilterDraft {
@@ -51,22 +53,26 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
     notifiedEmail: sp.get("notified_email") ?? "",
     notifiedWhatsapp: sp.get("notified_whatsapp") ?? "",
     donorId: sp.get("customer_reference") ?? "",
+    campaignId: sp.get("account_reference") ?? "",
   };
 }
 
 type FilterDrawerProps = {
   donors: { id: string; name: string }[];
+  campaigns: { id: string; name: string }[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
 
 function FilterDrawer({
   donors,
+  campaigns,
   open: openProp,
   onOpenChange: onOpenChangeProp,
 }: FilterDrawerProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { campaignId } = useParams<{ campaignId: string }>();
   const [openInternal, setOpenInternal] = useState(false);
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : openInternal;
@@ -118,6 +124,7 @@ function FilterDrawer({
       ["notified_email", draft.notifiedEmail],
       ["notified_whatsapp", draft.notifiedWhatsapp],
       ["customer_reference", draft.donorId],
+      ["account_reference", draft.campaignId],
     ];
 
     for (const [key, value] of fields) {
@@ -197,6 +204,28 @@ function FilterDrawer({
                 emptyText="Nenhum doador encontrado."
               />
             </div>
+
+            {!campaignId && (
+              <div className="flex flex-col gap-2">
+                <Label>Campanha:</Label>
+                <Select.Root
+                  value={draft.campaignId}
+                  onValueChange={setField("campaignId")}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Todas" />
+                  </Select.Trigger>
+                  <Select.Content position="popper">
+                    <Select.Item value="">Todas</Select.Item>
+                    {campaigns.map((campaign) => (
+                      <Select.Item key={campaign.id} value={campaign.id}>
+                        {campaign.name}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Root>
+              </div>
+            )}
 
             <div className="border border-border rounded p-4 flex flex-col gap-4">
               <div className="flex flex-col gap-2">

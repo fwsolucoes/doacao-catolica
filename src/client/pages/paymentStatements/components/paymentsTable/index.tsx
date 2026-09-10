@@ -147,7 +147,7 @@ type PaymentsTableProps = {
 
 function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsTableProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
-  const { payments, donors } = useLoaderData<DonationsLoader>();
+  const { payments, donors, campaigns } = useLoaderData<DonationsLoader>();
   const [selectedPayment, setSelectedPayment] = useState<
     DonationsLoader["payments"]["data"][number] | null
   >(null);
@@ -187,6 +187,7 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
             </Button>
             <FilterDrawer
               donors={donors.data}
+              campaigns={campaigns}
               open={filterDrawerOpen}
               onOpenChange={onFilterDrawerOpenChange}
             />

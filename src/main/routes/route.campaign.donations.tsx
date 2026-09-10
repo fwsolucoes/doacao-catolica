@@ -24,7 +24,7 @@ export async function loader(args: Route.LoaderArgs) {
     paymentMethodFactory.handleLoader(adaptedRoute),
   ]);
 
-  return { metrics, payments, donors, summary, paymentMethods };
+  return { metrics, payments, donors, summary, paymentMethods, campaigns: [] as Array<{ id: string; name: string }> };
 }
 
 export async function action(args: Route.ActionArgs) {

@@ -21,6 +21,7 @@ const listPaymentsByAccount = {
       notifiedWhatsapp: query.notified_whatsapp,
       search: query.search,
       customerReference: query.customer_reference,
+      accountReference: query.account_reference,
     }),
 };
 

@@ -166,6 +166,7 @@ const allDonationsMock: DonationsLoader = {
     { id: "mock-pm-2", name: "Boleto" },
     { id: "mock-pm-3", name: "Cartão de crédito" },
   ],
+  campaigns: [],
 };
 
 export { allDonationsMock };

@@ -15,6 +15,7 @@ type InputProps = {
   notifiedWhatsapp?: string;
   search?: string;
   customerReference?: string;
+  accountReference?: string;
 };
 
 class ListPaymentsByAccountUseCase {
@@ -27,7 +28,7 @@ class ListPaymentsByAccountUseCase {
     const searchParams = new PaymentsByAccountSearchParams({
       page: page ?? 1,
       filter: {
-        account_reference_2: accountId,
+        account_reference_2: filters.accountReference ? undefined : accountId,
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
         per_page: 20,
@@ -39,6 +40,7 @@ class ListPaymentsByAccountUseCase {
         notified_whatsapp: filters.notifiedWhatsapp,
         search: filters.search,
         customer_reference: filters.customerReference,
+        account_reference: filters.accountReference,
       },
     });
 
