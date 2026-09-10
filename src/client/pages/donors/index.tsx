@@ -1,5 +1,5 @@
 import { Download, Plus, RefreshCw, Zap } from "lucide-react";
-import { Link, useMatches, useParams } from "react-router";
+import { Link, useLocation, useMatches, useParams } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import { DonorsTable } from "./components/donorsTable";
 
 function DonorsPage() {
   const { campaignId } = useParams<{ campaignId: string }>();
+  const location = useLocation();
   const matches = useMatches();
   const campaignData = matches.find(
     (m) => m.data && typeof m.data === "object" && "campaign" in m.data,
@@ -31,9 +32,14 @@ function DonorsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" className="text-foreground">
-            <Download size={16} />
-            Exportar
+          <Button asChild variant="outline" className="text-foreground">
+            <a
+              href={`/campaign/${campaignId}/api/donors-export${location.search}`}
+              download
+            >
+              <Download size={16} />
+              Exportar
+            </a>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

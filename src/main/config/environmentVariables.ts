@@ -18,6 +18,8 @@ const environmentVariablesSchema = z.object({
   // Metabase embed configuration
   METABASE_API: z.string(),
   METABASE_SECRET_KEY: z.string(),
+  METABASE_API_KEY: z.string(),
+  METABASE_COOKIE: z.string(),
 
   // Google OAuth configuration
   GOOGLE_CLIENT_ID: z.string(),

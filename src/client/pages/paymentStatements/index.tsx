@@ -15,7 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useLoaderData, useLocation, useMatches } from "react-router";
+import { useLoaderData, useLocation, useMatches, useParams } from "react-router";
 import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 import { Button } from "~/client/components/ui/button";
 import { MetricCard } from "./components/metricCard";
@@ -28,6 +28,7 @@ function DonationsPage() {
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const openFilterDrawer = useCallback(() => setFilterDrawerOpen(true), []);
 
+  const { campaignId } = useParams<{ campaignId: string }>();
   const location = useLocation();
   const matches = useMatches();
   const period =
@@ -112,9 +113,14 @@ function DonationsPage() {
         </div>
         <div className="flex items-center gap-3">
           <PeriodSelect onCustomSelect={openFilterDrawer} />
-          <Button variant="outline" className="text-foreground">
-            <Download size={16} />
-            Exportar
+          <Button asChild variant="outline" className="text-foreground">
+            <a
+              href={`/campaign/${campaignId}/api/donations-export${location.search}`}
+              download
+            >
+              <Download size={16} />
+              Exportar
+            </a>
           </Button>
         </div>
       </div>
