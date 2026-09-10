@@ -29,7 +29,7 @@ function ReportCard({
   }[tone];
 
   const content = (
-    <Card.Root className="gap-0 overflow-hidden rounded-lg p-0">
+    <Card.Root className="h-full gap-0 overflow-hidden rounded-lg p-0">
       <div
         className={cn(
           "flex h-42 items-center justify-center rounded-t-lg",

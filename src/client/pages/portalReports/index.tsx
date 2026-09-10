@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { Heart, Wallet } from "lucide-react";
 import { ReportCard } from "~/client/pages/reports/components/reportCard";
 
 const REPORTS = [
@@ -9,6 +9,14 @@ const REPORTS = [
     icon: Wallet,
     tone: "blue" as const,
     navigateTo: "/financial-summary",
+  },
+  {
+    title: "Doações gerais",
+    description:
+      "Listagem completa de doações de todas as campanhas com filtros por doador, status, período e método de pagamento.",
+    icon: Heart,
+    tone: "green" as const,
+    navigateTo: "/donations",
   },
 ];
 
