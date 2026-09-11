@@ -89,7 +89,7 @@ function DefaultersReportPage() {
         </div>
       </Card.Root>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <Card.Root className="p-6">
           <div className="flex items-center gap-4">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[rgba(var(--spotlight-danger),0.16)] text-[rgb(var(--spotlight-danger))]">
@@ -150,7 +150,7 @@ function DefaultersReportPage() {
 
       <Card.Root className="gap-0 overflow-hidden p-0">
         <div className="flex flex-col gap-4 p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm font-semibold text-(--text-heading)">
               Doadores inadimplentes ({defaultingDonors.totalDefaultingDonors}){" "}
               — Últimos {currentMonths} meses
@@ -162,7 +162,7 @@ function DefaultersReportPage() {
               </a>
             </Button>
           </div>
-          <div className="w-80">
+          <div className="w-full sm:w-80">
             <Input
               leftIcon={Search}
               placeholder="Buscar por nome, e-mail ou telefone..."
