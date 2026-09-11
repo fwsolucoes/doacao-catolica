@@ -32,7 +32,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
     return { error: "Ação não reconhecida" };
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

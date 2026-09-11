@@ -15,7 +15,7 @@ export async function action(args: Route.ActionArgs) {
   try {
     return await campaignGroupFactory.handleAction(route);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

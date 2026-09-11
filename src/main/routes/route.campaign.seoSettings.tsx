@@ -28,7 +28,7 @@ export async function action(args: Route.ActionArgs) {
         return HttpAdapter.badRequest("Ação não definida");
     }
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

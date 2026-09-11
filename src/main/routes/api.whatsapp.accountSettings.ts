@@ -8,6 +8,6 @@ export async function action(args: Route.ActionArgs) {
     const adaptedRoute = await RouteAdapter.adaptRoute(args);
     return await updateAccountWhatsappSettings.handle(adaptedRoute);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }

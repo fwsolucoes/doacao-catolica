@@ -8,6 +8,6 @@ export async function action(props: Route.ActionArgs) {
     const adaptedRoute = await RouteAdapter.adaptRoute(props);
     return await AuthMiddleware.logoutUser(adaptedRoute);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }

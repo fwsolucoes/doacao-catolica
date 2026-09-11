@@ -43,7 +43,7 @@ export async function loader(args: Route.LoaderArgs) {
 //         throw HttpAdapter.notImplemented("Action not implemented");
 //     }
 //   } catch (error) {
-//     return ErrorHandlerAdapter.handle(error);
+//     return ErrorHandlerAdapter.handleAsData(error);
 //   }
 // }
 

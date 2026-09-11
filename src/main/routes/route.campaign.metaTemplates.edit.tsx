@@ -50,7 +50,7 @@ export async function action(args: ActionFunctionArgs) {
     }
     return await updateWhatsappTemplate.handle(route);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

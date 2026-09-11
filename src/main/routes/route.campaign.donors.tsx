@@ -98,7 +98,7 @@ export async function action(args: Route.ActionArgs) {
         throw HttpAdapter.badRequest(`Ação desconhecida: ${_action}`);
     }
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

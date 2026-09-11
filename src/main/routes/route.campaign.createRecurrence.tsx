@@ -35,7 +35,7 @@ export async function action(args: Route.ActionArgs) {
   try {
     await createRecurrence.handle(adaptedRoute);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 
   return {

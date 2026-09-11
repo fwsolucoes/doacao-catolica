@@ -8,6 +8,6 @@ export async function loader(props: Route.LoaderArgs) {
     const adaptedRoute = await RouteAdapter.adaptRoute(props);
     return await getCampaignMetricsModal.handle(adaptedRoute);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }

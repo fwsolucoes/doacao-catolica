@@ -37,7 +37,7 @@ export async function action(args: Route.ActionArgs) {
   try {
     await createOneTimePayment.handle(adaptedRoute);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 
   return {

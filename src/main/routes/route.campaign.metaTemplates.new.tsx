@@ -17,7 +17,7 @@ export async function action(args: ActionFunctionArgs) {
   try {
     return await createWhatsappTemplate.handle(route);
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 

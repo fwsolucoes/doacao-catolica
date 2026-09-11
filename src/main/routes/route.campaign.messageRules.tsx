@@ -44,7 +44,7 @@ export async function action(args: Route.ActionArgs) {
         throw HttpAdapter.badRequest("Action not implemented");
     }
   } catch (error) {
-    return ErrorHandlerAdapter.handle(error);
+    return ErrorHandlerAdapter.handleAsData(error);
   }
 }
 
