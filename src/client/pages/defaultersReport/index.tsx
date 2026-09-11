@@ -8,7 +8,7 @@ import {
   Search,
   UserX,
 } from "lucide-react";
-import { Link, useLoaderData, useNavigate } from "react-router";
+import { Link, useLoaderData, useNavigate, useParams } from "react-router";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -22,6 +22,7 @@ function DefaultersReportPage() {
   const { defaultingDonors, months: currentMonths } =
     useLoaderData<DefaultersReportLoader>();
   const navigate = useNavigate();
+  const { campaignId } = useParams<{ campaignId: string }>();
 
   const [months, setMonths] = useState(String(currentMonths));
   const [search, setSearch] = useState("");
@@ -243,9 +244,13 @@ function DefaultersReportPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell className="text-center">
-                      <Button variant="outline" size="sm" className="gap-1.5">
-                        <FileText size={14} />
-                        Extrato
+                      <Button variant="outline" size="sm" className="gap-1.5" asChild>
+                        <Link
+                          to={`/campaign/${campaignId}/donations?customer_reference=${defaulter.customerId}&start_date=1980-01-01&end_date=2099-12-31&period=custom`}
+                        >
+                          <FileText size={14} />
+                          Extrato
+                        </Link>
                       </Button>
                     </Table.Cell>
                   </Table.Row>
