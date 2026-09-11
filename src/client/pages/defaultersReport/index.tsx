@@ -12,9 +12,10 @@ import {
 import { Link } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import { InputGroup } from "~/client/components/ui/input-group";
+import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
+import { TablePagination } from "~/client/components/ui/table-pagination";
 
 type Defaulter = {
   name: string;
@@ -141,32 +142,29 @@ function DefaultersReportPage() {
       </div>
 
       <Card.Root className="gap-0 overflow-hidden p-0">
-        <div className="flex flex-wrap items-center justify-between gap-4 p-7">
-          <p className="text-sm font-semibold text-(--text-heading)">
-            Doadores inadimplentes ({DEFAULTERS.length}) — Últimos {months} meses
-          </p>
-          <Button variant="outline" size="sm">
-            <Download size={14} />
-            Exportar XLS
-          </Button>
-        </div>
-
-        <div className="px-7 pb-5">
-          <InputGroup.Root className="max-w-80">
-            <InputGroup.Addon>
-              <Search size={16} />
-            </InputGroup.Addon>
-            <InputGroup.Input
+        <div className="flex flex-col gap-4 p-6">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-(--text-heading)">
+              Doadores inadimplentes ({DEFAULTERS.length}) — Últimos {months} meses
+            </p>
+            <Button variant="outline" size="sm">
+              <Download size={14} />
+              Exportar XLS
+            </Button>
+          </div>
+          <div className="w-80">
+            <Input
+              leftIcon={Search}
               placeholder="Buscar por nome, e-mail ou telefone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
             />
-          </InputGroup.Root>
+          </div>
         </div>
 
-        <Table.Root>
-          <Table.Header>
+        <div className="px-7 pb-6">
+          <Table.Root>
+            <Table.Header>
             <Table.Row>
               <Table.Head>Nome</Table.Head>
               <Table.Head>Telefone</Table.Head>
@@ -224,20 +222,11 @@ function DefaultersReportPage() {
             )}
           </Table.Body>
         </Table.Root>
-
-        <div className="flex items-center justify-between border-t border-border px-7 py-4">
-          <p className="text-sm text-muted-foreground">
-            Página 1 de 2 — exibindo {Math.min(10, filtered.length)} de {DEFAULTERS.length} doadores
-          </p>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled>
-              Anterior
-            </Button>
-            <Button variant="outline" size="sm">
-              Próxima
-            </Button>
-          </div>
         </div>
+
+        <Card.Footer className="flex-col items-center gap-3 px-6 pb-4 sm:flex-row sm:justify-between">
+          <TablePagination currentPage={1} totalPages={2} />
+        </Card.Footer>
       </Card.Root>
     </div>
   );
