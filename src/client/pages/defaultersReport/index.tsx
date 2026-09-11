@@ -5,53 +5,38 @@ import {
   CircleDollarSign,
   Download,
   FileText,
-  MessageCircle,
   Search,
   UserX,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLoaderData, useNavigate } from "react-router";
+import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
-
-type Defaulter = {
-  name: string;
-  phone: string;
-  email: string;
-  overdueMonths: number;
-  pendingAmount: string;
-  registrationDate: string;
-  campaignTotal: string;
-  campaignCount: number;
-};
-
-const DEFAULTERS: Defaulter[] = [
-  { name: "Marcos Vinícius Teixeira", phone: "(11) 98871-2245", email: "marcos.teixeira@gmail.com", overdueMonths: 7, pendingAmount: "R$ 735,00", registrationDate: "14/03/2024", campaignTotal: "R$ 1.240,00", campaignCount: 12 },
-  { name: "Rita de Cássia Almeida", phone: "(21) 99120-8834", email: "rita.almeida@outlook.com", overdueMonths: 5, pendingAmount: "R$ 250,00", registrationDate: "02/07/2024", campaignTotal: "R$ 890,00", campaignCount: 18 },
-  { name: "José Antônio Ribeiro", phone: "(31) 98455-1190", email: "jose.ribeiro@uol.com.br", overdueMonths: 11, pendingAmount: "R$ 1.650,00", registrationDate: "27/01/2025", campaignTotal: "R$ 450,00", campaignCount: 5 },
-  { name: "Sandra Maria Lopes", phone: "(41) 99677-4412", email: "sandra.lopes@gmail.com", overdueMonths: 3, pendingAmount: "R$ 180,00", registrationDate: "19/09/2024", campaignTotal: "R$ 2.310,00", campaignCount: 27 },
-  { name: "Paulo Henrique Costa", phone: "(51) 98330-7761", email: "paulo.costa@empresa.com.br", overdueMonths: 9, pendingAmount: "R$ 1.080,00", registrationDate: "05/11/2023", campaignTotal: "R$ 3.120,00", campaignCount: 41 },
-  { name: "Célia Fernandes", phone: "(62) 98214-3387", email: "celia.fernandes@gmail.com", overdueMonths: 4, pendingAmount: "R$ 320,00", registrationDate: "23/04/2025", campaignTotal: "R$ 640,00", campaignCount: 8 },
-  { name: "Roberto Carlos Dias", phone: "(85) 99502-6673", email: "roberto.dias@gmail.com", overdueMonths: 12, pendingAmount: "R$ 2.400,00", registrationDate: "12/12/2024", campaignTotal: "R$ 1.500,00", campaignCount: 15 },
-  { name: "Adriana Nogueira", phone: "(71) 98844-2019", email: "adriana.nogueira@hotmail.com", overdueMonths: 2, pendingAmount: "R$ 120,00", registrationDate: "30/05/2025", campaignTotal: "R$ 380,00", campaignCount: 6 },
-  { name: "Eduardo Menezes", phone: "(48) 99311-5540", email: "eduardo.menezes@gmail.com", overdueMonths: 6, pendingAmount: "R$ 540,00", registrationDate: "08/02/2024", campaignTotal: "R$ 970,00", campaignCount: 11 },
-  { name: "Vera Lúcia Barros", phone: "(27) 98726-1103", email: "vera.barros@gmail.com", overdueMonths: 8, pendingAmount: "R$ 960,00", registrationDate: "16/08/2023", campaignTotal: "R$ 4.180,00", campaignCount: 52 },
-];
+import type { DefaultersReportLoader } from "~/client/types/defaultersReportLoader";
 
 function DefaultersReportPage() {
-  const [months, setMonths] = useState("4");
+  const { defaultingDonors, months: currentMonths } =
+    useLoaderData<DefaultersReportLoader>();
+  const navigate = useNavigate();
+
+  const [months, setMonths] = useState(String(currentMonths));
   const [search, setSearch] = useState("");
 
-  const filtered = DEFAULTERS.filter(
+  const filtered = defaultingDonors.donors.filter(
     (d) =>
       search === "" ||
       d.name.toLowerCase().includes(search.toLowerCase()) ||
       d.email.toLowerCase().includes(search.toLowerCase()) ||
-      d.phone.includes(search),
+      d.phoneDisplay.toLowerCase().includes(search.toLowerCase()),
   );
+
+  function handleUpdate() {
+    navigate(`?months=${months}`);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,7 +53,8 @@ function DefaultersReportPage() {
             Doadores Inadimplentes
           </h1>
           <p className="text-sm text-muted-foreground">
-            Doadores com doações sem pagamento nos últimos 12 meses e valores pendentes na campanha.
+            Doadores com doações sem pagamento nos últimos {currentMonths} meses
+            e valores pendentes na campanha.
           </p>
         </div>
         <Button variant="outline">
@@ -96,7 +82,7 @@ function DefaultersReportPage() {
               </Select.Content>
             </Select.Root>
           </div>
-          <Button>Atualizar</Button>
+          <Button onClick={handleUpdate}>Atualizar</Button>
         </div>
       </Card.Root>
 
@@ -107,9 +93,15 @@ function DefaultersReportPage() {
               <UserX size={24} />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-muted-foreground">Total de inadimplentes</p>
-              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">12</p>
-              <p className="text-xs text-muted-foreground">Doadores com pagamentos em aberto</p>
+              <p className="text-sm text-muted-foreground">
+                Total de inadimplentes
+              </p>
+              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">
+                {defaultingDonors.totalDefaultingDonors}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Doadores com pagamentos em aberto
+              </p>
             </div>
           </div>
         </Card.Root>
@@ -120,9 +112,15 @@ function DefaultersReportPage() {
               <CalendarDays size={24} />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-muted-foreground">Total médio por mês</p>
-              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">R$ 2.426,25</p>
-              <p className="text-xs text-muted-foreground">Média mensal do valor pendente (12 meses)</p>
+              <p className="text-sm text-muted-foreground">
+                Total médio por mês
+              </p>
+              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">
+                {defaultingDonors.averageMonthlyAmount}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Média mensal do valor pendente ({currentMonths} meses)
+              </p>
             </div>
           </div>
         </Card.Root>
@@ -133,9 +131,15 @@ function DefaultersReportPage() {
               <CircleDollarSign size={24} />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-muted-foreground">Total médio por doador</p>
-              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">R$ 808,75</p>
-              <p className="text-xs text-muted-foreground">Total pendente: R$ 9.705,00</p>
+              <p className="text-sm text-muted-foreground">
+                Total médio por doador
+              </p>
+              <p className="text-xl font-semibold tracking-tight text-(--text-heading)">
+                {defaultingDonors.averageAmountPerDonor}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Total pendente: {defaultingDonors.totalPendingAmount}
+              </p>
             </div>
           </div>
         </Card.Root>
@@ -145,7 +149,8 @@ function DefaultersReportPage() {
         <div className="flex flex-col gap-4 p-6">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-(--text-heading)">
-              Doadores inadimplentes ({DEFAULTERS.length}) — Últimos {months} meses
+              Doadores inadimplentes ({defaultingDonors.totalDefaultingDonors}){" "}
+              — Últimos {currentMonths} meses
             </p>
             <Button variant="outline" size="sm">
               <Download size={14} />
@@ -165,67 +170,93 @@ function DefaultersReportPage() {
         <div className="px-7 pb-6">
           <Table.Root>
             <Table.Header>
-            <Table.Row>
-              <Table.Head>Nome</Table.Head>
-              <Table.Head>Telefone</Table.Head>
-              <Table.Head>E-mail</Table.Head>
-              <Table.Head className="text-right">Doações sem pagamento (12m)</Table.Head>
-              <Table.Head className="text-right">Valor pendente</Table.Head>
-              <Table.Head>Cadastro</Table.Head>
-              <Table.Head className="text-right">Doações na campanha</Table.Head>
-              <Table.Head className="text-center">Ações</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {filtered.length === 0 ? (
-              <Table.Empty
-                title="Nenhum doador encontrado."
-                description="Tente ajustar o filtro de busca."
-              />
-            ) : (
-              filtered.map((defaulter) => (
-                <Table.Row key={defaulter.email}>
-                  <Table.Cell className="font-semibold">{defaulter.name}</Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      {defaulter.phone}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="size-6 p-0 text-[#25d366] hover:bg-transparent hover:text-[#25d366] hover:opacity-75"
-                        title="WhatsApp"
-                      >
-                        <MessageCircle size={16} />
+              <Table.Row>
+                <Table.Head>Nome</Table.Head>
+                <Table.Head>Telefone</Table.Head>
+                <Table.Head>E-mail</Table.Head>
+                <Table.Head className="text-right">
+                  Doações sem pagamento ({currentMonths}m)
+                </Table.Head>
+                <Table.Head className="text-right">Valor pendente</Table.Head>
+                <Table.Head>Cadastro</Table.Head>
+                <Table.Head className="text-right">
+                  Doações na campanha
+                </Table.Head>
+                <Table.Head className="text-center">Ações</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {filtered.length === 0 ? (
+                <Table.Empty
+                  title="Nenhum doador encontrado."
+                  description="Tente ajustar o filtro de busca ou o período selecionado."
+                />
+              ) : (
+                filtered.map((defaulter) => (
+                  <Table.Row key={defaulter.customerId}>
+                    <Table.Cell className="font-semibold">
+                      {defaulter.name}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        {defaulter.phoneDisplay}
+                        {defaulter.whatsappHref && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="size-6 p-0 text-[#25d366] hover:bg-transparent hover:text-[#25d366] hover:opacity-75"
+                            title="Abrir no WhatsApp"
+                            asChild
+                          >
+                            <a
+                              href={defaulter.whatsappHref}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <WhatsAppIcon size={16} />
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell className="text-muted-foreground">
+                      {defaulter.email}
+                    </Table.Cell>
+                    <Table.Cell className="text-right">
+                      <span className="inline-flex items-center justify-center rounded-full bg-destructive/15 px-3 py-0.5 text-xs font-semibold text-destructive">
+                        {defaulter.unpaidDonationsCount}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell className="text-right font-semibold">
+                      {defaulter.pendingAmount}
+                    </Table.Cell>
+                    <Table.Cell className="text-muted-foreground">
+                      {defaulter.createdAt}
+                    </Table.Cell>
+                    <Table.Cell className="text-right">
+                      <span className="font-semibold">
+                        {defaulter.totalPaidAmount}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {" "}
+                        · {defaulter.totalPaidDonationsCount}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell className="text-center">
+                      <Button variant="outline" size="sm" className="gap-1.5">
+                        <FileText size={14} />
+                        Extrato
                       </Button>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell className="text-muted-foreground">{defaulter.email}</Table.Cell>
-                  <Table.Cell className="text-right">
-                    <span className="inline-flex items-center justify-center rounded-full bg-destructive/15 px-3 py-0.5 text-xs font-semibold text-destructive">
-                      {defaulter.overdueMonths}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell className="text-right font-semibold">{defaulter.pendingAmount}</Table.Cell>
-                  <Table.Cell className="text-muted-foreground">{defaulter.registrationDate}</Table.Cell>
-                  <Table.Cell className="text-right">
-                    <span className="font-semibold">{defaulter.campaignTotal}</span>
-                    <span className="text-muted-foreground"> · {defaulter.campaignCount}</span>
-                  </Table.Cell>
-                  <Table.Cell className="text-center">
-                    <Button variant="ghost" size="sm" className="gap-1.5">
-                      <FileText size={14} />
-                      Extrato
-                    </Button>
-                  </Table.Cell>
-                </Table.Row>
-              ))
-            )}
-          </Table.Body>
-        </Table.Root>
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
+            </Table.Body>
+          </Table.Root>
         </div>
 
         <Card.Footer className="flex-col items-center gap-3 px-6 pb-4 sm:flex-row sm:justify-between">
-          <TablePagination currentPage={1} totalPages={2} />
+          <TablePagination currentPage={1} totalPages={1} />
         </Card.Footer>
       </Card.Root>
     </div>
