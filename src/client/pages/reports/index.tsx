@@ -1,4 +1,4 @@
-import { Cake, HeartHandshake, Repeat2, UserMinus, Users } from "lucide-react";
+import { Cake, HeartHandshake, Repeat2, UserMinus, UserX, Users } from "lucide-react";
 import { ReportCard } from "./components/reportCard";
 
 const REPORTS = [
@@ -25,6 +25,14 @@ const REPORTS = [
     icon: UserMinus,
     tone: "rose" as const,
     navigateTo: "../overdue-payments",
+  },
+  {
+    title: "Relatório de inadimplentes",
+    description:
+      "Doadores com pagamentos em atraso ou pendências financeiras no período selecionado.",
+    icon: UserX,
+    tone: "rose" as const,
+    navigateTo: "../defaulters-report",
   },
   {
     title: "Relatório de doações",

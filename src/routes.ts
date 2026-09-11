@@ -49,6 +49,10 @@ export default [
       "overdue-payments",
       "./main/routes/route.campaign.overduePayments.tsx",
     ),
+    route(
+      "defaulters-report",
+      "./main/routes/route.campaign.defaultersReport.tsx",
+    ),
     route("collaborators", "./main/routes/route.campaign.collaborators.tsx"),
     route("fundraisers", "./main/routes/route.campaign.ambassadors.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
