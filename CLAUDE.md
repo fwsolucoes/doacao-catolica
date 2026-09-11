@@ -225,6 +225,28 @@ return await useCase.execute({
 - `api` (`~/infra/http/api`) — chamadas autenticadas com token do usuário
 - `donationApi` (`~/infra/http/donationApi`) — endpoints da API de doações, autenticados via `api-key` no header (`environmentVariables.API_KEY_DONATION`). Controllers desses endpoints não precisam verificar `AuthService`.
 
+## Tratamento de erros em actions e loaders
+
+**Regra:** nunca retornar `ErrorHandlerAdapter.handle(error)` diretamente de um action ou loader. Sempre usar `ErrorHandlerAdapter.handleAsData(error)`.
+
+Em React Router v7 SSR produção, retornar uma `Response` com status não-2xx (ex: 502) de um action/loader faz o roteador client-side tratar como erro de rota e acionar o `ErrorBoundary`, ignorando `fetcher.data`. Em desenvolvimento (Vite) o comportamento é mais permissivo e o body é parseado mesmo para respostas não-2xx, mascarando o bug.
+
+`handleAsData` extrai o JSON da Response e o retorna como dado plain (status 200 implícito), o que popula `fetcher.data` corretamente e permite que `useActionToast` exiba o toast de erro.
+
+```ts
+// correto — retorna dados plain; fetcher.data é populado; toast funciona em prod
+} catch (error) {
+  return ErrorHandlerAdapter.handleAsData(error);
+}
+
+// errado — retorna Response 502; ErrorBoundary é acionado em prod
+} catch (error) {
+  return ErrorHandlerAdapter.handle(error);
+}
+```
+
+`ErrorHandlerAdapter.handle` existe apenas para casos onde o caller faz `fetch()` nativo e precisa do HTTP status real — não é o caso de nenhuma rota atual.
+
 ## Formulários
 
 Todo campo de formulário deve ser envolvido por `FormField`, inclusive campos com componentes customizados como `Combobox` e `ToggleGroup`. O `FormField` é o único ponto de exibição de erros retornados pelo servidor para aquele `name` — sem ele, um erro vindo da action não aparece na UI.
