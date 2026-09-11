@@ -244,9 +244,15 @@ function DefaultersReportPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell className="text-center">
-                      <Button variant="outline" size="sm" className="gap-1.5" asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5"
+                        asChild
+                      >
                         <Link
-                          to={`/campaign/${campaignId}/donations?customer_reference=${defaulter.customerId}&start_date=1980-01-01&end_date=2099-12-31&period=custom`}
+                          // to={`/campaign/${campaignId}/donations?customer_reference=${defaulter.customerId}&start_date=1980-01-01&end_date=2099-12-31&period=custom`}
+                          to={`/campaign/${campaignId}/donations?payments%3Asearch=${defaulter.name}&start_date=1980-01-01&end_date=2099-12-31&period=custom`}
                         >
                           <FileText size={14} />
                           Extrato

@@ -6,7 +6,7 @@ const NOT_INFORMED = "Não informado";
 type DonorProps = {
   customerId: number;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   createdAt: string;
   unpaidDonationsCount: number;
@@ -71,7 +71,7 @@ class DefaultingDonors {
     return {
       customerId: String(donor.customerId),
       name: donor.name,
-      email: donor.email,
+      email: donor.email ?? NOT_INFORMED,
       phoneDisplay: formatted || NOT_INFORMED,
       whatsappHref: buildWhatsAppHref(donor.phone),
       createdAt: this.formatDate(donor.createdAt),

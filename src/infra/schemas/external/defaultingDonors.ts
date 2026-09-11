@@ -3,7 +3,7 @@ import { z } from "zod";
 const externalDefaultingDonorSchema = z.object({
   customer_id: z.number(),
   name: z.string(),
-  email: z.string(),
+  email: z.string().nullable(),
   // known format: "+5532998128318"
   phone: z.string().nullable(),
   unpaid_donations_count: z.number(),
