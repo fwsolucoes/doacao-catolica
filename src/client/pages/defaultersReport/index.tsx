@@ -24,7 +24,6 @@ function DefaultersReportPage() {
   const navigate = useNavigate();
   const { campaignId } = useParams<{ campaignId: string }>();
 
-  const [months, setMonths] = useState(String(currentMonths));
   const [search, setSearch] = useState("");
 
   const filtered = defaultingDonors.donors.filter(
@@ -34,10 +33,6 @@ function DefaultersReportPage() {
       d.email.toLowerCase().includes(search.toLowerCase()) ||
       d.phoneDisplay.toLowerCase().includes(search.toLowerCase()),
   );
-
-  function handleUpdate() {
-    navigate(`?months=${months}`);
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -72,7 +67,10 @@ function DefaultersReportPage() {
             <span className="text-sm font-semibold text-foreground">
               Quantidade de últimos meses sem pagamento
             </span>
-            <Select.Root value={months} onValueChange={setMonths}>
+            <Select.Root
+              value={String(currentMonths)}
+              onValueChange={(v) => navigate(`?months=${v}`)}
+            >
               <Select.Trigger className="w-52">
                 <Select.Value />
               </Select.Trigger>
@@ -85,7 +83,6 @@ function DefaultersReportPage() {
               </Select.Content>
             </Select.Root>
           </div>
-          <Button onClick={handleUpdate}>Atualizar</Button>
         </div>
       </Card.Root>
 
