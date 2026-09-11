@@ -68,6 +68,7 @@ export default [
     route("settings/whatsapp", "./main/routes/route.campaign.whatsapp.tsx"),
     route("settings/preferences", "./main/routes/route.campaign.preferences.tsx"),
     route("api/ambassadors-export", "./main/routes/api.campaign.ambassadorsExport.ts"),
+    route("api/defaulters-export", "./main/routes/api.campaign.defaultersExport.ts"),
     route("api/donors-export", "./main/routes/api.campaign.donorsExport.ts"),
     route("api/donations-export", "./main/routes/api.campaign.donationsExport.ts"),
     route("api/payment-notifications/:paymentId", "./main/routes/api.campaign.paymentNotifications.ts"),

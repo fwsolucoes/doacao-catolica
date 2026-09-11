@@ -58,9 +58,11 @@ function DefaultersReportPage() {
             e valores pendentes na campanha.
           </p>
         </div>
-        <Button variant="outline">
-          <Download size={16} />
-          Exportar XLS
+        <Button variant="outline" asChild>
+          <a href={`/campaign/${campaignId}/api/defaulters-export?months=${currentMonths}`}>
+            <Download size={16} />
+            Exportar XLS
+          </a>
         </Button>
       </div>
 
@@ -153,9 +155,11 @@ function DefaultersReportPage() {
               Doadores inadimplentes ({defaultingDonors.totalDefaultingDonors}){" "}
               — Últimos {currentMonths} meses
             </p>
-            <Button variant="outline" size="sm">
-              <Download size={14} />
-              Exportar XLS
+            <Button variant="outline" size="sm" asChild>
+              <a href={`/campaign/${campaignId}/api/defaulters-export?months=${currentMonths}`}>
+                <Download size={14} />
+                Exportar XLS
+              </a>
             </Button>
           </div>
           <div className="w-80">
