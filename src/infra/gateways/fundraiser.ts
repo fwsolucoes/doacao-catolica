@@ -117,8 +117,6 @@ class FundraiserGateway implements FundraiserGatewayDTO {
       token,
     });
 
-    console.log("🚀apiResponse", apiResponse);
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
