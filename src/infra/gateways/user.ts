@@ -15,6 +15,8 @@ class UserGateway implements UserGatewayDTO {
       token,
     });
 
+    console.log("🚀🚀UserGateway meUser apiResponse", apiResponse);
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(externalUserSchema);

@@ -6,6 +6,7 @@ class ErrorHandlerAdapter {
   }
 
   static async handleAsData(error: any) {
+    if (error instanceof Response) throw error;
     const response = errorHandler(error);
     return response.json();
   }

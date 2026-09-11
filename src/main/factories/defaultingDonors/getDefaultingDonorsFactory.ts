@@ -5,8 +5,8 @@ const gateway = new DefaultingDonorsGateway();
 const useCase = new GetDefaultingDonorsUseCase(gateway);
 
 const getDefaultingDonors = {
-  handle: (accountUuid: string, months: number) =>
-    useCase.execute({ accountUuid, months }),
+  handle: (accountUuid: string | undefined, months: number, reference2?: string) =>
+    useCase.execute({ accountUuid, months, reference2 }),
 };
 
 export { getDefaultingDonors };

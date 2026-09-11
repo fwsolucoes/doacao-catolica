@@ -25,6 +25,7 @@ export default [
     route("campaigns-groups", "./main/routes/route.campaignsGroups.tsx"),
     route("reports", "./main/routes/route.reports.tsx"),
     route("financial-summary", "./main/routes/route.financialSummary.tsx"),
+    route("defaulters-report", "./main/routes/route.defaultersReport.tsx"),
   ]),
 
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [

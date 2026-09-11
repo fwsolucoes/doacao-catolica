@@ -1,5 +1,9 @@
-import type { loader } from "~/main/routes/route.campaign.defaultersReport";
+import type { DefaultingDonorsJson } from "~/domain/entities/defaultingDonors";
 
-type DefaultersReportLoader = Awaited<ReturnType<typeof loader>>;
+type DefaultersReportLoader = {
+  defaultingDonors: DefaultingDonorsJson;
+  months: number;
+  campaigns?: { id: string; name: string }[];
+};
 
 export type { DefaultersReportLoader };

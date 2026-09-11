@@ -1,4 +1,4 @@
-import { Heart, Wallet } from "lucide-react";
+import { Heart, UserX, Wallet } from "lucide-react";
 import { ReportCard } from "~/client/pages/reports/components/reportCard";
 
 const REPORTS = [
@@ -17,6 +17,14 @@ const REPORTS = [
     icon: Heart,
     tone: "green" as const,
     navigateTo: "/donations",
+  },
+  {
+    title: "Inadimplentes gerais",
+    description:
+      "Doadores com pagamentos em atraso ou pendências financeiras em todas as campanhas.",
+    icon: UserX,
+    tone: "rose" as const,
+    navigateTo: "/defaulters-report",
   },
 ];
 
