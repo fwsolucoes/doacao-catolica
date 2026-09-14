@@ -14,4 +14,12 @@ const declineInvitationSchema = z.object({
   id: z.string().uuid(),
 });
 
-export { acceptInvitationSchema, declineInvitationSchema };
+const acceptAmbassadorInvitationSchema = z.object({
+  projectId: z.string().min(1, "O id do projeto é obrigatório"),
+});
+
+export {
+  acceptAmbassadorInvitationSchema,
+  acceptInvitationSchema,
+  declineInvitationSchema,
+};

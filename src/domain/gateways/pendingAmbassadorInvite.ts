@@ -4,8 +4,18 @@ type PendingAmbassadorInvitesResult = {
   items: PendingInvite[];
 };
 
-type PendingAmbassadorInviteGatewayDTO = {
-  findAll(email: string, token: string): Promise<PendingAmbassadorInvitesResult>;
+type AcceptAmbassadorInvitationInput = {
+  userEmail: string;
+  projectId: string;
 };
 
-export type { PendingAmbassadorInviteGatewayDTO, PendingAmbassadorInvitesResult };
+type PendingAmbassadorInviteGatewayDTO = {
+  findAll(email: string, token: string): Promise<PendingAmbassadorInvitesResult>;
+  acceptInvitation(input: AcceptAmbassadorInvitationInput, token: string): Promise<void>;
+};
+
+export type {
+  AcceptAmbassadorInvitationInput,
+  PendingAmbassadorInviteGatewayDTO,
+  PendingAmbassadorInvitesResult,
+};

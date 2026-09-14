@@ -1,6 +1,9 @@
 import { CalendarDays, Star, UserRound } from "lucide-react";
+import { useFetcher } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
+import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import type { PendingInvitesLoader } from "~/client/types/pendingInvitesLoader";
 
 type AmbassadorInvite =
@@ -11,6 +14,11 @@ type AmbassadorInviteCardProps = {
 };
 
 function AmbassadorInviteCard({ invite }: AmbassadorInviteCardProps) {
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state !== "idle";
+
+  useActionToast(fetcher.data);
+
   return (
     <Card.Root className="w-full max-w-155 gap-5 rounded-lg p-6">
       <div className="flex items-center justify-between">
@@ -58,6 +66,21 @@ function AmbassadorInviteCard({ invite }: AmbassadorInviteCardProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-auto">
+        <fetcher.Form method="post" className="flex-1">
+          <input type="hidden" name="projectId" value={invite.publicProjectId} />
+          <Button
+            type="submit"
+            name="_action"
+            value="acceptAmbassadorInvitation"
+            className="w-full"
+            isLoading={isSubmitting}
+          >
+            Aceitar convite
+          </Button>
+        </fetcher.Form>
       </div>
     </Card.Root>
   );

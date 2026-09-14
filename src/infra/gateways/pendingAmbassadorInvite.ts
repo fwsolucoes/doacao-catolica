@@ -1,4 +1,5 @@
 import type {
+  AcceptAmbassadorInvitationInput,
   PendingAmbassadorInviteGatewayDTO,
   PendingAmbassadorInvitesResult,
 } from "~/domain/gateways/pendingAmbassadorInvite";
@@ -18,11 +19,6 @@ class PendingAmbassadorInviteGateway implements PendingAmbassadorInviteGatewayDT
       token,
     });
 
-    console.log(
-      "🚀PendingAmbassadorInviteGateway.findAll apiResponse",
-      apiResponse,
-    );
-
     if (!apiResponse.success) {
       throw HttpAdapter.badRequest(apiResponse.message, apiResponse.response);
     }
@@ -35,6 +31,23 @@ class PendingAmbassadorInviteGateway implements PendingAmbassadorInviteGatewayDT
     return {
       items: response.map((invite) => PendingInviteMapper.toEntity(invite)),
     };
+  }
+
+  async acceptInvitation(
+    input: AcceptAmbassadorInvitationInput,
+    token: string,
+  ): Promise<void> {
+    const apiResponse = await api.post("/project-agent/create", {
+      body: {
+        project_id: input.projectId,
+        user_email: input.userEmail,
+      },
+      token,
+    });
+
+    if (!apiResponse.success) {
+      throw HttpAdapter.badRequest(apiResponse.message, apiResponse.response);
+    }
   }
 }
 

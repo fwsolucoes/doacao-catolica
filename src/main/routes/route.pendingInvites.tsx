@@ -11,6 +11,7 @@ import { acceptInvitation } from "../factories/pendingInvite/acceptInvitationFac
 import { declineInvitation } from "../factories/pendingInvite/declineInvitationFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
 import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
+import { acceptAmbassadorInvitation } from "../factories/pendingAmbassadorInvite/acceptAmbassadorInvitationFactory";
 
 const ACCEPT_ACTION = "acceptInvitation";
 const DECLINE_ACTION = "declineInvitation";
@@ -45,6 +46,8 @@ export async function action(args: Route.ActionArgs) {
         return await acceptInvitation.handle(adaptedRoute);
       case DECLINE_ACTION:
         return await declineInvitation.handle(adaptedRoute);
+      case "acceptAmbassadorInvitation":
+        return await acceptAmbassadorInvitation.handle(adaptedRoute);
       default:
         throw HttpAdapter.badRequest("Ação não definida");
     }
