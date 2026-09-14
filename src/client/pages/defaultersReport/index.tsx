@@ -322,8 +322,8 @@ function DefaultersReportPage() {
               ) : (
                 filtered.map((defaulter) => {
                   const extratoTo = campaignId
-                    ? `/campaign/${campaignId}/donations?payments%3Asearch=${defaulter.name}&start_date=1980-01-01&end_date=2099-12-31&period=custom`
-                    : `/donations?payments%3Asearch=${defaulter.name}&start_date=1980-01-01&end_date=2099-12-31&period=custom`;
+                    ? `/campaign/${campaignId}/donations?customer_reference=${defaulter.customerUuid}&start_date=1980-01-01&end_date=2099-12-31&period=custom`
+                    : `/donations?customer_reference=${defaulter.customerUuid}&start_date=1980-01-01&end_date=2099-12-31&period=custom`;
 
                   return (
                     <Table.Row key={defaulter.customerId}>

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const externalDefaultingDonorSchema = z.object({
   customer_id: z.number(),
+  customer_uuid: z.string(),
   name: z.string(),
   email: z.string().nullable(),
   // known format: "+5532998128318"
@@ -29,6 +30,5 @@ const externalDefaultingDonorsSchema = z.object({
 });
 
 type ExternalDefaultingDonor = z.infer<typeof externalDefaultingDonorSchema>;
-
 
 export { externalDefaultingDonorsSchema, type ExternalDefaultingDonor };

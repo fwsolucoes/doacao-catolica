@@ -5,6 +5,7 @@ const NOT_INFORMED = "Não informado";
 
 type DonorProps = {
   customerId: number;
+  customerUuid: string;
   name: string;
   email: string | null;
   phone: string | null;
@@ -25,6 +26,7 @@ type DefaultingDonorsProps = {
 
 type DefaultingDonorJson = {
   customerId: string;
+  customerUuid: string;
   name: string;
   email: string;
   phoneDisplay: string;
@@ -70,6 +72,7 @@ class DefaultingDonors {
     const formatted = formatPhone(donor.phone);
     return {
       customerId: String(donor.customerId),
+      customerUuid: donor.customerUuid,
       name: donor.name,
       email: donor.email ?? NOT_INFORMED,
       phoneDisplay: formatted || NOT_INFORMED,

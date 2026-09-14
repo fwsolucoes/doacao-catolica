@@ -34,6 +34,7 @@ class DefaultingDonorsGateway implements DefaultingDonorsGatewayDTO {
       averageMonthlyAmount: s.average_monthly_amount,
       donors: data.data.donors.map((d) => ({
         customerId: d.customer_id,
+        customerUuid: d.customer_uuid,
         name: d.name,
         email: d.email,
         phone: d.phone,
