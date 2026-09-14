@@ -49,11 +49,24 @@ function AddAmbassadorModal({ open, onClose }: AddAmbassadorModalProps) {
             className="flex min-h-0 flex-1 flex-col"
           >
             <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto overscroll-contain px-8 pb-6">
-              <FormField name="userEmail" label="E-mail" required>
+              <FormField name="invitedUserName" label="Nome" required>
+                <Input name="invitedUserName" placeholder="João Silva" />
+              </FormField>
+              <FormField name="invitedUserEmail" label="E-mail" required>
                 <Input
-                  name="userEmail"
+                  name="invitedUserEmail"
                   type="email"
                   placeholder="embaixador@exemplo.com"
+                />
+              </FormField>
+              <FormField name="percentageCommission" label="Comissão (%)" required>
+                <Input
+                  name="percentageCommission"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="10"
                 />
               </FormField>
             </div>

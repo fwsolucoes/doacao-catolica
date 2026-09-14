@@ -20,15 +20,19 @@ class CreateFundraiserController {
     const { campaignId } = route.params;
     if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
 
+    const inviterId = user.accountId;
+
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(createFundraiserSchema).validate(body);
 
     await this.createFundraiserUseCase.execute(
       {
         projectId: campaignId,
-        userEmail: validated.userEmail,
-        percentageCommission: 0,
-        code: generateCode(),
+        inviterId,
+        invitedUserEmail: validated.invitedUserEmail,
+        invitedUserName: validated.invitedUserName,
+        percentageCommission: validated.percentageCommission,
+        token: generateCode(),
       },
       user.token,
     );

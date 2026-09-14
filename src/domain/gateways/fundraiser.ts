@@ -4,9 +4,11 @@ import type { FundraiserDetails } from "../entities/fundraiserDetails";
 
 type CreateFundraiserInput = {
   projectId: string;
-  userEmail: string;
-  percentageCommission: number | null;
-  code: string;
+  inviterId: number;
+  invitedUserEmail: string;
+  invitedUserName: string;
+  percentageCommission: number;
+  token: string;
 };
 
 type FundraiserGatewayDTO = {

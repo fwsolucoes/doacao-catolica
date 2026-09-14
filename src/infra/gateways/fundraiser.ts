@@ -107,13 +107,17 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     input: CreateFundraiserInput,
     token: string,
   ): Promise<void> {
-    const apiResponse = await api.post("/project-agent/create", {
-      body: {
-        code: input.code,
-        project_id: input.projectId,
-        user_email: input.userEmail,
-        percentage_comission: input.percentageCommission,
-      },
+    const body = {
+      token: input.token,
+      project_id: input.projectId,
+      inviter_id: input.inviterId,
+      invited_user_email: input.invitedUserEmail,
+      invited_user_name: input.invitedUserName,
+      percentage_comission: input.percentageCommission,
+    };
+
+    const apiResponse = await api.post("/project-agent-invite/create", {
+      body,
       token,
     });
 
