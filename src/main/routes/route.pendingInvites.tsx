@@ -10,6 +10,7 @@ import { getFormAction } from "~/lib/getFormAction";
 import { acceptInvitation } from "../factories/pendingInvite/acceptInvitationFactory";
 import { declineInvitation } from "../factories/pendingInvite/declineInvitationFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
+import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
 
 const ACCEPT_ACTION = "acceptInvitation";
 const DECLINE_ACTION = "declineInvitation";
@@ -19,11 +20,14 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const pendingInvites =
-    await listPendingInvites.handle(adaptedRoute);
+  const [pendingInvites, pendingAmbassadorInvites] = await Promise.all([
+    listPendingInvites.handle(adaptedRoute),
+    listPendingAmbassadorInvites.handle(adaptedRoute),
+  ]);
 
   return {
     pendingInvites,
+    pendingAmbassadorInvites,
     userEmail: user.email,
   };
 }

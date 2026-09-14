@@ -3,18 +3,20 @@ import { useCallback, useState } from "react";
 import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import type { PendingInvitesLoader } from "~/client/types/pendingInvitesLoader";
+import { AmbassadorInviteCard } from "./components/ambassadorInviteCard";
 import { DeclineInviteModal } from "./components/declineInviteModal";
 import { EmptyPendingInvites } from "./components/emptyPendingInvites";
 import { InviteCard } from "./components/inviteCard";
 import type { PendingInvite } from "./components/types";
 
 function PendingInvitesPage() {
-  const { pendingInvites, userEmail } =
+  const { pendingInvites, pendingAmbassadorInvites, userEmail } =
     useLoaderData<PendingInvitesLoader>();
   const [declineInvite, setDeclineInvite] =
     useState<PendingInvite | null>(null);
   const closeDeclineModal = useCallback(() => setDeclineInvite(null), []);
-  const hasPendingInvites = pendingInvites.items.length > 0;
+  const hasPendingInvites =
+    pendingInvites.items.length > 0 || pendingAmbassadorInvites.items.length > 0;
 
   return (
     <>
@@ -41,6 +43,9 @@ function PendingInvitesPage() {
                 userEmail={userEmail}
                 onDecline={setDeclineInvite}
               />
+            ))}
+            {pendingAmbassadorInvites.items.map((invite) => (
+              <AmbassadorInviteCard key={invite.id} invite={invite} />
             ))}
           </div>
         </div>

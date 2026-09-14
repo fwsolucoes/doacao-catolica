@@ -1,5 +1,6 @@
-import { CalendarDays, UserRound } from "lucide-react";
+import { CalendarDays, Users, UserRound } from "lucide-react";
 import { useFetcher } from "react-router";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { useActionToast } from "~/client/hooks/useActionToast";
@@ -19,9 +20,15 @@ function InviteCard({ invite, userEmail, onDecline }: InviteCardProps) {
 
   return (
     <Card.Root className="w-full max-w-155 gap-5 rounded-lg p-6">
-      <p className="text-sm font-medium leading-6 text-foreground">
-        Você foi convidado(a) para ser colaborador(a) desta campanha
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium leading-6 text-foreground">
+          Você foi convidado(a) para ser colaborador(a) desta campanha
+        </p>
+        <Badge variant="info" className="shrink-0">
+          <Users size={11} data-icon="inline-start" />
+          Colaborador
+        </Badge>
+      </div>
 
       <div className="flex flex-col gap-4">
         <div>

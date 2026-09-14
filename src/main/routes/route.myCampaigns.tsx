@@ -4,6 +4,7 @@ import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
+import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { redirect } from "react-router";
 
@@ -20,10 +21,12 @@ export async function loader(args: Route.LoaderArgs) {
     url.searchParams.get("skipPendingInvites") === "true";
 
   if (!skipPendingInvites) {
-    const pendingInvites =
-      await listPendingInvites.handle(adaptedRoute);
+    const [pendingInvites, pendingAmbassadorInvites] = await Promise.all([
+      listPendingInvites.handle(adaptedRoute),
+      listPendingAmbassadorInvites.handle(adaptedRoute),
+    ]);
 
-    if (pendingInvites.items.length > 0) {
+    if (pendingInvites.items.length > 0 || pendingAmbassadorInvites.items.length > 0) {
       throw redirect("/pending-invites");
     }
   }
