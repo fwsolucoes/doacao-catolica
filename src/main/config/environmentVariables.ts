@@ -40,6 +40,9 @@ const environmentVariablesSchema = z.object({
   // Donation checkout
   SANCTON_DONATION_CHECKOUT_URL: z.string(),
 
+  // Ambassador invite redirect
+  AMBASSADOR_INVITE_REDIRECT_URL: z.url(),
+
   // Logging
   TRAFFIC_SOURCE_ID: z.uuid(),
   TRAFFIC_SOURCE_TOKEN: z.string(),

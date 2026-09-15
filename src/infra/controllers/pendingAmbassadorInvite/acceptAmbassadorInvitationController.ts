@@ -4,6 +4,7 @@ import { DecodeRequestBodyAdapter } from "~/infra/adapters/decodeRequestBodyAdap
 import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
 import { acceptAmbassadorInvitationSchema } from "~/infra/schemas/internal/pendingInvite";
 import { AuthService } from "~/infra/services/authService";
+import { environmentVariables } from "~/main/config/environmentVariables";
 import type { RouteDTO } from "~/main/types/route";
 
 class AcceptAmbassadorInvitationController {
@@ -26,12 +27,9 @@ class AcceptAmbassadorInvitationController {
       user.token,
     );
 
-    const params = new URLSearchParams({
-      confirmationInviteParam: "true",
-      invitedEmail: user.email,
-    });
-
-    return redirect(`/pending-invites?${params.toString()}`);
+    return redirect(
+      `${environmentVariables.AMBASSADOR_INVITE_REDIRECT_URL}/${input.inviteId}`,
+    );
   }
 }
 
