@@ -31,13 +31,14 @@ function AmbassadorsPage() {
             Embaixadores
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie os embaixadores, suas comissões e as indicações de doadores.
+            Gerencie os embaixadores, suas comissões e as indicações de
+            doadores.
           </p>
         </div>
-        <Button className="gap-2" onClick={() => setAddOpen(true)}>
+        {/* <Button className="gap-2" onClick={() => setAddOpen(true)}>
           <Plus size={16} />
           Adicionar embaixador
-        </Button>
+        </Button> */}
       </div>
 
       <AddAmbassadorModal open={addOpen} onClose={closeAdd} />
@@ -61,7 +62,11 @@ function AmbassadorsPage() {
         </TabBar.List>
 
         <Card.Root className="gap-4 p-6">
-          {isActiveTab ? <ActiveAmbassadorsTable /> : <PendingAmbassadorsTable />}
+          {isActiveTab ? (
+            <ActiveAmbassadorsTable />
+          ) : (
+            <PendingAmbassadorsTable />
+          )}
           {isActiveTab && activeFundraisers.meta.totalPages > 1 && (
             <Card.Footer className="flex-col items-center gap-3 sm:flex-row sm:justify-between">
               <TablePagination
