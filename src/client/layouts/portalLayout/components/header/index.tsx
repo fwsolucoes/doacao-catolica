@@ -2,6 +2,7 @@ import { CalendarClock, HeartHandshake, LayoutGrid, Moon, Search, Sun } from "lu
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { useRoot } from "~/client/hooks/useRoot";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,7 @@ import { useTheme } from "~/client/hooks/useTheme";
 
 function PortalHeader() {
   const { theme, toggle } = useTheme();
+  const { user, environmentVariables } = useRoot();
   const navigate = useNavigate();
   const location = useLocation();
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -104,15 +106,24 @@ function PortalHeader() {
             <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Aplicações
             </DropdownMenuLabel>
-            <DropdownMenuItem className="gap-3 rounded-lg p-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-                <CalendarClock size={20} className="text-blue-600" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Agenda Católica</span>
-                <span className="text-xs text-muted-foreground">Gestão de Eventos e Inscrições</span>
-              </div>
-            </DropdownMenuItem>
+            {environmentVariables.SANCTON_EVENTS_PANEL_URL && (
+              <DropdownMenuItem asChild className="gap-3 rounded-lg p-3">
+                <a
+                  href={`${environmentVariables.SANCTON_EVENTS_PANEL_URL}/api/auth/token?token=${user?.token}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="cursor-pointer"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                    <CalendarClock size={20} className="text-blue-600" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium">Agenda Católica</span>
+                    <span className="text-xs text-muted-foreground">Gestão de Eventos e Inscrições</span>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem className="gap-3 rounded-lg p-3 mt-1">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
                 <HeartHandshake size={20} className="text-blue-600" />
