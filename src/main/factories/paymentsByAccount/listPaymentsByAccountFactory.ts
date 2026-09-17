@@ -19,7 +19,7 @@ const listPaymentsByAccount = {
       status: query.status,
       notifiedEmail: query.notified_email,
       notifiedWhatsapp: query.notified_whatsapp,
-      search: query.search,
+      search: query["payments:search"],
       customerReference: query.customer_reference,
       accountReference: query.account_reference,
     }),
