@@ -37,19 +37,17 @@ function TransfersTable() {
           {transfers.data.map((transfer) => (
             <Table.Row key={transfer.id}>
               <Table.Cell className="text-sm text-muted-foreground">
-                {formatDate(transfer.createdAt)}
+                {formatDate(transfer.paidDate)}
               </Table.Cell>
               <Table.Cell className="text-sm text-muted-foreground">
-                {formatDate(transfer.paidDate)}
+                {formatDate(transfer.createdAt)}
               </Table.Cell>
               <Table.Cell className="font-semibold text-secondary-foreground">
                 {formatCurrency(transfer.amount)}
               </Table.Cell>
               <Table.Cell className="text-muted-foreground">—</Table.Cell>
               <Table.Cell>
-                <Badge
-                  variant={getStatusVariant(transfer.status)}
-                >
+                <Badge variant={getStatusVariant(transfer.status)}>
                   {formatStatus(transfer.status)}
                 </Badge>
               </Table.Cell>
