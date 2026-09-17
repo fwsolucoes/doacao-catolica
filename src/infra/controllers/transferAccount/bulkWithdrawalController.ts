@@ -6,6 +6,12 @@ import { bulkWithdrawalBodySchema } from "~/infra/schemas/internal/transferAccou
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import type { RouteDTO } from "~/main/types/route";
 
+function getScheduleDate(): string {
+  const now = new Date();
+  const target = now.getHours() < 18 ? now : new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  return target.toISOString().split("T")[0] as string;
+}
+
 class BulkWithdrawalController {
   constructor(private bulkWithdrawalUseCase: BulkWithdrawalUseCase) {}
 
@@ -19,9 +25,9 @@ class BulkWithdrawalController {
     await this.bulkWithdrawalUseCase.execute({
       referenceId: String(user.accountId),
       pix: {
-        key: validated.pix_key,
-        type: validated.pix_type,
-        scheduleDate: validated.schedule_date,
+        key: validated.pixKey,
+        type: validated.pixType,
+        scheduleDate: getScheduleDate(),
       },
     });
 

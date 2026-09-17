@@ -249,6 +249,53 @@ Em React Router v7 SSR produção, retornar uma `Response` com status não-2xx (
 
 ## Formulários
 
+### Nomenclatura de campos de formulário
+
+Todos os campos de formulário no frontend usam **camelCase**, nunca snake_case. Isso inclui campos visíveis, hidden inputs e os schemas internos em `infra/schemas/internal/`.
+
+```tsx
+// correto
+<input type="hidden" name="pixKey" value={...} />
+<input type="hidden" name="pixType" value={...} />
+<Input name="scheduleDate" />
+
+// errado
+<input type="hidden" name="pix_key" value={...} />
+<input type="hidden" name="pix_type" value={...} />
+<Input name="schedule_date" />
+```
+
+A única exceção são os schemas externos (`infra/schemas/external/`) que refletem a nomenclatura da API externa.
+
+Dados gerados pelo servidor (como datas calculadas com lógica de negócio) não devem ser enviados pelo frontend como hidden inputs — devem ser calculados no controller.
+
+### Campos que vêm dos params de rota
+
+Valores que existem nos params da URL não devem ser enviados como campos de formulário. O controller os extrai de `route.params` diretamente:
+
+```ts
+// correto — campaignId vem do param :campaignId na URL
+const { campaignId } = route.params;
+await useCase.execute({ accountUuid: campaignId, ... });
+
+// errado — não enviar como campo hidden no formulário
+<input type="hidden" name="accountUuid" value={campaignId} />
+```
+
+### FormField para selects controlados por estado
+
+Quando um `<Select>` é controlado via estado React (`value` + `onValueChange`), não precisa de `name` prop — o valor é propagado pelos hidden inputs que dependem da seleção. O `FormField` deve ter o `name` do campo cujo erro deve exibir (ex.: `pixKey`), não o ID da conta selecionada:
+
+```tsx
+// correto — FormField mostra erro de pixKey se chave não for selecionada
+<FormField name="pixKey" label="Selecione a chave Pix" required>
+  <Select.Root value={selectedId} onValueChange={setSelectedId}>
+    ...
+  </Select.Root>
+</FormField>
+<input type="hidden" name="pixKey" value={selectedAccount?.pixKey ?? ""} />
+```
+
 Todo campo de formulário deve ser envolvido por `FormField`, inclusive campos com componentes customizados como `Combobox` e `ToggleGroup`. O `FormField` é o único ponto de exibição de erros retornados pelo servidor para aquele `name` — sem ele, um erro vindo da action não aparece na UI.
 
 ```tsx

@@ -20,7 +20,7 @@ import { Select } from "~/client/components/ui/select";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { useRoot } from "~/client/hooks/useRoot";
 import type { TransfersLoader } from "~/client/types/transfersLoader";
-import { formatCurrency, getPixLabel, getTodayISO } from "./utils";
+import { formatCurrency, getPixLabel } from "./utils";
 
 function RequestWithdrawalModal() {
   const { transferMetrics, transferAccounts } =
@@ -81,18 +81,16 @@ function RequestWithdrawalModal() {
 
         <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
           <fetcher.Form method="post" className="flex flex-col gap-5 px-6 pb-6">
-            <input type="hidden" name="_action" value="requestWithdrawal" />
             <input
               type="hidden"
-              name="pix_key"
+              name="pixKey"
               value={selectedAccount?.pixKey ?? ""}
             />
             <input
               type="hidden"
-              name="pix_type"
+              name="pixType"
               value={selectedAccount?.pixType ?? ""}
             />
-            <input type="hidden" name="schedule_date" value={getTodayISO()} />
 
             <div className="flex gap-3 rounded-xl border border-[rgba(var(--spotlight-warning),0.35)] bg-[rgba(var(--spotlight-warning),0.09)] p-4">
               <AlertTriangle
@@ -113,12 +111,11 @@ function RequestWithdrawalModal() {
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <FormField
-                  name="account_uuid"
+                  name="pixKey"
                   label="Selecione a chave Pix"
                   required
                 >
                   <Select.Root
-                    name="account_uuid"
                     value={selectedAccountId}
                     onValueChange={setSelectedAccountId}
                   >
@@ -170,6 +167,8 @@ function RequestWithdrawalModal() {
               </DialogClose>
               <Button
                 type="submit"
+                name="_action"
+                value="requestWithdrawal"
                 disabled={isSubmitting || !accounts.length || !selectedAccount}
                 isLoading={isSubmitting}
               >
