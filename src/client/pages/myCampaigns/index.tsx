@@ -1,32 +1,70 @@
-import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
-import { Link, useLoaderData, useFetcher } from "react-router";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Search } from "lucide-react";
+import { Link, useLoaderData, useFetcher, useNavigate, useLocation } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Empty } from "~/client/components/ui/empty";
 import { FolderOpen } from "lucide-react";
+import { Input } from "~/client/components/ui/input";
 import type { CampaignsLoader } from "~/client/types/campaignsLoader";
 import { CampaignCard } from "./components/campaignCard";
 
 function MyCampaignsPage() {
   const { campaigns } = useLoaderData<CampaignsLoader>();
   const fetcher = useFetcher<CampaignsLoader>();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [items, setItems] = useState(campaigns.data);
+  const searchParam = new URLSearchParams(location.search).get("search") ?? "";
+  const [localSearch, setLocalSearch] = useState(searchParam);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [extraItems, setExtraItems] = useState(campaigns.data.slice(0, 0));
   const [meta, setMeta] = useState(campaigns.meta);
 
   useEffect(() => {
+    setLocalSearch(searchParam);
+  }, [searchParam]);
+
+  useEffect(() => {
+    setExtraItems([]);
+    setMeta(campaigns.meta);
+  }, [campaigns]);
+
+  useEffect(() => {
     if (!fetcher.data) return;
-    setItems((prev) => [...prev, ...fetcher.data!.campaigns.data]);
+    setExtraItems((prev) => [...prev, ...fetcher.data!.campaigns.data]);
     setMeta(fetcher.data!.campaigns.meta);
   }, [fetcher.data]);
 
+  const items = [...campaigns.data, ...extraItems];
   const hasMore = meta.page < meta.totalPages;
   const isLoading = fetcher.state !== "idle";
 
+  function handleSearchChange(value: string) {
+    setLocalSearch(value);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+
+    const next = new URLSearchParams(location.search);
+    if (!value) {
+      next.delete("search");
+      navigate(`?${next.toString()}`, { preventScrollReset: true });
+      return;
+    }
+    if (value.length >= 3) {
+      searchTimerRef.current = setTimeout(() => {
+        next.set("search", value);
+        navigate(`?${next.toString()}`, { preventScrollReset: true });
+      }, 400);
+    }
+  }
+
   function loadMore() {
-    fetcher.load(
-      `/my-campaigns?campaigns:page=${meta.page + 1}&skipPendingInvites=true`,
-    );
+    const next = new URLSearchParams();
+    next.set("campaigns:page", String(meta.page + 1));
+    next.set("skipPendingInvites", "true");
+    const currentSearch = new URLSearchParams(location.search).get("search");
+    if (currentSearch) next.set("search", currentSearch);
+    fetcher.load(`/my-campaigns?${next.toString()}`);
   }
 
   return (
@@ -41,12 +79,21 @@ function MyCampaignsPage() {
           </p>
         </div>
 
-        <Button asChild className="w-full gap-2 sm:w-auto">
-          <Link to="create">
-            <Plus size={18} />
-            Nova campanha
-          </Link>
-        </Button>
+        <div className="flex w-full items-center gap-3 sm:w-auto">
+          <Input
+            leftIcon={Search}
+            placeholder="Buscar por nome..."
+            className="w-full sm:w-64"
+            value={localSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+          <Button asChild className="shrink-0 gap-2">
+            <Link to="create">
+              <Plus size={18} />
+              Nova campanha
+            </Link>
+          </Button>
+        </div>
       </header>
 
       {items.length === 0 ? (
