@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, Search } from "lucide-react";
-import { Link, useLoaderData, useFetcher, useNavigate, useLocation } from "react-router";
+import {
+  Link,
+  useLoaderData,
+  useFetcher,
+  useNavigate,
+  useLocation,
+} from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Empty } from "~/client/components/ui/empty";
 import { FolderOpen } from "lucide-react";
@@ -80,13 +86,6 @@ function MyCampaignsPage() {
         </div>
 
         <div className="flex w-full items-center gap-3 sm:w-auto">
-          <Input
-            leftIcon={Search}
-            placeholder="Buscar por nome..."
-            className="w-full sm:w-64"
-            value={localSearch}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
           <Button asChild className="shrink-0 gap-2">
             <Link to="create">
               <Plus size={18} />
@@ -120,11 +119,7 @@ function MyCampaignsPage() {
 
           {hasMore && (
             <div className="flex justify-center">
-              <Button
-                variant="outline"
-                onClick={loadMore}
-                disabled={isLoading}
-              >
+              <Button variant="outline" onClick={loadMore} disabled={isLoading}>
                 {isLoading ? "Carregando..." : "Carregar mais"}
               </Button>
             </div>

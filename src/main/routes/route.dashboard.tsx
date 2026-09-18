@@ -9,7 +9,7 @@ import { getDashboardCampaigns } from "../factories/dashboardCampaigns/getDashbo
 import { getDashboardPaymentMethods } from "../factories/dashboardPaymentMethods/getDashboardPaymentMethodsFactory";
 import { getDashboardRecentDonations } from "../factories/dashboardRecentDonations/getDashboardRecentDonationsFactory";
 import { getDashboardWeekly } from "../factories/dashboardWeekly/getDashboardWeeklyFactory";
-import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
+import { listCampaigns } from "../factories/campaign/listCampaignsFactory";
 import { getPortalOverview } from "../factories/campaignOverview/getPortalOverviewFactory";
 
 export async function loader(args: Route.LoaderArgs) {
