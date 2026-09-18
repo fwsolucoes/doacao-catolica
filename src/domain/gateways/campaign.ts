@@ -60,6 +60,7 @@ type UpdateCampaignWithDetailsInput = {
   institutionName?: string | null;
   cnpj?: string | null;
   address?: string | null;
+  projectCategoryId?: string | null;
   // Página da Campanha — top-level
   image?: string | null;
   imageMobile?: string | null;

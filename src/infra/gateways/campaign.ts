@@ -52,6 +52,8 @@ class CampaignGateway implements CampaignGatewayDTO {
 
     const apiResponse = await api.get(url, { token });
 
+    console.log("🚀~~apiResponse", apiResponse);
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(externalCampaignSchema);
@@ -190,6 +192,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       institution_name: input.institutionName,
       cnpj: input.cnpj,
       address: input.address,
+      project_category_id: input.projectCategoryId,
       image: input.image,
       image_mobile: input.imageMobile,
       featured_video: input.videoUrl,

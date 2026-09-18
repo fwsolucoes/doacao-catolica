@@ -30,6 +30,8 @@ type CampaignConstructorProps = {
   updatedAt: string;
   slug: string;
   apiDonationPublicId: string | null;
+  projectCategoryId: string | null;
+  visibleInMarketplace: boolean;
 };
 
 type CampaignRestoreProps = CampaignConstructorProps;
@@ -64,6 +66,8 @@ class Campaign {
   updatedAt: string;
   slug: string;
   apiDonationPublicId: string | null;
+  projectCategoryId: string | null;
+  visibleInMarketplace: boolean;
 
   private constructor(props: CampaignConstructorProps) {
     this.id = props.id;
@@ -95,6 +99,8 @@ class Campaign {
     this.updatedAt = props.updatedAt;
     this.slug = props.slug;
     this.apiDonationPublicId = props.apiDonationPublicId;
+    this.projectCategoryId = props.projectCategoryId;
+    this.visibleInMarketplace = props.visibleInMarketplace;
   }
 
   static restore(props: CampaignRestoreProps): Campaign {
@@ -146,6 +152,8 @@ class Campaign {
       updatedAt: this.updatedAt,
       slug: this.slug,
       apiDonationPublicId: this.apiDonationPublicId,
+      projectCategoryId: this.projectCategoryId,
+      visibleInMarketplace: this.visibleInMarketplace,
     };
   }
 }

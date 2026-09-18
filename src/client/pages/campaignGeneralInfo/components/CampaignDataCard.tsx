@@ -29,7 +29,8 @@ function SectionCard({
 }
 
 function CampaignDataCard() {
-  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
+  const { campaign, projectCategories } =
+    useLoaderData<CampaignGeneralInfoLoader>();
 
   const { campaignId } = useParams<{ campaignId: string }>();
 
@@ -64,22 +65,16 @@ function CampaignDataCard() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField name="category" label="Categoria">
-          <Select.Root name="category" defaultValue="paroquia">
+          <Select.Root name="category" defaultValue={campaign.projectCategoryId ?? undefined}>
             <Select.Trigger>
               <Select.Value placeholder="Selecione a categoria" />
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="paroquia">Paróquia</Select.Item>
-              <Select.Item value="comunidade">Comunidade</Select.Item>
-              <Select.Item value="missao">Missão</Select.Item>
-              <Select.Item value="outro">Outro</Select.Item>
-              <Select.Item value="dizimo">Dízimo</Select.Item>
-              <Select.Item value="apostolado">Apostolado</Select.Item>
-              <Select.Item value="obras-e-reformas">
-                Obras e Reformas
-              </Select.Item>
-              <Select.Item value="acao-social">Ação social</Select.Item>
-              <Select.Item value="evento">Evento</Select.Item>
+              {projectCategories.map((category) => (
+                <Select.Item key={category.id} value={category.id}>
+                  {category.name}
+                </Select.Item>
+              ))}
             </Select.Content>
           </Select.Root>
         </FormField>

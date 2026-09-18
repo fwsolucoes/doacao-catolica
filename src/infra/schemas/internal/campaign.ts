@@ -58,6 +58,7 @@ const updateCampaignGeneralInfoSchema = z.object({
   institutionName: z.string().optional().transform((v) => v || null),
   cnpj: z.string().min(1, "CPF/CNPJ é obrigatório"),
   address: z.string().optional().transform((v) => v || null),
+  category: z.string().optional().transform((v) => v || null),
 });
 
 type CreateCampaignType = z.infer<typeof createCampaignSchema>;

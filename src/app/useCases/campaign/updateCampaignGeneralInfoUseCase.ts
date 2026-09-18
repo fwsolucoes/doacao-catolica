@@ -16,6 +16,7 @@ type InputProps = {
   institutionName: string | null;
   cnpj: string | null;
   address: string | null;
+  category: string | null;
 };
 
 class UpdateCampaignGeneralInfoUseCase {
@@ -41,6 +42,7 @@ class UpdateCampaignGeneralInfoUseCase {
         institutionName: input.institutionName,
         cnpj: input.cnpj,
         address: input.address,
+        projectCategoryId: input.category,
       },
       token,
     );

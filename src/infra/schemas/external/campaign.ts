@@ -38,6 +38,8 @@ const externalCampaignSchema = z.object({
   already_has_revenue: z.boolean().optional(),
   current_revenue: z.string().optional(),
   total_goal: z.number().nullable(),
+  project_category_id: z.string().nullable().optional(),
+  visible_in_marketplace: z.boolean().nullable().optional(),
 });
 
 const listCampaignsSchema = z.object({

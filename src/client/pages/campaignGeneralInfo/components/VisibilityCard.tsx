@@ -22,7 +22,7 @@ function SectionCard({
 
 function VisibilityCard() {
   const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
-  const [isPublic, setIsPublic] = useState(campaign.published);
+  const [isPublic, setIsPublic] = useState(campaign.visibleInMarketplace);
 
   return (
     <SectionCard title="Visibilidade">
