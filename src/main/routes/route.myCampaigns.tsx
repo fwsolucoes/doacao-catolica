@@ -2,7 +2,7 @@ import type { Route } from "+/route.myCampaigns";
 import { MyCampaignsPage } from "~/client/pages/myCampaigns";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
-import { listCampaigns } from "../factories/campaing/listCampaingsFactory";
+import { listCampaigns } from "../factories/campaign/listCampaignsFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
 import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
@@ -26,29 +26,16 @@ export async function loader(args: Route.LoaderArgs) {
       listPendingAmbassadorInvites.handle(adaptedRoute),
     ]);
 
-    if (pendingInvites.items.length > 0 || pendingAmbassadorInvites.items.length > 0) {
+    if (
+      pendingInvites.items.length > 0 ||
+      pendingAmbassadorInvites.items.length > 0
+    ) {
       throw redirect("/pending-invites");
     }
   }
 
   return { campaigns };
 }
-
-// export async function action(args: Route.ActionArgs) {
-//   const adaptedRoute = await RouteAdapter.adaptRoute(args);
-//   const _action = await DecodeActionAdapter.decode(adaptedRoute.request);
-
-//   try {
-//     switch (_action) {
-//       case "deletePatient":
-//         return await deletePatient.handle(adaptedRoute);
-//       default:
-//         throw HttpAdapter.notImplemented("Action not implemented");
-//     }
-//   } catch (error) {
-//     return ErrorHandlerAdapter.handleAsData(error);
-//   }
-// }
 
 export function ErrorBoundary() {
   return <ErrorBoundaryPage />;
