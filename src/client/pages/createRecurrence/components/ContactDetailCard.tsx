@@ -1,4 +1,5 @@
 import { Pencil } from "lucide-react";
+import { useLoaderData } from "react-router";
 import {
   Avatar,
   AvatarFallback,
@@ -8,7 +9,9 @@ import { Button } from "~/client/components/ui/button";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { PhoneInput } from "~/client/components/ui/phone-input";
+import { useRoot } from "~/client/hooks/useRoot";
 import { getInitials } from "~/lib/getInitials";
+import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
 
 type ContactDetailCardProps = {
   contact: {
@@ -24,9 +27,17 @@ type ContactDetailCardProps = {
   onEmailChange?: (value: string) => void;
 };
 
-function ContactDetailCard({ contact, onPhoneChange, onEmailChange }: ContactDetailCardProps) {
-  const { name, cpf, birthDate, phone, email, avatar } = contact;
+function ContactDetailCard({
+  contact,
+  onPhoneChange,
+  onEmailChange,
+}: ContactDetailCardProps) {
+  const { name, cpf, birthDate, phone, email, avatar, contactId } = contact;
   const initials = getInitials(name);
+  const { environmentVariables, user } = useRoot();
+  const { currentUrl } = useLoaderData<CreateRecurrenceLoader>();
+
+  const editHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/${contactId}?redirectBack=${encodeURIComponent(currentUrl)}`;
 
   return (
     <div className="rounded-lg border border-border  p-4 space-y-4">
@@ -38,9 +49,17 @@ function ContactDetailCard({ contact, onPhoneChange, onEmailChange }: ContactDet
           </AvatarFallback>
         </Avatar>
         <span className="flex-1 font-semibold text-foreground">{name}</span>
-        <Button type="button" variant="outline" size="sm" className="gap-1.5">
-          <Pencil size={14} />
-          Editar
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="gap-1.5"
+          asChild
+        >
+          <a href={editHref} target="_blank" rel="noopener noreferrer">
+            <Pencil size={14} />
+            Editar
+          </a>
         </Button>
       </div>
 
