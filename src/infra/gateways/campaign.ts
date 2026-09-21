@@ -163,6 +163,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       email_reply_to: input.emailReplyTo,
       nomenclature: input.nomenclature,
       support_tag_id: input.supportTagId,
+      visible_in_marketplace: input.visibleInMarketplace,
       show_auto_pix_invite: input.showAutoPixInvite,
       require_login: input.requireLogin,
     };
@@ -181,7 +182,6 @@ class CampaignGateway implements CampaignGatewayDTO {
       name: input.name,
       slug: input.slug,
       status: input.status,
-      visible_in_marketplace: input.visibleInMarketplace,
       start_date: input.startDate,
       end_date: input.endDate,
       no_end_date: input.noEndDate,

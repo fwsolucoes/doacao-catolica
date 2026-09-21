@@ -39,7 +39,10 @@ const externalCampaignSchema = z.object({
   current_revenue: z.string().optional(),
   total_goal: z.number().nullable(),
   project_category_id: z.string().nullable().optional(),
-  visible_in_marketplace: z.boolean().nullable().optional(),
+  preferences: z
+    .object({ visible_in_marketplace: z.boolean().nullable().optional() })
+    .nullable()
+    .optional(),
 });
 
 const listCampaignsSchema = z.object({

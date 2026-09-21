@@ -36,7 +36,7 @@ class CampaignMapper {
       apiDonationPublicId: externalCampaign.api_donation_public_id,
       subAccountId: externalCampaign.subaccount_id,
       projectCategoryId: externalCampaign.project_category_id ?? null,
-      visibleInMarketplace: externalCampaign.visible_in_marketplace ?? false,
+      visibleInMarketplace: externalCampaign.preferences?.visible_in_marketplace ?? false,
     });
   }
 }

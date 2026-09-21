@@ -1,6 +1,7 @@
 // src/client/pages/donors/components/oneTimeDonorsTable.tsx
 import {
   ArrowRightLeft,
+  Eye,
   MoreHorizontal,
   Pencil,
   ReceiptText,
@@ -46,6 +47,7 @@ function OneTimeDonorRow({
   const { campaignId } = useParams<{ campaignId: string }>();
   const { environmentVariables, user } = useRoot();
   const whatsAppHref = buildWhatsAppHref(donor.phone);
+  const donationsHref = `/campaign/${campaignId}/donations?customer_reference=${donor.customerReference}&start_date=1980-01-01&end_date=2099-12-31&period=custom`;
   const contactFetcher = useFetcher<{ contactId: string }>();
   const prevFetcherState = useRef<string>("idle");
 
@@ -138,6 +140,16 @@ function OneTimeDonorRow({
             >
               <Pencil size={16} />
               {contactFetcher.state === "loading" ? "Aguarde..." : "Editar doador"}
+            </Button>
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+              asChild
+            >
+              <Link to={donationsHref}>
+                <Eye size={16} />
+                Ver doações
+              </Link>
             </Button>
             <Button
               variant="ghost"
