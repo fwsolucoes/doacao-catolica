@@ -19,7 +19,6 @@ function MyCampaignsPage() {
   const fetcher = useFetcher<CampaignsLoader>();
   const navigate = useNavigate();
   const location = useLocation();
-
   const searchParam = new URLSearchParams(location.search).get("search") ?? "";
   const [localSearch, setLocalSearch] = useState(searchParam);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

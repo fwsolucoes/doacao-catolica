@@ -16,19 +16,28 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
-  const campaign = await getCampaign.handle(adaptedRoute);
+  let campaign: Awaited<ReturnType<typeof getCampaign.handle>>;
+  try {
+    campaign = await getCampaign.handle(adaptedRoute);
+  } catch {
+    throw redirect("/my-campaigns?noPermission=true");
+  }
+
   const isOwner = user.accountId === campaign.accountId;
   const isSuperUser = user.id === "14692";
   const isMonthlyType = campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
 
-  const [overview, permissions, metrics] = await Promise.all([
+  let permissions: Awaited<ReturnType<typeof getProjectPermissions.handle>>;
+  try {
+    permissions = isOwner || isSuperUser
+      ? { projectRole: { name: "Administrador" }, projectPermissions: [...PROJECT_ALL_PERMISSIONS] as string[] }
+      : await getProjectPermissions.handle(adaptedRoute, campaign.id);
+  } catch {
+    throw redirect("/my-campaigns?noPermission=true");
+  }
+
+  const [overview, metrics] = await Promise.all([
     getCampaignOverview.handle(adaptedRoute),
-    isOwner || isSuperUser
-      ? Promise.resolve({
-          projectRole: { name: "Administrador" },
-          projectPermissions: [...PROJECT_ALL_PERMISSIONS] as string[],
-        })
-      : getProjectPermissions.handle(adaptedRoute, campaign.id),
     isMonthlyType ? getPaymentMetrics.handle(adaptedRoute) : Promise.resolve(null),
   ]);
 
