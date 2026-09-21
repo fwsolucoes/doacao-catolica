@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Info, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   useFetcher,
@@ -24,6 +24,7 @@ import {
 import type { CampaignPaymentSettingsLoader } from "~/client/types/campaignPaymentSettingsLoader";
 import { AddSuggestedValueDialog } from "./components/addSuggestedValueDialog";
 import { EditSuggestedValueDialog } from "./components/editSuggestedValueDialog";
+import { DeleteSuggestedValueDialog } from "./components/deleteSuggestedValueDialog";
 
 type ToggleRowProps = {
   name: string;
@@ -52,7 +53,7 @@ function ToggleRow({
   );
 }
 
-export type SuggestedValue = {
+type SuggestedValue = {
   id: string;
   amount: number;
   description: string;
@@ -62,14 +63,8 @@ function formatAmount(amount: number): string {
   return `R$ ${amount.toLocaleString("pt-BR")}`;
 }
 
-const DEFAULT_VALUES: SuggestedValue[] = [
-  { id: "1", amount: 25, description: "Ajuda a manter as atividades diárias." },
-  { id: "2", amount: 50, description: "Contribuição recorrente sugerida." },
-  { id: "3", amount: 100, description: "Impacto significativo no projeto." },
-];
-
 function CampaignPaymentSettingsPage() {
-  const { preferences, subAccounts } =
+  const { preferences, subAccounts, suggestedValues } =
     useLoaderData<CampaignPaymentSettingsLoader>();
   const layoutData = useRouteLoaderData<CampaignLayoutLoader>(
     "main/routes/layout.campaignLayout",
@@ -109,9 +104,14 @@ function CampaignPaymentSettingsPage() {
   const [chargeImmediately, setChargeImmediately] = useState(
     preferences.chargeImmediately ?? true,
   );
-  const [suggestedValues] = useState<SuggestedValue[]>(DEFAULT_VALUES);
+
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<SuggestedValue | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<SuggestedValue | null>(null);
+
+  const closeAddDialog = useCallback(() => setAddDialogOpen(false), []);
+  const closeEditDialog = useCallback(() => setEditTarget(null), []);
+  const closeDeleteDialog = useCallback(() => setDeleteTarget(null), []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -276,6 +276,7 @@ function CampaignPaymentSettingsPage() {
                           variant="ghost"
                           size="sm"
                           className="size-8 p-0 text-muted-foreground hover:text-destructive"
+                          onClick={() => setDeleteTarget(val)}
                         >
                           <Trash2 size={14} />
                         </Button>
@@ -327,11 +328,15 @@ function CampaignPaymentSettingsPage() {
 
       <AddSuggestedValueDialog
         open={addDialogOpen}
-        onClose={() => setAddDialogOpen(false)}
+        onClose={closeAddDialog}
       />
       <EditSuggestedValueDialog
         target={editTarget}
-        onClose={() => setEditTarget(null)}
+        onClose={closeEditDialog}
+      />
+      <DeleteSuggestedValueDialog
+        target={deleteTarget}
+        onClose={closeDeleteDialog}
       />
     </div>
   );
