@@ -52,8 +52,6 @@ class CampaignGateway implements CampaignGatewayDTO {
 
     const apiResponse = await api.get(url, { token });
 
-    console.log("🚀~~apiResponse", apiResponse);
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(externalCampaignSchema);
@@ -144,9 +142,11 @@ class CampaignGateway implements CampaignGatewayDTO {
     const preferencesBody = {
       registration_title: input.title,
       registration_text: input.description,
+      why_donate_enabled: input.whyDonateEnabled,
       why_donate_title: input.whyDonateTitle,
       why_donate_text: input.whyDonateText,
       why_donate_image: input.whyDonateImage,
+      about_us_enabled: input.aboutUsEnabled,
       about_us_title: input.aboutTitle,
       about_us_text: input.aboutText,
       about_us_image: input.aboutImage,

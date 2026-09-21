@@ -77,6 +77,8 @@ const updateCampaignPageSchema = z.object({
   aboutTitle: z.string().optional().transform((v) => v || null),
   aboutText: z.string().optional().transform((v) => v || null),
   aboutImage: z.string().optional().transform((v) => v || null),
+  whyDonateEnabled: z.string().transform((v) => v === "true"),
+  aboutUsEnabled: z.string().transform((v) => v === "true"),
   supportWhatsapp: z.string().optional().transform((v) => v || null),
   supportEmail: z.string().optional().transform((v) => v || null),
 });

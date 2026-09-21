@@ -28,6 +28,9 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
       if (editorRef.current) {
         editorRef.current.innerHTML = defaultValue ?? "";
       }
+      if (hiddenRef.current) {
+        hiddenRef.current.value = defaultValue ?? "";
+      }
     }, []);
 
     function syncHidden() {
@@ -131,7 +134,6 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
           ref={hiddenRef}
           type="hidden"
           name={name}
-          defaultValue={defaultValue}
         />
       </div>
     );

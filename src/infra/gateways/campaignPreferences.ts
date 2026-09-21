@@ -13,10 +13,9 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
     campaignId: string,
     token: string,
   ): Promise<CampaignPreferences> {
-    const apiResponse = await api.get(
-      `/project_preferences/find-one/by-project-id/${campaignId}`,
-      { token },
-    );
+    const url = `/project_preferences/find-one/by-project-id/${campaignId}`;
+
+    const apiResponse = await api.get(url, { token });
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 

@@ -9,9 +9,11 @@ type InputProps = {
   imageMobile: string | null;
   videoUrl: string | null;
   headerImage: string | null;
+  whyDonateEnabled: boolean;
   whyDonateTitle: string | null;
   whyDonateText: string | null;
   whyDonateImage: string | null;
+  aboutUsEnabled: boolean;
   aboutTitle: string | null;
   aboutText: string | null;
   aboutImage: string | null;
@@ -32,9 +34,11 @@ class UpdateCampaignPageUseCase {
         headerImage: input.headerImage,
         title: input.title,
         description: input.description,
+        whyDonateEnabled: input.whyDonateEnabled,
         whyDonateTitle: input.whyDonateTitle,
         whyDonateText: input.whyDonateText,
         whyDonateImage: input.whyDonateImage,
+        aboutUsEnabled: input.aboutUsEnabled,
         aboutTitle: input.aboutTitle,
         aboutText: input.aboutText,
         aboutImage: input.aboutImage,

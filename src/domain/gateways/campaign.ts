@@ -69,9 +69,11 @@ type UpdateCampaignWithDetailsInput = {
   // Página da Campanha — preferences
   title?: string | null;
   description?: string | null;
+  whyDonateEnabled?: boolean;
   whyDonateTitle?: string | null;
   whyDonateText?: string | null;
   whyDonateImage?: string | null;
+  aboutUsEnabled?: boolean;
   aboutTitle?: string | null;
   aboutText?: string | null;
   aboutImage?: string | null;
