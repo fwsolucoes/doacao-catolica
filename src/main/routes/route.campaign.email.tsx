@@ -7,14 +7,18 @@ import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getCampaignPreferences } from "../factories/campaign/getCampaignPreferencesFactory";
+import { listEmailTemplates } from "../factories/campaign/listEmailTemplatesFactory";
 import { updateCampaignEmailSettings } from "../factories/campaign/updateCampaignEmailSettingsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  const preferences = await getCampaignPreferences.handle(route);
-  return { preferences };
+  const [preferences, emailLayouts] = await Promise.all([
+    getCampaignPreferences.handle(route),
+    listEmailTemplates.handle(route),
+  ]);
+  return { preferences, emailLayouts };
 }
 
 export async function action(args: Route.ActionArgs) {

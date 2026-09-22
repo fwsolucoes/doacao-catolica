@@ -16,32 +16,11 @@ import type { CampaignEmailLoader } from "~/client/types/campaignEmailLoader";
 import { NewLayoutDialog } from "./components/newLayoutDialog";
 
 type EmailLayout = {
-  id: string;
-  name: string;
-  description: string;
+  uuid: string;
+  type: string;
+  body: string;
   createdAt: string;
 };
-
-const SAMPLE_LAYOUTS: EmailLayout[] = [
-  {
-    id: "1",
-    name: "Layout básico",
-    description: "Layout simples e clean para qualquer tipo de mensagem",
-    createdAt: "10/01/2024",
-  },
-  {
-    id: "2",
-    name: "Layout moderno",
-    description: "Design moderno com gradiente e espaçamento amplo",
-    createdAt: "15/01/2024",
-  },
-  {
-    id: "3",
-    name: "Layout profissional",
-    description: "Estilo corporativo com barra lateral",
-    createdAt: "01/02/2024",
-  },
-];
 
 function LayoutCard({ layout }: { layout: EmailLayout }) {
   return (
@@ -50,10 +29,7 @@ function LayoutCard({ layout }: { layout: EmailLayout }) {
         <Code2 size={48} className="text-muted-foreground/40" />
       </div>
       <div className="flex flex-col gap-4 p-5">
-        <div className="flex flex-col gap-1">
-          <p className="text-sm font-semibold text-foreground">{layout.name}</p>
-          <p className="text-xs text-muted-foreground">{layout.description}</p>
-        </div>
+        <p className="text-sm font-semibold text-foreground">{layout.type}</p>
         <p className="text-xs text-muted-foreground">
           Criado em {layout.createdAt}
         </p>
@@ -106,7 +82,7 @@ function VariablesBanner() {
 }
 
 function CampaignEmailPage() {
-  const { preferences } = useLoaderData<CampaignEmailLoader>();
+  const { preferences, emailLayouts } = useLoaderData<CampaignEmailLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
@@ -206,8 +182,8 @@ function CampaignEmailPage() {
               <VariablesBanner />
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {SAMPLE_LAYOUTS.map((layout) => (
-                  <LayoutCard key={layout.id} layout={layout} />
+                {emailLayouts.map((layout) => (
+                  <LayoutCard key={layout.uuid} layout={layout} />
                 ))}
               </div>
             </div>
