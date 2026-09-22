@@ -130,6 +130,7 @@ class Payment {
 
     return {
       id: this.id,
+      rawStatus: this.status,
       rawAmount: this.amount,
       customerName: this.customerName,
       customerDocument: FormatAdapter.cpfCnpj(this.customerDocument ?? ""),

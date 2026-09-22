@@ -29,6 +29,7 @@ const allDonationsMock: DonationsLoader = {
     data: [
       {
         id: "mock-pay-1",
+        rawStatus: "manual",
         rawAmount: 250,
         customerName: "Ana Beatriz Souza",
         customerDocument: "123.456.789-00",
@@ -52,6 +53,7 @@ const allDonationsMock: DonationsLoader = {
       },
       {
         id: "mock-pay-2",
+        rawStatus: "created",
         rawAmount: 120,
         customerName: "Carlos Eduardo Lima",
         customerDocument: "987.654.321-00",
@@ -75,6 +77,7 @@ const allDonationsMock: DonationsLoader = {
       },
       {
         id: "mock-pay-3",
+        rawStatus: "overdue",
         rawAmount: 500,
         customerName: "Mariana Ferreira Costa",
         customerDocument: "456.789.123-00",
@@ -98,6 +101,7 @@ const allDonationsMock: DonationsLoader = {
       },
       {
         id: "mock-pay-4",
+        rawStatus: "confirmed",
         rawAmount: 80,
         customerName: "Roberto Alves Pereira",
         customerDocument: "321.654.987-00",

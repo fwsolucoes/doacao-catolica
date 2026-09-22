@@ -49,7 +49,10 @@ class CampaignGateway implements CampaignGatewayDTO {
     });
   }
 
-  async getCampaignMetatag(id: string, token: string): Promise<CampaignMetatag> {
+  async getCampaignMetatag(
+    id: string,
+    token: string,
+  ): Promise<{ metatag: CampaignMetatag; campaignSlug: string }> {
     const url = `/project/find-one/${id}`;
 
     const apiResponse = await api.get(url, { token });
@@ -57,19 +60,21 @@ class CampaignGateway implements CampaignGatewayDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(externalCampaignMetatagSchema);
-    const { metatag } = schemaValidator.validate(apiResponse.response);
+    const { metatag, slug } = schemaValidator.validate(apiResponse.response);
 
-    if (!metatag) {
-      return { title: null, description: null, keywords: null, ogTitle: null, ogDescription: null };
-    }
+    const metatagData: CampaignMetatag = metatag
+      ? {
+          title: metatag.title,
+          description: metatag.description,
+          keywords: metatag.keywords,
+          ogTitle: metatag.og_title,
+          ogDescription: metatag.og_description,
+          ogUrl: metatag.og_url,
+          ogImage: metatag.og_image,
+        }
+      : { title: null, description: null, keywords: null, ogTitle: null, ogDescription: null, ogUrl: null, ogImage: null };
 
-    return {
-      title: metatag.title,
-      description: metatag.description,
-      keywords: metatag.keywords,
-      ogTitle: metatag.og_title,
-      ogDescription: metatag.og_description,
-    };
+    return { metatag: metatagData, campaignSlug: slug };
   }
 
   async getCampaign(id: string, token: string): Promise<Campaign> {
@@ -203,6 +208,8 @@ class CampaignGateway implements CampaignGatewayDTO {
       keywords: input.metaKeywords,
       og_title: input.ogTitle,
       og_description: input.ogDescription,
+      og_url: input.ogUrl,
+      og_image: input.ogImage,
     };
     const hasMetaTag = Object.values(metaTagBody).some((v) => v !== undefined);
 

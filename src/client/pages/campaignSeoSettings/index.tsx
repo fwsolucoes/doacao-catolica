@@ -15,7 +15,7 @@ import {
 import type { CampaignSeoSettingsLoader } from "~/client/types/campaignSeoSettingsLoader";
 
 function CampaignSeoSettingsPage() {
-  const { metatag } = useLoaderData<CampaignSeoSettingsLoader>();
+  const { metatag, campaignSlug } = useLoaderData<CampaignSeoSettingsLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
@@ -28,6 +28,7 @@ function CampaignSeoSettingsPage() {
   const [keywords, setKeywords] = useState(metatag.keywords ?? "");
   const [ogTitle, setOgTitle] = useState(metatag.ogTitle ?? "");
   const [ogDescription, setOgDescription] = useState(metatag.ogDescription ?? "");
+  const [canonicalUrl, setCanonicalUrl] = useState(metatag.ogUrl ?? campaignSlug);
 
   return (
     <div className="flex flex-col gap-6">
@@ -96,7 +97,8 @@ function CampaignSeoSettingsPage() {
                   name="canonicalUrl"
                   type="url"
                   placeholder="https://givehub.org/educacao-para-todos"
-                  disabled
+                  value={canonicalUrl}
+                  onChange={(e) => setCanonicalUrl(e.target.value)}
                 />
               </FormField>
             </SectionCard>
@@ -131,7 +133,7 @@ function CampaignSeoSettingsPage() {
                 <ImageUploadCompact
                   name="ogImage"
                   description="1200×630px em JPG ou PNG (máx. 2MB)."
-                  disabled
+                  defaultValue={metatag.ogImage}
                 />
               </FormField>
             </SectionCard>

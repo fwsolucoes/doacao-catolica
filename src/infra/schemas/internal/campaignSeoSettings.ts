@@ -6,6 +6,8 @@ const updateCampaignSeoSettingsSchema = z.object({
   keywords: z.string().optional().transform((v) => v || null),
   ogTitle: z.string().optional().transform((v) => v || null),
   ogDescription: z.string().optional().transform((v) => v || null),
+  canonicalUrl: z.string().optional().transform((v) => v || null),
+  ogImage: z.string().optional().transform((v) => v || null),
 });
 
 type UpdateCampaignSeoSettingsSchema = z.infer<

@@ -82,13 +82,21 @@ function getInitials(name: string): string {
   return parts.map((w) => w[0].toUpperCase()).join("");
 }
 
+const NO_RECEIPT_STATUSES = new Set([
+  "failed",
+  "overdue",
+  "created",
+  "awaiting_payment",
+]);
+
 type ActionsPopoverProps = {
   onViewDetails: () => void;
   onSendReminder: () => void;
   paymentLink: string;
+  receiptUrl: string | null;
 };
 
-function ActionsPopover({ onViewDetails, onSendReminder, paymentLink }: ActionsPopoverProps) {
+function ActionsPopover({ onViewDetails, onSendReminder, paymentLink, receiptUrl }: ActionsPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -119,13 +127,18 @@ function ActionsPopover({ onViewDetails, onSendReminder, paymentLink }: ActionsP
             Acessar fatura
           </a>
         </Button>
-        <Button
-          variant="ghost"
-          className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
-        >
-          <Receipt size={16} />
-          Emitir recibo
-        </Button>
+        {receiptUrl && (
+          <Button
+            variant="ghost"
+            className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+            asChild
+          >
+            <a href={receiptUrl} target="_blank" rel="noopener noreferrer">
+              <Receipt size={16} />
+              Emitir recibo
+            </a>
+          </Button>
+        )}
         <div className="my-1 h-px bg-muted" />
         <Button
           variant="ghost"
@@ -330,6 +343,11 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                     onViewDetails={() => setSelectedPayment(payment)}
                     onSendReminder={() => setSelectedReminderPayment(payment)}
                     paymentLink={payment.paymentLink}
+                    receiptUrl={
+                      !NO_RECEIPT_STATUSES.has(payment.rawStatus)
+                        ? `/campaign/${campaignId}/api/donation-receipt?paymentId=${payment.id}`
+                        : null
+                    }
                   />
                 </Table.Cell>
               </Table.Row>

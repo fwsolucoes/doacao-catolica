@@ -96,6 +96,8 @@ type UpdateCampaignWithDetailsInput = {
   metaKeywords?: string | null;
   ogTitle?: string | null;
   ogDescription?: string | null;
+  ogUrl?: string | null;
+  ogImage?: string | null;
   // Preferências — top-level
   redirectAfterRegistration?: string | null;
   redirectAfterOneTimePayment?: string | null;
@@ -118,6 +120,8 @@ type CampaignMetatag = {
   keywords: string | null;
   ogTitle: string | null;
   ogDescription: string | null;
+  ogUrl: string | null;
+  ogImage: string | null;
 };
 
 type CampaignGatewayDTO = {
@@ -126,7 +130,10 @@ type CampaignGatewayDTO = {
     token: string,
   ) => Promise<SearchResult<Campaign>>;
   getCampaign: (id: string, token: string) => Promise<Campaign>;
-  getCampaignMetatag: (id: string, token: string) => Promise<CampaignMetatag>;
+  getCampaignMetatag: (
+    id: string,
+    token: string,
+  ) => Promise<{ metatag: CampaignMetatag; campaignSlug: string }>;
   verifySlug: (slug: string, token: string) => Promise<{ available: boolean }>;
   createCampaign: (
     input: CreateCampaignInput,

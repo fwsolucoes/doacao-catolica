@@ -8,6 +8,8 @@ type InputProps = {
   keywords: string | null;
   ogTitle: string | null;
   ogDescription: string | null;
+  canonicalUrl: string | null;
+  ogImage: string | null;
 };
 
 class UpdateCampaignSeoSettingsUseCase {
@@ -22,6 +24,8 @@ class UpdateCampaignSeoSettingsUseCase {
         metaKeywords: input.keywords,
         ogTitle: input.ogTitle,
         ogDescription: input.ogDescription,
+        ogUrl: input.canonicalUrl,
+        ogImage: input.ogImage,
       },
       input.token,
     );

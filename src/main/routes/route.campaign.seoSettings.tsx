@@ -13,8 +13,8 @@ export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  const metatag = await getCampaignMetatag.handle(route);
-  return { metatag };
+  const { metatag, campaignSlug } = await getCampaignMetatag.handle(route);
+  return { metatag, campaignSlug };
 }
 
 export async function action(args: Route.ActionArgs) {
