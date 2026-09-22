@@ -45,12 +45,12 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
-  support_whatsapp: z
+  whatsapp_project_support: z
     .string()
     .nullable()
     .optional()
     .transform((v) => v ?? null),
-  support_email: z
+  email_project_support: z
     .string()
     .nullable()
     .optional()
