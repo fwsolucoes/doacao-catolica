@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "~/client/components/ui/dialog";
 import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
-import { Input } from "~/client/components/ui/input";
+import { Select } from "~/client/components/ui/select";
 import { Separator } from "~/client/components/ui/separator";
 import { Textarea } from "~/client/components/ui/textarea";
 
@@ -59,6 +59,23 @@ function TipBanner() {
   );
 }
 
+const TEMPLATE_TYPES: { value: string; label: string }[] = [
+  { value: "payment_before_due_date", label: "Pagamento antes do vencimento" },
+  { value: "payment_on_due_date", label: "Pagamento no vencimento" },
+  { value: "payment_after_due_date", label: "Pagamento após o vencimento" },
+  { value: "payment_paid", label: "Pagamento realizado" },
+  { value: "payment_settled", label: "Pagamento liquidado" },
+  { value: "subscription_created_internally", label: "Assinatura criada internamente" },
+  { value: "subscription_created_externally", label: "Assinatura criada externamente" },
+  { value: "default_recovery", label: "Recuperação padrão" },
+  { value: "subscription_canceled", label: "Assinatura cancelada" },
+  { value: "donator_birthday", label: "Aniversário do doador" },
+  { value: "instant_reminder", label: "Lembrete instantâneo" },
+  { value: "credit_card_created", label: "Cartão de crédito cadastrado" },
+  { value: "donate_now", label: "Doe agora" },
+  { value: "pending_automatic_pix_authorization", label: "Autorização Pix automático pendente" },
+];
+
 type NewLayoutDialogProps = {
   open: boolean;
   onClose: () => void;
@@ -68,6 +85,7 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
+  const [selectedType, setSelectedType] = useState("");
   useActionToast(fetcher.data);
 
   useEffect(() => {
@@ -94,11 +112,19 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
           >
             <div className="flex flex-col gap-5 overflow-y-auto px-6">
               <FormField name="type" label="Tipo do layout" required>
-                <Input
-                  name="type"
-                  placeholder="Ex.: layout_basico"
-                  autoFocus
-                />
+                <Select.Root value={selectedType} onValueChange={setSelectedType}>
+                  <Select.Trigger>
+                    <Select.Value placeholder="Selecione o tipo..." />
+                  </Select.Trigger>
+                  <Select.Content>
+                    {TEMPLATE_TYPES.map((t) => (
+                      <Select.Item key={t.value} value={t.value}>
+                        {t.label}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Root>
+                <input type="hidden" name="type" value={selectedType} />
               </FormField>
 
               <FormField name="body" label="HTML do layout" required>
