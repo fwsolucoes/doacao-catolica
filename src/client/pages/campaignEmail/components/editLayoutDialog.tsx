@@ -16,61 +16,23 @@ import { Separator } from "~/client/components/ui/separator";
 import { Textarea } from "~/client/components/ui/textarea";
 import { TEMPLATE_TYPES } from "./templateTypes";
 
-const DEFAULT_HTML = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4;">
-    <tr>
-      <td align="center" style="padding: 20px 0;">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
-          <!-- Imagem 1 -->
-          <tr><td><img src="{{imagem_1}}" alt="Banner" style="width: 100%; height: auto; display: block;"></td></tr>
-          <!-- Corpo -->
-          <tr><td style="padding: 24px;">{{corpo_email}}</td></tr>
-          <!-- Imagem 2 -->
-          <tr><td><img src="{{imagem_2}}" alt="Rodapé" style="width: 100%; height: auto; display: block;"></td></tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+type EditTarget = { type: string; body: string };
 
-function TipBanner() {
-  return (
-    <div className="flex flex-wrap items-baseline gap-x-1 gap-y-0.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-      <span className="text-xs font-semibold text-amber-800">Dica:</span>
-      <span className="text-xs text-amber-700">
-        Use tabelas para layout de email (não CSS Grid/Flexbox). Inclua as
-        variáveis
-      </span>
-      <code className="font-mono text-xs text-amber-700">{"{{imagem_1}}"}</code>
-      <span className="text-xs text-amber-700">,</span>
-      <code className="font-mono text-xs text-amber-700">{"{{imagem_2}}"}</code>
-      <span className="text-xs text-amber-700">e</span>
-      <code className="font-mono text-xs text-amber-700">
-        {"{{corpo_email}}"}
-      </code>
-      <span className="text-xs text-amber-700">no HTML.</span>
-    </div>
-  );
-}
-
-type NewLayoutDialogProps = {
-  open: boolean;
+type EditLayoutDialogProps = {
+  target: EditTarget | null;
   onClose: () => void;
 };
 
-function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
+function EditLayoutDialog({ target, onClose }: EditLayoutDialogProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(target?.type ?? "");
   useActionToast(fetcher.data);
+
+  useEffect(() => {
+    if (target) setSelectedType(target.type);
+  }, [target]);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast) {
@@ -79,12 +41,12 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
   }, [fetcher.state, fetcher.data, onClose]);
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog open={target !== null} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="flex max-h-[90dvh] flex-col sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Novo layout</DialogTitle>
+          <DialogTitle>Editar layout</DialogTitle>
           <DialogDescription>
-            Configure o HTML e as informações do layout.
+            Atualize o HTML e as informações do layout.
           </DialogDescription>
         </DialogHeader>
 
@@ -113,13 +75,12 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
 
               <FormField name="body" label="HTML do layout" required>
                 <Textarea
+                  key={target?.type}
                   name="body"
                   className="min-h-72 font-mono text-xs"
-                  defaultValue={DEFAULT_HTML}
+                  defaultValue={target?.body ?? ""}
                 />
               </FormField>
-
-              <TipBanner />
             </div>
 
             <Separator />
@@ -128,10 +89,10 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
               <Button
                 type="submit"
                 name="_action"
-                value="createEmailTemplate"
+                value="updateEmailTemplate"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Salvando..." : "Salvar layout"}
+                {isSubmitting ? "Salvando..." : "Salvar alterações"}
               </Button>
             </DialogFooter>
           </fetcher.Form>
@@ -141,4 +102,4 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
   );
 }
 
-export { NewLayoutDialog };
+export { EditLayoutDialog, type EditTarget };

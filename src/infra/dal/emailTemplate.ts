@@ -5,7 +5,7 @@ import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { listEmailTemplatesSchema } from "../schemas/external/emailTemplate";
-import type { CreateEmailTemplateBody } from "../schemas/internal/emailTemplate";
+import type { CreateEmailTemplateBody, UpdateEmailTemplateBody } from "../schemas/internal/emailTemplate";
 
 class EmailTemplateDal implements EmailTemplateDalDTO {
   async listEmailTemplates(campaignId: string): Promise<EmailTemplate[]> {
@@ -51,6 +51,21 @@ class EmailTemplateDal implements EmailTemplateDalDTO {
       throw HttpAdapter.badGateway(
         apiResponse.response.errors.type[0] ?? apiResponse.message,
       );
+  }
+
+  async updateEmailTemplate(
+    campaignId: string,
+    data: UpdateEmailTemplateBody,
+  ): Promise<void> {
+    const apiResponse = await donationApi.put(
+      `/api/account_mail_templates/${campaignId}`,
+      {
+        body: { type: data.type, body: data.body },
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
   async deleteEmailTemplate(campaignId: string, type: string): Promise<void> {

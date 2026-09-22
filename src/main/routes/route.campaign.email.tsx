@@ -11,6 +11,7 @@ import { deleteEmailTemplate } from "../factories/campaign/deleteEmailTemplateFa
 import { getCampaignPreferences } from "../factories/campaign/getCampaignPreferencesFactory";
 import { listEmailTemplates } from "../factories/campaign/listEmailTemplatesFactory";
 import { updateCampaignEmailSettings } from "../factories/campaign/updateCampaignEmailSettingsFactory";
+import { updateEmailTemplate } from "../factories/campaign/updateEmailTemplateFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
@@ -34,6 +35,8 @@ export async function action(args: Route.ActionArgs) {
         return await updateCampaignEmailSettings.handle(route);
       case "createEmailTemplate":
         return await createEmailTemplate.handle(route);
+      case "updateEmailTemplate":
+        return await updateEmailTemplate.handle(route);
       case "deleteEmailTemplate":
         return await deleteEmailTemplate.handle(route);
       default:

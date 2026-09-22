@@ -14,7 +14,9 @@ import {
 } from "~/client/components/campaignSettings/stepNav";
 import type { CampaignEmailLoader } from "~/client/types/campaignEmailLoader";
 import { DeleteLayoutDialog, type DeleteTarget } from "./components/deleteLayoutDialog";
+import { EditLayoutDialog, type EditTarget } from "./components/editLayoutDialog";
 import { NewLayoutDialog } from "./components/newLayoutDialog";
+import { PreviewLayoutDialog, type PreviewTarget } from "./components/previewLayoutDialog";
 
 type EmailLayout = {
   uuid: string;
@@ -25,10 +27,12 @@ type EmailLayout = {
 
 type LayoutCardProps = {
   layout: EmailLayout;
+  onPreview: (target: PreviewTarget) => void;
+  onEdit: (target: EditTarget) => void;
   onDelete: (target: DeleteTarget) => void;
 };
 
-function LayoutCard({ layout, onDelete }: LayoutCardProps) {
+function LayoutCard({ layout, onPreview, onEdit, onDelete }: LayoutCardProps) {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card">
       <div className="flex h-40 items-center justify-center bg-muted">
@@ -40,7 +44,12 @@ function LayoutCard({ layout, onDelete }: LayoutCardProps) {
           Criado em {layout.createdAt}
         </p>
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" size="sm" className="h-9 flex-1 gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 flex-1 gap-2"
+            onClick={() => onPreview({ type: layout.type, body: layout.body })}
+          >
             <Eye size={15} />
             Visualizar
           </Button>
@@ -48,6 +57,7 @@ function LayoutCard({ layout, onDelete }: LayoutCardProps) {
             variant="ghost"
             size="sm"
             className="size-9 p-0 text-muted-foreground"
+            onClick={() => onEdit({ type: layout.type, body: layout.body })}
           >
             <Pencil size={15} />
           </Button>
@@ -100,6 +110,10 @@ function CampaignEmailPage() {
   const closeNewLayout = useCallback(() => setNewLayoutOpen(false), []);
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
   const closeDeleteDialog = useCallback(() => setDeleteTarget(null), []);
+  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
+  const closeEditDialog = useCallback(() => setEditTarget(null), []);
+  const [previewTarget, setPreviewTarget] = useState<PreviewTarget | null>(null);
+  const closePreviewDialog = useCallback(() => setPreviewTarget(null), []);
 
   const [emailSenderName, setEmailSenderName] = useState(
     preferences.emailSenderName ?? "",
@@ -196,6 +210,8 @@ function CampaignEmailPage() {
                   <LayoutCard
                     key={layout.uuid}
                     layout={layout}
+                    onPreview={setPreviewTarget}
+                    onEdit={setEditTarget}
                     onDelete={setDeleteTarget}
                   />
                 ))}
@@ -208,6 +224,14 @@ function CampaignEmailPage() {
       <NewLayoutDialog
         open={newLayoutOpen}
         onClose={closeNewLayout}
+      />
+      <PreviewLayoutDialog
+        target={previewTarget}
+        onClose={closePreviewDialog}
+      />
+      <EditLayoutDialog
+        target={editTarget}
+        onClose={closeEditDialog}
       />
       <DeleteLayoutDialog
         target={deleteTarget}
