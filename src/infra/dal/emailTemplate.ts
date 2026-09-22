@@ -52,6 +52,15 @@ class EmailTemplateDal implements EmailTemplateDalDTO {
         apiResponse.response.errors.type[0] ?? apiResponse.message,
       );
   }
+
+  async deleteEmailTemplate(campaignId: string, type: string): Promise<void> {
+    const apiResponse = await donationApi.delete(
+      `/api/account_mail_templates/${campaignId}/${type}`,
+      { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
 }
 
 export { EmailTemplateDal };

@@ -13,6 +13,7 @@ import {
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
 import type { CampaignEmailLoader } from "~/client/types/campaignEmailLoader";
+import { DeleteLayoutDialog, type DeleteTarget } from "./components/deleteLayoutDialog";
 import { NewLayoutDialog } from "./components/newLayoutDialog";
 
 type EmailLayout = {
@@ -22,7 +23,12 @@ type EmailLayout = {
   createdAt: string;
 };
 
-function LayoutCard({ layout }: { layout: EmailLayout }) {
+type LayoutCardProps = {
+  layout: EmailLayout;
+  onDelete: (target: DeleteTarget) => void;
+};
+
+function LayoutCard({ layout, onDelete }: LayoutCardProps) {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card">
       <div className="flex h-40 items-center justify-center bg-muted">
@@ -49,6 +55,7 @@ function LayoutCard({ layout }: { layout: EmailLayout }) {
             variant="ghost"
             size="sm"
             className="size-9 p-0 text-muted-foreground hover:text-destructive"
+            onClick={() => onDelete({ type: layout.type })}
           >
             <Trash2 size={15} />
           </Button>
@@ -91,6 +98,8 @@ function CampaignEmailPage() {
   const steps = buildSteps(campaignId!);
   const [newLayoutOpen, setNewLayoutOpen] = useState(false);
   const closeNewLayout = useCallback(() => setNewLayoutOpen(false), []);
+  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
+  const closeDeleteDialog = useCallback(() => setDeleteTarget(null), []);
 
   const [emailSenderName, setEmailSenderName] = useState(
     preferences.emailSenderName ?? "",
@@ -184,7 +193,11 @@ function CampaignEmailPage() {
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {emailLayouts.map((layout) => (
-                  <LayoutCard key={layout.uuid} layout={layout} />
+                  <LayoutCard
+                    key={layout.uuid}
+                    layout={layout}
+                    onDelete={setDeleteTarget}
+                  />
                 ))}
               </div>
             </div>
@@ -195,6 +208,10 @@ function CampaignEmailPage() {
       <NewLayoutDialog
         open={newLayoutOpen}
         onClose={closeNewLayout}
+      />
+      <DeleteLayoutDialog
+        target={deleteTarget}
+        onClose={closeDeleteDialog}
       />
     </div>
   );
