@@ -18,6 +18,7 @@ import { useCallback, useState } from "react";
 import { useLoaderData, useLocation, useMatches, useParams } from "react-router";
 import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 import { Button } from "~/client/components/ui/button";
+import { getMonthDates } from "~/lib/getMonthDates";
 import { MetricCard } from "./components/metricCard";
 import type { MetricCardProps } from "./components/metricCard";
 import { PaymentsTable } from "./components/paymentsTable";
@@ -31,6 +32,16 @@ function DonationsPage() {
   const { campaignId } = useParams<{ campaignId: string }>();
   const location = useLocation();
   const matches = useMatches();
+
+  function downloadReport() {
+    const sp = new URLSearchParams(location.search);
+    const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
+    if (!sp.get("start_date")) {
+      sp.set("start_date", firstDayOfMonth);
+      sp.set("end_date", lastDayOfMonth);
+    }
+    window.open(`/campaign/${campaignId}/api/donations-export?${sp.toString()}`, "_blank");
+  }
   const period =
     new URLSearchParams(location.search).get("period") ?? "currentMonth";
   const periodLabel =
@@ -113,14 +124,9 @@ function DonationsPage() {
         </div>
         <div className="flex items-center gap-3">
           <PeriodSelect onCustomSelect={openFilterDrawer} />
-          <Button asChild variant="outline" className="text-foreground">
-            <a
-              href={`/campaign/${campaignId}/api/donations-export${location.search}`}
-              download
-            >
-              <Download size={16} />
-              Exportar
-            </a>
+          <Button variant="outline" className="text-foreground" onClick={downloadReport}>
+            <Download size={16} />
+            Exportar
           </Button>
         </div>
       </div>

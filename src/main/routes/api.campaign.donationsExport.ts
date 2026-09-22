@@ -6,14 +6,13 @@ import { environmentVariables } from "~/main/config/environmentVariables";
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
   const { campaignId } = adaptedRoute.params;
-  const { start_date, end_date, per_page, date_type, origin, type, status, notified_email, notified_whatsapp, search, customer_reference } = adaptedRoute.query;
+  const { start_date, end_date, date_type, origin, type, status, notified_email, notified_whatsapp, search, customer_reference } = adaptedRoute.query;
 
   const { lastDayOfMonth } = getMonthDates(0);
 
   const params = new URLSearchParams();
   params.set("start_date", start_date ?? "2022-01-01");
   params.set("end_date", end_date ?? lastDayOfMonth);
-  if (per_page) params.set("per_page", per_page);
   if (date_type) params.set("date_type", date_type);
   if (origin) params.set("origin", origin);
   if (type) params.set("type", type);
@@ -24,17 +23,18 @@ export async function loader(args: Route.LoaderArgs) {
   if (customer_reference) params.set("customer_reference", customer_reference);
 
   const response = await fetch(
-    `${environmentVariables.API_URL_DONATION}/api/reports/subscriptions/${campaignId}?${params}`,
+    `${environmentVariables.API_URL_DONATION}/api/reports/payments/${campaignId}?${params}`,
     { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
   );
 
-  return new Response(response.body, {
-    status: response.status,
-    headers: {
-      "Content-Type": response.headers.get("Content-Type") ?? "text/csv; charset=utf-8",
-      "Content-Disposition":
-        response.headers.get("Content-Disposition") ??
-        'attachment; filename="donations.csv"',
-    },
+  if (!response.ok) {
+    throw new Error("Failed to fetch the file");
+  }
+
+  const fileBuffer = await response.arrayBuffer();
+
+  return new Response(fileBuffer, {
+    status: 200,
+    headers: response.headers,
   });
 }
