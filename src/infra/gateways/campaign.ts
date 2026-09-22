@@ -3,6 +3,7 @@ import type { CampaignSearchParams } from "~/app/search/campaignSearchParams";
 import type { Campaign } from "~/domain/entities/campaign";
 import type {
   CampaignGatewayDTO,
+  CampaignMetatag,
   CreateCampaignInput,
   UpdateCampaignWithDetailsInput,
   GetProjectPermissionsOutput,
@@ -15,6 +16,7 @@ import { api } from "../http/api";
 import { CampaignMapper } from "../mappers/campaign";
 import {
   createCampaignResponseSchema,
+  externalCampaignMetatagSchema,
   externalCampaignSchema,
   listCampaignsSchema,
   verifySlugSchema,
@@ -45,6 +47,29 @@ class CampaignGateway implements CampaignGatewayDTO {
         totalItems: externalCampaigns.meta.totalItems,
       },
     });
+  }
+
+  async getCampaignMetatag(id: string, token: string): Promise<CampaignMetatag> {
+    const url = `/project/find-one/${id}`;
+
+    const apiResponse = await api.get(url, { token });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const schemaValidator = new SchemaValidatorAdapter(externalCampaignMetatagSchema);
+    const { metatag } = schemaValidator.validate(apiResponse.response);
+
+    if (!metatag) {
+      return { title: null, description: null, keywords: null, ogTitle: null, ogDescription: null };
+    }
+
+    return {
+      title: metatag.title,
+      description: metatag.description,
+      keywords: metatag.keywords,
+      ogTitle: metatag.og_title,
+      ogDescription: metatag.og_description,
+    };
   }
 
   async getCampaign(id: string, token: string): Promise<Campaign> {
@@ -175,6 +200,9 @@ class CampaignGateway implements CampaignGatewayDTO {
     const metaTagBody = {
       title: input.metaTitle,
       description: input.metaDescription,
+      keywords: input.metaKeywords,
+      og_title: input.ogTitle,
+      og_description: input.ogDescription,
     };
     const hasMetaTag = Object.values(metaTagBody).some((v) => v !== undefined);
 

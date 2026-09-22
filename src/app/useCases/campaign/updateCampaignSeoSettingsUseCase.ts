@@ -5,6 +5,9 @@ type InputProps = {
   token: string;
   metaTitle: string | null;
   metaDescription: string | null;
+  keywords: string | null;
+  ogTitle: string | null;
+  ogDescription: string | null;
 };
 
 class UpdateCampaignSeoSettingsUseCase {
@@ -16,6 +19,9 @@ class UpdateCampaignSeoSettingsUseCase {
         campaignId: input.campaignId,
         metaTitle: input.metaTitle,
         metaDescription: input.metaDescription,
+        metaKeywords: input.keywords,
+        ogTitle: input.ogTitle,
+        ogDescription: input.ogDescription,
       },
       input.token,
     );

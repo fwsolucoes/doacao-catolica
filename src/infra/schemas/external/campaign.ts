@@ -71,8 +71,21 @@ const createCampaignResponseSchema = z
   })
   .transform(({ created_project }) => ({ id: created_project.id }));
 
+const externalCampaignMetatagSchema = z.object({
+  metatag: z
+    .object({
+      title: z.string().nullable(),
+      description: z.string().nullable(),
+      keywords: z.string().nullable(),
+      og_title: z.string().nullable(),
+      og_description: z.string().nullable(),
+    })
+    .nullable(),
+});
+
 export {
   createCampaignResponseSchema,
+  externalCampaignMetatagSchema,
   externalCampaignSchema,
   listCampaignsSchema,
   verifySlugSchema,

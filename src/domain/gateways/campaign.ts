@@ -93,6 +93,9 @@ type UpdateCampaignWithDetailsInput = {
   // Metadados SEO — projectMetatag
   metaTitle?: string | null;
   metaDescription?: string | null;
+  metaKeywords?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
   // Preferências — top-level
   redirectAfterRegistration?: string | null;
   redirectAfterOneTimePayment?: string | null;
@@ -109,12 +112,21 @@ type GetProjectPermissionsOutput = {
   projectPermissions: string[];
 };
 
+type CampaignMetatag = {
+  title: string | null;
+  description: string | null;
+  keywords: string | null;
+  ogTitle: string | null;
+  ogDescription: string | null;
+};
+
 type CampaignGatewayDTO = {
   listCampaigns: (
     searchParams: CampaignSearchParams,
     token: string,
   ) => Promise<SearchResult<Campaign>>;
   getCampaign: (id: string, token: string) => Promise<Campaign>;
+  getCampaignMetatag: (id: string, token: string) => Promise<CampaignMetatag>;
   verifySlug: (slug: string, token: string) => Promise<{ available: boolean }>;
   createCampaign: (
     input: CreateCampaignInput,
@@ -133,6 +145,7 @@ type CampaignGatewayDTO = {
 
 export type {
   CampaignGatewayDTO,
+  CampaignMetatag,
   CreateCampaignInput,
   UpdateCampaignWithDetailsInput,
   GetProjectPermissionsOutput,

@@ -6,13 +6,15 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { getCampaignMetatag } from "../factories/campaign/getCampaignMetatagFactory";
 import { updateCampaignSeoSettings } from "../factories/campaign/updateCampaignSeoSettingsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
-  return {};
+  const metatag = await getCampaignMetatag.handle(route);
+  return { metatag };
 }
 
 export async function action(args: Route.ActionArgs) {

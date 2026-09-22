@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFetcher, useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
@@ -12,8 +12,10 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
+import type { CampaignSeoSettingsLoader } from "~/client/types/campaignSeoSettingsLoader";
 
 function CampaignSeoSettingsPage() {
+  const { metatag } = useLoaderData<CampaignSeoSettingsLoader>();
   const { campaignId } = useParams<{ campaignId: string }>();
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
@@ -21,8 +23,11 @@ function CampaignSeoSettingsPage() {
 
   const steps = buildSteps(campaignId!);
 
-  const [metaTitle, setMetaTitle] = useState("");
-  const [metaDescription, setMetaDescription] = useState("");
+  const [metaTitle, setMetaTitle] = useState(metatag.title ?? "");
+  const [metaDescription, setMetaDescription] = useState(metatag.description ?? "");
+  const [keywords, setKeywords] = useState(metatag.keywords ?? "");
+  const [ogTitle, setOgTitle] = useState(metatag.ogTitle ?? "");
+  const [ogDescription, setOgDescription] = useState(metatag.ogDescription ?? "");
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,7 +85,8 @@ function CampaignSeoSettingsPage() {
                 <Input
                   name="keywords"
                   placeholder="doação, educação, ong, crianças"
-                  disabled
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">Separe por vírgulas.</p>
               </FormField>
@@ -104,7 +110,8 @@ function CampaignSeoSettingsPage() {
                 <Input
                   name="ogTitle"
                   placeholder="Ex.: Educação para Todos"
-                  disabled
+                  value={ogTitle}
+                  onChange={(e) => setOgTitle(e.target.value)}
                 />
               </FormField>
 
@@ -113,7 +120,8 @@ function CampaignSeoSettingsPage() {
                   name="ogDescription"
                   placeholder="Junte-se a nós e transforme vidas por meio da educação."
                   className="min-h-24"
-                  disabled
+                  value={ogDescription}
+                  onChange={(e) => setOgDescription(e.target.value)}
                 />
               </FormField>
 
