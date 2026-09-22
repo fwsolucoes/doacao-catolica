@@ -5,6 +5,7 @@ import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { listEmailTemplatesSchema } from "../schemas/external/emailTemplate";
+import type { CreateEmailTemplateBody } from "../schemas/internal/emailTemplate";
 
 class EmailTemplateDal implements EmailTemplateDalDTO {
   async listEmailTemplates(campaignId: string): Promise<EmailTemplate[]> {
@@ -27,6 +28,29 @@ class EmailTemplateDal implements EmailTemplateDalDTO {
         createdAt: item.created_at2 ?? "",
       }),
     );
+  }
+
+  async createEmailTemplate(
+    campaignId: string,
+    data: CreateEmailTemplateBody,
+  ): Promise<void> {
+    const body = {
+      type: data.type,
+      body: data.body,
+    };
+
+    const apiResponse = await donationApi.post(
+      `/api/account_mail_templates/${campaignId}`,
+      {
+        body,
+        headers: { "api-key": environmentVariables.API_KEY_DONATION },
+      },
+    );
+
+    if (!apiResponse.success)
+      throw HttpAdapter.badGateway(
+        apiResponse.response.errors.type[0] ?? apiResponse.message,
+      );
   }
 }
 

@@ -1,5 +1,5 @@
 import { Code2, Eye, Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -90,6 +90,7 @@ function CampaignEmailPage() {
 
   const steps = buildSteps(campaignId!);
   const [newLayoutOpen, setNewLayoutOpen] = useState(false);
+  const closeNewLayout = useCallback(() => setNewLayoutOpen(false), []);
 
   const [emailSenderName, setEmailSenderName] = useState(
     preferences.emailSenderName ?? "",
@@ -193,7 +194,7 @@ function CampaignEmailPage() {
 
       <NewLayoutDialog
         open={newLayoutOpen}
-        onClose={() => setNewLayoutOpen(false)}
+        onClose={closeNewLayout}
       />
     </div>
   );

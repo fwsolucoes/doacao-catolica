@@ -6,6 +6,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { createEmailTemplate } from "../factories/campaign/createEmailTemplateFactory";
 import { getCampaignPreferences } from "../factories/campaign/getCampaignPreferencesFactory";
 import { listEmailTemplates } from "../factories/campaign/listEmailTemplatesFactory";
 import { updateCampaignEmailSettings } from "../factories/campaign/updateCampaignEmailSettingsFactory";
@@ -30,6 +31,8 @@ export async function action(args: Route.ActionArgs) {
     switch (_action) {
       case "updateEmailSettings":
         return await updateCampaignEmailSettings.handle(route);
+      case "createEmailTemplate":
+        return await createEmailTemplate.handle(route);
       default:
         return HttpAdapter.badRequest("Ação não definida");
     }

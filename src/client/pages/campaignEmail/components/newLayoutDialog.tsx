@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useFetcher, useParams } from "react-router";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import {
   Dialog,
@@ -7,8 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/client/components/ui/dialog";
-import { FormField } from "~/client/components/ui/form-field";
+import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
+import { Separator } from "~/client/components/ui/separator";
 import { Textarea } from "~/client/components/ui/textarea";
 
 const DEFAULT_HTML = `<!DOCTYPE html>
@@ -61,6 +65,17 @@ type NewLayoutDialogProps = {
 };
 
 function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
+  const { campaignId } = useParams<{ campaignId: string }>();
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state !== "idle";
+  useActionToast(fetcher.data);
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data?.toast) {
+      onClose();
+    }
+  }, [fetcher.state, fetcher.data, onClose]);
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="flex max-h-[90dvh] flex-col sm:max-w-3xl">
@@ -71,34 +86,46 @@ function NewLayoutDialog({ open, onClose }: NewLayoutDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-5 overflow-y-auto px-6">
-          <FormField name="layoutName" label="Nome do layout" required>
-            <Input name="layoutName" placeholder="Ex.: Layout básico" />
-          </FormField>
+        <FormErrorProvider fieldErrors={fetcher.data?.cause?.fieldErrors}>
+          <fetcher.Form
+            method="post"
+            action={`/campaign/${campaignId}/settings/email`}
+            className="contents"
+          >
+            <div className="flex flex-col gap-5 overflow-y-auto px-6">
+              <FormField name="type" label="Tipo do layout" required>
+                <Input
+                  name="type"
+                  placeholder="Ex.: layout_basico"
+                  autoFocus
+                />
+              </FormField>
 
-          <FormField name="layoutDescription" label="Descrição">
-            <Input
-              name="layoutDescription"
-              placeholder="Descreva o propósito deste layout"
-            />
-          </FormField>
+              <FormField name="body" label="HTML do layout" required>
+                <Textarea
+                  name="body"
+                  className="min-h-72 font-mono text-xs"
+                  defaultValue={DEFAULT_HTML}
+                />
+              </FormField>
 
-          <FormField name="layoutHtml" label="HTML do layout" required>
-            <Textarea
-              name="layoutHtml"
-              className="min-h-72 font-mono text-xs"
-              defaultValue={DEFAULT_HTML}
-            />
-          </FormField>
+              <TipBanner />
+            </div>
 
-          <TipBanner />
-        </div>
+            <Separator />
 
-        <DialogFooter showCloseButton closeButtonLabel="Cancelar">
-          <Button type="button" onClick={onClose}>
-            Salvar layout
-          </Button>
-        </DialogFooter>
+            <DialogFooter showCloseButton closeButtonLabel="Cancelar">
+              <Button
+                type="submit"
+                name="_action"
+                value="createEmailTemplate"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Salvando..." : "Salvar layout"}
+              </Button>
+            </DialogFooter>
+          </fetcher.Form>
+        </FormErrorProvider>
       </DialogContent>
     </Dialog>
   );
