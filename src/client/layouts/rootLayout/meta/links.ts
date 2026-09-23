@@ -2,6 +2,11 @@ import type { LinksFunction } from "react-router";
 
 const rootLinks: LinksFunction = () => [
   {
+    rel: "icon",
+    type: "image/svg+xml",
+    href: "/small-logo-icon.svg",
+  },
+  {
     rel: "preconnect",
     href: "https://fonts.googleapis.com",
   },
