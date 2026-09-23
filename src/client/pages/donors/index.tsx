@@ -32,14 +32,13 @@ function DonorsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <Button asChild variant="outline" className="text-foreground">
-            <a
-              href={`/campaign/${campaignId}/api/donors-export${location.search}`}
-              download
-            >
-              <Download size={16} />
-              Exportar
-            </a>
+          <Button
+            variant="outline"
+            className="text-foreground"
+            onClick={() => window.open(`/campaign/${campaignId}/api/donors-export${location.search}`, "_blank")}
+          >
+            <Download size={16} />
+            Exportar
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
