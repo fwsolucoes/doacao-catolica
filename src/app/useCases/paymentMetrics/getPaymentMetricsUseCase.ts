@@ -9,19 +9,21 @@ type InputProps = {
   campaignPublicId: string;
   startDate?: string;
   endDate?: string;
+  dateType?: string;
 };
 
 class GetPaymentMetricsUseCase {
   constructor(private paymentMetricsGateway: PaymentMetricsGatewayDTO) {}
 
   async execute(input: InputProps): Promise<PaymentMetricsData> {
-    const { campaignPublicId, startDate, endDate } = input;
+    const { campaignPublicId, startDate, endDate, dateType } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
     const searchParams = new PaymentMetricsSearchParams({
       filter: {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
+        date_type: dateType ?? "paid_confirmed",
       },
     });
 
