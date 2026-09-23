@@ -63,7 +63,9 @@ function CampaignGoalCard() {
           <div>
             <p className="text-xs text-muted-foreground">Arrecadado</p>
             <p className="text-2xl font-semibold text-(--text-heading)">
-              {formatCurrency(String(raised))}
+              {isMonthly
+                ? (layoutData?.bannerTotalReceived ?? formatCurrency(String(raised)))
+                : formatCurrency(String(raised))}
             </p>
           </div>
           {goal !== null && (

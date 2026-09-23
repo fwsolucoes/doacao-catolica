@@ -53,7 +53,9 @@ function KpiCards() {
         />
         <div className="flex flex-col gap-1">
           <Card.MetricValue>
-            {formatCurrency(String(raised))}
+            {isMonthly
+              ? (layoutData?.bannerTotalReceived ?? formatCurrency(String(raised)))
+              : formatCurrency(String(raised))}
           </Card.MetricValue>
           {goal !== null && (
             <span className="text-xs text-muted-foreground">
