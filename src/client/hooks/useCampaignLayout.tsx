@@ -8,6 +8,7 @@ type PermissionType = (typeof PROJECT_ALL_PERMISSIONS)[number];
 
 type CampaignLayoutContextType = {
   isPermissionGranted: (permission: PermissionType) => boolean;
+  campaign: CampaignLayoutLoader["campaign"];
 };
 
 const CampaignLayoutContext = createContext<CampaignLayoutContextType>(
@@ -30,14 +31,17 @@ const CampaignLayoutProvider = ({ children }: { children: ReactNode }) => {
     (m) => m.id === "main/routes/layout.campaignLayout",
   );
 
+  const { campaign } = match?.data as CampaignLayoutLoader;
+
   function isPermissionGranted(permission: PermissionType) {
-    if (!match) throw new Error("CampaignLayoutProvider: route match not found");
+    if (!match)
+      throw new Error("CampaignLayoutProvider: route match not found");
     const { projectPermissions } = match.data as CampaignLayoutLoader;
     return projectPermissions.includes(permission);
   }
 
   return (
-    <CampaignLayoutContext.Provider value={{ isPermissionGranted }}>
+    <CampaignLayoutContext.Provider value={{ isPermissionGranted, campaign }}>
       {children}
     </CampaignLayoutContext.Provider>
   );

@@ -26,7 +26,10 @@ export async function loader(args: Route.LoaderArgs) {
       : Promise.resolve(null),
   ]);
 
-  return { contacts, campaign, contactDetail, currentUrl: args.request.url };
+  const redirectUrl = new URL(args.request.url);
+  redirectUrl.search = `isStudent=false&projectAccountId=${campaign.accountId}`;
+
+  return { contacts, campaign, contactDetail, currentUrl: redirectUrl.toString() };
 }
 
 export async function action(args: Route.ActionArgs) {
