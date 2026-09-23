@@ -120,6 +120,46 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
+  payment_unique_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  payment_recurring_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_payment_unique_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_payment_unique_text: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_payment_recurring_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_payment_recurring_text: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_register_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  success_register_text: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
 });
 
 type ExternalCampaignPreferences = z.infer<

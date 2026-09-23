@@ -68,6 +68,29 @@ function CampaignPreferencesPage() {
   const [requireLogin, setRequireLogin] = useState(
     preferences.requireLogin ?? false,
   );
+  const [oneTimePaymentTitle, setOneTimePaymentTitle] = useState(
+    preferences.oneTimePaymentTitle ?? "",
+  );
+  const [monthlyPaymentTitle, setMonthlyPaymentTitle] = useState(
+    preferences.monthlyPaymentTitle ?? "",
+  );
+  const [oneTimeThanksTitle, setOneTimeThanksTitle] = useState(
+    preferences.oneTimeThanksTitle ?? "",
+  );
+  const [oneTimeThanksDescription, setOneTimeThanksDescription] = useState(
+    preferences.oneTimeThanksDescription ?? "",
+  );
+  const [monthlyThanksTitle, setMonthlyThanksTitle] = useState(
+    preferences.monthlyThanksTitle ?? "",
+  );
+  const [monthlyThanksDescription, setMonthlyThanksDescription] = useState(
+    preferences.monthlyThanksDescription ?? "",
+  );
+  const [registrationThanksTitle, setRegistrationThanksTitle] = useState(
+    preferences.registrationThanksTitle ?? "",
+  );
+  const [registrationThanksDescription, setRegistrationThanksDescription] =
+    useState(preferences.registrationThanksDescription ?? "");
 
   return (
     <div className="flex flex-col gap-6">
@@ -106,7 +129,11 @@ function CampaignPreferencesPage() {
               description="Título exibido no topo da página de pagamento avulsa."
             >
               <FormField name="oneTimePaymentTitle" label="Título">
-                <Input name="oneTimePaymentTitle" disabled />
+                <Input
+                  name="oneTimePaymentTitle"
+                  value={oneTimePaymentTitle}
+                  onChange={(e) => setOneTimePaymentTitle(e.target.value)}
+                />
               </FormField>
             </SectionCard>
 
@@ -115,7 +142,11 @@ function CampaignPreferencesPage() {
               description="Título exibido no topo da página de pagamento recorrente."
             >
               <FormField name="monthlyPaymentTitle" label="Título">
-                <Input name="monthlyPaymentTitle" disabled />
+                <Input
+                  name="monthlyPaymentTitle"
+                  value={monthlyPaymentTitle}
+                  onChange={(e) => setMonthlyPaymentTitle(e.target.value)}
+                />
               </FormField>
             </SectionCard>
 
@@ -124,10 +155,18 @@ function CampaignPreferencesPage() {
               description="Mensagem exibida após uma doação avulsa."
             >
               <FormField name="oneTimeThanksTitle" label="Título">
-                <Input name="oneTimeThanksTitle" disabled />
+                <Input
+                  name="oneTimeThanksTitle"
+                  value={oneTimeThanksTitle}
+                  onChange={(e) => setOneTimeThanksTitle(e.target.value)}
+                />
               </FormField>
               <FormField name="oneTimeThanksDescription" label="Descrição">
-                <Textarea name="oneTimeThanksDescription" disabled />
+                <Textarea
+                  name="oneTimeThanksDescription"
+                  value={oneTimeThanksDescription}
+                  onChange={(e) => setOneTimeThanksDescription(e.target.value)}
+                />
               </FormField>
             </SectionCard>
 
@@ -136,10 +175,18 @@ function CampaignPreferencesPage() {
               description="Mensagem exibida após uma doação recorrente confirmada."
             >
               <FormField name="monthlyThanksTitle" label="Título">
-                <Input name="monthlyThanksTitle" disabled />
+                <Input
+                  name="monthlyThanksTitle"
+                  value={monthlyThanksTitle}
+                  onChange={(e) => setMonthlyThanksTitle(e.target.value)}
+                />
               </FormField>
               <FormField name="monthlyThanksDescription" label="Descrição">
-                <Textarea name="monthlyThanksDescription" disabled />
+                <Textarea
+                  name="monthlyThanksDescription"
+                  value={monthlyThanksDescription}
+                  onChange={(e) => setMonthlyThanksDescription(e.target.value)}
+                />
               </FormField>
             </SectionCard>
 
@@ -148,10 +195,20 @@ function CampaignPreferencesPage() {
               description="Mensagem exibida após concluir o cadastro como doador recorrente."
             >
               <FormField name="registrationThanksTitle" label="Título">
-                <Input name="registrationThanksTitle" disabled />
+                <Input
+                  name="registrationThanksTitle"
+                  value={registrationThanksTitle}
+                  onChange={(e) => setRegistrationThanksTitle(e.target.value)}
+                />
               </FormField>
               <FormField name="registrationThanksDescription" label="Descrição">
-                <Textarea name="registrationThanksDescription" disabled />
+                <Textarea
+                  name="registrationThanksDescription"
+                  value={registrationThanksDescription}
+                  onChange={(e) =>
+                    setRegistrationThanksDescription(e.target.value)
+                  }
+                />
               </FormField>
             </SectionCard>
 

@@ -51,6 +51,14 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       supportTagId: data.support_tag_id,
       showAutoPixInvite: data.show_auto_pix_invite,
       requireLogin: data.require_login,
+      oneTimePaymentTitle: data.payment_unique_title,
+      monthlyPaymentTitle: data.payment_recurring_title,
+      oneTimeThanksTitle: data.success_payment_unique_title,
+      oneTimeThanksDescription: data.success_payment_unique_text,
+      monthlyThanksTitle: data.success_payment_recurring_title,
+      monthlyThanksDescription: data.success_payment_recurring_text,
+      registrationThanksTitle: data.success_register_title,
+      registrationThanksDescription: data.success_register_text,
     };
   }
 

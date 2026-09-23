@@ -107,6 +107,14 @@ type UpdateCampaignWithDetailsInput = {
   supportTagId?: string | null;
   showAutoPixInvite?: boolean;
   requireLogin?: boolean;
+  oneTimePaymentTitle?: string | null;
+  monthlyPaymentTitle?: string | null;
+  oneTimeThanksTitle?: string | null;
+  oneTimeThanksDescription?: string | null;
+  monthlyThanksTitle?: string | null;
+  monthlyThanksDescription?: string | null;
+  registrationThanksTitle?: string | null;
+  registrationThanksDescription?: string | null;
 };
 
 type GetProjectPermissionsOutput = {

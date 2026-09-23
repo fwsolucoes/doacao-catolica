@@ -20,6 +20,38 @@ const updateCampaignPreferencesSettingsSchema = z.object({
     .transform((v) => v || null),
   showAutoPixInvite: z.string().transform((v) => v === "true"),
   requireLogin: z.string().transform((v) => v === "true"),
+  oneTimePaymentTitle: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  monthlyPaymentTitle: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  oneTimeThanksTitle: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  oneTimeThanksDescription: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  monthlyThanksTitle: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  monthlyThanksDescription: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  registrationThanksTitle: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
+  registrationThanksDescription: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
 });
 
 type UpdateCampaignPreferencesSettingsSchema = z.infer<

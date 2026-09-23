@@ -26,6 +26,14 @@ type CampaignPreferences = {
   supportTagId: string | null;
   showAutoPixInvite: boolean | null;
   requireLogin: boolean | null;
+  oneTimePaymentTitle: string | null;
+  monthlyPaymentTitle: string | null;
+  oneTimeThanksTitle: string | null;
+  oneTimeThanksDescription: string | null;
+  monthlyThanksTitle: string | null;
+  monthlyThanksDescription: string | null;
+  registrationThanksTitle: string | null;
+  registrationThanksDescription: string | null;
 };
 
 type UpdateCampaignPreferencesInput = {

@@ -196,6 +196,14 @@ class CampaignGateway implements CampaignGatewayDTO {
       visible_in_marketplace: input.visibleInMarketplace,
       show_auto_pix_invite: input.showAutoPixInvite,
       require_login: input.requireLogin,
+      payment_unique_title: input.oneTimePaymentTitle,
+      payment_recurring_title: input.monthlyPaymentTitle,
+      success_payment_unique_title: input.oneTimeThanksTitle,
+      success_payment_unique_text: input.oneTimeThanksDescription,
+      success_payment_recurring_title: input.monthlyThanksTitle,
+      success_payment_recurring_text: input.monthlyThanksDescription,
+      success_register_title: input.registrationThanksTitle,
+      success_register_text: input.registrationThanksDescription,
     };
 
     const hasPreferences = Object.values(preferencesBody).some(

@@ -10,6 +10,14 @@ type InputProps = {
   supportTagId: string | null;
   showAutoPixInvite: boolean;
   requireLogin: boolean;
+  oneTimePaymentTitle: string | null;
+  monthlyPaymentTitle: string | null;
+  oneTimeThanksTitle: string | null;
+  oneTimeThanksDescription: string | null;
+  monthlyThanksTitle: string | null;
+  monthlyThanksDescription: string | null;
+  registrationThanksTitle: string | null;
+  registrationThanksDescription: string | null;
 };
 
 class UpdateCampaignPreferencesSettingsUseCase {
@@ -26,6 +34,14 @@ class UpdateCampaignPreferencesSettingsUseCase {
         supportTagId: input.supportTagId,
         showAutoPixInvite: input.showAutoPixInvite,
         requireLogin: input.requireLogin,
+        oneTimePaymentTitle: input.oneTimePaymentTitle,
+        monthlyPaymentTitle: input.monthlyPaymentTitle,
+        oneTimeThanksTitle: input.oneTimeThanksTitle,
+        oneTimeThanksDescription: input.oneTimeThanksDescription,
+        monthlyThanksTitle: input.monthlyThanksTitle,
+        monthlyThanksDescription: input.monthlyThanksDescription,
+        registrationThanksTitle: input.registrationThanksTitle,
+        registrationThanksDescription: input.registrationThanksDescription,
       },
       input.token,
     );
