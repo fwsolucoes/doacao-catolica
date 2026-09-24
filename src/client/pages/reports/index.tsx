@@ -1,4 +1,11 @@
-import { Cake, HeartHandshake, Repeat2, UserMinus, UserX, Users } from "lucide-react";
+import {
+  Cake,
+  HeartHandshake,
+  Repeat2,
+  UserMinus,
+  UserX,
+  Users,
+} from "lucide-react";
 import { ReportCard } from "./components/reportCard";
 
 const REPORTS = [
@@ -18,14 +25,14 @@ const REPORTS = [
     tone: "amber" as const,
     navigateTo: "../birthday-report",
   },
-  {
-    title: "Lapsos no período",
-    description:
-      "Doadores recorrentes que interromperam contribuições no período selecionado.",
-    icon: UserMinus,
-    tone: "rose" as const,
-    navigateTo: "../overdue-payments",
-  },
+  // {
+  //   title: "Lapsos no período",
+  //   description:
+  //     "Doadores recorrentes que interromperam contribuições no período selecionado.",
+  //   icon: UserMinus,
+  //   tone: "rose" as const,
+  //   navigateTo: "../overdue-payments",
+  // },
   {
     title: "Relatório de inadimplentes",
     description:

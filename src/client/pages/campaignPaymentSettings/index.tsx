@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { formatToHiddenDigits } from "@arkyn/shared";
 import { Info, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   useFetcher,
@@ -79,9 +80,9 @@ function CampaignPaymentSettingsPage() {
   const campaignSubAccountId = layoutData?.campaign.subAccountId ?? "";
   const walletLocked = !!campaignSubAccountId;
 
-  const walletOptions = subAccounts.data.map((sa) => ({
-    value: sa.subAccountId,
-    label: sa.name,
+  const walletOptions = subAccounts.data.map(({ subAccountId, name, cpfCnpj }) => ({
+    value: subAccountId,
+    label: `${name} - (${formatToHiddenDigits(cpfCnpj, { hider: "•", range: [3, 6] })})`,
   }));
 
   const [wallet, setWallet] = useState(campaignSubAccountId);
