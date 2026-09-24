@@ -1,6 +1,7 @@
 import { ListFilter, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { getDatesFromPeriod } from "../periodSelect";
 import { Button } from "~/client/components/ui/button";
 import { Combobox } from "~/client/components/ui/combobox";
 import { Input } from "~/client/components/ui/input";
@@ -43,10 +44,16 @@ type FilterDraft = {
 };
 
 function draftFromParams(sp: URLSearchParams): FilterDraft {
+  const startDate = sp.get("start_date");
+  const endDate = sp.get("end_date");
+  const defaultDates =
+    startDate && endDate
+      ? { startDate, endDate }
+      : getDatesFromPeriod(sp.get("period") ?? "currentMonth");
   return {
     dateType: sp.get("date_type") === "due" ? "due" : "paid_confirmed",
-    startDate: sp.get("start_date") ?? "",
-    endDate: sp.get("end_date") ?? "",
+    startDate: defaultDates.startDate,
+    endDate: defaultDates.endDate,
     origin: sp.get("origin") ?? "",
     paymentType: sp.get("type") ?? "",
     status: sp.get("status") ?? "",

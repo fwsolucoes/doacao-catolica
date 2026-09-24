@@ -14,6 +14,46 @@ export const PERIOD_OPTIONS = [
   { label: "Data personalizada", value: "custom" },
 ] as const;
 
+function getDatesFromPeriod(period: string): { startDate: string; endDate: string } {
+  const today = new Date();
+
+  function monthRange(offset: number) {
+    return {
+      startDate: new Date(today.getFullYear(), today.getMonth() - offset, 1)
+        .toISOString()
+        .split("T")[0]!,
+      endDate: new Date(today.getFullYear(), today.getMonth() - offset + 1, 0)
+        .toISOString()
+        .split("T")[0]!,
+    };
+  }
+
+  function lastDaysRange(days: number) {
+    const from = new Date(today);
+    from.setDate(today.getDate() - days);
+    return {
+      startDate: from.toISOString().split("T")[0]!,
+      endDate: today.toISOString().split("T")[0]!,
+    };
+  }
+
+  switch (period) {
+    case "last30Days":   return lastDaysRange(30);
+    case "last60Days":   return lastDaysRange(60);
+    case "last6Months":  return lastDaysRange(180);
+    case "last12Months": return lastDaysRange(365);
+    case "lastMonth":    return monthRange(1);
+    case "nextMonth":    return monthRange(-1);
+    case "next12Month":  return {
+      startDate: today.toISOString().split("T")[0]!,
+      endDate: new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())
+        .toISOString()
+        .split("T")[0]!,
+    };
+    default: return monthRange(0);
+  }
+}
+
 type PeriodSelectProps = {
   onCustomSelect?: () => void;
 };
@@ -32,74 +72,13 @@ function PeriodSelect({ onCustomSelect }: PeriodSelectProps) {
     navigate(`?${sp.toString()}`);
   }
 
-  function applyMonthFilter(offset: number, periodKey: string) {
-    const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth() - offset, 1)
-      .toISOString()
-      .split("T")[0];
-    const lastDay = new Date(today.getFullYear(), today.getMonth() - offset + 1, 0)
-      .toISOString()
-      .split("T")[0];
-    applyParams({ start_date: firstDay, end_date: lastDay, period: periodKey });
-  }
-
-  function applyLastDaysFilter(days: number, periodKey: string) {
-    const today = new Date();
-    const from = new Date(today);
-    from.setDate(today.getDate() - days);
-    applyParams({
-      start_date: from.toISOString().split("T")[0],
-      end_date: today.toISOString().split("T")[0],
-      period: periodKey,
-    });
-  }
-
-  function applyYearFilter(yearOffset: number, periodKey: string) {
-    const today = new Date();
-    const endDate = new Date(
-      today.getFullYear() + yearOffset,
-      today.getMonth(),
-      today.getDate(),
-    )
-      .toISOString()
-      .split("T")[0];
-    applyParams({
-      start_date: today.toISOString().split("T")[0],
-      end_date: endDate,
-      period: periodKey,
-    });
-  }
-
   function handleSelect(value: string) {
-    switch (value) {
-      case "currentMonth":
-        applyMonthFilter(0, value);
-        break;
-      case "last30Days":
-        applyLastDaysFilter(30, value);
-        break;
-      case "last60Days":
-        applyLastDaysFilter(60, value);
-        break;
-      case "last6Months":
-        applyLastDaysFilter(180, value);
-        break;
-      case "last12Months":
-        applyLastDaysFilter(365, value);
-        break;
-      case "lastMonth":
-        applyMonthFilter(1, value);
-        break;
-      case "nextMonth":
-        applyMonthFilter(-1, value);
-        break;
-      case "next12Month":
-        applyYearFilter(1, value);
-        break;
-      case "custom":
-        onCustomSelect?.();
-        break;
+    if (value === "custom") {
+      onCustomSelect?.();
+      return;
     }
+    const { startDate, endDate } = getDatesFromPeriod(value);
+    applyParams({ start_date: startDate, end_date: endDate, period: value });
   }
 
   return (
@@ -119,4 +98,4 @@ function PeriodSelect({ onCustomSelect }: PeriodSelectProps) {
   );
 }
 
-export { PeriodSelect };
+export { PeriodSelect, getDatesFromPeriod };

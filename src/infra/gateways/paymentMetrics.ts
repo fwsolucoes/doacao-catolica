@@ -25,6 +25,8 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
 
+    console.log("🚀API Response:", apiResponse); // Debugging line
+
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
     const schemaValidator = new SchemaValidatorAdapter(
