@@ -89,7 +89,7 @@ function DonorsTable() {
               placeholder="Buscar por nome, CPF, e-mail ou telefone..."
               className="h-11 rounded-xl bg-background"
               defaultValue={searchValue}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value.replace(/[.\-/]/g, ""))}
             />
           </div>
           <DonorsFilterDrawer />

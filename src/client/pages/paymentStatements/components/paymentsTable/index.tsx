@@ -184,9 +184,10 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
               placeholder="Buscar por nome, e-mail ou CPF/CNPJ..."
               className="h-11 rounded-xl border-transparent bg-background"
               defaultValue={getParam("search") || ""}
-              onChange={(e) =>
-                handleChangeTimeoutFilter("search", e.target.value)
-              }
+              onChange={(e) => {
+                const value = e.target.value.replace(/[.\-/]/g, "");
+                handleChangeTimeoutFilter("search", value);
+              }}
             />
           </div>
           <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
