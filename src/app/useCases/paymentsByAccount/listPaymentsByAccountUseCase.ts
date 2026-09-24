@@ -32,7 +32,7 @@ class ListPaymentsByAccountUseCase {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
         per_page: 20,
-        date_type: filters.dateType,
+        date_type: filters.dateType === "due" ? undefined : filters.dateType,
         origin: filters.origin,
         type: filters.paymentType,
         status: filters.status,

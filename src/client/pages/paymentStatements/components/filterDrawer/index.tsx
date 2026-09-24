@@ -44,8 +44,7 @@ type FilterDraft = {
 
 function draftFromParams(sp: URLSearchParams): FilterDraft {
   return {
-    dateType:
-      sp.get("date_type") === "paid_confirmed" ? "paid_confirmed" : "due",
+    dateType: sp.get("date_type") === "due" ? "due" : "paid_confirmed",
     startDate: sp.get("start_date") ?? "",
     endDate: sp.get("end_date") ?? "",
     origin: sp.get("origin") ?? "",
@@ -117,7 +116,7 @@ function FilterDrawer({
 
     if (draft.dateType === "paid_confirmed")
       nextSp.set("date_type", "paid_confirmed");
-    else nextSp.delete("date_type");
+    else nextSp.set("date_type", "due");
 
     const fields: [string, string][] = [
       ["origin", draft.origin],

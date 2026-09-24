@@ -14,13 +14,15 @@ class PaymentBookletGateway implements PaymentBookletGatewayDTO {
   ): Promise<string> {
     const headers = { "api-key": environmentVariables.API_KEY_DONATION };
 
+    const body = {
+      subscription_id: input.subscriptionUuid,
+      project_id: input.accountReference,
+      start_date: input.startDate,
+      end_date: input.endDate,
+    };
+
     const apiResponse = await webworkerApi.post("/generate-bulk-slips", {
-      body: {
-        subscription_id: input.subscriptionUuid,
-        project_id: input.accountReference,
-        start_date: input.startDate,
-        end_date: input.endDate,
-      },
+      body,
       headers,
     });
 
