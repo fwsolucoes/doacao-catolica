@@ -62,7 +62,7 @@ function Combobox({
             className,
           )}
         >
-          <span className="truncate">
+          <span className="truncate pb-1">
             {selected ? selected.label : placeholder}
           </span>
           <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />

@@ -86,6 +86,11 @@ function CampaignPaymentSettingsPage() {
   }));
 
   const [wallet, setWallet] = useState(campaignSubAccountId);
+
+  const walletOptionsWithFallback =
+    walletLocked && !walletOptions.some((o) => o.value === wallet)
+      ? [{ value: wallet, label: "Usuário logado não tem acesso às informações da carteira" }, ...walletOptions]
+      : walletOptions;
   const [pixEnabled, setPixEnabled] = useState(preferences.pixEnabled ?? true);
   const [boletoEnabled, setBoletoEnabled] = useState(
     preferences.boletoEnabled ?? true,
@@ -147,7 +152,7 @@ function CampaignPaymentSettingsPage() {
                 required
               >
                 <Combobox
-                  options={walletOptions}
+                  options={walletOptionsWithFallback}
                   value={wallet}
                   onChange={setWallet}
                   placeholder="Selecione uma carteira"
