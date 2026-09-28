@@ -70,11 +70,7 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
-  min_amount: z
-    .string()
-    .nullable()
-    .optional()
-    .transform((v) => v ?? null),
+  min_amount: z.number().nullable().optional().transform((v) => v ?? null),
   allow_transfer_taxes: z
     .boolean()
     .nullable()

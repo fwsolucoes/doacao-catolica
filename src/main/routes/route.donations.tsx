@@ -15,13 +15,37 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
+  const customerRef = adaptedRoute.query.customer_reference;
+
   const [metrics, payments, campaigns] = await Promise.all([
     getTotalPaymentsByAccount.handle(user.accountId),
     listPaymentsByAccount.handle(user.accountId, adaptedRoute.query),
     listCampaignSelect.handle(adaptedRoute),
   ]);
 
-  return { ...allDonationsMock, metrics, payments, campaigns };
+  const donors =
+    customerRef && payments.data.length > 0
+      ? {
+          ...allDonationsMock.donors,
+          data: [
+            {
+              id: customerRef,
+              name: payments.data[0].customerName,
+              contactId: "",
+              email: null,
+              cpf: null,
+              birthDate: null,
+              phone: null,
+              whatsapp: null,
+              donorType: "",
+              createdAt: "",
+            },
+            ...allDonationsMock.donors.data,
+          ],
+        }
+      : allDonationsMock.donors;
+
+  return { ...allDonationsMock, metrics, payments, campaigns, donors };
 }
 
 export function ErrorBoundary() {

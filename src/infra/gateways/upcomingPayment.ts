@@ -12,13 +12,15 @@ class UpcomingPaymentGateway implements UpcomingPaymentGatewayDTO {
   ): Promise<void> {
     const headers = { "api-key": environmentVariables.API_KEY_DONATION };
 
+    const body = {
+      account_reference: input.accountReference,
+      subscription_uuid: input.subscriptionUuid,
+      start_date: input.startDate,
+      end_date: input.endDate,
+    };
+
     const apiResponse = await donationApi.post("/api/subscriptions/payments", {
-      body: {
-        account_reference: input.accountReference,
-        subscription_uuid: input.subscriptionUuid,
-        start_date: input.startDate,
-        end_date: input.endDate,
-      },
+      body,
       headers,
     });
 
