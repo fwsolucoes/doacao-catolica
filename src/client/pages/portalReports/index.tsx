@@ -1,4 +1,4 @@
-import { Heart, UserX, Wallet } from "lucide-react";
+import { CalendarRange, Heart, UserX, Wallet } from "lucide-react";
 import { ReportCard } from "~/client/pages/reports/components/reportCard";
 
 const REPORTS = [
@@ -25,6 +25,14 @@ const REPORTS = [
     icon: UserX,
     tone: "rose" as const,
     navigateTo: "/defaulters-report",
+  },
+  {
+    title: "Doações Mês a Mês",
+    description:
+      "Valores doados por cada doador em cada mês do período selecionado, em todas as campanhas.",
+    icon: CalendarRange,
+    tone: "violet" as const,
+    navigateTo: "/monthly-donors-report",
   },
 ];
 

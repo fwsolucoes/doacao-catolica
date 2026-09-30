@@ -13,7 +13,8 @@ export default [
   route("api/whatsapp/selectOfficialNumber", "./main/routes/api.whatsapp.selectOfficialNumber.ts"),
   route("api/campaign-metrics-modal", "./main/routes/api.campaign.metricsModal.ts"),
   route("api/financial-summary-export", "./main/routes/api.financialSummaryExport.ts"),
-  
+  route("api/monthly-donors-export", "./main/routes/api.monthlyDonorsExport.ts"),
+
   layout("./main/routes/layout.portalLayout.tsx", [
     route("test-error", "./main/routes/route.testError.tsx"),
     route("dashboard", "./main/routes/route.dashboard.tsx"),
@@ -26,6 +27,7 @@ export default [
     route("reports", "./main/routes/route.reports.tsx"),
     route("financial-summary", "./main/routes/route.financialSummary.tsx"),
     route("defaulters-report", "./main/routes/route.defaultersReport.tsx"),
+    route("monthly-donors-report", "./main/routes/route.monthlyDonorsReport.tsx"),
   ]),
 
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
@@ -54,6 +56,10 @@ export default [
       "defaulters-report",
       "./main/routes/route.campaign.defaultersReport.tsx",
     ),
+    route(
+      "monthly-donors-report",
+      "./main/routes/route.campaign.monthlyDonorsReport.tsx",
+    ),
     route("collaborators", "./main/routes/route.campaign.collaborators.tsx"),
     route("fundraisers", "./main/routes/route.campaign.ambassadors.tsx"),
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
@@ -70,6 +76,7 @@ export default [
     route("settings/preferences", "./main/routes/route.campaign.preferences.tsx"),
     route("api/ambassadors-export", "./main/routes/api.campaign.ambassadorsExport.ts"),
     route("api/defaulters-export", "./main/routes/api.campaign.defaultersExport.ts"),
+    route("api/monthly-donors-export", "./main/routes/api.campaign.monthlyDonorsExport.ts"),
     route("api/donors-export", "./main/routes/api.campaign.donorsExport.ts"),
     route("api/donations-export", "./main/routes/api.campaign.donationsExport.ts"),
     route("api/payment-notifications/:paymentId", "./main/routes/api.campaign.paymentNotifications.ts"),

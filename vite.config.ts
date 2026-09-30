@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 import devtoolsJson from "vite-plugin-devtools-json";
 
 export default defineConfig({
+  server: { host: true },
   plugins: [tailwindcss(), wyw(), devtoolsJson(), reactRouter()],
   resolve:
     process.env.NODE_ENV === "development"

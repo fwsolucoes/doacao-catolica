@@ -1,5 +1,6 @@
 import {
   Cake,
+  CalendarRange,
   HeartHandshake,
   Repeat2,
   UserMinus,
@@ -54,6 +55,14 @@ const REPORTS = [
       "Panorama completo dos doadores recorrentes ativos, previsão mensal e churn.",
     icon: Repeat2,
     tone: "violet" as const,
+  },
+  {
+    title: "Doações Mês a Mês",
+    description:
+      "Valores doados por cada doador em cada mês do período selecionado.",
+    icon: CalendarRange,
+    tone: "green" as const,
+    navigateTo: "../monthly-donors-report",
   },
 ];
 
