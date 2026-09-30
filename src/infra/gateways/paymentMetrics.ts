@@ -24,8 +24,9 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
+    // console.log("🚀API URL:", url); // Debugging line
 
-    console.log("🚀API Response:", apiResponse); // Debugging line
+    // console.log("🚀API Response:", apiResponse); // Debugging line
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 

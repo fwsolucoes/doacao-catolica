@@ -31,12 +31,12 @@ const CampaignLayoutProvider = ({ children }: { children: ReactNode }) => {
     (m) => m.id === "main/routes/layout.campaignLayout",
   );
 
-  const { campaign } = match?.data as CampaignLayoutLoader;
+  const { campaign } = match?.loaderData as CampaignLayoutLoader;
 
   function isPermissionGranted(permission: PermissionType) {
     if (!match)
       throw new Error("CampaignLayoutProvider: route match not found");
-    const { projectPermissions } = match.data as CampaignLayoutLoader;
+    const { projectPermissions } = match.loaderData as CampaignLayoutLoader;
     return projectPermissions.includes(permission);
   }
 

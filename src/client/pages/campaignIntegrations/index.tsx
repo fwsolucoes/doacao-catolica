@@ -1,12 +1,12 @@
-import { BarChart3, Pencil, Plus, Target, Trash2, Webhook } from "lucide-react";
+import { BarChart3, Pencil, Plus, Tag, Target, Trash2, Webhook } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
 import type { ReactNode } from "react";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
-import { FormField } from "~/client/components/ui/form-field";
+import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
-import { Switch } from "~/client/components/ui/switch";
+import { useActionToast } from "~/client/hooks/useActionToast";
 import {
   buildSteps,
   StepNav,
@@ -17,12 +17,12 @@ import {
   WEBHOOK_EVENTS,
 } from "./components/newWebhookDialog";
 import { DeleteWebhookDialog } from "./components/deleteWebhookDialog";
+import type { CampaignIntegrationsLoader } from "~/client/types/campaignIntegrationsLoader";
 
 type WebhookItem = {
   id: string;
   url: string;
   events: string[]; // event IDs
-  enabled: boolean;
 };
 
 const SAMPLE_WEBHOOKS: WebhookItem[] = [
@@ -30,7 +30,6 @@ const SAMPLE_WEBHOOKS: WebhookItem[] = [
     id: "1",
     url: "https://api.suainstituicao.org/webhooks/givehub",
     events: ["payment_approved", "subscription_created"],
-    enabled: true,
   },
 ];
 
@@ -48,7 +47,7 @@ function IntegrationCard({
   icon: ReactNode;
   title: string;
   description: string;
-  action: ReactNode;
+  action?: ReactNode;
   children?: ReactNode;
 }) {
   return (
@@ -65,7 +64,7 @@ function IntegrationCard({
             <p className="text-sm text-muted-foreground">{description}</p>
           </div>
         </div>
-        <div className="shrink-0 pt-1">{action}</div>
+        {action && <div className="shrink-0 pt-1">{action}</div>}
       </div>
       {children && (
         <div className="flex flex-col gap-5 px-7 pb-7">{children}</div>
@@ -76,12 +75,10 @@ function IntegrationCard({
 
 function WebhookRow({
   webhook,
-  onToggle,
   onEdit,
   onDelete,
 }: {
   webhook: WebhookItem;
-  onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
 }) {
@@ -98,7 +95,6 @@ function WebhookRow({
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        <Switch checked={webhook.enabled} onCheckedChange={onToggle} />
         <Button
           variant="ghost"
           size="sm"
@@ -122,20 +118,16 @@ function WebhookRow({
 
 function CampaignIntegrationsPage() {
   const { campaignId } = useParams<{ campaignId: string }>();
+  const { integrations } = useLoaderData<CampaignIntegrationsLoader>();
+  const { Form, state, data } = useFetcher();
+  const isSubmitting = state === "submitting";
+  useActionToast(data);
   const steps = buildSteps(campaignId!);
 
-  const [gaEnabled, setGaEnabled] = useState(true);
-  const [metaEnabled, setMetaEnabled] = useState(false);
   const [webhooks, setWebhooks] = useState<WebhookItem[]>(SAMPLE_WEBHOOKS);
   const [newWebhookOpen, setNewWebhookOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<WebhookItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<WebhookItem | null>(null);
-
-  function toggleWebhook(id: string) {
-    setWebhooks((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w)),
-    );
-  }
 
   function deleteWebhook(id: string) {
     setWebhooks((prev) => prev.filter((w) => w.id !== id));
@@ -157,77 +149,106 @@ function CampaignIntegrationsPage() {
       <div className="flex items-start gap-8">
         <StepNav steps={steps} />
 
-        <div className="flex min-w-0 flex-1 flex-col gap-6">
-          {/* Google Analytics */}
-          <IntegrationCard
-            icon={<BarChart3 size={20} className="text-sidebar-primary" />}
-            title="Google Analytics"
-            description="Acompanhe o tráfego da página da campanha e o comportamento dos visitantes."
-            action={
-              <Switch checked={gaEnabled} onCheckedChange={setGaEnabled} />
-            }
+        <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
+          <Form
+            method="post"
+            className="flex min-w-0 flex-1 flex-col gap-6"
           >
-            <FormField
-              name="gaId"
-              label="ID de acompanhamento (Measurement ID)"
+            {/* Google Analytics */}
+            <IntegrationCard
+              icon={<BarChart3 size={20} className="text-sidebar-primary" />}
+              title="Google Analytics"
+              description="Acompanhe o tráfego da página da campanha e o comportamento dos visitantes."
             >
-              <Input name="gaId" placeholder="G-XXXXXXXXXX" />
-              <p className="text-xs text-muted-foreground">
-                Encontre em Google Analytics → Administrador → Fluxos de dados.
-              </p>
-            </FormField>
-          </IntegrationCard>
+              <FormField
+                name="googleAnalyticsPixel"
+                label="ID de acompanhamento (Measurement ID)"
+              >
+                <Input
+                  name="googleAnalyticsPixel"
+                  placeholder="G-XXXXXXXXXX"
+                  defaultValue={integrations.googleAnalyticsPixel ?? ""}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Encontre em Google Analytics → Administrador → Fluxos de dados.
+                </p>
+              </FormField>
+            </IntegrationCard>
 
-          {/* Meta Ads */}
-          <IntegrationCard
-            icon={<Target size={20} className="text-sidebar-primary" />}
-            title="Meta Ads (Pixel)"
-            description="Rastreie conversões e otimize campanhas no Facebook e Instagram."
-            action={
-              <Switch checked={metaEnabled} onCheckedChange={setMetaEnabled} />
-            }
-          >
-            <FormField name="metaPixelId" label="ID do Pixel">
-              <Input name="metaPixelId" placeholder="000000000000000" />
-              <p className="text-xs text-muted-foreground">
-                Encontre em Gerenciador de Eventos da Meta → Fontes de Dados.
-              </p>
-            </FormField>
-          </IntegrationCard>
+            {/* Google Tag Manager */}
+            <IntegrationCard
+              icon={<Tag size={20} className="text-sidebar-primary" />}
+              title="Google Tag Manager"
+              description="Gerencie tags e scripts de rastreamento sem precisar editar o código da campanha."
+            >
+              <FormField name="googleTagManagerPixel" label="ID do Contêiner">
+                <Input
+                  name="googleTagManagerPixel"
+                  placeholder="GTM-XXXXXXX"
+                  defaultValue={integrations.googleTagManagerPixel ?? ""}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Encontre em Google Tag Manager → Administrador → Contêiner.
+                </p>
+              </FormField>
+            </IntegrationCard>
 
-          {/* Webhooks */}
-          <IntegrationCard
-            icon={<Webhook size={20} className="text-sidebar-primary" />}
-            title="Webhooks"
-            description="Receba notificações HTTP em tempo real quando eventos ocorrerem na campanha."
-            action={
-              <Button size="sm" onClick={() => setNewWebhookOpen(true)}>
-                <Plus size={15} />
-                Novo webhook
+            {/* Meta Ads */}
+            <IntegrationCard
+              icon={<Target size={20} className="text-sidebar-primary" />}
+              title="Meta Ads (Pixel)"
+              description="Rastreie conversões e otimize campanhas no Facebook e Instagram."
+            >
+              <FormField name="facebookPixel" label="ID do Pixel">
+                <Input
+                  name="facebookPixel"
+                  placeholder="000000000000000"
+                  defaultValue={integrations.facebookPixel ?? ""}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Encontre em Gerenciador de Eventos da Meta → Fontes de Dados.
+                </p>
+              </FormField>
+            </IntegrationCard>
+
+            {/* Webhooks — desabilitado temporariamente */}
+            {/* <IntegrationCard
+              icon={<Webhook size={20} className="text-sidebar-primary" />}
+              title="Webhooks"
+              description="Receba notificações HTTP em tempo real quando eventos ocorrerem na campanha."
+              action={
+                <Button size="sm" onClick={() => setNewWebhookOpen(true)}>
+                  <Plus size={15} />
+                  Novo webhook
+                </Button>
+              }
+            >
+              {webhooks.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  {webhooks.map((webhook) => (
+                    <WebhookRow
+                      key={webhook.id}
+                      webhook={webhook}
+                      onEdit={() => setEditTarget(webhook)}
+                      onDelete={() => setDeleteTarget(webhook)}
+                    />
+                  ))}
+                </div>
+              )}
+            </IntegrationCard> */}
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                name="_action"
+                value="updateIntegrations"
+                disabled={isSubmitting}
+              >
+                Salvar alterações
               </Button>
-            }
-          >
-            {webhooks.length > 0 && (
-              <div className="flex flex-col gap-3">
-                {webhooks.map((webhook) => (
-                  <WebhookRow
-                    key={webhook.id}
-                    webhook={webhook}
-                    onToggle={() => toggleWebhook(webhook.id)}
-                    onEdit={() => setEditTarget(webhook)}
-                    onDelete={() => setDeleteTarget(webhook)}
-                  />
-                ))}
-              </div>
-            )}
-          </IntegrationCard>
-
-          <div className="flex justify-end">
-            <Button type="button" disabled>
-              Salvar alterações
-            </Button>
-          </div>
-        </div>
+            </div>
+          </Form>
+        </FormErrorProvider>
       </div>
 
       <NewWebhookDialog

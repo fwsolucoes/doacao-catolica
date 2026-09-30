@@ -47,8 +47,8 @@ function DonationsPage() {
   const periodLabel =
     PERIOD_OPTIONS.find((o) => o.value === period)?.label ?? "Mês atual";
   const campaignData = matches.find(
-    (m) => m.data && typeof m.data === "object" && "campaign" in m.data,
-  )?.data as { campaign: { name: string } } | undefined;
+    (m) => m.loaderData && typeof m.loaderData === "object" && "campaign" in m.loaderData,
+  )?.loaderData as { campaign: { name: string } } | undefined;
   const campaignName = campaignData?.campaign?.name;
 
   const metricCards: MetricCardProps[] = [

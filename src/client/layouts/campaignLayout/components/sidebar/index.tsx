@@ -340,8 +340,8 @@ function AppSidebar() {
   const basePath = `/campaign/${campaignId}`;
   const matches = useMatches();
   const campaignData = matches.find(
-    (m) => m.data && typeof m.data === "object" && "campaign" in m.data,
-  )?.data as { campaign: { accountId: number } } | undefined;
+    (m) => m.loaderData && typeof m.loaderData === "object" && "campaign" in m.loaderData,
+  )?.loaderData as { campaign: { accountId: number } } | undefined;
   const campaignAccountId = campaignData?.campaign?.accountId ?? null;
   const showShalomMetrics = campaignAccountId === SHALOM_ACCOUNT_ID;
 

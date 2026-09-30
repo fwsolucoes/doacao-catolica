@@ -15,8 +15,8 @@ function DonorsPage() {
   const location = useLocation();
   const matches = useMatches();
   const campaignData = matches.find(
-    (m) => m.data && typeof m.data === "object" && "campaign" in m.data,
-  )?.data as { campaign: { name: string } } | undefined;
+    (m) => m.loaderData && typeof m.loaderData === "object" && "campaign" in m.loaderData,
+  )?.loaderData as { campaign: { name: string } } | undefined;
   const campaignName = campaignData?.campaign?.name;
 
   return (
