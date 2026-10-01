@@ -49,8 +49,6 @@ class CampaignIntegrationsGateway implements CampaignIntegrationsGatewayDTO {
 
     const apiResponse = await api.put(url, { body, token });
 
-    console.log("🚀API Response:", apiResponse); // Debugging line
-
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }

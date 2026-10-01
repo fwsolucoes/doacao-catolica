@@ -23,7 +23,7 @@ class GetPaymentMetricsUseCase {
       filter: {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
-        date_type: dateType ?? "paid_confirmed",
+        date_type: dateType ?? "donation",
       },
     });
 

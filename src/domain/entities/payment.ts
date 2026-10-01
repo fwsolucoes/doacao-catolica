@@ -44,8 +44,7 @@ type PaymentConstructorProps = {
   origin: string;
   paymentType: string;
   dueDate: string | null;
-  paidDate: string | null;
-  confirmedDate: string | null;
+  donationDate: string | null;
   notifiedByEmail: boolean;
   notifiedByWhatsApp: boolean;
   notificationsCount: number;
@@ -70,8 +69,7 @@ class Payment {
   readonly origin: string;
   readonly paymentType: string;
   readonly dueDate: string | null;
-  readonly paidDate: string | null;
-  readonly confirmedDate: string | null;
+  readonly donationDate: string | null;
   readonly notifiedByEmail: boolean;
   readonly notifiedByWhatsApp: boolean;
   readonly notificationsCount: number;
@@ -93,8 +91,7 @@ class Payment {
     this.origin = props.origin;
     this.paymentType = props.paymentType;
     this.dueDate = props.dueDate;
-    this.paidDate = props.paidDate;
-    this.confirmedDate = props.confirmedDate;
+    this.donationDate = props.donationDate;
     this.notifiedByEmail = props.notifiedByEmail;
     this.notifiedByWhatsApp = props.notifiedByWhatsApp;
     this.notificationsCount = props.notificationsCount;
@@ -141,7 +138,7 @@ class Payment {
       origin: this.origin === "subscription" ? "Recorrente" : "Pontual",
       paymentType: PAYMENT_TYPE_MAP[this.paymentType] ?? this.paymentType,
       dueDate: this.dueDate ?? "—",
-      paidDate: this.paidDate?.split(" ")[0] ?? this.confirmedDate ?? null,
+      paidDate: this.donationDate?.split(" ")[0] ?? null,
       notifiedByEmail: this.notifiedByEmail,
       notifiedByWhatsApp: this.notifiedByWhatsApp,
       notificationsCount: this.notificationsCount,

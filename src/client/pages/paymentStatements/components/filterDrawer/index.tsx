@@ -28,7 +28,7 @@ const DRAWER_PARAMS = [
   "account_reference",
 ] as const;
 
-type DateType = "due" | "paid_confirmed";
+type DateType = "due" | "donation";
 
 type FilterDraft = {
   dateType: DateType;
@@ -51,7 +51,7 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
       ? { startDate, endDate }
       : getDatesFromPeriod(sp.get("period") ?? "currentMonth");
   return {
-    dateType: sp.get("date_type") === "due" ? "due" : "paid_confirmed",
+    dateType: sp.get("date_type") === "due" ? "due" : "donation",
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,
     origin: sp.get("origin") ?? "",
@@ -121,8 +121,7 @@ function FilterDrawer({
   function applyFilters() {
     const nextSp = new URLSearchParams(location.search);
 
-    if (draft.dateType === "paid_confirmed")
-      nextSp.set("date_type", "paid_confirmed");
+    if (draft.dateType === "donation") nextSp.set("date_type", "donation");
     else nextSp.set("date_type", "due");
 
     const fields: [string, string][] = [
@@ -252,12 +251,9 @@ function FilterDrawer({
                     </label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <RadioGroup.Item
-                      value="paid_confirmed"
-                      id="dateType-paid_confirmed"
-                    />
+                    <RadioGroup.Item value="donation" id="dateType-donation" />
                     <label
-                      htmlFor="dateType-paid_confirmed"
+                      htmlFor="dateType-donation"
                       className="cursor-pointer text-sm"
                     >
                       Pagamento

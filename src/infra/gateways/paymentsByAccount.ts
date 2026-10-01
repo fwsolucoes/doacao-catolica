@@ -38,8 +38,7 @@ class PaymentsByAccountGateway implements PaymentsByAccountGatewayDTO {
           origin: item.payment_origin,
           paymentType: item.payment_type,
           dueDate: item.payment_due_date,
-          paidDate: item.payment_paid_date,
-          confirmedDate: item.payment_confirmed_date,
+          donationDate: item.payment_donation_date,
           notifiedByEmail: item.notifications.some(
             (n) => n.channel === "email" && n.notified === 1,
           ),
