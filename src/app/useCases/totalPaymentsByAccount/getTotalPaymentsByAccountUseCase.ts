@@ -6,13 +6,14 @@ type InputProps = {
   accountId: number;
   startDate?: string;
   endDate?: string;
+  dateType?: string;
 };
 
 class GetTotalPaymentsByAccountUseCase {
   constructor(private gateway: TotalPaymentsByAccountGatewayDTO) {}
 
   async execute(input: InputProps) {
-    const { accountId, startDate, endDate } = input;
+    const { accountId, startDate, endDate, dateType } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
     const searchParams = new TotalPaymentsByAccountSearchParams({
@@ -20,6 +21,7 @@ class GetTotalPaymentsByAccountUseCase {
         account_reference_2: accountId,
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
+        date_type: dateType ?? "donation",
       },
     });
 

@@ -7,8 +7,18 @@ const getTotalPaymentsByAccountUseCase = new GetTotalPaymentsByAccountUseCase(
 );
 
 const getTotalPaymentsByAccount = {
-  handle: (accountId: number, startDate?: string, endDate?: string) =>
-    getTotalPaymentsByAccountUseCase.execute({ accountId, startDate, endDate }),
+  handle: (
+    accountId: number,
+    startDate?: string,
+    endDate?: string,
+    dateType?: string,
+  ) =>
+    getTotalPaymentsByAccountUseCase.execute({
+      accountId,
+      startDate,
+      endDate,
+      dateType,
+    }),
 };
 
 export { getTotalPaymentsByAccount };

@@ -18,7 +18,12 @@ export async function loader(args: Route.LoaderArgs) {
   const customerRef = adaptedRoute.query.customer_reference;
 
   const [metrics, payments, campaigns] = await Promise.all([
-    getTotalPaymentsByAccount.handle(user.accountId),
+    getTotalPaymentsByAccount.handle(
+      user.accountId,
+      undefined,
+      undefined,
+      adaptedRoute.query.date_type,
+    ),
     listPaymentsByAccount.handle(user.accountId, adaptedRoute.query),
     listCampaignSelect.handle(adaptedRoute),
   ]);

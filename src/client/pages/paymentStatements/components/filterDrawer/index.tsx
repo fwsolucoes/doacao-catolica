@@ -31,7 +31,7 @@ const DRAWER_PARAMS = [
 type DateType = "due" | "donation";
 
 type FilterDraft = {
-  dateType: DateType;
+  dateType?: DateType;
   startDate: string;
   endDate: string;
   origin: string;
@@ -50,8 +50,12 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
     startDate && endDate
       ? { startDate, endDate }
       : getDatesFromPeriod(sp.get("period") ?? "currentMonth");
+  const dateTypeParam = sp.get("date_type");
   return {
-    dateType: sp.get("date_type") === "due" ? "due" : "donation",
+    dateType:
+      dateTypeParam === "due" || dateTypeParam === "donation"
+        ? dateTypeParam
+        : undefined,
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,
     origin: sp.get("origin") ?? "",
@@ -121,8 +125,8 @@ function FilterDrawer({
   function applyFilters() {
     const nextSp = new URLSearchParams(location.search);
 
-    if (draft.dateType === "donation") nextSp.set("date_type", "donation");
-    else nextSp.set("date_type", "due");
+    if (draft.dateType) nextSp.set("date_type", draft.dateType);
+    else nextSp.delete("date_type");
 
     const fields: [string, string][] = [
       ["origin", draft.origin],
@@ -238,7 +242,7 @@ function FilterDrawer({
               <div className="flex flex-col gap-2">
                 <Label>Tipo de data:</Label>
                 <RadioGroup.Root
-                  value={draft.dateType}
+                  value={draft.dateType ?? ""}
                   onValueChange={(v) => setField("dateType")(v as DateType)}
                 >
                   <div className="flex items-center gap-2">
