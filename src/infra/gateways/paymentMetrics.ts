@@ -43,7 +43,7 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
     const canceled = data.total_by_status.canceled;
 
     return {
-      receivedOnline: fmt(received.amount + confirmed.amount),
+      receivedOnline: fmt(received.gross_amount + confirmed.gross_amount),
       released: fmt(
         received.gross_amount + confirmed.gross_amount + manual.gross_amount,
       ),

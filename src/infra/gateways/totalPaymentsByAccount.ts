@@ -35,7 +35,8 @@ class TotalPaymentsByAccountGateway implements TotalPaymentsByAccountGatewayDTO 
         byStatus.confirmed.amount +
         byStatus.manual.amount,
       receivedOnlineAmount:
-        subscriptions.received.amount + subscriptions.confirmed.amount,
+        (subscriptions.received.gross_amount ?? 0) +
+        (subscriptions.confirmed.gross_amount ?? 0),
       receivedOfflineAmount:
         transfers.received.amount +
         transfers.confirmed.amount +
