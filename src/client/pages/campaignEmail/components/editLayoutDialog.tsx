@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFetcher, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -27,12 +27,7 @@ function EditLayoutDialog({ target, onClose }: EditLayoutDialogProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
-  const [selectedType, setSelectedType] = useState(target?.type ?? "");
   useActionToast(fetcher.data);
-
-  useEffect(() => {
-    if (target) setSelectedType(target.type);
-  }, [target]);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast) {
@@ -58,7 +53,11 @@ function EditLayoutDialog({ target, onClose }: EditLayoutDialogProps) {
           >
             <div className="flex flex-col gap-5 overflow-y-auto px-6">
               <FormField name="type" label="Tipo do layout" required>
-                <Select.Root value={selectedType} onValueChange={setSelectedType}>
+                <Select.Root
+                  key={target?.type}
+                  name="type"
+                  defaultValue={target?.type ?? ""}
+                >
                   <Select.Trigger>
                     <Select.Value placeholder="Selecione o tipo..." />
                   </Select.Trigger>
@@ -70,7 +69,6 @@ function EditLayoutDialog({ target, onClose }: EditLayoutDialogProps) {
                     ))}
                   </Select.Content>
                 </Select.Root>
-                <input type="hidden" name="type" value={selectedType} />
               </FormField>
 
               <FormField name="body" label="HTML do layout" required>
