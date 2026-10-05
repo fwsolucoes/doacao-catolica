@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { Checkbox } from "~/client/components/ui/checkbox";
 import { CurrencyInput } from "~/client/components/ui/currency-input";
 import {
   Dialog,
@@ -47,17 +48,11 @@ function UpdateRecurrenceDialog({
   useActionToast(fetcher.data);
   const isSubmitting = fetcher.state !== "idle";
 
-  const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
   const [valueType, setValueType] = useState<"fixed" | "undetermined">("fixed");
-  const [activeNotification, setActiveNotification] = useState(true);
-  const [perpetuate, setPerpetuate] = useState(false);
 
   useEffect(() => {
     if (!donor) return;
-    setPaymentType(toPaymentType(donor.paymentMethod));
     setValueType(donor.amount > 0 ? "fixed" : "undetermined");
-    setActiveNotification(donor.activeNotification);
-    setPerpetuate(false);
   }, [donor?.subscriptionUuid]);
 
   useEffect(() => {
@@ -80,12 +75,6 @@ function UpdateRecurrenceDialog({
               name="paymentId"
               value={donor?.subscriptionUuid ?? ""}
             />
-            <input
-              type="hidden"
-              name="activeNotification"
-              value={activeNotification ? "checked" : ""}
-            />
-
             <div className="flex flex-col gap-4 px-6">
               <FormField name="payDay" label="Dia do vencimento:" required>
                 <Input
@@ -100,11 +89,9 @@ function UpdateRecurrenceDialog({
 
               <FormField name="type" label="Forma de pagamento:" required>
                 <Select.Root
+                  key={donor?.subscriptionUuid}
                   name="type"
-                  value={paymentType}
-                  onValueChange={(v) =>
-                    setPaymentType(v as "pix" | "bank_slip")
-                  }
+                  defaultValue={donor ? toPaymentType(donor.paymentMethod) : "pix"}
                 >
                   <Select.Trigger>
                     <Select.Value />
@@ -164,25 +151,30 @@ function UpdateRecurrenceDialog({
 
               <div className="flex items-center justify-between gap-4">
                 <Label
+                  htmlFor="activeNotification"
                   className="cursor-pointer font-normal"
-                  onClick={() => setActiveNotification((v) => !v)}
                 >
                   Enviar notificações ao doador
                 </Label>
                 <Switch
-                  checked={activeNotification}
-                  onCheckedChange={setActiveNotification}
+                  id="activeNotification"
+                  name="activeNotification"
+                  value="checked"
+                  defaultChecked={donor?.activeNotification ?? true}
+                  key={donor?.subscriptionUuid}
                 />
               </div>
 
-              <Label className="flex cursor-pointer items-center gap-3 font-normal">
-                <input
-                  type="checkbox"
+              <Label
+                htmlFor="perpetuatePaymentsChange"
+                className="flex cursor-pointer items-center gap-3 font-normal"
+              >
+                <Checkbox
+                  id="perpetuatePaymentsChange"
                   name="perpetuatePaymentsChange"
                   value="checked"
-                  checked={perpetuate}
-                  onChange={(e) => setPerpetuate(e.target.checked)}
-                  className="size-4"
+                  defaultChecked={false}
+                  key={donor?.subscriptionUuid}
                 />
                 Propagar alterações para cobranças pendentes
               </Label>
