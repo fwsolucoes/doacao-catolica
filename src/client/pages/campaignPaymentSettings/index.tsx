@@ -31,16 +31,14 @@ type ToggleRowProps = {
   name: string;
   title: string;
   description: string;
-  checked: boolean;
-  onChange: (value: boolean) => void;
+  defaultChecked: boolean;
 };
 
 function ToggleRow({
   name,
   title,
   description,
-  checked,
-  onChange,
+  defaultChecked,
 }: ToggleRowProps) {
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-border p-4">
@@ -48,8 +46,7 @@ function ToggleRow({
         <p className="text-sm font-semibold text-foreground">{title}</p>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <input type="hidden" name={name} value={checked ? "true" : "false"} />
-      <Switch checked={checked} onCheckedChange={onChange} />
+      <Switch name={name} defaultChecked={defaultChecked} />
     </div>
   );
 }
@@ -91,26 +88,6 @@ function CampaignPaymentSettingsPage() {
     walletLocked && !walletOptions.some((o) => o.value === wallet)
       ? [{ value: wallet, label: "Usuário logado não tem acesso às informações da carteira" }, ...walletOptions]
       : walletOptions;
-  const [pixEnabled, setPixEnabled] = useState(preferences.pixEnabled ?? true);
-  const [boletoEnabled, setBoletoEnabled] = useState(
-    preferences.boletoEnabled ?? true,
-  );
-  const [creditCardEnabled, setCreditCardEnabled] = useState(
-    preferences.creditCardEnabled ?? true,
-  );
-  const [minAmount, setMinAmount] = useState(
-    String(preferences.minAmount ?? ""),
-  );
-  const [passFeeToDonor, setPassFeeToDonor] = useState(
-    preferences.passFeeToDonor ?? false,
-  );
-  const [allowCustomAmount, setAllowCustomAmount] = useState(
-    preferences.allowCustomAmount ?? true,
-  );
-  const [chargeImmediately, setChargeImmediately] = useState(
-    preferences.chargeImmediately ?? true,
-  );
-
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<SuggestedValue | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<SuggestedValue | null>(null);
@@ -187,22 +164,19 @@ function CampaignPaymentSettingsPage() {
                 name="pixEnabled"
                 title="Pix"
                 description="Aprovação instantânea, sem taxas de intermediação."
-                checked={pixEnabled}
-                onChange={setPixEnabled}
+                defaultChecked={preferences.pixEnabled ?? true}
               />
               <ToggleRow
                 name="boletoEnabled"
                 title="Boleto bancário"
                 description="Compensação em até 3 dias úteis."
-                checked={boletoEnabled}
-                onChange={setBoletoEnabled}
+                defaultChecked={preferences.boletoEnabled ?? true}
               />
               <ToggleRow
                 name="creditCardEnabled"
                 title="Cartão de crédito"
                 description="Doações únicas e recorrentes em até 12x."
-                checked={creditCardEnabled}
-                onChange={setCreditCardEnabled}
+                defaultChecked={preferences.creditCardEnabled ?? true}
               />
             </SectionCard>
 
@@ -216,8 +190,7 @@ function CampaignPaymentSettingsPage() {
                   name="minAmount"
                   type="number"
                   min="0"
-                  value={minAmount}
-                  onChange={(e) => setMinAmount(e.target.value)}
+                  defaultValue={String(preferences.minAmount ?? "")}
                   placeholder="0"
                 />
               </FormField>
@@ -225,8 +198,7 @@ function CampaignPaymentSettingsPage() {
                 name="passFeeToDonor"
                 title="Repassar taxa ao doador"
                 description="O doador poderá optar por cobrir as taxas de processamento no checkout."
-                checked={passFeeToDonor}
-                onChange={setPassFeeToDonor}
+                defaultChecked={preferences.passFeeToDonor ?? false}
               />
             </SectionCard>
 
@@ -305,15 +277,13 @@ function CampaignPaymentSettingsPage() {
                   name="allowCustomAmount"
                   title='Habilitar opção "Outro valor"'
                   description="Permite ao doador digitar um valor personalizado além dos sugeridos."
-                  checked={allowCustomAmount}
-                  onChange={setAllowCustomAmount}
+                  defaultChecked={preferences.allowCustomAmount ?? true}
                 />
                 <ToggleRow
                   name="chargeImmediately"
                   title="Gerar primeiro pagamento imediatamente no cadastro recorrente"
                   description="Ao concluir o cadastro, a primeira cobrança recorrente é gerada na hora, sem esperar o próximo ciclo."
-                  checked={chargeImmediately}
-                  onChange={setChargeImmediately}
+                  defaultChecked={preferences.chargeImmediately ?? true}
                 />
               </div>
             </Card.Root>
