@@ -47,7 +47,7 @@ const updateCampaignGeneralInfoSchema = z.object({
   name: z.string().min(3, "Mínimo de 3 caracteres"),
   slug: z.string().min(1, "Slug é obrigatório"),
   // known values: "active" | "inactive"
-  status: z.string().transform((v) => v === "active"),
+  status: z.string().optional().transform((v) => v === "active"),
   visibleInMarketplace: z.string().transform((v) => v === "true"),
   typeDonation: z.string().min(1, "Campo obrigatório"),
   startDate: z.string().optional().transform((v) => (v ? new Date(v).toISOString() : null)),

@@ -40,7 +40,6 @@ function CampaignDataCard() {
     ? SANCTON_DONATION_CHECKOUT_URL
     : `${SANCTON_DONATION_CHECKOUT_URL}/`;
 
-  const [isActive, setIsActive] = useState(campaign.status);
   const [phone, setPhone] = useState<Value | "">(campaign.phone ?? "");
 
   const startDateValue = campaign.startDateInput ?? "";
@@ -81,15 +80,18 @@ function CampaignDataCard() {
 
         <FormField name="status" label="Status">
           <div className="flex h-10.75 items-center justify-between rounded-md border border-border bg-muted px-4">
-            <span className="text-sm font-semibold text-foreground">
-              {isActive ? "Campanha ativa" : "Campanha inativa"}
-            </span>
-            <input
-              type="hidden"
+            <Switch
               name="status"
-              value={isActive ? "active" : "inactive"}
+              value="active"
+              defaultChecked={campaign.status}
+              className="peer order-2"
             />
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
+            <span className="order-1 hidden text-sm font-semibold text-foreground peer-data-[state=checked]:inline">
+              Campanha ativa
+            </span>
+            <span className="order-1 hidden text-sm font-semibold text-foreground peer-data-[state=unchecked]:inline">
+              Campanha inativa
+            </span>
           </div>
         </FormField>
       </div>

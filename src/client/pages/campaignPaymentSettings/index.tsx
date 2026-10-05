@@ -46,7 +46,7 @@ function ToggleRow({
         <p className="text-sm font-semibold text-foreground">{title}</p>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <Switch name={name} defaultChecked={defaultChecked} />
+      <Switch name={name} value="true" defaultChecked={defaultChecked} />
     </div>
   );
 }

@@ -18,8 +18,14 @@ const updateCampaignPreferencesSettingsSchema = z.object({
     .string()
     .optional()
     .transform((v) => v || null),
-  showAutoPixInvite: z.string().transform((v) => v === "true"),
-  requireLogin: z.string().transform((v) => v === "true"),
+  showAutoPixInvite: z
+    .string()
+    .optional()
+    .transform((v) => v === "true"),
+  requireLogin: z
+    .string()
+    .optional()
+    .transform((v) => v === "true"),
   oneTimePaymentTitle: z
     .string()
     .optional()

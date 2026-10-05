@@ -31,7 +31,7 @@ function CheckoutToggleRow({
         <span className="text-sm font-semibold text-foreground">{label}</span>
         <span className="text-xs text-muted-foreground">{description}</span>
       </div>
-      <Switch name={name} defaultChecked={defaultChecked} />
+      <Switch name={name} value="true" defaultChecked={defaultChecked} />
     </div>
   );
 }

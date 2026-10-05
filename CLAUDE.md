@@ -268,6 +268,19 @@ const [title, setTitle] = useState(preferences.title ?? "");
 
 Para `Switch`, o Radix já gera sozinho um hidden input ("bubble input") que espelha o valor pro form nativo quando recebe `name` — não criar um `<input type="hidden">` manual ao lado.
 
+**Atenção ao converter `Switch` controlado → `defaultChecked`:** o bubble input do Radix tem semântica de checkbox, não de booleano explícito — quando marcado, envia o literal do prop `value` (padrão `"on"`, **não** `"true"`); quando desmarcado, **o campo some do `FormData`** (não envia `"false"`). Isso é diferente do padrão antigo (hidden input manual que sempre mandava `"true"`/`"false"`). Dois ajustes obrigatórios ao migrar:
+
+```tsx
+// correto — value explícito + schema tolera ausência
+<Switch name="enabled" value="true" defaultChecked={preferences.enabled ?? false} />
+```
+```ts
+// schema: .optional() é obrigatório (campo pode não vir), ausência = false
+enabled: z.string().optional().transform((v) => v === "true"),
+```
+
+Sem o `.optional()`, o Zod rejeita o submit inteiro quando o switch está desmarcado (campo ausente tratado como obrigatório faltando). Sem o `value="true"` explícito, marcado envia `"on"` e `v === "true"` sempre dá `false` — o toggle "liga" silenciosamente salva como desligado. Sempre conferir o schema Zod correspondente em `infra/schemas/internal/` antes de migrar um `Switch` existente.
+
 **`useState` só se justifica quando o valor é usado em JS durante a digitação/seleção** — ex.: um campo deriva outro, há preview condicional na UI, ou o valor selecionado precisa alimentar um `<input type="hidden">` com um valor diferente do exibido (ver seção "FormField para selects controlados por estado" abaixo, caso do Pix). Fora isso, controlar o campo é desnecessário e re-renderiza o formulário inteiro a cada keystroke.
 
 ### Nomenclatura de campos de formulário
