@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -22,13 +21,6 @@ function CampaignSeoSettingsPage() {
   useActionToast(data);
 
   const steps = buildSteps(campaignId!);
-
-  const [metaTitle, setMetaTitle] = useState(metatag.title ?? "");
-  const [metaDescription, setMetaDescription] = useState(metatag.description ?? "");
-  const [keywords, setKeywords] = useState(metatag.keywords ?? "");
-  const [ogTitle, setOgTitle] = useState(metatag.ogTitle ?? "");
-  const [ogDescription, setOgDescription] = useState(metatag.ogDescription ?? "");
-  const [canonicalUrl, setCanonicalUrl] = useState(metatag.ogUrl ?? campaignSlug);
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,8 +53,7 @@ function CampaignSeoSettingsPage() {
                 <Input
                   name="metaTitle"
                   placeholder="Ex.: Educação para Todos · Doe agora"
-                  value={metaTitle}
-                  onChange={(e) => setMetaTitle(e.target.value)}
+                  defaultValue={metatag.title ?? ""}
                 />
                 <p className="text-xs text-muted-foreground">
                   Recomendado: até 60 caracteres.
@@ -74,8 +65,7 @@ function CampaignSeoSettingsPage() {
                   name="metaDescription"
                   placeholder="Descreva sua campanha para os buscadores..."
                   className="min-h-24"
-                  value={metaDescription}
-                  onChange={(e) => setMetaDescription(e.target.value)}
+                  defaultValue={metatag.description ?? ""}
                 />
                 <p className="text-xs text-muted-foreground">
                   Recomendado: até 160 caracteres.
@@ -86,8 +76,7 @@ function CampaignSeoSettingsPage() {
                 <Input
                   name="keywords"
                   placeholder="doação, educação, ong, crianças"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
+                  defaultValue={metatag.keywords ?? ""}
                 />
                 <p className="text-xs text-muted-foreground">Separe por vírgulas.</p>
               </FormField>
@@ -97,8 +86,7 @@ function CampaignSeoSettingsPage() {
                   name="canonicalUrl"
                   type="url"
                   placeholder="https://givehub.org/educacao-para-todos"
-                  value={canonicalUrl}
-                  onChange={(e) => setCanonicalUrl(e.target.value)}
+                  defaultValue={metatag.ogUrl ?? campaignSlug}
                 />
               </FormField>
             </SectionCard>
@@ -112,8 +100,7 @@ function CampaignSeoSettingsPage() {
                 <Input
                   name="ogTitle"
                   placeholder="Ex.: Educação para Todos"
-                  value={ogTitle}
-                  onChange={(e) => setOgTitle(e.target.value)}
+                  defaultValue={metatag.ogTitle ?? ""}
                 />
               </FormField>
 
@@ -122,8 +109,7 @@ function CampaignSeoSettingsPage() {
                   name="ogDescription"
                   placeholder="Junte-se a nós e transforme vidas por meio da educação."
                   className="min-h-24"
-                  value={ogDescription}
-                  onChange={(e) => setOgDescription(e.target.value)}
+                  defaultValue={metatag.ogDescription ?? ""}
                 />
               </FormField>
 
