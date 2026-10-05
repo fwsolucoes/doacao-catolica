@@ -4,7 +4,7 @@ const createCampaignSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   slug: z.string().min(1, "Slug é obrigatório"),
   typeDonation: z.string().min(1, "Tipo de doação é obrigatório"),
-  status: z.string().transform((v) => v === "active"),
+  status: z.string().optional().transform((v) => v === "active"),
   published: z.string().transform((v) => v === "true"),
   startDate: z.string().optional().transform((v) => (v ? new Date(v).toISOString() : null)),
   endDate: z.string().optional().transform((v) => (v ? new Date(v).toISOString() : null)),

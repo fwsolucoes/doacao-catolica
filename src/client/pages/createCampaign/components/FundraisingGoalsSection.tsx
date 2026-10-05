@@ -9,7 +9,6 @@ import { cn } from "~/lib/utils";
 type ProgressBase = "total" | "monthly";
 
 function FundraisingGoalsSection() {
-  const [showProgressBar, setShowProgressBar] = useState(true);
   const [progressBase, setProgressBase] = useState<ProgressBase>("total");
 
   return (
@@ -33,8 +32,12 @@ function FundraisingGoalsSection() {
             Exibe o quanto já foi arrecadado em relação à meta na página pública da campanha.
           </span>
         </div>
-        <input type="hidden" name="showProgressBar" value={showProgressBar ? "true" : "false"} />
-        <Switch checked={showProgressBar} onCheckedChange={setShowProgressBar} className="shrink-0" />
+        <Switch
+          name="showProgressBar"
+          value="true"
+          defaultChecked={true}
+          className="shrink-0"
+        />
       </div>
 
       <div className="flex flex-col gap-3.5 rounded-xl border border-border p-4">

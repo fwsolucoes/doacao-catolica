@@ -14,7 +14,6 @@ import { CreateSlugField } from "../CreateSlugField";
 
 function CampaignDataSection() {
   const { projectCategories } = useLoaderData<CreateCampaignLoader>();
-  const [isActive, setIsActive] = useState(true);
   const [phone, setPhone] = useState<Value | "">("");
 
   return (
@@ -46,11 +45,18 @@ function CampaignDataSection() {
 
         <FormField name="status" label="Status">
           <div className="flex h-10.75 items-center justify-between rounded-md border border-border bg-muted px-4">
-            <span className="text-sm font-semibold text-foreground">
-              {isActive ? "Campanha ativa" : "Campanha inativa"}
+            <Switch
+              name="status"
+              value="active"
+              defaultChecked={true}
+              className="peer order-2"
+            />
+            <span className="order-1 hidden text-sm font-semibold text-foreground peer-data-[state=checked]:inline">
+              Campanha ativa
             </span>
-            <input type="hidden" name="status" value={isActive ? "active" : "inactive"} />
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
+            <span className="order-1 hidden text-sm font-semibold text-foreground peer-data-[state=unchecked]:inline">
+              Campanha inativa
+            </span>
           </div>
         </FormField>
       </div>
