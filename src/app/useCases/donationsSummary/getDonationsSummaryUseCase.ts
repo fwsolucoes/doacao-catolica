@@ -6,19 +6,21 @@ type InputProps = {
   campaignId: string;
   startDate?: string;
   endDate?: string;
+  dateType?: string;
 };
 
 class GetDonationsSummaryUseCase {
   constructor(private gateway: DonationsSummaryGatewayDTO) {}
 
   async execute(input: InputProps) {
-    const { campaignId, startDate, endDate } = input;
+    const { campaignId, startDate, endDate, dateType } = input;
     const { firstDayOfMonth, lastDayOfMonth } = getMonthDates(0);
 
     const searchParams = new DonationsSummarySearchParams({
       filter: {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
+        date_type: dateType ?? "donation",
       },
     });
 

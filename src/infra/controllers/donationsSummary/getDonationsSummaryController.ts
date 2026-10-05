@@ -13,6 +13,7 @@ class GetDonationsSummaryController {
       campaignId,
       startDate: route.query.start_date,
       endDate: route.query.end_date,
+      dateType: route.query.date_type,
     });
   }
 }

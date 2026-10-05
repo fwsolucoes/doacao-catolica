@@ -87,7 +87,8 @@ class CampaignOverviewGateway implements CampaignOverviewGatewayDTO {
       newSupportersLast7Days: data.new_supporters_last_7_days,
       averageTicketMonth: data.average_ticket_month,
       averageTicketPreviousMonth: data.average_ticket_previous_month,
-      averageTicketVariationPercentage: data.average_ticket_variation_percentage,
+      averageTicketVariationPercentage:
+        data.average_ticket_variation_percentage,
       oneTimeCustomers: data.one_time_customers,
       recurringCustomers: data.recurring_customers,
     };
