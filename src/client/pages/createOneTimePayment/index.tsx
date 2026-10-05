@@ -45,9 +45,6 @@ function CreateOneTimePaymentPage() {
     "onlinePayment" | "receivedPayment"
   >("onlinePayment");
   const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
-  const [offlineMethod, setOfflineMethod] = useState(
-    paymentMethods[0]?.id ?? "",
-  );
 
   useActionToast(data);
 
@@ -217,8 +214,7 @@ function CreateOneTimePaymentPage() {
                       >
                         <Select.Root
                           name="method"
-                          value={offlineMethod}
-                          onValueChange={setOfflineMethod}
+                          defaultValue={paymentMethods[0]?.id ?? ""}
                         >
                           <Select.Trigger>
                             <Select.Value />
