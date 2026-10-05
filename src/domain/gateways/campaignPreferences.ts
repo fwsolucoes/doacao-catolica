@@ -34,6 +34,9 @@ type CampaignPreferences = {
   monthlyThanksDescription: string | null;
   registrationThanksTitle: string | null;
   registrationThanksDescription: string | null;
+  redirectAfterRegistration: string | null;
+  redirectAfterOneTimePayment: string | null;
+  redirectAfterRecurringPayment: string | null;
 };
 
 type UpdateCampaignPreferencesInput = {

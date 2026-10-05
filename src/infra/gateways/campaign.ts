@@ -204,6 +204,9 @@ class CampaignGateway implements CampaignGatewayDTO {
       success_payment_recurring_text: input.monthlyThanksDescription,
       success_register_title: input.registrationThanksTitle,
       success_register_text: input.registrationThanksDescription,
+      url_thank_you_recurring_signup: input.redirectAfterRegistration,
+      url_thank_you_single: input.redirectAfterOneTimePayment,
+      url_thank_you_recurring: input.redirectAfterRecurringPayment,
     };
 
     const hasPreferences = Object.values(preferencesBody).some(
@@ -240,9 +243,6 @@ class CampaignGateway implements CampaignGatewayDTO {
       image_mobile: input.imageMobile,
       featured_video: input.videoUrl,
       featured_image: input.headerImage,
-      url_thank_you_recurring_signup: input.redirectAfterRegistration,
-      url_thank_you_single: input.redirectAfterOneTimePayment,
-      url_thank_you_recurring: input.redirectAfterRecurringPayment,
       ...(hasPreferences ? { preferences: preferencesBody } : {}),
       ...(hasMetaTag ? { projectMetatag: metaTagBody } : {}),
     };

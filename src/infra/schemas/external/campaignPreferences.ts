@@ -156,6 +156,21 @@ const externalCampaignPreferencesSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v ?? null),
+  url_thank_you_recurring_signup: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  url_thank_you_single: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  url_thank_you_recurring: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
 });
 
 type ExternalCampaignPreferences = z.infer<

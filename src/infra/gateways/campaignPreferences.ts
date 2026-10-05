@@ -59,6 +59,9 @@ class CampaignPreferencesGateway implements CampaignPreferencesGatewayDTO {
       monthlyThanksDescription: data.success_payment_recurring_text,
       registrationThanksTitle: data.success_register_title,
       registrationThanksDescription: data.success_register_text,
+      redirectAfterRegistration: data.url_thank_you_recurring_signup,
+      redirectAfterOneTimePayment: data.url_thank_you_single,
+      redirectAfterRecurringPayment: data.url_thank_you_recurring,
     };
   }
 

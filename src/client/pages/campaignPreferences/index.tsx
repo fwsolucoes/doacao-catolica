@@ -50,12 +50,12 @@ function CampaignPreferencesPage() {
   const steps = buildSteps(campaignId!);
 
   const [redirectAfterRegistration, setRedirectAfterRegistration] = useState(
-    "",
+    preferences.redirectAfterRegistration ?? "",
   );
   const [redirectAfterOneTimePayment, setRedirectAfterOneTimePayment] =
-    useState("");
+    useState(preferences.redirectAfterOneTimePayment ?? "");
   const [redirectAfterRecurringPayment, setRedirectAfterRecurringPayment] =
-    useState("");
+    useState(preferences.redirectAfterRecurringPayment ?? "");
   const [nomenclature, setNomenclature] = useState(
     preferences.nomenclature ?? "donation",
   );
