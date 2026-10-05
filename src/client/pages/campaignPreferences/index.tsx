@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -19,14 +18,12 @@ function CheckoutToggleRow({
   name,
   label,
   description,
-  checked,
-  onChange,
+  defaultChecked,
 }: {
   name: string;
   label: string;
   description: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
+  defaultChecked: boolean;
 }) {
   return (
     <div className="flex items-center justify-between gap-4 rounded-[13px] border border-border p-4">
@@ -34,8 +31,7 @@ function CheckoutToggleRow({
         <span className="text-sm font-semibold text-foreground">{label}</span>
         <span className="text-xs text-muted-foreground">{description}</span>
       </div>
-      <input type="hidden" name={name} value={checked ? "true" : "false"} />
-      <Switch checked={checked} onCheckedChange={onChange} />
+      <Switch name={name} defaultChecked={defaultChecked} />
     </div>
   );
 }
@@ -48,49 +44,6 @@ function CampaignPreferencesPage() {
   useActionToast(data);
 
   const steps = buildSteps(campaignId!);
-
-  const [redirectAfterRegistration, setRedirectAfterRegistration] = useState(
-    preferences.redirectAfterRegistration ?? "",
-  );
-  const [redirectAfterOneTimePayment, setRedirectAfterOneTimePayment] =
-    useState(preferences.redirectAfterOneTimePayment ?? "");
-  const [redirectAfterRecurringPayment, setRedirectAfterRecurringPayment] =
-    useState(preferences.redirectAfterRecurringPayment ?? "");
-  const [nomenclature, setNomenclature] = useState(
-    preferences.nomenclature ?? "donation",
-  );
-  const [supportTagId, setSupportTagId] = useState(
-    preferences.supportTagId ?? "",
-  );
-  const [showPixInvite, setShowPixInvite] = useState(
-    preferences.showAutoPixInvite ?? true,
-  );
-  const [requireLogin, setRequireLogin] = useState(
-    preferences.requireLogin ?? false,
-  );
-  const [oneTimePaymentTitle, setOneTimePaymentTitle] = useState(
-    preferences.oneTimePaymentTitle ?? "",
-  );
-  const [monthlyPaymentTitle, setMonthlyPaymentTitle] = useState(
-    preferences.monthlyPaymentTitle ?? "",
-  );
-  const [oneTimeThanksTitle, setOneTimeThanksTitle] = useState(
-    preferences.oneTimeThanksTitle ?? "",
-  );
-  const [oneTimeThanksDescription, setOneTimeThanksDescription] = useState(
-    preferences.oneTimeThanksDescription ?? "",
-  );
-  const [monthlyThanksTitle, setMonthlyThanksTitle] = useState(
-    preferences.monthlyThanksTitle ?? "",
-  );
-  const [monthlyThanksDescription, setMonthlyThanksDescription] = useState(
-    preferences.monthlyThanksDescription ?? "",
-  );
-  const [registrationThanksTitle, setRegistrationThanksTitle] = useState(
-    preferences.registrationThanksTitle ?? "",
-  );
-  const [registrationThanksDescription, setRegistrationThanksDescription] =
-    useState(preferences.registrationThanksDescription ?? "");
 
   return (
     <div className="flex flex-col gap-6">
@@ -131,8 +84,7 @@ function CampaignPreferencesPage() {
               <FormField name="oneTimePaymentTitle" label="Título">
                 <Input
                   name="oneTimePaymentTitle"
-                  value={oneTimePaymentTitle}
-                  onChange={(e) => setOneTimePaymentTitle(e.target.value)}
+                  defaultValue={preferences.oneTimePaymentTitle ?? ""}
                 />
               </FormField>
             </SectionCard>
@@ -144,8 +96,7 @@ function CampaignPreferencesPage() {
               <FormField name="monthlyPaymentTitle" label="Título">
                 <Input
                   name="monthlyPaymentTitle"
-                  value={monthlyPaymentTitle}
-                  onChange={(e) => setMonthlyPaymentTitle(e.target.value)}
+                  defaultValue={preferences.monthlyPaymentTitle ?? ""}
                 />
               </FormField>
             </SectionCard>
@@ -157,15 +108,13 @@ function CampaignPreferencesPage() {
               <FormField name="oneTimeThanksTitle" label="Título">
                 <Input
                   name="oneTimeThanksTitle"
-                  value={oneTimeThanksTitle}
-                  onChange={(e) => setOneTimeThanksTitle(e.target.value)}
+                  defaultValue={preferences.oneTimeThanksTitle ?? ""}
                 />
               </FormField>
               <FormField name="oneTimeThanksDescription" label="Descrição">
                 <Textarea
                   name="oneTimeThanksDescription"
-                  value={oneTimeThanksDescription}
-                  onChange={(e) => setOneTimeThanksDescription(e.target.value)}
+                  defaultValue={preferences.oneTimeThanksDescription ?? ""}
                 />
               </FormField>
             </SectionCard>
@@ -177,15 +126,13 @@ function CampaignPreferencesPage() {
               <FormField name="monthlyThanksTitle" label="Título">
                 <Input
                   name="monthlyThanksTitle"
-                  value={monthlyThanksTitle}
-                  onChange={(e) => setMonthlyThanksTitle(e.target.value)}
+                  defaultValue={preferences.monthlyThanksTitle ?? ""}
                 />
               </FormField>
               <FormField name="monthlyThanksDescription" label="Descrição">
                 <Textarea
                   name="monthlyThanksDescription"
-                  value={monthlyThanksDescription}
-                  onChange={(e) => setMonthlyThanksDescription(e.target.value)}
+                  defaultValue={preferences.monthlyThanksDescription ?? ""}
                 />
               </FormField>
             </SectionCard>
@@ -197,17 +144,13 @@ function CampaignPreferencesPage() {
               <FormField name="registrationThanksTitle" label="Título">
                 <Input
                   name="registrationThanksTitle"
-                  value={registrationThanksTitle}
-                  onChange={(e) => setRegistrationThanksTitle(e.target.value)}
+                  defaultValue={preferences.registrationThanksTitle ?? ""}
                 />
               </FormField>
               <FormField name="registrationThanksDescription" label="Descrição">
                 <Textarea
                   name="registrationThanksDescription"
-                  value={registrationThanksDescription}
-                  onChange={(e) =>
-                    setRegistrationThanksDescription(e.target.value)
-                  }
+                  defaultValue={preferences.registrationThanksDescription ?? ""}
                 />
               </FormField>
             </SectionCard>
@@ -224,8 +167,7 @@ function CampaignPreferencesPage() {
                   name="redirectAfterRegistration"
                   type="url"
                   placeholder="https://..."
-                  value={redirectAfterRegistration}
-                  onChange={(e) => setRedirectAfterRegistration(e.target.value)}
+                  defaultValue={preferences.redirectAfterRegistration ?? ""}
                 />
               </FormField>
               <FormField
@@ -236,10 +178,7 @@ function CampaignPreferencesPage() {
                   name="redirectAfterOneTimePayment"
                   type="url"
                   placeholder="https://..."
-                  value={redirectAfterOneTimePayment}
-                  onChange={(e) =>
-                    setRedirectAfterOneTimePayment(e.target.value)
-                  }
+                  defaultValue={preferences.redirectAfterOneTimePayment ?? ""}
                 />
               </FormField>
               <FormField
@@ -250,9 +189,8 @@ function CampaignPreferencesPage() {
                   name="redirectAfterRecurringPayment"
                   type="url"
                   placeholder="https://..."
-                  value={redirectAfterRecurringPayment}
-                  onChange={(e) =>
-                    setRedirectAfterRecurringPayment(e.target.value)
+                  defaultValue={
+                    preferences.redirectAfterRecurringPayment ?? ""
                   }
                 />
               </FormField>
@@ -266,8 +204,7 @@ function CampaignPreferencesPage() {
                 <FormField name="nomenclature" label="Nomenclatura">
                   <Select.Root
                     name="nomenclature"
-                    value={nomenclature}
-                    onValueChange={setNomenclature}
+                    defaultValue={preferences.nomenclature ?? "donation"}
                   >
                     <Select.Trigger>
                       <Select.Value />
@@ -287,8 +224,7 @@ function CampaignPreferencesPage() {
                   <Input
                     name="supportTagId"
                     placeholder="Ex: 12345"
-                    value={supportTagId}
-                    onChange={(e) => setSupportTagId(e.target.value)}
+                    defaultValue={preferences.supportTagId ?? ""}
                   />
                 </FormField>
               </div>
@@ -302,15 +238,13 @@ function CampaignPreferencesPage() {
                 name="showAutoPixInvite"
                 label="Mostrar convite para PIX automático"
                 description="Exibe uma sugestão para ativar o PIX automático na tela de pagamento."
-                checked={showPixInvite}
-                onChange={setShowPixInvite}
+                defaultChecked={preferences.showAutoPixInvite ?? true}
               />
               <CheckoutToggleRow
                 name="requireLogin"
                 label="Obrigar login ao se cadastrar"
                 description="Exige criação de conta / login para concluir o cadastro do doador."
-                checked={requireLogin}
-                onChange={setRequireLogin}
+                defaultChecked={preferences.requireLogin ?? false}
               />
             </SectionCard>
 

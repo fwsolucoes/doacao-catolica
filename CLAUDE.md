@@ -249,6 +249,27 @@ Em React Router v7 SSR produção, retornar uma `Response` com status não-2xx (
 
 ## Formulários
 
+### useState em campos de formulário — evitar
+
+**Regra:** não usar `useState` para campos de formulário que só são lidos no submit (via `FormData`). Usar sempre não controlado: `defaultValue` (`Input`, `Textarea`, `Select.Root`) ou `defaultChecked` (`Switch`, `Checkbox`). Os componentes do design system em `src/client/components/ui/` são wrappers finos sobre Radix UI / elementos nativos — todos aceitam essas props sem necessidade de estado.
+
+```tsx
+// correto — não controlado, sem useState
+<Input name="title" defaultValue={preferences.title ?? ""} />
+<Select.Root name="status" defaultValue={preferences.status ?? "active"}>
+  ...
+</Select.Root>
+<Switch name="enabled" defaultChecked={preferences.enabled ?? false} />
+
+// errado — useState desnecessário, re-renderiza a página inteira a cada tecla
+const [title, setTitle] = useState(preferences.title ?? "");
+<Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+```
+
+Para `Switch`, o Radix já gera sozinho um hidden input ("bubble input") que espelha o valor pro form nativo quando recebe `name` — não criar um `<input type="hidden">` manual ao lado.
+
+**`useState` só se justifica quando o valor é usado em JS durante a digitação/seleção** — ex.: um campo deriva outro, há preview condicional na UI, ou o valor selecionado precisa alimentar um `<input type="hidden">` com um valor diferente do exibido (ver seção "FormField para selects controlados por estado" abaixo, caso do Pix). Fora isso, controlar o campo é desnecessário e re-renderiza o formulário inteiro a cada keystroke.
+
 ### Nomenclatura de campos de formulário
 
 Todos os campos de formulário no frontend usam **camelCase**, nunca snake_case. Isso inclui campos visíveis, hidden inputs e os schemas internos em `infra/schemas/internal/`.
