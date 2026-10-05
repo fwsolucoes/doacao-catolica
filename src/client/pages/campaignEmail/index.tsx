@@ -115,13 +115,6 @@ function CampaignEmailPage() {
   const [previewTarget, setPreviewTarget] = useState<PreviewTarget | null>(null);
   const closePreviewDialog = useCallback(() => setPreviewTarget(null), []);
 
-  const [emailSenderName, setEmailSenderName] = useState(
-    preferences.emailSenderName ?? "",
-  );
-  const [emailReplyTo, setEmailReplyTo] = useState(
-    preferences.emailReplyTo ?? "",
-  );
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0.5">
@@ -154,8 +147,7 @@ function CampaignEmailPage() {
                   <Input
                     name="emailSenderName"
                     placeholder="Ex.: Educação para Todos"
-                    value={emailSenderName}
-                    onChange={(e) => setEmailSenderName(e.target.value)}
+                    defaultValue={preferences.emailSenderName ?? ""}
                   />
                 </FormField>
                 <FormField name="emailReplyTo" label="Responder para (opcional)">
@@ -163,8 +155,7 @@ function CampaignEmailPage() {
                     name="emailReplyTo"
                     type="email"
                     placeholder="atendimento@suainstituicao.org"
-                    value={emailReplyTo}
-                    onChange={(e) => setEmailReplyTo(e.target.value)}
+                    defaultValue={preferences.emailReplyTo ?? ""}
                   />
                 </FormField>
               </SectionCard>
