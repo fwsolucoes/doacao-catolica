@@ -8,11 +8,11 @@ export async function loader(args: Route.LoaderArgs) {
 
   const campaign = await getCampaign.handle(adaptedRoute);
   const accountUuid = String(campaign.apiDonationPublicId ?? campaign.id);
+  const { campaignId } = adaptedRoute.params;
 
   const {
     start_month,
     end_month,
-    project_id,
     project_account_id,
     search,
     name,
@@ -21,9 +21,9 @@ export async function loader(args: Route.LoaderArgs) {
 
   const params = new URLSearchParams();
   params.set("account_uuid", accountUuid);
+  params.set("project_id", campaignId);
   if (start_month) params.set("start_month", start_month);
   if (end_month) params.set("end_month", end_month);
-  if (project_id) params.set("project_id", project_id);
   if (project_account_id) params.set("project_account_id", project_account_id);
   if (search) params.set("search", search);
   if (name) params.set("name", name);

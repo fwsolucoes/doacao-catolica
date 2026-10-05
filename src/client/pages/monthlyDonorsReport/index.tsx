@@ -23,6 +23,12 @@ import {
 } from "~/client/components/ui/sheet";
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/client/components/ui/tooltip";
 import type { MonthlyDonorsReportLoader } from "~/client/types/monthlyDonorsReportLoader";
 
 // known values: "pix_automatico" | "cartao_credito" | "boleto" | "pix"
@@ -138,9 +144,48 @@ function MonthlyDonorsReportPage() {
 
   const backTo = isGeneralView ? "/reports" : "../reports";
 
+  const exportParams = new URLSearchParams(location.search);
+  exportParams.set("start_month", sp.get("start_month") ?? displayStartMonth);
+  exportParams.set("end_month", sp.get("end_month") ?? displayEndMonth);
+
   const exportHref = isGeneralView
-    ? `/api/monthly-donors-export${location.search}`
-    : `/campaign/${campaignId}/api/monthly-donors-export${location.search}`;
+    ? `/api/monthly-donors-export?${exportParams}`
+    : `/campaign/${campaignId}/api/monthly-donors-export?${exportParams}`;
+
+  const missingRequiredFilterMessage =
+    isGeneralView && !sp.get("project_account_id")
+      ? "Selecione a conta do projeto nos filtros para exportar."
+      : null;
+
+  function renderExportButton(size?: "sm") {
+    const content = (
+      <>
+        <Download size={size === "sm" ? 14 : 16} />
+        Exportar XLS
+      </>
+    );
+
+    if (missingRequiredFilterMessage) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" variant="outline" size={size} disabled>
+                {content}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{missingRequiredFilterMessage}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return (
+      <Button variant="outline" size={size} asChild>
+        <a href={exportHref}>{content}</a>
+      </Button>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -160,12 +205,7 @@ function MonthlyDonorsReportPage() {
             Valores doados por cada doador em cada mês do período selecionado.
           </p>
         </div>
-        <Button variant="outline" asChild>
-          <a href={exportHref}>
-            <Download size={16} />
-            Exportar XLS
-          </a>
-        </Button>
+        {renderExportButton()}
       </div>
 
       <Card.Root className="p-6">
@@ -320,12 +360,7 @@ function MonthlyDonorsReportPage() {
                 </SheetContent>
               </Sheet>
 
-              <Button variant="outline" size="sm" asChild>
-                <a href={exportHref}>
-                  <Download size={14} />
-                  Exportar XLS
-                </a>
-              </Button>
+              {renderExportButton("sm")}
             </div>
           </div>
           <div className="w-full sm:w-80">
