@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
+import { Checkbox } from "~/client/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -31,9 +32,6 @@ function DisableRecurrenceDialog({
   const fetcher = useFetcher();
   useActionToast(fetcher.data);
   const isSubmitting = fetcher.state !== "idle";
-
-  const [perpetuatePayments, setPerpetuatePayments] = useState(false);
-  const [perpetuateNextPayments, setPerpetuateNextPayments] = useState(false);
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data?.toast?.type === "success") {
@@ -71,25 +69,29 @@ function DisableRecurrenceDialog({
               </FormField>
 
               <div className="flex flex-col gap-3">
-                <Label className="flex cursor-pointer items-center gap-3 font-normal">
-                  <input
-                    type="checkbox"
+                <Label
+                  htmlFor="perpetuatePaymentsChange"
+                  className="flex cursor-pointer items-center gap-3 font-normal"
+                >
+                  <Checkbox
+                    id="perpetuatePaymentsChange"
                     name="perpetuatePaymentsChange"
                     value="checked"
-                    checked={perpetuatePayments}
-                    onChange={(e) => setPerpetuatePayments(e.target.checked)}
-                    className="size-4"
+                    defaultChecked={false}
+                    key={subscriptionUuid}
                   />
                   Cancelar cobranças pendentes
                 </Label>
-                <Label className="flex cursor-pointer items-center gap-3 font-normal">
-                  <input
-                    type="checkbox"
+                <Label
+                  htmlFor="perpetuateNextPaymentsChange"
+                  className="flex cursor-pointer items-center gap-3 font-normal"
+                >
+                  <Checkbox
+                    id="perpetuateNextPaymentsChange"
                     name="perpetuateNextPaymentsChange"
                     value="checked"
-                    checked={perpetuateNextPayments}
-                    onChange={(e) => setPerpetuateNextPayments(e.target.checked)}
-                    className="size-4"
+                    defaultChecked={false}
+                    key={subscriptionUuid}
                   />
                   Cancelar próximas cobranças agendadas
                 </Label>
