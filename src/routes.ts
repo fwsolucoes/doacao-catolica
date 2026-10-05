@@ -82,6 +82,7 @@ export default [
     route("api/payment-notifications/:paymentId", "./main/routes/api.campaign.paymentNotifications.ts"),
     route("api/pix-authorization-history/:subscriptionUuid", "./main/routes/api.campaign.pixAuthorizationHistory.ts"),
     route("api/fundraiser-details/:fundraiserId", "./main/routes/api.campaign.fundraiserDetails.ts"),
+    route("api/donation-receipt", "./main/routes/api.campaign.donationReceipt.ts"),
     route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
     route("shalom-metrics", "./main/routes/route.campaign.shalomMetrics.tsx"),
   ]),
