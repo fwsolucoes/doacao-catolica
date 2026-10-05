@@ -59,7 +59,9 @@ class CampaignGateway implements CampaignGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    const schemaValidator = new SchemaValidatorAdapter(externalCampaignMetatagSchema);
+    const schemaValidator = new SchemaValidatorAdapter(
+      externalCampaignMetatagSchema,
+    );
     const { metatag, slug } = schemaValidator.validate(apiResponse.response);
 
     const metatagData: CampaignMetatag = metatag
@@ -72,7 +74,15 @@ class CampaignGateway implements CampaignGatewayDTO {
           ogUrl: metatag.og_url,
           ogImage: metatag.og_image,
         }
-      : { title: null, description: null, keywords: null, ogTitle: null, ogDescription: null, ogUrl: null, ogImage: null };
+      : {
+          title: null,
+          description: null,
+          keywords: null,
+          ogTitle: null,
+          ogDescription: null,
+          ogUrl: null,
+          ogImage: null,
+        };
 
     return { metatag: metatagData, campaignSlug: slug };
   }
