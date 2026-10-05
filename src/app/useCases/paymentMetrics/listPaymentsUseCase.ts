@@ -43,7 +43,7 @@ class ListPaymentsUseCase {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
         per_page: 20,
-        date_type: dateType ?? "due",
+        date_type: dateType === "due" ? undefined : dateType,
         origin: origin,
         type: paymentType,
         status: status,

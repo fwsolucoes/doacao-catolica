@@ -20,7 +20,7 @@ class GetDonationsSummaryUseCase {
       filter: {
         start_date: startDate ?? firstDayOfMonth,
         end_date: endDate ?? lastDayOfMonth,
-        date_type: dateType ?? "donation",
+        date_type: dateType === "due" ? undefined : (dateType ?? "donation"),
       },
     });
 
