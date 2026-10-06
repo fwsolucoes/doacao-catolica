@@ -10,7 +10,6 @@ type MonthlyDonorProps = {
   name: string;
   document: string | null;
   phone: string | null;
-  paymentMethod: string;
   campaignName: string;
   monthlyAmounts: Record<string, number | null>;
   totalAmount: number;
@@ -31,7 +30,6 @@ type MonthlyDonorJson = {
   document: string;
   phoneDisplay: string;
   whatsappHref: string | null;
-  paymentMethod: string;
   campaignName: string;
   monthlyAmounts: Record<string, string>;
   totalAmount: string;
@@ -76,7 +74,6 @@ class MonthlyDonors {
       document: donor.document ?? NOT_INFORMED,
       phoneDisplay: formatPhone(donor.phone) || NOT_INFORMED,
       whatsappHref: buildWhatsAppHref(donor.phone),
-      paymentMethod: donor.paymentMethod,
       campaignName: donor.campaignName,
       monthlyAmounts,
       totalAmount: this.formatCurrency(donor.totalAmount),

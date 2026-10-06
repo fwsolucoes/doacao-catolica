@@ -1,12 +1,13 @@
 import type { GetMonthlyDonorsUseCase } from "~/app/useCases/monthlyDonors/getMonthlyDonorsUseCase";
 import type { RouteDTO } from "~/main/types/route";
 
+type Overrides = { projectId?: string; projectAccountId?: string };
+
 class GetMonthlyDonorsController {
   constructor(private useCase: GetMonthlyDonorsUseCase) {}
 
-  async handle(route: RouteDTO, accountUuid?: string) {
+  async handle(route: RouteDTO, overrides?: Overrides) {
     const {
-      account_uuid,
       start_month,
       end_month,
       project_id,
@@ -18,11 +19,10 @@ class GetMonthlyDonorsController {
     } = route.query;
 
     return await this.useCase.execute({
-      accountUuid: accountUuid ?? account_uuid,
       startMonth: start_month,
       endMonth: end_month,
-      projectId: project_id,
-      projectAccountId: project_account_id,
+      projectId: overrides?.projectId ?? project_id,
+      projectAccountId: project_account_id || overrides?.projectAccountId,
       search,
       name,
       cpf,

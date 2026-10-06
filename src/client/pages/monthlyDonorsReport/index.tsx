@@ -12,9 +12,9 @@ import { toast } from "sonner";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
+import { Combobox } from "~/client/components/ui/combobox";
 import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
-import { Select } from "~/client/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -25,21 +25,7 @@ import {
 } from "~/client/components/ui/sheet";
 import { Table } from "~/client/components/ui/table";
 import { TablePagination } from "~/client/components/ui/table-pagination";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/client/components/ui/tooltip";
 import type { MonthlyDonorsReportLoader } from "~/client/types/monthlyDonorsReportLoader";
-
-// known values: "pix_automatico" | "cartao_credito" | "boleto" | "pix"
-const PAYMENT_METHOD_LABEL: Record<string, string> = {
-  pix_automatico: "Pix Automático",
-  cartao_credito: "Cartão de Crédito",
-  boleto: "Boleto",
-  pix: "Pix",
-};
 
 function formatMonthLabel(month: string): string {
   const [year, monthNumber] = month.split("-");
@@ -51,7 +37,6 @@ type FilterDraft = {
   projectAccountId: string;
   name: string;
   cpf: string;
-  accountUuid: string;
 };
 
 function MonthlyDonorsReportPage() {
@@ -66,6 +51,7 @@ function MonthlyDonorsReportPage() {
 
   const [localSearch, setLocalSearch] = useState(sp.get("search") ?? "");
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const projectAccountSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isExporting, setIsExporting] = useState(false);
 
@@ -75,12 +61,11 @@ function MonthlyDonorsReportPage() {
     projectAccountId: "",
     name: "",
     cpf: "",
-    accountUuid: "",
   });
 
   const filterKeys = isGeneralView
-    ? ["project_id", "project_account_id", "name", "cpf", "account_uuid"]
-    : ["project_id", "project_account_id", "name", "cpf"];
+    ? ["project_id", "project_account_id", "name", "cpf"]
+    : ["name", "cpf"];
   const activeFilterCount = filterKeys.filter((key) => sp.get(key)).length;
 
   const displayStartMonth = monthlyDonors.months[0] ?? "";
@@ -109,35 +94,46 @@ function MonthlyDonorsReportPage() {
     }, 500);
   }
 
+  function handleProjectAccountSearch(value: string) {
+    if (projectAccountSearchTimer.current) {
+      clearTimeout(projectAccountSearchTimer.current);
+    }
+    projectAccountSearchTimer.current = setTimeout(() => {
+      updateParams({ project_account_search: value || null });
+    }, 500);
+  }
+
   function openDrawer() {
     setDraft({
       projectId: sp.get("project_id") ?? "",
       projectAccountId: sp.get("project_account_id") ?? "",
       name: sp.get("name") ?? "",
       cpf: sp.get("cpf") ?? "",
-      accountUuid: sp.get("account_uuid") ?? "",
     });
     setDrawerOpen(true);
   }
 
   function applyFilters() {
     updateParams({
-      project_id: draft.projectId || null,
-      project_account_id: draft.projectAccountId || null,
+      ...(isGeneralView
+        ? {
+            project_id: draft.projectId || null,
+            project_account_id: draft.projectAccountId || null,
+          }
+        : {}),
       name: draft.name || null,
       cpf: draft.cpf || null,
-      ...(isGeneralView ? { account_uuid: draft.accountUuid || null } : {}),
     });
     setDrawerOpen(false);
   }
 
   function clearFilters() {
     updateParams({
-      project_id: null,
-      project_account_id: null,
+      ...(isGeneralView
+        ? { project_id: null, project_account_id: null }
+        : {}),
       name: null,
       cpf: null,
-      ...(isGeneralView ? { account_uuid: null } : {}),
     });
   }
 
@@ -155,11 +151,6 @@ function MonthlyDonorsReportPage() {
   const exportHref = isGeneralView
     ? `/api/monthly-donors-export?${exportParams}`
     : `/campaign/${campaignId}/api/monthly-donors-export?${exportParams}`;
-
-  const missingRequiredFilterMessage =
-    isGeneralView && !sp.get("project_account_id")
-      ? "Selecione a conta do projeto nos filtros para exportar."
-      : null;
 
   async function handleExport() {
     if (isExporting) return;
@@ -200,21 +191,6 @@ function MonthlyDonorsReportPage() {
         {isExporting ? "Exportando..." : "Exportar XLS"}
       </>
     );
-
-    if (missingRequiredFilterMessage) {
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button type="button" variant="outline" size={size} disabled>
-                {content}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{missingRequiredFilterMessage}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    }
 
     return (
       <Button
@@ -320,53 +296,34 @@ function MonthlyDonorsReportPage() {
 
                   <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-4">
                     {isGeneralView && (
-                      <div className="flex flex-col gap-2">
-                        <Label>Campanha:</Label>
-                        <Select.Root
-                          value={draft.accountUuid}
-                          onValueChange={(value) =>
-                            setDraft((prev) => ({ ...prev, accountUuid: value }))
-                          }
-                        >
-                          <Select.Trigger>
-                            <Select.Value placeholder="Todas" />
-                          </Select.Trigger>
-                          <Select.Content position="popper">
-                            <Select.Item value="">Todas</Select.Item>
-                            {(campaigns ?? []).map((campaign) => (
-                              <Select.Item key={campaign.id} value={campaign.id}>
-                                {campaign.name}
-                              </Select.Item>
-                            ))}
-                          </Select.Content>
-                        </Select.Root>
-                      </div>
+                      <>
+                        <div className="flex flex-col gap-2">
+                          <Label>Projeto:</Label>
+                          <Input
+                            value={draft.projectId}
+                            onChange={(e) =>
+                              setDraft((prev) => ({ ...prev, projectId: e.target.value }))
+                            }
+                            placeholder="Referência do projeto"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <Label>Conta do projeto:</Label>
+                          <Combobox
+                            options={campaigns ?? []}
+                            value={draft.projectAccountId}
+                            onChange={(value) =>
+                              setDraft((prev) => ({ ...prev, projectAccountId: value }))
+                            }
+                            onSearchChange={handleProjectAccountSearch}
+                            placeholder="Selecione uma campanha"
+                            searchPlaceholder="Pesquisar campanha..."
+                            emptyText="Nenhuma campanha encontrada."
+                          />
+                        </div>
+                      </>
                     )}
-
-                    <div className="flex flex-col gap-2">
-                      <Label>Projeto:</Label>
-                      <Input
-                        value={draft.projectId}
-                        onChange={(e) =>
-                          setDraft((prev) => ({ ...prev, projectId: e.target.value }))
-                        }
-                        placeholder="Referência do projeto"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <Label>Conta do projeto:</Label>
-                      <Input
-                        value={draft.projectAccountId}
-                        onChange={(e) =>
-                          setDraft((prev) => ({
-                            ...prev,
-                            projectAccountId: e.target.value,
-                          }))
-                        }
-                        placeholder="Referência da conta"
-                      />
-                    </div>
 
                     <div className="flex flex-col gap-2">
                       <Label>Nome:</Label>
@@ -445,11 +402,6 @@ function MonthlyDonorsReportPage() {
                             {donor.name}
                           </span>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>
-                              {PAYMENT_METHOD_LABEL[donor.paymentMethod] ??
-                                donor.paymentMethod}
-                            </span>
-                            <span>·</span>
                             <span>{donor.document}</span>
                             <span>·</span>
                             <span>{donor.phoneDisplay}</span>

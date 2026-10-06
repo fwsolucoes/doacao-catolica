@@ -2,7 +2,6 @@ import { MonthlyDonorsSearchParams } from "~/app/search/monthlyDonorsSearchParam
 import type { MonthlyDonorsGatewayDTO } from "~/domain/gateways/monthlyDonors";
 
 type InputProps = {
-  accountUuid?: string;
   startMonth?: string;
   endMonth?: string;
   projectId?: string;
@@ -12,6 +11,8 @@ type InputProps = {
   cpf?: string;
   page?: number;
 };
+
+const PAGE_LIMIT = 10;
 
 function monthString(offset: number): string {
   const today = new Date();
@@ -24,7 +25,6 @@ class GetMonthlyDonorsUseCase {
 
   async execute(input: InputProps) {
     const {
-      accountUuid,
       startMonth,
       endMonth,
       projectId,
@@ -37,8 +37,8 @@ class GetMonthlyDonorsUseCase {
 
     const searchParams = new MonthlyDonorsSearchParams({
       page: page ?? 1,
+      pageLimit: PAGE_LIMIT,
       filter: {
-        account_uuid: accountUuid,
         start_month: startMonth ?? monthString(11),
         end_month: endMonth ?? monthString(0),
         project_id: projectId,
@@ -46,6 +46,7 @@ class GetMonthlyDonorsUseCase {
         search,
         name,
         cpf,
+        per_page: PAGE_LIMIT,
       },
     });
 

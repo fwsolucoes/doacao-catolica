@@ -1,7 +1,6 @@
 import { SearchParams } from "../shared/searchParams";
 
 type Filter = {
-  account_uuid?: string;
   start_month: string;
   end_month: string;
   project_id?: string;
@@ -9,6 +8,7 @@ type Filter = {
   search?: string;
   name?: string;
   cpf?: string;
+  per_page?: number;
 };
 
 class MonthlyDonorsSearchParams extends SearchParams<Filter> {}

@@ -9,9 +9,9 @@ export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
 
   const campaign = await getCampaign.handle(adaptedRoute);
-  const accountUuid = String(campaign.apiDonationPublicId ?? campaign.id);
+  const projectId = String(campaign.apiDonationPublicId ?? campaign.id);
 
-  const monthlyDonors = await getMonthlyDonors.handle(adaptedRoute, accountUuid);
+  const monthlyDonors = await getMonthlyDonors.handle(adaptedRoute, { projectId });
 
   return { monthlyDonors };
 }
