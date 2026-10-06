@@ -3,10 +3,12 @@ import {
   ChevronLeft,
   Download,
   ListFilter,
+  Loader2,
   Search,
   XCircle,
 } from "lucide-react";
 import { Link, useLoaderData, useLocation, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
@@ -64,6 +66,8 @@ function MonthlyDonorsReportPage() {
 
   const [localSearch, setLocalSearch] = useState(sp.get("search") ?? "");
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [isExporting, setIsExporting] = useState(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [draft, setDraft] = useState<FilterDraft>({
@@ -157,11 +161,43 @@ function MonthlyDonorsReportPage() {
       ? "Selecione a conta do projeto nos filtros para exportar."
       : null;
 
+  async function handleExport() {
+    if (isExporting) return;
+    setIsExporting(true);
+    try {
+      const response = await fetch(exportHref);
+      if (!response.ok) throw new Error("export failed");
+
+      const blob = await response.blob();
+      const filenameMatch = response.headers
+        .get("Content-Disposition")
+        ?.match(/filename="?([^"]+)"?/);
+      const filename = filenameMatch?.[1] ?? "doacoes-mes-a-mes.xlsx";
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error("Não foi possível gerar o arquivo. Tente novamente.");
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
   function renderExportButton(size?: "sm") {
     const content = (
       <>
-        <Download size={size === "sm" ? 14 : 16} />
-        Exportar XLS
+        {isExporting ? (
+          <Loader2 size={size === "sm" ? 14 : 16} className="animate-spin" />
+        ) : (
+          <Download size={size === "sm" ? 14 : 16} />
+        )}
+        {isExporting ? "Exportando..." : "Exportar XLS"}
       </>
     );
 
@@ -181,8 +217,14 @@ function MonthlyDonorsReportPage() {
     }
 
     return (
-      <Button variant="outline" size={size} asChild>
-        <a href={exportHref}>{content}</a>
+      <Button
+        type="button"
+        variant="outline"
+        size={size}
+        onClick={handleExport}
+        disabled={isExporting}
+      >
+        {content}
       </Button>
     );
   }

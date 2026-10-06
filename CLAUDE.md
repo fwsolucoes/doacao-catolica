@@ -380,6 +380,47 @@ const closeDialog = useCallback(() => setDialog(null), []);
 
 **Por que isso quebra:** após um submit bem-sucedido, `fetcher.data` permanece com `{toast:{type:"success"}}`. Na próxima vez que o pai re-renderiza (ao abrir outro dialog), uma nova referência de `onClose` faz o `useEffect` disparar novamente — encontra `fetcher.state === "idle"` e `fetcher.data.toast.type === "success"` (dados da submissão anterior) e fecha o dialog imediatamente, sem o usuário perceber o flash.
 
+### Feedback visual em botões de ação assíncrona fora de formulários
+
+Botões que disparam uma ação assíncrona que **não** passa por `Form`/`useFetcher` (ex.: download de arquivo via `fetch` + blob, chamada a um endpoint que não é action/loader de rota) devem indicar carregamento e tratar erro — nunca ficar sem feedback enquanto o servidor processa.
+
+**Regra:**
+- Estado de carregamento via `useState` (aqui não é campo de formulário, então não se aplica a regra de evitar `useState` — ver seção "Formulários").
+- Ícone trocado por `Loader2` com `animate-spin` enquanto carrega; texto do botão também muda.
+- Botão `disabled` durante a execução, para evitar duplo clique.
+- Erro tratado com `toast.error` (de `sonner`), nunca silenciosamente ignorado.
+
+```tsx
+import { Download, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+const [isExporting, setIsExporting] = useState(false);
+
+async function handleExport() {
+  if (isExporting) return;
+  setIsExporting(true);
+  try {
+    const response = await fetch(exportHref);
+    if (!response.ok) throw new Error("export failed");
+    const blob = await response.blob();
+    // cria <a> temporário com URL.createObjectURL(blob) e dispara o download
+  } catch {
+    toast.error("Não foi possível gerar o arquivo. Tente novamente.");
+  } finally {
+    setIsExporting(false);
+  }
+}
+
+<Button type="button" variant="outline" onClick={handleExport} disabled={isExporting}>
+  {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+  {isExporting ? "Exportando..." : "Exportar XLS"}
+</Button>
+```
+
+**Por que não usar `<a href={exportHref}>` direto:** o navegador não dá nenhum feedback enquanto o servidor gera o arquivo (pode envolver chamada a uma API externa lenta) — o usuário clica e não sabe se funcionou. Buscar via `fetch` e converter a resposta em blob permite controlar exatamente o início e o fim do carregamento e reagir a erros.
+
+Ver implementação de referência em `src/client/pages/monthlyDonorsReport/index.tsx` (`handleExport` / `renderExportButton`).
+
 ## Utilitários de data
 
 `src/lib/getMonthDates.ts` — retorna `{ firstDayOfMonth, lastDayOfMonth }` em `YYYY-MM-DD`:
