@@ -14,7 +14,6 @@ export async function loader(args: Route.LoaderArgs) {
     start_month,
     end_month,
     project_id,
-    project_account_id,
     search,
     name,
     cpf,
@@ -24,7 +23,7 @@ export async function loader(args: Route.LoaderArgs) {
   if (start_month) params.set("start_month", start_month);
   if (end_month) params.set("end_month", end_month);
   if (project_id) params.set("project_id", project_id);
-  params.set("project_account_id", project_account_id || String(user.accountId));
+  params.set("project_account_id", String(user.accountId));
   if (search) params.set("search", search);
   if (name) params.set("name", name);
   if (cpf) params.set("cpf", cpf);

@@ -63,8 +63,6 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
     let url = `/api/metrics/payments/${campaignPublicId}`;
     url += searchParams.toExternal(["pageLimit"]);
 
-    console.log("🚀getTotalPaymentsByAccount url", url);
-
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });

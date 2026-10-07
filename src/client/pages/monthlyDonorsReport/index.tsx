@@ -33,8 +33,7 @@ function formatMonthLabel(month: string): string {
 }
 
 type FilterDraft = {
-  projectId: string;
-  projectAccountId: string;
+  campaignId: string;
   name: string;
   cpf: string;
 };
@@ -51,20 +50,19 @@ function MonthlyDonorsReportPage() {
 
   const [localSearch, setLocalSearch] = useState(sp.get("search") ?? "");
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const projectAccountSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const campaignSearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isExporting, setIsExporting] = useState(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [draft, setDraft] = useState<FilterDraft>({
-    projectId: "",
-    projectAccountId: "",
+    campaignId: "",
     name: "",
     cpf: "",
   });
 
   const filterKeys = isGeneralView
-    ? ["project_id", "project_account_id", "name", "cpf"]
+    ? ["project_id", "name", "cpf"]
     : ["name", "cpf"];
   const activeFilterCount = filterKeys.filter((key) => sp.get(key)).length;
 
@@ -94,19 +92,18 @@ function MonthlyDonorsReportPage() {
     }, 500);
   }
 
-  function handleProjectAccountSearch(value: string) {
-    if (projectAccountSearchTimer.current) {
-      clearTimeout(projectAccountSearchTimer.current);
+  function handleCampaignSearch(value: string) {
+    if (campaignSearchTimer.current) {
+      clearTimeout(campaignSearchTimer.current);
     }
-    projectAccountSearchTimer.current = setTimeout(() => {
-      updateParams({ project_account_search: value || null });
+    campaignSearchTimer.current = setTimeout(() => {
+      updateParams({ campaign_search: value || null });
     }, 500);
   }
 
   function openDrawer() {
     setDraft({
-      projectId: sp.get("project_id") ?? "",
-      projectAccountId: sp.get("project_account_id") ?? "",
+      campaignId: sp.get("project_id") ?? "",
       name: sp.get("name") ?? "",
       cpf: sp.get("cpf") ?? "",
     });
@@ -115,12 +112,7 @@ function MonthlyDonorsReportPage() {
 
   function applyFilters() {
     updateParams({
-      ...(isGeneralView
-        ? {
-            project_id: draft.projectId || null,
-            project_account_id: draft.projectAccountId || null,
-          }
-        : {}),
+      ...(isGeneralView ? { project_id: draft.campaignId || null } : {}),
       name: draft.name || null,
       cpf: draft.cpf || null,
     });
@@ -129,9 +121,7 @@ function MonthlyDonorsReportPage() {
 
   function clearFilters() {
     updateParams({
-      ...(isGeneralView
-        ? { project_id: null, project_account_id: null }
-        : {}),
+      ...(isGeneralView ? { project_id: null } : {}),
       name: null,
       cpf: null,
     });
@@ -296,33 +286,20 @@ function MonthlyDonorsReportPage() {
 
                   <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-4">
                     {isGeneralView && (
-                      <>
-                        <div className="flex flex-col gap-2">
-                          <Label>Projeto:</Label>
-                          <Input
-                            value={draft.projectId}
-                            onChange={(e) =>
-                              setDraft((prev) => ({ ...prev, projectId: e.target.value }))
-                            }
-                            placeholder="Referência do projeto"
-                          />
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                          <Label>Conta do projeto:</Label>
-                          <Combobox
-                            options={campaigns ?? []}
-                            value={draft.projectAccountId}
-                            onChange={(value) =>
-                              setDraft((prev) => ({ ...prev, projectAccountId: value }))
-                            }
-                            onSearchChange={handleProjectAccountSearch}
-                            placeholder="Selecione uma campanha"
-                            searchPlaceholder="Pesquisar campanha..."
-                            emptyText="Nenhuma campanha encontrada."
-                          />
-                        </div>
-                      </>
+                      <div className="flex flex-col gap-2">
+                        <Label>Selecione uma campanha:</Label>
+                        <Combobox
+                          options={campaigns ?? []}
+                          value={draft.campaignId}
+                          onChange={(value) =>
+                            setDraft((prev) => ({ ...prev, campaignId: value }))
+                          }
+                          onSearchChange={handleCampaignSearch}
+                          placeholder="Selecione uma campanha"
+                          searchPlaceholder="Pesquisar campanha..."
+                          emptyText="Nenhuma campanha encontrada."
+                        />
+                      </div>
                     )}
 
                     <div className="flex flex-col gap-2">

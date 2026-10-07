@@ -22,7 +22,7 @@ class GetMonthlyDonorsController {
       startMonth: start_month,
       endMonth: end_month,
       projectId: overrides?.projectId ?? project_id,
-      projectAccountId: project_account_id || overrides?.projectAccountId,
+      projectAccountId: overrides?.projectAccountId ?? project_account_id,
       search,
       name,
       cpf,

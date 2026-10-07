@@ -21,7 +21,7 @@ export async function loader(args: Route.LoaderArgs) {
       ...adaptedRoute,
       query: {
         ...adaptedRoute.query,
-        search: adaptedRoute.query.project_account_search,
+        search: adaptedRoute.query.campaign_search,
       },
     }),
   ]);
