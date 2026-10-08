@@ -89,6 +89,8 @@ const NO_RECEIPT_STATUSES = new Set([
   "awaiting_payment",
 ]);
 
+const RECEIPT_ENABLED_CAMPAIGN_ID = "019b9d99-5b22-7889-8541-537ffb1fc153";
+
 type ActionsPopoverProps = {
   onViewDetails: () => void;
   onSendReminder: () => void;
@@ -345,6 +347,8 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                     onSendReminder={() => setSelectedReminderPayment(payment)}
                     paymentLink={payment.paymentLink}
                     receiptUrl={
+                      campaignId === RECEIPT_ENABLED_CAMPAIGN_ID &&
+                      payment.origin === "Recorrente" &&
                       !NO_RECEIPT_STATUSES.has(payment.rawStatus)
                         ? `/campaign/${campaignId}/api/donation-receipt?paymentId=${payment.id}`
                         : null
