@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "~/client/lib/utils";
+import { cn } from "~/lib/utils";
 import { Label } from "./label";
 
 type FieldErrors = Record<string, string[] | undefined>;
