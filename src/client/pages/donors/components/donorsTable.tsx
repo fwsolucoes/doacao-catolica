@@ -13,6 +13,7 @@ import { DonorsFilterDrawer } from "./donorsFilterDrawer";
 import { EnableRecurrenceDialog } from "./enableRecurrenceDialog";
 import { GenerateBookletDialog } from "./generateBookletDialog";
 import { GenerateUpcomingPaymentsDialog } from "./generateUpcomingPaymentsDialog";
+import { LinkAmbassadorDialog } from "./linkAmbassadorDialog";
 import { UpdateRecurrenceDialog } from "./updateRecurrenceDialog";
 import { RecurringDonorsTable } from "./recurringDonorsTable";
 import { OneTimeDonorsTable } from "./oneTimeDonorsTable";
@@ -27,6 +28,7 @@ type DialogState =
   | { type: "generateBooklet"; subscriptionUuid: string }
   | { type: "disableRecurrence"; subscriptionUuid: string; name: string }
   | { type: "enableRecurrence"; subscriptionUuid: string; name: string }
+  | { type: "linkAmbassador"; donor: DonorRow }
   | null;
 
 
@@ -141,6 +143,10 @@ function DonorsTable() {
         subscriptionUuid={
           dialog?.type === "generateBooklet" ? dialog.subscriptionUuid : null
         }
+        onClose={closeDialog}
+      />
+      <LinkAmbassadorDialog
+        donor={dialog?.type === "linkAmbassador" ? dialog.donor : null}
         onClose={closeDialog}
       />
     </>

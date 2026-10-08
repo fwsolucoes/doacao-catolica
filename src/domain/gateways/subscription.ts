@@ -49,11 +49,17 @@ type EnableSubscriptionInput = {
   observation?: string;
 };
 
+type LinkAmbassadorInput = {
+  subscriptionUuid: string;
+  affiliateReference: string;
+};
+
 type SubscriptionGatewayDTO = {
   createSubscription(input: CreateSubscriptionInput): Promise<string>;
   updateSubscription(input: UpdateSubscriptionInput): Promise<void>;
   disableSubscription(input: DisableSubscriptionInput): Promise<void>;
   enableSubscription(input: EnableSubscriptionInput): Promise<void>;
+  linkAmbassador(input: LinkAmbassadorInput): Promise<void>;
 };
 
 export type {
@@ -61,5 +67,6 @@ export type {
   CreateSubscriptionInput,
   DisableSubscriptionInput,
   EnableSubscriptionInput,
+  LinkAmbassadorInput,
   UpdateSubscriptionInput,
 };

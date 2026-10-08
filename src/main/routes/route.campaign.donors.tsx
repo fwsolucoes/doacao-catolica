@@ -14,6 +14,7 @@ import { listRecurringDonors } from "../factories/listRecurringDonors/listRecurr
 import { generatePaymentBooklet } from "../factories/generatePaymentBooklet/generatePaymentBookletFactory";
 import { generateUpcomingPayments } from "../factories/generateUpcomingPayments/generateUpcomingPaymentsFactory";
 import { getDonorsSummary } from "../factories/getDonorsSummary/getDonorsSummaryFactory";
+import { linkAmbassador } from "../factories/linkAmbassador/linkAmbassadorFactory";
 import { updateRecurrence } from "../factories/updateRecurrence/updateRecurrenceFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -90,6 +91,15 @@ export async function action(args: Route.ActionArgs) {
         return {
           toast: {
             message: "Recorrência ativada com sucesso!",
+            type: "success" as const,
+          },
+        };
+
+      case "linkAmbassador":
+        await linkAmbassador.handle(adaptedRoute);
+        return {
+          toast: {
+            message: "Embaixador vinculado com sucesso!",
             type: "success" as const,
           },
         };

@@ -8,6 +8,7 @@ import {
   Pencil,
   Receipt,
   ReceiptText,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -54,6 +55,7 @@ type ActionsPopoverProps = {
   onGenerateBooklet: () => void;
   onCancelRecurrence: () => void;
   onEnableRecurrence: () => void;
+  onLinkAmbassador: () => void;
 };
 
 function ActionsPopover({
@@ -64,6 +66,7 @@ function ActionsPopover({
   onGenerateBooklet,
   onCancelRecurrence,
   onEnableRecurrence,
+  onLinkAmbassador,
 }: ActionsPopoverProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const { environmentVariables, user } = useRoot();
@@ -131,6 +134,14 @@ function ActionsPopover({
             <Eye size={16} />
             Ver doações
           </Link>
+        </Button>
+        <Button
+          variant="ghost"
+          className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+          onClick={() => openDialog(onLinkAmbassador)}
+        >
+          <UserPlus size={16} />
+          Vincular embaixador
         </Button>
         {donor.status ? (
           <>
@@ -313,6 +324,7 @@ function RecurringDonorRow({
               name: donor.name,
             })
           }
+          onLinkAmbassador={() => setDialog({ type: "linkAmbassador", donor })}
         />
       </Table.Cell>
     </Table.Row>

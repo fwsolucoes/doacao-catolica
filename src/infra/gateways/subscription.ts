@@ -2,6 +2,7 @@ import type {
   CreateSubscriptionInput,
   DisableSubscriptionInput,
   EnableSubscriptionInput,
+  LinkAmbassadorInput,
   SubscriptionGatewayDTO,
   UpdateSubscriptionInput,
 } from "~/domain/gateways/subscription";
@@ -159,6 +160,18 @@ class SubscriptionGateway implements SubscriptionGatewayDTO {
     if (input.observation) body.obs = input.observation;
 
     const apiResponse = await donationApi.post(url, { body, headers });
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+  }
+
+  async linkAmbassador(input: LinkAmbassadorInput): Promise<void> {
+    const headers = { "api-key": environmentVariables.API_KEY_DONATION };
+    const url = `/api/subscriptions/${input.subscriptionUuid}`;
+
+    const body = { affiliate_reference: input.affiliateReference };
+
+    const apiResponse = await donationApi.put(url, { body, headers });
+
+    console.log("🚀linkAmbassador apiResponse", apiResponse);
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 }

@@ -57,12 +57,12 @@ function Combobox({
           aria-expanded={open}
           disabled={disabled}
           className={cn(
-            "h-9 w-full justify-between px-3 font-normal",
+            "grid h-9 w-full grid-cols-[minmax(0,1fr)_auto] overflow-hidden px-3 font-normal",
             !value && "text-(--text-muted)",
             className,
           )}
         >
-          <span className="truncate pb-1">
+          <span className="min-w-0 truncate text-left">
             {selected ? selected.label : placeholder}
           </span>
           <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />

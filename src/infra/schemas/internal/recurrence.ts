@@ -80,6 +80,13 @@ const enableRecurrenceSchema = z.object({
 
 type EnableRecurrenceType = z.infer<typeof enableRecurrenceSchema>;
 
+const linkAmbassadorSchema = z.object({
+  subscriptionUuid: z.uuid({ message: "UUID inválido" }),
+  affiliateReference: z.string().min(1, "Selecione um embaixador"),
+});
+
+type LinkAmbassadorType = z.infer<typeof linkAmbassadorSchema>;
+
 export {
   createRecurrenceSchema,
   type CreateRecurrenceType,
@@ -87,6 +94,8 @@ export {
   type DisableRecurrenceType,
   enableRecurrenceSchema,
   type EnableRecurrenceType,
+  linkAmbassadorSchema,
+  type LinkAmbassadorType,
   updateRecurrenceSchema,
   type UpdateRecurrenceType,
 };
