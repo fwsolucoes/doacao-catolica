@@ -30,6 +30,22 @@ const PIX_ALERT_MESSAGES: Record<string, string> = {
     "Atenção! Autorização de PIX Automático cancelada pelo banco do cliente. Solicite ao cliente para que autorize novamente, acessando o link de sua fatura.",
 };
 
+function extractOperatorResponseDescription(
+  operatorResponse: string | null,
+): string {
+  try {
+    if (!operatorResponse) return "Motivo não informado";
+
+    const firstLevel = JSON.parse(operatorResponse);
+    const secondLevel = JSON.parse(firstLevel.error);
+    const description = secondLevel.errors?.[0]?.description;
+
+    return description || "Motivo não informado";
+  } catch {
+    return "Motivo não informado";
+  }
+}
+
 const CARD_NO_TOKEN_ALERT =
   "Atenção! Essa recorrência não possui cartão salvo. Possivelmente o usuário permitiu o cartão somente no primeiro pagamento ou não concluiu o cadastro do cartão. Solicite ao usuário para acessar o link da fatura e preencher com os dados do cartão de crédito.";
 
@@ -53,6 +69,7 @@ type PaymentConstructorProps = {
   subscriptionHasToken: boolean;
   pixAuthorizationStatus: string | null;
   operatorReference: string | null;
+  operatorResponse: string | null;
   // Nome da campanha à qual o pagamento pertence — usado na visão "todas as campanhas".
   // Nulo na visão de uma campanha específica, onde a campanha já está no contexto da rota.
   campaignName?: string | null;
@@ -78,6 +95,7 @@ class Payment {
   readonly subscriptionHasToken: boolean;
   readonly pixAuthorizationStatus: string | null;
   readonly operatorReference: string | null;
+  readonly operatorResponse: string | null;
   readonly campaignName: string | null;
 
   private constructor(props: PaymentConstructorProps) {
@@ -100,6 +118,7 @@ class Payment {
     this.subscriptionHasToken = props.subscriptionHasToken;
     this.pixAuthorizationStatus = props.pixAuthorizationStatus;
     this.operatorReference = props.operatorReference;
+    this.operatorResponse = props.operatorResponse;
     this.campaignName = props.campaignName ?? null;
   }
 
@@ -147,6 +166,10 @@ class Payment {
       subscriptionHasToken: this.subscriptionHasToken,
       pixAuthorizationStatus: this.pixAuthorizationStatus,
       operatorReference: this.operatorReference?.replace(/^pay_/, "") ?? null,
+      operatorResponse:
+        this.status === "failed"
+          ? extractOperatorResponseDescription(this.operatorResponse)
+          : null,
       campaignName: this.campaignName,
     };
   }

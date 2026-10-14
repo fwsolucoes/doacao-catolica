@@ -14,6 +14,7 @@ import { useFetcher, useParams } from "react-router";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
 import { ManualPaymentDialog } from "./manualPaymentDialog";
 import { SendReminderNotificationDialog } from "./sendReminderNotificationDialog";
+import { Alert } from "~/client/components/ui/alert";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -355,6 +356,18 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                 </section>
 
                 <Separator />
+
+                {payment.status === "Falha no pagamento" && (
+                  <Alert.Root variant="destructive">
+                    <Alert.Icon>
+                      <XCircle size={16} />
+                    </Alert.Icon>
+                    <Alert.Title>Falha no pagamento</Alert.Title>
+                    <Alert.Description>
+                      {payment.operatorResponse}
+                    </Alert.Description>
+                  </Alert.Root>
+                )}
 
                 <section className="space-y-3.5">
                   <h3 className="text-base font-semibold">Link de pagamento</h3>
