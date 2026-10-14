@@ -64,7 +64,7 @@ function SimpleNavItem({
         >
           <NavLink to={to} end>
             <Icon size={20} />
-            <span>{label}</span>
+            <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </NavLink>
         </SidebarMenuButton>
       ) : (
@@ -74,7 +74,7 @@ function SimpleNavItem({
           className="cursor-default opacity-60 rounded-xl"
         >
           <Icon size={20} />
-          <span>{label}</span>
+          <span className="group-data-[collapsible=icon]:hidden">{label}</span>
         </SidebarMenuButton>
       )}
     </SidebarMenuItem>
@@ -108,10 +108,10 @@ function CollapsibleNavItem({
         className="rounded-xl hover:bg-accent data-[active=true]:bg-accent"
       >
         <Icon size={20} />
-        <span>{label}</span>
+        <span className="group-data-[collapsible=icon]:hidden">{label}</span>
         <ChevronDown
           className={cn(
-            "ml-auto shrink-0 transition-transform duration-200",
+            "ml-auto shrink-0 transition-transform duration-200 group-data-[collapsible=icon]:hidden",
             open && "-rotate-180",
           )}
         />

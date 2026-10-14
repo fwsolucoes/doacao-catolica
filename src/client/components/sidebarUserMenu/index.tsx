@@ -49,13 +49,13 @@ function SidebarUserMenu() {
               size="lg"
               className="h-auto gap-3.5 rounded-2xl bg-secondary/60 px-2.5 py-2.5 hover:bg-secondary/80 data-[state=open]:bg-secondary"
             >
-              <Avatar size="xl">
+              <Avatar className="size-11 group-data-[collapsible=icon]:size-8">
                 <AvatarImage src={user?.avatar} alt={user?.name} />
                 <AvatarFallback className="bg-sidebar-primary text-sm font-bold text-white">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 gap-0.5 text-left leading-tight">
+              <div className="grid flex-1 gap-0.5 text-left leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate text-[13px] leading-4 font-semibold text-foreground">
                   {user?.name}
                 </span>
@@ -65,7 +65,7 @@ function SidebarUserMenu() {
               </div>
               <ChevronsUpDown
                 size={14}
-                className="ml-auto shrink-0 text-sidebar-foreground/40"
+                className="ml-auto shrink-0 text-sidebar-foreground/40 group-data-[collapsible=icon]:hidden"
               />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
