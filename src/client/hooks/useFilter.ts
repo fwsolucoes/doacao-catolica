@@ -1,5 +1,5 @@
-import { useScopedParams } from "@arkyn/components";
 import { useLocation, useNavigate } from "react-router";
+import { useScopedParams } from "~/lib/scopedParams";
 
 function useFilter(scope: string) {
   const navigate = useNavigate();

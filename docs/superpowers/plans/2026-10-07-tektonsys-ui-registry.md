@@ -571,7 +571,7 @@ git push -u origin main
 
 - [ ] **Step 2: Connect to Vercel and deploy**
 
-Via the Vercel dashboard (or `vercel` CLI if already authenticated), import the `tektonsys-ui` repository with default Next.js settings and deploy. No environment variables are required.
+Via the Vercel dashboard (or `vercel` CLI if already authenticated), import the `tektonsys-ui` repository. **Note (updated after the 2026-10-13 React Router v7 re-scaffold): this is no longer a Next.js app — do not use Vercel's Next.js defaults.** The repo now ships its own `vercel.json` (`buildCommand: npm run build`, `outputDirectory: build/client`, SPA fallback rewrite to `/index.html`), so Vercel's "Other"/"Vite" framework preset with that config file is what to select; the SPA rewrite is what keeps deep links like `/components/button` from 404ing on refresh, while `/r/*.json` static files still take precedence over the rewrite. No environment variables are required.
 
 - [ ] **Step 3: Verify public access**
 
