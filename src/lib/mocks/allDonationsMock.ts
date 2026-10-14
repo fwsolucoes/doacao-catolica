@@ -49,6 +49,7 @@ const allDonationsMock: DonationsLoader = {
         subscriptionHasToken: true,
         pixAuthorizationStatus: null,
         operatorReference: "abc123",
+        operatorResponse: null,
         campaignName: "Campanha Natal Solidário",
       },
       {
@@ -73,6 +74,7 @@ const allDonationsMock: DonationsLoader = {
         subscriptionHasToken: false,
         pixAuthorizationStatus: null,
         operatorReference: null,
+        operatorResponse: null,
         campaignName: "Reforma do Templo",
       },
       {
@@ -97,6 +99,7 @@ const allDonationsMock: DonationsLoader = {
         subscriptionHasToken: true,
         pixAuthorizationStatus: null,
         operatorReference: "def456",
+        operatorResponse: null,
         campaignName: "Missões Internacionais",
       },
       {
@@ -121,6 +124,7 @@ const allDonationsMock: DonationsLoader = {
         subscriptionHasToken: false,
         pixAuthorizationStatus: null,
         operatorReference: "ghi789",
+        operatorResponse: null,
         campaignName: "Campanha Natal Solidário",
       },
     ],
