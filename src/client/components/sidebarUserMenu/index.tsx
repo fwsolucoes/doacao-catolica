@@ -47,19 +47,19 @@ function SidebarUserMenu() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="bg-sidebar-accent/50 hover:bg-sidebar-accent/70 rounded-lg data-[state=open]:bg-sidebar-accent"
+              className="h-auto gap-3.5 rounded-2xl bg-secondary/60 px-2.5 py-2.5 hover:bg-secondary/80 data-[state=open]:bg-secondary"
             >
-              <Avatar>
+              <Avatar size="xl">
                 <AvatarImage src={user?.avatar} alt={user?.name} />
-                <AvatarFallback className="bg-sidebar-primary text-[0.7rem] font-extrabold text-white">
+                <AvatarFallback className="bg-sidebar-primary text-sm font-bold text-white">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold text-sidebar-foreground">
+              <div className="grid flex-1 gap-0.5 text-left leading-tight">
+                <span className="truncate text-[13px] leading-4 font-semibold text-foreground">
                   {user?.name}
                 </span>
-                <span className="truncate text-xs text-sidebar-foreground/60">
+                <span className="truncate text-[11px] leading-4 text-muted-foreground">
                   {user?.email}
                 </span>
               </div>
