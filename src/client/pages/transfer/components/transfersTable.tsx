@@ -4,12 +4,6 @@ import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/client/components/ui/tooltip";
 import type { TransfersLoader } from "~/client/types/transfersLoader";
 import {
   formatCurrency,
@@ -60,28 +54,21 @@ function TransfersTable() {
               <Table.Cell className="text-right">
                 {transfer.status === "transferred" &&
                   transfer.transactionReceiptUrl && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-9 text-muted-foreground"
-                            aria-label="Ver recibo"
-                            asChild
-                          >
-                            <a
-                              href={transfer.transactionReceiptUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ReceiptText size={16} />
-                            </a>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Ver recibo</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 text-muted-foreground transition-colors hover:text-foreground"
+                      asChild
+                    >
+                      <a
+                        href={transfer.transactionReceiptUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ReceiptText size={16} />
+                        Ver recibo
+                      </a>
+                    </Button>
                   )}
               </Table.Cell>
             </Table.Row>
