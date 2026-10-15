@@ -4,6 +4,12 @@ import { Link } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 // import { Progress } from "~/client/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/client/components/ui/tooltip";
 import { useRoot } from "~/client/hooks/useRoot";
 
 type Campaign = {
@@ -104,17 +110,24 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           </div> */}
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-10 rounded-xl"
-              aria-label="Visualizar campanha"
-              asChild
-            >
-              <a href={checkoutUrl} target="_blank" rel="noreferrer">
-                <Eye size={18} />
-              </a>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="size-10 rounded-xl"
+                    aria-label="Visualizar campanha"
+                    asChild
+                  >
+                    <a href={checkoutUrl} target="_blank" rel="noreferrer">
+                      <Eye size={18} />
+                    </a>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Visualizar campanha</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               variant="outline"
               className="h-10 rounded-xl px-3"
@@ -123,7 +136,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             >
               <Link to={`/campaign/${campaign.id}/home`}>
                 <Settings size={18} />
-                Gerenciar
+                Gerenciar Campanha
               </Link>
             </Button>
           </div>
