@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   Wifi,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetcher, useRouteLoaderData } from "react-router";
 import { cn } from "~/lib/utils";
 import { Badge } from "~/client/components/ui/badge";
@@ -27,7 +27,9 @@ import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
 
 type ConnectionType = "official" | "qrcode";
 type TestConnectionData = { connected: boolean };
-type SaveSettingsData = { success: boolean };
+type SaveSettingsData =
+  | { success: boolean }
+  | { name: string; message: string };
 
 function OwnNumberConfigDialog({
   open,
@@ -54,17 +56,38 @@ function OwnNumberConfigDialog({
 
   const saveFetcher = useFetcher<SaveSettingsData>();
   const isSaving = saveFetcher.state !== "idle";
+  const hasRetriedCreate = useRef(false);
 
   useEffect(() => {
-    if (saveFetcher.state === "idle" && saveFetcher.data?.success) {
+    if (saveFetcher.state !== "idle" || !saveFetcher.data) return;
+
+    if ("success" in saveFetcher.data && saveFetcher.data.success) {
       onSave();
+      return;
     }
-  }, [saveFetcher.state, saveFetcher.data, onSave]);
+
+    if (
+      "name" in saveFetcher.data &&
+      saveFetcher.data.name === "NotFound" &&
+      !hasRetriedCreate.current &&
+      connectionType &&
+      accountReference
+    ) {
+      hasRetriedCreate.current = true;
+      const provider =
+        connectionType === "official" ? "aini" : "unofficial_whaticket";
+      saveFetcher.submit(
+        { accountReference, provider, type: "custom" },
+        { method: "POST", action: "/api/whatsapp/createAccountSettings" },
+      );
+    }
+  }, [saveFetcher.state, saveFetcher.data, onSave, connectionType, accountReference]);
 
   function handleOpenChange(value: boolean) {
     if (!value) {
       setConnectionType(null);
       setToken("");
+      hasRetriedCreate.current = false;
     }
     onOpenChange(value);
   }
@@ -78,6 +101,7 @@ function OwnNumberConfigDialog({
 
   function handleSave() {
     if (!connectionType || !accountReference) return;
+    hasRetriedCreate.current = false;
     const provider =
       connectionType === "official" ? "aini" : "unofficial_whaticket";
     saveFetcher.submit(

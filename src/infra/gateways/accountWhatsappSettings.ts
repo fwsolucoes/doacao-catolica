@@ -5,6 +5,7 @@ import type {
   UpdateAccountWhatsappSettingsInput,
 } from "~/domain/gateways/accountWhatsappSettings";
 import { environmentVariables } from "~/main/config/environmentVariables";
+import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { donationApi } from "../http/donationApi";
 import { externalAccountWhatsappSettingsSchema } from "../schemas/external/accountWhatsappSettings";
@@ -50,6 +51,10 @@ class AccountWhatsappSettingsGateway implements AccountWhatsappSettingsGatewayDT
       `/api/account_whatsapp_settings/${input.accountReference}`,
       { body, headers },
     );
+
+    if (!apiResponse.success && apiResponse.status === 404) {
+      throw HttpAdapter.notFound(apiResponse.message);
+    }
 
     if (!apiResponse.success) {
       throw new Error(
