@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, Settings } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 // import { Progress } from "~/client/components/ui/progress";
@@ -53,14 +53,19 @@ const STATUS_BADGE: Record<string, { variant: "success" | "neutral"; label: stri
 function CampaignCard({ campaign }: { campaign: Campaign }) {
   const { SANCTON_DONATION_CHECKOUT_URL, CAMPAIGN_DEFAULT_IMAGE } =
     useRoot().environmentVariables;
+  const navigate = useNavigate();
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
+  const manageUrl = `/campaign/${campaign.id}/home`;
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
   const [imageError, setImageError] = useState(false);
   // const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
 
   return (
-    <div className="overflow-clip rounded-[1.1rem] border border-border bg-card flex flex-col">
+    <div
+      className="overflow-clip rounded-[1.1rem] border border-border bg-card flex flex-col transition-shadow duration-300 hover:shadow-lg cursor-pointer"
+      onClick={() => navigate(manageUrl)}
+    >
       <div className="relative">
         <img
           src={campaign.image && !imageError ? campaign.image : CAMPAIGN_DEFAULT_IMAGE}
@@ -109,7 +114,10 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             <span>apoiadores</span>
           </div> */}
 
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2"
+            onClick={(e) => e.stopPropagation()}
+          >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -134,7 +142,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
               aria-label="Configurar campanha"
               asChild
             >
-              <Link to={`/campaign/${campaign.id}/home`}>
+              <Link to={manageUrl}>
                 <Settings size={18} />
                 Gerenciar Campanha
               </Link>
