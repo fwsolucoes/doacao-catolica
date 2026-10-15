@@ -4,6 +4,7 @@ type TransferProps = {
   type: string;
   paidDate: string | null;
   amount: number;
+  transactionReceiptUrl: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -15,6 +16,7 @@ class Transfer {
   readonly type: string;
   readonly paidDate: string | null;
   readonly amount: number;
+  readonly transactionReceiptUrl: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly deletedAt: string | null;
@@ -25,6 +27,7 @@ class Transfer {
     this.type = props.type;
     this.paidDate = props.paidDate;
     this.amount = props.amount;
+    this.transactionReceiptUrl = props.transactionReceiptUrl;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.deletedAt = props.deletedAt;
@@ -41,6 +44,7 @@ class Transfer {
       type: this.type,
       paidDate: this.paidDate,
       amount: this.amount,
+      transactionReceiptUrl: this.transactionReceiptUrl,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,

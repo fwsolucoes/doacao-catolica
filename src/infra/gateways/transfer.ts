@@ -64,6 +64,7 @@ class TransferGateway implements TransferGatewayDTO {
           type: item.type,
           paidDate: item.paid_date,
           amount: item.amount,
+          transactionReceiptUrl: item.transaction_receipt_url,
           createdAt: item.created_at2,
           updatedAt: item.updated_at2,
           deletedAt: item.deleted_at2,
