@@ -2,6 +2,7 @@ import { ArrowLeft, Eye, Moon, Sun } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/client/components/ui/tooltip";
 import { useRoot } from "~/client/hooks/useRoot";
 import { useTheme } from "~/client/hooks/useTheme";
 import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
@@ -59,22 +60,36 @@ function CampaignBanner() {
       <div className="flex-1" />
 
       <div className="flex shrink-0 items-center gap-1.5">
-        <Button variant="ghost" size="icon" className="size-10" onClick={toggle} aria-label="Alternar tema">
-          {theme === "light" ? (
-            <Moon key="moon" size={16} className="animate-theme-icon-in text-foreground" />
-          ) : (
-            <Sun key="sun" size={16} className="animate-theme-icon-in text-foreground" />
-          )}
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-10" onClick={toggle} aria-label="Alternar tema">
+                {theme === "light" ? (
+                  <Moon key="moon" size={18} className="animate-theme-icon-in text-foreground" />
+                ) : (
+                  <Sun key="sun" size={18} className="animate-theme-icon-in text-foreground" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Alternar tema</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         {/* <Button variant="ghost" size="icon" className="relative size-10">
           <Bell size={16} className="text-foreground" />
           <span className="absolute right-2 top-2 size-2.5 rounded-full bg-[#3a64f2]" />
         </Button> */}
-        <Button variant="ghost" size="icon" className="size-10" aria-label="Visualizar campanha" asChild>
-          <a href={checkoutUrl} target="_blank" rel="noreferrer">
-            <Eye size={16} className="text-foreground" />
-          </a>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="size-10" aria-label="Visualizar campanha" asChild>
+                <a href={checkoutUrl} target="_blank" rel="noreferrer">
+                  <Eye size={18} className="text-foreground" />
+                </a>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Visualizar campanha</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </header>
   );

@@ -12,6 +12,7 @@ import {
 } from "~/client/components/ui/dropdown-menu";
 import { Input } from "~/client/components/ui/input";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/client/components/ui/tooltip";
 import { useTheme } from "~/client/hooks/useTheme";
 
 function PortalHeader() {
@@ -63,27 +64,34 @@ function PortalHeader() {
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={toggle}
-          className="size-9"
-          aria-label="Alternar tema"
-        >
-          {theme === "light" ? (
-            <Moon
-              key="moon"
-              size={18}
-              className="animate-theme-icon-in text-foreground"
-            />
-          ) : (
-            <Sun
-              key="sun"
-              size={18}
-              className="animate-theme-icon-in text-foreground"
-            />
-          )}
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={toggle}
+                className="size-9"
+                aria-label="Alternar tema"
+              >
+                {theme === "light" ? (
+                  <Moon
+                    key="moon"
+                    size={18}
+                    className="animate-theme-icon-in text-foreground"
+                  />
+                ) : (
+                  <Sun
+                    key="sun"
+                    size={18}
+                    className="animate-theme-icon-in text-foreground"
+                  />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Alternar tema</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         {/* <Button
           size="icon"
