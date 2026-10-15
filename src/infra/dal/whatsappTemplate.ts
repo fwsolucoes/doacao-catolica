@@ -29,8 +29,6 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       ? `/api/account_whatsapp_templates/${campaignId}?${query}`
       : `/api/account_whatsapp_templates/${campaignId}`;
 
-    console.log("🚀URL for listing WhatsApp templates:", url); // Debugging line
-
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });
@@ -121,9 +119,12 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     return [{ sub_type: button.subType, button_index: 0, value: button.value }];
   }
 
-  async getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail> {
+  async getWhatsappTemplate(
+    campaignId: string,
+    uuid: string,
+  ): Promise<WhatsappTemplateDetail> {
     const apiResponse = await donationApi.get(
-      `/api/account_whatsapp_templates/${uuid}`,
+      `/api/account_whatsapp_templates/${campaignId}/${uuid}`,
       {
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
       },

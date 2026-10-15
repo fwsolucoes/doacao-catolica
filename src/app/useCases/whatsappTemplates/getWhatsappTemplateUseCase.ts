@@ -4,8 +4,8 @@ import type { WhatsappTemplateDetail } from "~/domain/views/whatsappTemplateDeta
 class GetWhatsappTemplateUseCase {
   constructor(private whatsappTemplateDal: WhatsappTemplateDalDTO) {}
 
-  async execute(uuid: string): Promise<WhatsappTemplateDetail> {
-    return this.whatsappTemplateDal.getWhatsappTemplate(uuid);
+  async execute(campaignId: string, uuid: string): Promise<WhatsappTemplateDetail> {
+    return this.whatsappTemplateDal.getWhatsappTemplate(campaignId, uuid);
   }
 }
 
