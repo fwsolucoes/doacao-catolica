@@ -25,8 +25,8 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (templateType) params.set("template_type", templateType);
     const query = params.toString();
     const url = query
-      ? `/api/client_whatsapp_templates?${query}`
-      : `/api/client_whatsapp_templates`;
+      ? `/api/account_whatsapp_templates?${query}`
+      : `/api/account_whatsapp_templates`;
 
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -76,7 +76,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (buttons.length) body.buttons = buttons;
 
     const apiResponse = await donationApi.post(
-      "/api/client_whatsapp_templates",
+      "/api/account_whatsapp_templates",
       {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -119,7 +119,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
 
   async getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail> {
     const apiResponse = await donationApi.get(
-      `/api/client_whatsapp_templates/${uuid}`,
+      `/api/account_whatsapp_templates/${uuid}`,
       {
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
       },
@@ -190,7 +190,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     }
 
     const apiResponse = await donationApi.put(
-      `/api/client_whatsapp_templates/${uuid}`,
+      `/api/account_whatsapp_templates/${uuid}`,
       {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -211,7 +211,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (data.button.value) body.value = data.button.value;
 
     const apiResponse = await donationApi.post(
-      `/api/client_whatsapp_templates/${templateUuid}/buttons`,
+      `/api/account_whatsapp_templates/${templateUuid}/buttons`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -230,7 +230,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (data.header_type === "document") body.link = data.header_document;
 
     const apiResponse = await donationApi.put(
-      `/api/client_whatsapp_templates/${templateUuid}/headers/${headerUuid}`,
+      `/api/account_whatsapp_templates/${templateUuid}/headers/${headerUuid}`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -249,7 +249,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (data.button.value) body.value = data.button.value;
 
     const apiResponse = await donationApi.put(
-      `/api/client_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
+      `/api/account_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -261,7 +261,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     buttonUuid: string,
   ): Promise<void> {
     const apiResponse = await donationApi.delete(
-      `/api/client_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
+      `/api/account_whatsapp_templates/${templateUuid}/buttons/${buttonUuid}`,
       { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -273,7 +273,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     variableUuid: string,
   ): Promise<void> {
     const apiResponse = await donationApi.delete(
-      `/api/client_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
+      `/api/account_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
       { headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -299,7 +299,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     const body = this.buildVariableBody(data.system_field, data.description);
 
     const apiResponse = await donationApi.post(
-      `/api/client_whatsapp_templates/${templateUuid}/variables`,
+      `/api/account_whatsapp_templates/${templateUuid}/variables`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
@@ -314,7 +314,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     const body = this.buildVariableBody(data.system_field, data.description);
 
     const apiResponse = await donationApi.put(
-      `/api/client_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
+      `/api/account_whatsapp_templates/${templateUuid}/variables/${variableUuid}`,
       { body, headers: { "api-key": environmentVariables.API_KEY_DONATION } },
     );
 
