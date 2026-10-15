@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useToast, useScopedParams } from "@arkyn/components";
+import { toast } from "sonner";
+import { useScopedParams } from "~/lib/scopedParams";
 
 type UseQueryToastOptions = {
   param: string;
@@ -15,7 +16,6 @@ function useQueryToast({
   message,
   type = "success",
 }: UseQueryToastOptions) {
-  const { showToast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,7 +28,11 @@ function useQueryToast({
     if (paramValue === value && !hasShown.current) {
       hasShown.current = true;
 
-      showToast({ message, type });
+      if (type === "danger") {
+        toast.error(message);
+      } else {
+        toast.success(message);
+      }
 
       const params = new URLSearchParams(location.search);
       params.delete(param);
@@ -41,7 +45,7 @@ function useQueryToast({
         { replace: true },
       );
     }
-  }, [paramValue, value, message, type, showToast, location, navigate]);
+  }, [paramValue, value, message, type, location, navigate]);
 }
 
 export { useQueryToast };

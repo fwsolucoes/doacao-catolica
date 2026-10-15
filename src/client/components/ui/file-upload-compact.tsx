@@ -1,6 +1,6 @@
 import { File, Loader2, RefreshCw, Upload } from "lucide-react";
 import { use, useState } from "react";
-import { cn } from "~/client/lib/utils";
+import { cn } from "~/lib/utils";
 import { Button } from "./button";
 import { FormErrorContext, FormFieldContext } from "./form-field";
 
