@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ReceiptText } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
@@ -30,7 +30,7 @@ function TransfersTable() {
             <Table.Head>Valor</Table.Head>
             <Table.Head>Chave Pix</Table.Head>
             <Table.Head>Status</Table.Head>
-            {/* <Table.Head className="text-right">Recibo</Table.Head> */}
+            <Table.Head className="text-right">Ações</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -51,16 +51,26 @@ function TransfersTable() {
                   {formatStatus(transfer.status)}
                 </Badge>
               </Table.Cell>
-              {/* <Table.Cell className="text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 text-muted-foreground"
-                >
-                  <ReceiptText size={16} />
-                  Ver recibo
-                </Button>
-              </Table.Cell> */}
+              <Table.Cell className="text-right">
+                {transfer.status === "transferred" &&
+                  transfer.transactionReceiptUrl && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 text-muted-foreground transition-colors hover:text-foreground"
+                      asChild
+                    >
+                      <a
+                        href={transfer.transactionReceiptUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ReceiptText size={16} />
+                        Ver recibo
+                      </a>
+                    </Button>
+                  )}
+              </Table.Cell>
             </Table.Row>
           ))}
 

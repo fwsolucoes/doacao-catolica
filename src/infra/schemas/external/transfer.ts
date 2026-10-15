@@ -6,6 +6,7 @@ const externalTransferSchema = z.object({
   type: z.string(),
   paid_date: z.string().nullable(),
   amount: z.number(),
+  transaction_receipt_url: z.string().nullable(),
   created_at2: z.string(),
   updated_at2: z.string(),
   deleted_at2: z.string().nullable(),
