@@ -17,6 +17,7 @@ import { whatsappTemplateDetailResponseSchema } from "../schemas/external/whatsa
 
 class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   async listWhatsappTemplates(
+    campaignId: string,
     notificationType?: string,
     templateType?: string,
   ): Promise<WhatsappTemplate[]> {
@@ -25,8 +26,10 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (templateType) params.set("template_type", templateType);
     const query = params.toString();
     const url = query
-      ? `/api/account_whatsapp_templates?${query}`
-      : `/api/account_whatsapp_templates`;
+      ? `/api/account_whatsapp_templates/${campaignId}?${query}`
+      : `/api/account_whatsapp_templates/${campaignId}`;
+
+    console.log("🚀URL for listing WhatsApp templates:", url); // Debugging line
 
     const apiResponse = await donationApi.get(url, {
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -54,6 +57,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   }
 
   async createWhatsappTemplate(
+    campaignId: string,
     data: CreateWhatsappTemplateBody,
   ): Promise<void> {
     const header = this.buildHeader(data);
@@ -76,7 +80,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     if (buttons.length) body.buttons = buttons;
 
     const apiResponse = await donationApi.post(
-      "/api/account_whatsapp_templates",
+      `/api/account_whatsapp_templates/${campaignId}`,
       {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },
@@ -163,6 +167,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   }
 
   async updateWhatsappTemplate(
+    campaignId: string,
     uuid: string,
     data: UpdateWhatsappTemplateBody,
   ): Promise<void> {
@@ -190,7 +195,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     }
 
     const apiResponse = await donationApi.put(
-      `/api/account_whatsapp_templates/${uuid}`,
+      `/api/account_whatsapp_templates/${campaignId}/${uuid}`,
       {
         body,
         headers: { "api-key": environmentVariables.API_KEY_DONATION },

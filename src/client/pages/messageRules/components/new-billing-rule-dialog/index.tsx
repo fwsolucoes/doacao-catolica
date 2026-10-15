@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useParams } from "react-router";
 import { Mail } from "lucide-react";
 import { Tabs } from "radix-ui";
 import { cn } from "~/lib/utils";
@@ -47,6 +47,7 @@ function NewBillingRuleDialog({
   rule?: NotificationSettingJson;
 }) {
   const isEditing = !!rule;
+  const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
@@ -70,11 +71,11 @@ function NewBillingRuleDialog({
 
   useEffect(() => {
     if (messageType) {
-      templateFetcher.load(`/api/client_whatsapp_templates?notification_type=${messageType}`);
+      templateFetcher.load(`/campaign/${campaignId}/api/whatsapp-templates?notification_type=${messageType}`);
     }
     // templateFetcher omitted intentionally — its reference changes on every render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageType]);
+  }, [messageType, campaignId]);
 
   const templates = templateFetcher.data ?? [];
   const isLoadingTemplates = templateFetcher.state !== "idle";

@@ -10,10 +10,18 @@ import type { WhatsappTemplate } from "../views/whatsappTemplate";
 import type { WhatsappTemplateDetail } from "../views/whatsappTemplateDetail";
 
 type WhatsappTemplateDalDTO = {
-  listWhatsappTemplates(notificationType?: string, templateType?: string): Promise<WhatsappTemplate[]>;
-  createWhatsappTemplate(data: CreateWhatsappTemplateBody): Promise<void>;
+  listWhatsappTemplates(
+    campaignId: string,
+    notificationType?: string,
+    templateType?: string,
+  ): Promise<WhatsappTemplate[]>;
+  createWhatsappTemplate(campaignId: string, data: CreateWhatsappTemplateBody): Promise<void>;
   getWhatsappTemplate(uuid: string): Promise<WhatsappTemplateDetail>;
-  updateWhatsappTemplate(uuid: string, data: UpdateWhatsappTemplateBody): Promise<void>;
+  updateWhatsappTemplate(
+    campaignId: string,
+    uuid: string,
+    data: UpdateWhatsappTemplateBody,
+  ): Promise<void>;
   updateWhatsappTemplateHeader(
     templateUuid: string,
     headerUuid: string,

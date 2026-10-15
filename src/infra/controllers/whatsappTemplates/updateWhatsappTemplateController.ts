@@ -15,13 +15,14 @@ class UpdateWhatsappTemplateController {
   constructor(private updateWhatsappTemplateUseCase: UpdateWhatsappTemplateUseCase) {}
 
   async handle(route: RouteDTO) {
-    const { templateId } = route.params;
+    const { campaignId, templateId } = route.params;
+    if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
     if (!templateId) throw HttpAdapter.badRequest("templateId is required");
 
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(updateWhatsappTemplateSchema).validate(body);
 
-    await this.updateWhatsappTemplateUseCase.execute(templateId, validated);
+    await this.updateWhatsappTemplateUseCase.execute(campaignId, templateId, validated);
 
     const message = ACTION_MESSAGES[validated._action] ?? "Template atualizado com sucesso!";
 

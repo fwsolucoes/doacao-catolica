@@ -1,4 +1,4 @@
-import type { Route } from "+/api.whatsappTemplates";
+import type { Route } from "+/api.campaign.whatsappTemplates";
 import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { listWhatsappTemplates } from "../factories/whatsappTemplates/listWhatsappTemplatesFactory";

@@ -4,8 +4,12 @@ import type { UpdateWhatsappTemplateBody } from "~/infra/schemas/internal/whatsa
 class UpdateWhatsappTemplateUseCase {
   constructor(private whatsappTemplateDal: WhatsappTemplateDalDTO) {}
 
-  async execute(uuid: string, data: UpdateWhatsappTemplateBody): Promise<void> {
-    await this.whatsappTemplateDal.updateWhatsappTemplate(uuid, data);
+  async execute(
+    campaignId: string,
+    uuid: string,
+    data: UpdateWhatsappTemplateBody,
+  ): Promise<void> {
+    await this.whatsappTemplateDal.updateWhatsappTemplate(campaignId, uuid, data);
   }
 }
 

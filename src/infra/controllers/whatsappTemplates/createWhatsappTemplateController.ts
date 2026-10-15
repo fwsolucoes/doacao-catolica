@@ -15,7 +15,7 @@ class CreateWhatsappTemplateController {
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(createWhatsappTemplateSchema).validate(body);
 
-    await this.createWhatsappTemplateUseCase.execute(validated);
+    await this.createWhatsappTemplateUseCase.execute(campaignId, validated);
 
     return {
       toast: {
