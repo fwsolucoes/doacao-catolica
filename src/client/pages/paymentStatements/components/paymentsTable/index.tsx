@@ -106,7 +106,13 @@ type ActionsPopoverProps = {
   canSendReminder: boolean;
 };
 
-function ActionsPopover({ onViewDetails, onSendReminder, paymentLink, receiptUrl, canSendReminder }: ActionsPopoverProps) {
+function ActionsPopover({
+  onViewDetails,
+  onSendReminder,
+  paymentLink,
+  receiptUrl,
+  canSendReminder,
+}: ActionsPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -172,7 +178,10 @@ type PaymentsTableProps = {
   onFilterDrawerOpenChange: (open: boolean) => void;
 };
 
-function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsTableProps) {
+function PaymentsTable({
+  filterDrawerOpen,
+  onFilterDrawerOpenChange,
+}: PaymentsTableProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const { payments, donors, campaigns } = useLoaderData<DonationsLoader>();
   const [selectedPayment, setSelectedPayment] = useState<
@@ -184,7 +193,10 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
   const [selectedReminderPayment, setSelectedReminderPayment] = useState<
     DonationsLoader["payments"]["data"][number] | null
   >(null);
-  const closeReminderDialog = useCallback(() => setSelectedReminderPayment(null), []);
+  const closeReminderDialog = useCallback(
+    () => setSelectedReminderPayment(null),
+    [],
+  );
 
   const { data, meta } = payments;
 
@@ -235,7 +247,9 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to={`/campaign/${campaignId}/create-one-time-payment`}>
+                    <Link
+                      to={`/campaign/${campaignId}/create-one-time-payment`}
+                    >
                       <Zap size={16} className="text-foreground" />
                       Criar pagamento avulso
                     </Link>
@@ -287,9 +301,7 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                   </Table.Cell>
                 )}
                 <Table.Cell>
-                  <Badge
-                    variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}
-                  >
+                  <Badge variant={ORIGIN_BADGE[payment.origin] ?? "neutral"}>
                     {payment.origin === "Recorrente" && (
                       <RefreshCw size={11} data-icon="inline-start" />
                     )}
@@ -301,9 +313,7 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                 </Table.Cell>
                 <Table.Cell>
                   <div className="flex items-center gap-1.5">
-                    <Badge
-                      variant={STATUS_BADGE[payment.status] ?? "neutral"}
-                    >
+                    <Badge variant={STATUS_BADGE[payment.status] ?? "neutral"}>
                       {payment.status}
                     </Badge>
                     {payment.alertMessage && (
@@ -360,7 +370,6 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                     paymentLink={payment.paymentLink}
                     receiptUrl={
                       campaignId === RECEIPT_ENABLED_CAMPAIGN_ID &&
-                      payment.origin === "Recorrente" &&
                       !NO_RECEIPT_STATUSES.has(payment.rawStatus)
                         ? `/campaign/${campaignId}/api/donation-receipt?paymentId=${payment.id}`
                         : null

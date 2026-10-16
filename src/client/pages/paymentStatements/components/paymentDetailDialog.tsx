@@ -253,7 +253,7 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
             <div className="min-h-0 flex-1 overflow-y-auto">
               {/* Alert banner */}
               {payment.alertMessage && (
-                <div className="flex items-start gap-3.5 border-b border-destructive/30 bg-destructive/10 px-4 py-3 sm:px-7 sm:py-3.5">
+                <div className="flex items-start gap-3.5 border-y border-destructive/30 bg-destructive/10 px-4 py-3 sm:px-7 sm:py-3.5">
                   <AlertTriangle
                     size={24}
                     className="mt-0.5 shrink-0 text-destructive"
