@@ -3,8 +3,16 @@ import { z } from "zod";
 const externalCampaignPreferencesSchema = z.object({
   id: z.string(),
   // Fields below will be populated once the API supports them:
-  registration_text: z.string(),
-  registration_title: z.string(),
+  registration_text: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
+  registration_title: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
   why_donate_title: z
     .string()
     .nullable()
