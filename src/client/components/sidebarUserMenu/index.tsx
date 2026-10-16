@@ -25,8 +25,7 @@ function getInitials(name: string) {
   const words = name.split(" ").filter(Boolean);
   if (words.length === 0) return "";
   const first = words[0][0].toUpperCase();
-  const last =
-    words.length > 1 ? words[words.length - 1][0].toUpperCase() : "";
+  const last = words.length > 1 ? words[words.length - 1][0].toUpperCase() : "";
   return first + last;
 }
 
@@ -37,7 +36,7 @@ function SidebarUserMenu() {
   const initials = user ? getInitials(user.name) : "";
 
   function toSanctonPanel(redirect: string) {
-    return `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token}&redirect=${redirect}`;
+    return `${environmentVariables.SANCTON_PANEL_URL}/api/auth/token?token=${user?.token}&redirect=${redirect}`;
   }
 
   return (
