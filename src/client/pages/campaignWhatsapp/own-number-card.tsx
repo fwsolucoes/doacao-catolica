@@ -1,11 +1,37 @@
-import { CircleCheck, CircleSlash, Phone, Settings2 } from "lucide-react";
+import {
+  CircleCheck,
+  CircleSlash,
+  Phone,
+  QrCode,
+  Settings2,
+  ShieldCheck,
+} from "lucide-react";
 import { useCallback, useState } from "react";
+import type { ComponentProps } from "react";
 import { useLoaderData } from "react-router";
 import { cn } from "~/lib/utils";
+import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import type { CampaignWhatsappLoader } from "~/client/types/campaignWhatsappLoader";
 import { ActiveBadge, BulletItem, SelectedButton } from "./card-shared";
 import { OwnNumberConfigDialog } from "./own-number-config-dialog";
+
+// known values: "aini" | "unofficial_whaticket"
+const CONNECTION_TYPE_BADGE: Record<
+  string,
+  {
+    variant: ComponentProps<typeof Badge>["variant"];
+    label: string;
+    icon: typeof ShieldCheck;
+  }
+> = {
+  aini: { variant: "navy", label: "Conexão Oficial Meta", icon: ShieldCheck },
+  unofficial_whaticket: {
+    variant: "violet",
+    label: "Conexão QR code",
+    icon: QrCode,
+  },
+};
 
 function OwnNumberCard({
   selected,
@@ -17,6 +43,10 @@ function OwnNumberCard({
   const settings = useLoaderData<CampaignWhatsappLoader>();
   const isConfigured =
     settings?.type === "custom" && settings?.hasToken === true;
+  const connectionBadge = settings?.provider
+    ? CONNECTION_TYPE_BADGE[settings.provider]
+    : undefined;
+  const ConnectionIcon = connectionBadge?.icon;
 
   const [showConfig, setShowConfig] = useState(false);
   const handleSave = useCallback(() => {
@@ -83,6 +113,17 @@ function OwnNumberCard({
                   Configurações
                 </Button>
               </div>
+              {isConfigured && settings?.provider && (
+                <Badge
+                  variant={connectionBadge?.variant ?? "neutral"}
+                  className="w-fit"
+                >
+                  {ConnectionIcon && (
+                    <ConnectionIcon size={11} data-icon="inline-start" />
+                  )}
+                  {connectionBadge?.label ?? settings.provider}
+                </Badge>
+              )}
               <p className="text-xs text-muted-foreground">
                 Configure a conexão do seu número antes de selecionar esta
                 opção.
