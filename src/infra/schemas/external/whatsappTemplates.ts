@@ -7,6 +7,7 @@ const whatsappTemplateItemSchema = z.object({
   template_type: z.string(),
   notification_type: z.string(),
   template_preview_text: z.string().optional().nullable(),
+  template_preview_image: z.string().optional().nullable(),
   header: z
     .object({ type: z.string().optional().nullable() })
     .optional()

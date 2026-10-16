@@ -15,6 +15,10 @@ type WhatsappTemplateDalDTO = {
     notificationType?: string,
     templateType?: string,
   ): Promise<WhatsappTemplate[]>;
+  listClientWhatsappTemplates(
+    notificationType?: string,
+    templateType?: string,
+  ): Promise<WhatsappTemplate[]>;
   createWhatsappTemplate(campaignId: string, data: CreateWhatsappTemplateBody): Promise<void>;
   getWhatsappTemplate(campaignId: string, uuid: string): Promise<WhatsappTemplateDetail>;
   updateWhatsappTemplate(

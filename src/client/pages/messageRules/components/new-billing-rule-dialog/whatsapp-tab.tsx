@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { cn } from "~/lib/utils";
 import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
 import type { RichTextareaRef } from "~/client/components/campaignSettings/richTextarea";
 import { FormField } from "~/client/components/ui/form-field";
@@ -13,6 +14,7 @@ type WhatsappTemplateJson = {
   templateType: string;
   notificationType: string;
   templatePreviewText: string;
+  templatePreviewImage: string | null;
 };
 
 export type { WhatsappTemplateJson };
@@ -23,12 +25,14 @@ function WhatsAppTab({
   templates = [],
   isLoadingTemplates = false,
   hideFreeformMessage = false,
+  hidePreview = false,
 }: {
   defaultMessage?: string | null;
   messageType?: string;
   templates?: WhatsappTemplateJson[];
   isLoadingTemplates?: boolean;
   hideFreeformMessage?: boolean;
+  hidePreview?: boolean;
 }) {
   const [selectedTemplateUuid, setSelectedTemplateUuid] = useState("");
 
@@ -103,59 +107,74 @@ function WhatsAppTab({
         />
       )}
 
-      {!hideFreeformMessage && (
+      {(!hideFreeformMessage || !hidePreview) && (
         <div className="grid grid-cols-5 gap-7">
-          <div className="col-span-3 flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <p className="text-sm font-semibold text-foreground">Inserir variável</p>
-              <VariablePopover onInsert={insertVariable} />
-            </div>
+          {!hideFreeformMessage && (
+            <div className="col-span-3 flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-foreground">Inserir variável</p>
+                <VariablePopover onInsert={insertVariable} />
+              </div>
 
-            {useTemplate ? (
-              <input
-                type="hidden"
-                name="whatsappMessage"
-                value={selectedTemplate!.templatePreviewText}
-              />
-            ) : (
-              <FormField name="whatsappMessage" label="Mensagem WhatsApp">
-                <RichTextarea
-                  ref={richRef}
+              {useTemplate ? (
+                <input
+                  type="hidden"
                   name="whatsappMessage"
-                  defaultValue={initial}
-                  onChange={setHtmlContent}
-                  formats={["bold"]}
+                  value={selectedTemplate!.templatePreviewText}
                 />
-              </FormField>
-            )}
-          </div>
-
-          <div className="col-span-2 flex flex-col gap-3">
-            <div className="flex flex-col gap-0.5">
-              <p className="text-sm font-semibold text-foreground">Prévia</p>
-              <p className="text-xs text-muted-foreground">
-                Variáveis serão preenchidas no envio
-              </p>
-            </div>
-            <div className="overflow-clip rounded-2xl border border-border">
-              <div className="flex items-center gap-2.5 bg-[#007a55] px-5 py-3">
-                <WhatsAppIcon size={16} className="text-white" />
-                <span className="text-sm font-semibold text-white">Empresa Demo</span>
-              </div>
-              <div className="bg-[#ecfdf5] p-5">
-                {useTemplate ? (
-                  <p className="whitespace-pre-wrap text-sm text-[#002c22]">
-                    {selectedTemplate!.templatePreviewText}
-                  </p>
-                ) : (
-                  <p
-                    className="whitespace-pre-wrap text-sm text-[#002c22]"
-                    dangerouslySetInnerHTML={{ __html: htmlContent }}
+              ) : (
+                <FormField name="whatsappMessage" label="Mensagem WhatsApp">
+                  <RichTextarea
+                    ref={richRef}
+                    name="whatsappMessage"
+                    defaultValue={initial}
+                    onChange={setHtmlContent}
+                    formats={["bold"]}
                   />
-                )}
+                </FormField>
+              )}
+            </div>
+          )}
+
+          {!hidePreview && (
+            <div
+              className={cn(
+                "flex flex-col gap-3",
+                hideFreeformMessage ? "col-span-5" : "col-span-2",
+              )}
+            >
+              <div className="flex flex-col gap-0.5">
+                <p className="text-sm font-semibold text-foreground">Prévia</p>
+                <p className="text-xs text-muted-foreground">
+                  Variáveis serão preenchidas no envio
+                </p>
+              </div>
+              <div className="overflow-clip rounded-2xl border border-border">
+                <div className="flex items-center gap-2.5 bg-[#007a55] px-5 py-3">
+                  <WhatsAppIcon size={16} className="text-white" />
+                  <span className="text-sm font-semibold text-white">Empresa Demo</span>
+                </div>
+                <div className="bg-[#ecfdf5] p-5">
+                  {useTemplate && selectedTemplate!.templatePreviewImage ? (
+                    <img
+                      src={selectedTemplate!.templatePreviewImage}
+                      alt={selectedTemplate!.templateName}
+                      className="mx-auto max-w-80 rounded-lg"
+                    />
+                  ) : useTemplate ? (
+                    <p className="whitespace-pre-wrap text-sm text-[#002c22]">
+                      {selectedTemplate!.templatePreviewText}
+                    </p>
+                  ) : (
+                    <p
+                      className="whitespace-pre-wrap text-sm text-[#002c22]"
+                      dangerouslySetInnerHTML={{ __html: htmlContent }}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </>

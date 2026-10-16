@@ -5,6 +5,7 @@ type WhatsappTemplateProps = {
   templateType: string;
   notificationType: string;
   templatePreviewText: string;
+  templatePreviewImage: string | null;
   headerType: string | null;
   variablesCount: number;
   buttonsCount: number;
@@ -19,6 +20,7 @@ class WhatsappTemplate {
   templateType: string;
   notificationType: string;
   templatePreviewText: string;
+  templatePreviewImage: string | null;
   headerType: string | null;
   variablesCount: number;
   buttonsCount: number;
@@ -30,6 +32,7 @@ class WhatsappTemplate {
     this.templateType = props.templateType;
     this.notificationType = props.notificationType;
     this.templatePreviewText = props.templatePreviewText;
+    this.templatePreviewImage = props.templatePreviewImage;
     this.headerType = props.headerType;
     this.variablesCount = props.variablesCount;
     this.buttonsCount = props.buttonsCount;
@@ -47,6 +50,7 @@ class WhatsappTemplate {
       templateType: this.templateType,
       notificationType: this.notificationType,
       templatePreviewText: this.templatePreviewText,
+      templatePreviewImage: this.templatePreviewImage,
       headerType: this.headerType,
       variablesCount: this.variablesCount,
       buttonsCount: this.buttonsCount,

@@ -53,6 +53,7 @@ function NewBillingRuleDialog({
     whatsappSettings?.type === "custom" &&
     whatsappSettings?.hasToken === true &&
     whatsappSettings?.provider === "aini";
+  const isOfficialDoacaoCatolica = whatsappSettings?.type !== "custom";
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
@@ -76,11 +77,14 @@ function NewBillingRuleDialog({
 
   useEffect(() => {
     if (messageType) {
-      templateFetcher.load(`/campaign/${campaignId}/api/whatsapp-templates?notification_type=${messageType}`);
+      const templatesPath = isOfficialDoacaoCatolica
+        ? `/campaign/${campaignId}/api/client-whatsapp-templates?notification_type=${messageType}`
+        : `/campaign/${campaignId}/api/whatsapp-templates?notification_type=${messageType}`;
+      templateFetcher.load(templatesPath);
     }
     // templateFetcher omitted intentionally — its reference changes on every render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageType, campaignId]);
+  }, [messageType, campaignId, isOfficialDoacaoCatolica]);
 
   const templates = templateFetcher.data ?? [];
   const isLoadingTemplates = templateFetcher.state !== "idle";
@@ -251,7 +255,10 @@ function NewBillingRuleDialog({
                       messageType={messageType}
                       templates={templates}
                       isLoadingTemplates={isLoadingTemplates}
-                      hideFreeformMessage={isOfficialMetaOwnNumber}
+                      hideFreeformMessage={
+                        isOfficialMetaOwnNumber || isOfficialDoacaoCatolica
+                      }
+                      hidePreview={isOfficialMetaOwnNumber}
                     />
                   </Tabs.Content>
                   <Tabs.Content

@@ -47,6 +47,45 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
         templateType: item.template_type,
         notificationType: item.notification_type,
         templatePreviewText: item.template_preview_text ?? "",
+        templatePreviewImage: item.template_preview_image ?? null,
+        headerType: item.header?.type ?? null,
+        variablesCount: (item.variables ?? []).length,
+        buttonsCount: (item.buttons ?? []).length,
+      }),
+    );
+  }
+
+  async listClientWhatsappTemplates(
+    notificationType?: string,
+    templateType?: string,
+  ): Promise<WhatsappTemplate[]> {
+    const params = new URLSearchParams();
+    if (notificationType) params.set("notification_type", notificationType);
+    if (templateType) params.set("template_type", templateType);
+    const query = params.toString();
+    const url = query
+      ? `/api/client_whatsapp_templates?${query}`
+      : `/api/client_whatsapp_templates`;
+
+    const apiResponse = await donationApi.get(url, {
+      headers: { "api-key": environmentVariables.API_KEY_DONATION },
+    });
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    const validated = new SchemaValidatorAdapter(
+      listWhatsappTemplatesSchema,
+    ).validate(apiResponse.response);
+
+    return (validated.data ?? []).map((item) =>
+      WhatsappTemplate.restore({
+        uuid: item.uuid,
+        templateName: item.template_name,
+        templateLanguage: item.template_language ?? "",
+        templateType: item.template_type,
+        notificationType: item.notification_type,
+        templatePreviewText: item.template_preview_text ?? "",
+        templatePreviewImage: item.template_preview_image ?? null,
         headerType: item.header?.type ?? null,
         variablesCount: (item.variables ?? []).length,
         buttonsCount: (item.buttons ?? []).length,

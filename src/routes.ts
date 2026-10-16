@@ -84,6 +84,7 @@ export default [
     route("api/fundraiser-details/:fundraiserId", "./main/routes/api.campaign.fundraiserDetails.ts"),
     route("api/donation-receipt", "./main/routes/api.campaign.donationReceipt.ts"),
     route("api/whatsapp-templates", "./main/routes/api.campaign.whatsappTemplates.ts"),
+    route("api/client-whatsapp-templates", "./main/routes/api.campaign.clientWhatsappTemplates.ts"),
     route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
     route("shalom-metrics", "./main/routes/route.campaign.shalomMetrics.tsx"),
   ]),
