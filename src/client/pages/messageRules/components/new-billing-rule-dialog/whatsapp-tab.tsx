@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { cn } from "~/lib/utils";
 import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
 import type { RichTextareaRef } from "~/client/components/campaignSettings/richTextarea";
 import { FormField } from "~/client/components/ui/form-field";
@@ -137,12 +136,7 @@ function WhatsAppTab({
           )}
 
           {!hidePreview && (
-            <div
-              className={cn(
-                "flex flex-col gap-3",
-                hideFreeformMessage ? "col-span-5" : "col-span-2",
-              )}
-            >
+            <div className="col-span-2 flex flex-col gap-3">
               <div className="flex flex-col gap-0.5">
                 <p className="text-sm font-semibold text-foreground">Prévia</p>
                 <p className="text-xs text-muted-foreground">
