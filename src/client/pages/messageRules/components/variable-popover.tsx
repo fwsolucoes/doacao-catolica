@@ -12,13 +12,14 @@ import { TEMPLATE_VARIABLES } from "../constants";
 type VariablePopoverProps = {
   onInsert: (variable: string) => void;
   disabled?: boolean;
+  variables?: { label: string; value: string }[];
 };
 
-function VariablePopover({ onInsert, disabled }: VariablePopoverProps) {
+function VariablePopover({ onInsert, disabled, variables = TEMPLATE_VARIABLES }: VariablePopoverProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const filtered = TEMPLATE_VARIABLES.filter((v) =>
+  const filtered = variables.filter((v) =>
     v.label.toLowerCase().includes(search.toLowerCase()),
   );
 

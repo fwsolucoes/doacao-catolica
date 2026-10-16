@@ -54,6 +54,10 @@ function NewBillingRuleDialog({
     whatsappSettings?.hasToken === true &&
     whatsappSettings?.provider === "aini";
   const isOfficialDoacaoCatolica = whatsappSettings?.type !== "custom";
+  const isOwnNumberQrcode =
+    whatsappSettings?.type === "custom" &&
+    whatsappSettings?.hasToken === true &&
+    whatsappSettings?.provider === "unofficial_whaticket";
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
@@ -76,7 +80,7 @@ function NewBillingRuleDialog({
   }, [fetcher.state, fetcher.data, onOpenChange]);
 
   useEffect(() => {
-    if (messageType) {
+    if (messageType && !isOwnNumberQrcode) {
       const templatesPath = isOfficialDoacaoCatolica
         ? `/campaign/${campaignId}/api/client-whatsapp-templates?notification_type=${messageType}`
         : `/campaign/${campaignId}/api/whatsapp-templates?notification_type=${messageType}`;
@@ -84,7 +88,7 @@ function NewBillingRuleDialog({
     }
     // templateFetcher omitted intentionally — its reference changes on every render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageType, campaignId, isOfficialDoacaoCatolica]);
+  }, [messageType, campaignId, isOfficialDoacaoCatolica, isOwnNumberQrcode]);
 
   const templates = templateFetcher.data ?? [];
   const isLoadingTemplates = templateFetcher.state !== "idle";
@@ -259,6 +263,7 @@ function NewBillingRuleDialog({
                         isOfficialMetaOwnNumber || isOfficialDoacaoCatolica
                       }
                       hidePreview={isOfficialMetaOwnNumber}
+                      hideTemplateSelect={isOwnNumberQrcode}
                     />
                   </Tabs.Content>
                   <Tabs.Content

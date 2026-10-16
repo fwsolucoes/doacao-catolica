@@ -5,7 +5,11 @@ import { FormField } from "~/client/components/ui/form-field";
 import { Select } from "~/client/components/ui/select";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
 import { VariablePopover } from "../variable-popover";
-import { WHATSAPP_DEFAULT } from "../../constants";
+import {
+  BILLING_RULE_TYPES,
+  QRCODE_TEMPLATE_VARIABLES,
+  WHATSAPP_DEFAULT,
+} from "../../constants";
 
 type WhatsappTemplateJson = {
   uuid: string;
@@ -25,6 +29,7 @@ function WhatsAppTab({
   isLoadingTemplates = false,
   hideFreeformMessage = false,
   hidePreview = false,
+  hideTemplateSelect = false,
 }: {
   defaultMessage?: string | null;
   messageType?: string;
@@ -32,6 +37,7 @@ function WhatsAppTab({
   isLoadingTemplates?: boolean;
   hideFreeformMessage?: boolean;
   hidePreview?: boolean;
+  hideTemplateSelect?: boolean;
 }) {
   const [selectedTemplateUuid, setSelectedTemplateUuid] = useState("");
 
@@ -58,6 +64,12 @@ function WhatsAppTab({
   const hasContent = htmlContent.replace(/<[^>]*>/g, "").trim().length > 0;
   const enableWhatsapp = useTemplate || hasContent;
 
+  const variables = hideTemplateSelect
+    ? QRCODE_TEMPLATE_VARIABLES.filter(
+        (v) => v.value !== "{{link_payment}}" || BILLING_RULE_TYPES.has(messageType),
+      )
+    : undefined;
+
   return (
     <>
       <input
@@ -66,37 +78,39 @@ function WhatsAppTab({
         value={enableWhatsapp ? "true" : "false"}
       />
 
-      <div className="mb-5 flex flex-col gap-1.5">
-        <p className="text-sm font-semibold text-foreground">Template Aprovado</p>
+      {!hideTemplateSelect && (
+        <div className="mb-5 flex flex-col gap-1.5">
+          <p className="text-sm font-semibold text-foreground">Template Aprovado</p>
 
-        {!messageType || (!isLoadingTemplates && !hasTemplates) ? (
-          <p className="text-xs text-muted-foreground">
-            {!messageType
-              ? "Selecione um tipo de mensagem para ver os templates disponíveis."
-              : "Nenhum template configurado para este tipo de mensagem."}
-          </p>
-        ) : (
-          <Select.Root
-            value={selectedTemplateUuid}
-            onValueChange={setSelectedTemplateUuid}
-            disabled={isLoadingTemplates}
-          >
-            <Select.Trigger>
-              <Select.Value
-                placeholder={isLoadingTemplates ? "Carregando templates..." : "Selecione um template"}
-              />
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Item value="">Escrever manualmente</Select.Item>
-              {templates.map((t) => (
-                <Select.Item key={t.uuid} value={t.uuid}>
-                  {t.templateName}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-        )}
-      </div>
+          {!messageType || (!isLoadingTemplates && !hasTemplates) ? (
+            <p className="text-xs text-muted-foreground">
+              {!messageType
+                ? "Selecione um tipo de mensagem para ver os templates disponíveis."
+                : "Nenhum template configurado para este tipo de mensagem."}
+            </p>
+          ) : (
+            <Select.Root
+              value={selectedTemplateUuid}
+              onValueChange={setSelectedTemplateUuid}
+              disabled={isLoadingTemplates}
+            >
+              <Select.Trigger>
+                <Select.Value
+                  placeholder={isLoadingTemplates ? "Carregando templates..." : "Selecione um template"}
+                />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item value="">Escrever manualmente</Select.Item>
+                {templates.map((t) => (
+                  <Select.Item key={t.uuid} value={t.uuid}>
+                    {t.templateName}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
+        </div>
+      )}
 
       {hideFreeformMessage && useTemplate && (
         <input
@@ -112,7 +126,7 @@ function WhatsAppTab({
             <div className="col-span-3 flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <p className="text-sm font-semibold text-foreground">Inserir variável</p>
-                <VariablePopover onInsert={insertVariable} />
+                <VariablePopover onInsert={insertVariable} variables={variables} />
               </div>
 
               {useTemplate ? (
