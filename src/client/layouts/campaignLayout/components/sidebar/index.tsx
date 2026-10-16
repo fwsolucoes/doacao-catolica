@@ -75,9 +75,12 @@ function AppSidebar() {
   const matches = useMatches();
   const campaignData = matches.find(
     (m) => m.loaderData && typeof m.loaderData === "object" && "campaign" in m.loaderData,
-  )?.loaderData as { campaign: { accountId: number } } | undefined;
+  )?.loaderData as
+    | { campaign: { accountId: number }; whatsappSettings: { type: string | null } | null }
+    | undefined;
   const campaignAccountId = campaignData?.campaign?.accountId ?? null;
   const showShalomMetrics = campaignAccountId === SHALOM_ACCOUNT_ID;
+  const isOfficialDoacaoCatolica = campaignData?.whatsappSettings?.type !== "custom";
 
   const visibleSections: SidebarNavSection[] = sections.map((section) => ({
     ...section,
@@ -85,9 +88,11 @@ function AppSidebar() {
       item.subItems
         ? {
             ...item,
-            subItems: item.subItems.filter(
-              (sub) => sub.label !== "Métricas Shalom" || showShalomMetrics,
-            ),
+            subItems: item.subItems.filter((sub) => {
+              if (sub.label === "Métricas Shalom") return showShalomMetrics;
+              if (sub.label === "Templates META") return !isOfficialDoacaoCatolica;
+              return true;
+            }),
           }
         : item,
     ),

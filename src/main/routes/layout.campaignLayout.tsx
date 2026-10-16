@@ -9,6 +9,7 @@ import { getCampaignOverview } from "../factories/campaignOverview/getCampaignOv
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
 import { getProjectPermissions } from "../factories/projectPermissions/getProjectPermissionsFactory";
 import { getPaymentMetrics } from "../factories/paymentMetrics/getPaymentMetricsFactory";
+import { getAccountWhatsappSettings } from "../factories/whatsapp/getAccountWhatsappSettingsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -36,12 +37,19 @@ export async function loader(args: Route.LoaderArgs) {
     throw redirect("/my-campaigns?noPermission=true");
   }
 
-  const [overview, metrics] = await Promise.all([
+  const [overview, metrics, whatsappSettings] = await Promise.all([
     getCampaignOverview.handle(adaptedRoute),
     isMonthlyType ? getPaymentMetrics.handle(adaptedRoute) : Promise.resolve(null),
+    getAccountWhatsappSettings.handle(adaptedRoute),
   ]);
 
-  return { campaign, overview, ...permissions, bannerTotalReceived: metrics?.released ?? null };
+  return {
+    campaign,
+    overview,
+    ...permissions,
+    bannerTotalReceived: metrics?.released ?? null,
+    whatsappSettings,
+  };
 }
 
 export function ErrorBoundary() {
