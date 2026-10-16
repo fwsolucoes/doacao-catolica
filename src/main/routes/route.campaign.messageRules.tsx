@@ -12,6 +12,7 @@ import { listNotificationSettings } from "../factories/notificationSetting/listN
 import { deleteNotificationSetting } from "../factories/notificationSetting/deleteNotificationSettingFactory";
 import { toggleNotificationSetting } from "../factories/notificationSetting/toggleNotificationSettingFactory";
 import { updateNotificationSetting } from "../factories/notificationSetting/updateNotificationSettingFactory";
+import { getAccountWhatsappSettings } from "../factories/whatsapp/getAccountWhatsappSettingsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -20,7 +21,8 @@ export async function loader(args: Route.LoaderArgs) {
 
   const notificationSettings =
     await listNotificationSettings.handle(adaptedRoute);
-  return { notificationSettings };
+  const whatsappSettings = await getAccountWhatsappSettings.handle(adaptedRoute);
+  return { notificationSettings, whatsappSettings };
 }
 
 export async function action(args: Route.ActionArgs) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFetcher, useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
 import { Mail } from "lucide-react";
 import { Tabs } from "radix-ui";
 import { cn } from "~/lib/utils";
@@ -48,6 +48,11 @@ function NewBillingRuleDialog({
 }) {
   const isEditing = !!rule;
   const { campaignId } = useParams<{ campaignId: string }>();
+  const { whatsappSettings } = useLoaderData<MessageRulesLoader>();
+  const isOfficialMetaOwnNumber =
+    whatsappSettings?.type === "custom" &&
+    whatsappSettings?.hasToken === true &&
+    whatsappSettings?.provider === "aini";
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
@@ -246,6 +251,7 @@ function NewBillingRuleDialog({
                       messageType={messageType}
                       templates={templates}
                       isLoadingTemplates={isLoadingTemplates}
+                      hideFreeformMessage={isOfficialMetaOwnNumber}
                     />
                   </Tabs.Content>
                   <Tabs.Content
