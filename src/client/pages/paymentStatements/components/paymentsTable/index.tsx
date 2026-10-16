@@ -89,6 +89,13 @@ const NO_RECEIPT_STATUSES = new Set([
   "awaiting_payment",
 ]);
 
+// "Enviar Lembrete" só faz sentido para pagamentos vencidos ou aguardando pagamento
+const REMINDER_ENABLED_STATUSES = new Set([
+  "overdue",
+  "created",
+  "awaiting_payment",
+]);
+
 const RECEIPT_ENABLED_CAMPAIGN_ID = "019b9d99-5b22-7889-8541-537ffb1fc153";
 
 type ActionsPopoverProps = {
@@ -96,9 +103,10 @@ type ActionsPopoverProps = {
   onSendReminder: () => void;
   paymentLink: string;
   receiptUrl: string | null;
+  canSendReminder: boolean;
 };
 
-function ActionsPopover({ onViewDetails, onSendReminder, paymentLink, receiptUrl }: ActionsPopoverProps) {
+function ActionsPopover({ onViewDetails, onSendReminder, paymentLink, receiptUrl, canSendReminder }: ActionsPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -141,15 +149,19 @@ function ActionsPopover({ onViewDetails, onSendReminder, paymentLink, receiptUrl
             </a>
           </Button>
         )}
-        <div className="my-1 h-px bg-muted" />
-        <Button
-          variant="ghost"
-          className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
-          onClick={onSendReminder}
-        >
-          <WhatsAppIcon size={16} />
-          Enviar Lembrete
-        </Button>
+        {canSendReminder && (
+          <>
+            <div className="my-1 h-px bg-muted" />
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-start gap-5 rounded-lg px-2.5 py-2 text-sm font-normal text-muted-foreground hover:bg-muted"
+              onClick={onSendReminder}
+            >
+              <WhatsAppIcon size={16} />
+              Enviar Lembrete
+            </Button>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );
@@ -353,6 +365,9 @@ function PaymentsTable({ filterDrawerOpen, onFilterDrawerOpenChange }: PaymentsT
                         ? `/campaign/${campaignId}/api/donation-receipt?paymentId=${payment.id}`
                         : null
                     }
+                    canSendReminder={REMINDER_ENABLED_STATUSES.has(
+                      payment.rawStatus,
+                    )}
                   />
                 </Table.Cell>
               </Table.Row>
