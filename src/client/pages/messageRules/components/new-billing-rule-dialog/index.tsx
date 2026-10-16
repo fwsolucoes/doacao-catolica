@@ -264,6 +264,7 @@ function NewBillingRuleDialog({
                       }
                       hidePreview={isOfficialMetaOwnNumber}
                       hideTemplateSelect={isOwnNumberQrcode}
+                      isAccountOwnedTemplate={!isOfficialDoacaoCatolica}
                     />
                   </Tabs.Content>
                   <Tabs.Content

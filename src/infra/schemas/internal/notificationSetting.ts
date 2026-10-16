@@ -5,6 +5,10 @@ const createNotificationSettingSchema = z.object({
   type: z.string().min(1, "Tipo é obrigatório"),
   days: z.coerce.number().int().min(0),
   whatsappMessage: z.string().default(""),
+  accountWhatsappTemplateUuid: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
   mailSubject: z.string().default(""),
   mailMessage: z.string().default(""),
   emailImage1: z.string().default(""),
@@ -25,6 +29,10 @@ const updateNotificationSettingSchema = z.object({
   type: z.string().min(1, "Tipo é obrigatório"),
   days: z.coerce.number().int().min(0),
   whatsappMessage: z.string().default(""),
+  accountWhatsappTemplateUuid: z
+    .string()
+    .optional()
+    .transform((v) => v || null),
   mailSubject: z.string().default(""),
   mailMessage: z.string().default(""),
   emailImage1: z.string().default(""),

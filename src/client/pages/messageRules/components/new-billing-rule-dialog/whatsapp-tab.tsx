@@ -30,6 +30,7 @@ function WhatsAppTab({
   hideFreeformMessage = false,
   hidePreview = false,
   hideTemplateSelect = false,
+  isAccountOwnedTemplate = false,
 }: {
   defaultMessage?: string | null;
   messageType?: string;
@@ -38,6 +39,7 @@ function WhatsAppTab({
   hideFreeformMessage?: boolean;
   hidePreview?: boolean;
   hideTemplateSelect?: boolean;
+  isAccountOwnedTemplate?: boolean;
 }) {
   const [selectedTemplateUuid, setSelectedTemplateUuid] = useState("");
 
@@ -110,6 +112,14 @@ function WhatsAppTab({
             </Select.Root>
           )}
         </div>
+      )}
+
+      {useTemplate && isAccountOwnedTemplate && (
+        <input
+          type="hidden"
+          name="accountWhatsappTemplateUuid"
+          value={selectedTemplate!.uuid}
+        />
       )}
 
       {hideFreeformMessage && useTemplate && (

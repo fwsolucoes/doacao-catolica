@@ -5,6 +5,7 @@ type CreateNotificationSettingData = {
   type: string;
   days: number;
   whatsappMessage: string | null;
+  accountWhatsappTemplateUuid: string | null;
   mailSubject: string;
   mailMessage: string;
   bannerImage: string | null;
@@ -20,6 +21,7 @@ type UpdateNotificationSettingData = {
   type: string;
   days: number;
   whatsappMessage: string | null;
+  accountWhatsappTemplateUuid: string | null;
   mailSubject: string;
   mailMessage: string;
   bannerImage: string | null;

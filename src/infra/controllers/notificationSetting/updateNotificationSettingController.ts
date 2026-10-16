@@ -44,6 +44,7 @@ class UpdateNotificationSettingController {
         type: validated.type,
         days: validated.days,
         whatsappMessage: validated.whatsappMessage,
+        accountWhatsappTemplateUuid: validated.accountWhatsappTemplateUuid,
         mailSubject: validated.mailSubject,
         mailMessage: validated.mailMessage,
         bannerImage: validated.emailImage1 || null,
