@@ -51,6 +51,10 @@ const allDonationsMock: DonationsLoader = {
         operatorReference: "abc123",
         operatorResponse: null,
         campaignName: "Campanha Natal Solidário",
+        observations: "Pagamento recebido em espécie durante evento presencial.",
+        receivingAccount: "Caixa - Conta Corrente",
+        manualPaymentMethod: "Dinheiro",
+        paymentPaidDate: "05/09/2026",
       },
       {
         id: "mock-pay-2",
@@ -76,6 +80,10 @@ const allDonationsMock: DonationsLoader = {
         operatorReference: null,
         operatorResponse: null,
         campaignName: "Reforma do Templo",
+        observations: null,
+        receivingAccount: "Não informado",
+        manualPaymentMethod: "Não informado",
+        paymentPaidDate: null,
       },
       {
         id: "mock-pay-3",
@@ -101,6 +109,10 @@ const allDonationsMock: DonationsLoader = {
         operatorReference: "def456",
         operatorResponse: null,
         campaignName: "Missões Internacionais",
+        observations: null,
+        receivingAccount: "Não informado",
+        manualPaymentMethod: "Não informado",
+        paymentPaidDate: null,
       },
       {
         id: "mock-pay-4",
@@ -126,6 +138,10 @@ const allDonationsMock: DonationsLoader = {
         operatorReference: "ghi789",
         operatorResponse: null,
         campaignName: "Campanha Natal Solidário",
+        observations: null,
+        receivingAccount: "Não informado",
+        manualPaymentMethod: "Não informado",
+        paymentPaidDate: null,
       },
     ],
     meta: {

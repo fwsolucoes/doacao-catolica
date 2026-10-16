@@ -46,6 +46,17 @@ class PaymentGateway implements PaymentGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
+
+  async cancelManualPayment(accountUuid: string, paymentUuid: string): Promise<string> {
+    const apiResponse = await donationApi.post(
+      `/api/payments/manual/${accountUuid}/cancel`,
+      { body: { payment_uuid: paymentUuid }, headers: this.headers },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    return apiResponse.response?.message ?? "Baixa manual cancelada com sucesso!";
+  }
 }
 
 export { PaymentGateway };

@@ -1,3 +1,4 @@
+import type { CancelManualPaymentUseCase } from "~/app/useCases/payment/cancelManualPaymentUseCase";
 import type { CancelPaymentUseCase } from "~/app/useCases/payment/cancelPaymentUseCase";
 import type { ManualPaymentUseCase } from "~/app/useCases/payment/manualPaymentUseCase";
 import type { SendReminderNotificationUseCase } from "~/app/useCases/payment/sendReminderNotificationUseCase";
@@ -5,6 +6,7 @@ import { DecodeRequestBodyAdapter } from "~/infra/adapters/decodeRequestBodyAdap
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
 import {
+  cancelManualPaymentBodySchema,
   cancelPaymentBodySchema,
   manualPaymentBodySchema,
   sendReminderNotificationBodySchema,
@@ -16,6 +18,7 @@ class PaymentController {
     private cancelPaymentUseCase: CancelPaymentUseCase,
     private manualPaymentUseCase: ManualPaymentUseCase,
     private sendReminderNotificationUseCase: SendReminderNotificationUseCase,
+    private cancelManualPaymentUseCase: CancelManualPaymentUseCase,
   ) {}
 
   async handleAction(route: RouteDTO) {
@@ -49,6 +52,13 @@ class PaymentController {
       case "sendReminderNotification": {
         const validated = new SchemaValidatorAdapter(sendReminderNotificationBodySchema).validate(body);
         const message = await this.sendReminderNotificationUseCase.execute(validated.paymentId);
+        return {
+          toast: { message, type: "success" as const },
+        };
+      }
+      case "cancelManualPayment": {
+        const validated = new SchemaValidatorAdapter(cancelManualPaymentBodySchema).validate(body);
+        const message = await this.cancelManualPaymentUseCase.execute(campaignId, validated.paymentId);
         return {
           toast: { message, type: "success" as const },
         };

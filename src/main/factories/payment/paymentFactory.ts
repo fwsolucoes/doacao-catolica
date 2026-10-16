@@ -1,3 +1,4 @@
+import { CancelManualPaymentUseCase } from "~/app/useCases/payment/cancelManualPaymentUseCase";
 import { CancelPaymentUseCase } from "~/app/useCases/payment/cancelPaymentUseCase";
 import { ManualPaymentUseCase } from "~/app/useCases/payment/manualPaymentUseCase";
 import { SendReminderNotificationUseCase } from "~/app/useCases/payment/sendReminderNotificationUseCase";
@@ -9,6 +10,7 @@ const controller = new PaymentController(
   new CancelPaymentUseCase(gateway),
   new ManualPaymentUseCase(gateway),
   new SendReminderNotificationUseCase(gateway),
+  new CancelManualPaymentUseCase(gateway),
 );
 
 const paymentFactory = {

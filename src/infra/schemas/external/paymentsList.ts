@@ -32,6 +32,16 @@ const externalPaymentItemSchema = z.object({
       notified: z.number(),
     }),
   ),
+  obs: z.string().nullable().optional(),
+  manual_payment_amounts: z
+    .array(
+      z.object({
+        bank_account: z.string().nullable().optional(),
+        method: z.object({ name: z.string() }).nullable(),
+      }),
+    )
+    .nullable()
+    .optional(),
 });
 
 const externalPaymentsListSchema = z.object({

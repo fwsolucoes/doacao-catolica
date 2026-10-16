@@ -104,6 +104,10 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
           pixAuthorizationStatus: item.pix_authorization_status,
           operatorReference: item.operator_reference,
           operatorResponse: item.operator_response ?? null,
+          observations: item.obs ?? null,
+          receivingAccount: item.manual_payment_amounts?.[0]?.bank_account ?? null,
+          manualPaymentMethod: item.manual_payment_amounts?.[0]?.method?.name ?? null,
+          paymentPaidDate: item.payment_paid_date,
         }),
       ),
       meta: {

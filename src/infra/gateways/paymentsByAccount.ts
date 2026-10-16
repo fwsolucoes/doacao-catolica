@@ -56,6 +56,10 @@ class PaymentsByAccountGateway implements PaymentsByAccountGatewayDTO {
           operatorReference: item.operator_reference,
           operatorResponse: item.operator_response ?? null,
           campaignName: item.account_name,
+          observations: null,
+          receivingAccount: null,
+          manualPaymentMethod: null,
+          paymentPaidDate: item.payment_paid_date,
         }),
       ),
       meta: {

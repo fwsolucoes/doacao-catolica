@@ -73,6 +73,10 @@ type PaymentConstructorProps = {
   // Nome da campanha à qual o pagamento pertence — usado na visão "todas as campanhas".
   // Nulo na visão de uma campanha específica, onde a campanha já está no contexto da rota.
   campaignName?: string | null;
+  observations: string | null;
+  receivingAccount: string | null;
+  manualPaymentMethod: string | null;
+  paymentPaidDate: string | null;
 };
 
 class Payment {
@@ -97,6 +101,10 @@ class Payment {
   readonly operatorReference: string | null;
   readonly operatorResponse: string | null;
   readonly campaignName: string | null;
+  readonly observations: string | null;
+  readonly receivingAccount: string | null;
+  readonly manualPaymentMethod: string | null;
+  readonly paymentPaidDate: string | null;
 
   private constructor(props: PaymentConstructorProps) {
     this.id = props.id;
@@ -120,6 +128,10 @@ class Payment {
     this.operatorReference = props.operatorReference;
     this.operatorResponse = props.operatorResponse;
     this.campaignName = props.campaignName ?? null;
+    this.observations = props.observations;
+    this.receivingAccount = props.receivingAccount;
+    this.manualPaymentMethod = props.manualPaymentMethod;
+    this.paymentPaidDate = props.paymentPaidDate;
   }
 
   static restore(props: PaymentConstructorProps): Payment {
@@ -171,6 +183,10 @@ class Payment {
           ? extractOperatorResponseDescription(this.operatorResponse)
           : null,
       campaignName: this.campaignName,
+      observations: this.observations,
+      receivingAccount: this.receivingAccount ?? "Não informado",
+      manualPaymentMethod: this.manualPaymentMethod ?? "Não informado",
+      paymentPaidDate: this.paymentPaidDate?.split(" ")[0] ?? null,
     };
   }
 }

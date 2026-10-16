@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useFetcher, useParams } from "react-router";
+import { CancelManualPaymentDialog } from "./cancelManualPaymentDialog";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
 import { ManualPaymentDialog } from "./manualPaymentDialog";
 import { SendReminderNotificationDialog } from "./sendReminderNotificationDialog";
@@ -148,10 +149,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
   const closeManualPaymentDialog = useCallback(() => setShowManualPaymentDialog(false), []);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const closeReminderDialog = useCallback(() => setShowReminderDialog(false), []);
+  const [showCancelManualPaymentDialog, setShowCancelManualPaymentDialog] = useState(false);
+  const closeCancelManualPaymentDialog = useCallback(
+    () => setShowCancelManualPaymentDialog(false),
+    [],
+  );
 
   const canShowPendingActions =
     payment?.status === "Aguardando pagamento" ||
     payment?.status === "Vencido";
+  const isManualPayment = payment?.rawStatus === "manual";
 
   useEffect(() => {
     if (payment && campaignId) {
@@ -284,14 +291,23 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
                       Forma de pagamento
                     </div>
-                    <div className="pt-0.5">
-                      <Badge
-                        variant={
-                          PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
-                        }
-                      >
-                        {payment.paymentType}
-                      </Badge>
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                      {isManualPayment ? (
+                        <>
+                          <Badge variant="info">Baixa manual</Badge>
+                          <Badge variant="violet">
+                            {payment.manualPaymentMethod}
+                          </Badge>
+                        </>
+                      ) : (
+                        <Badge
+                          variant={
+                            PAYMENT_TYPE_BADGE[payment.paymentType] ?? "neutral"
+                          }
+                        >
+                          {payment.paymentType}
+                        </Badge>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -333,6 +349,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                       {payment.paidDate ?? "—"}
                     </div>
                   </div>
+                  {isManualPayment && (
+                    <div className="space-y-1">
+                      <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                        Data da baixa manual
+                      </div>
+                      <div className="text-base font-semibold text-foreground">
+                        {payment.paymentPaidDate ?? "—"}
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-1">
                     <div className="text-xs uppercase tracking-wide text-muted-foreground">
                       ID da transação
@@ -354,6 +380,32 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
                     </div>
                   </div>
                 </section>
+
+                {isManualPayment && (
+                  <>
+                    <Separator />
+                    <section className="grid grid-cols-2 gap-x-7 gap-y-5 sm:grid-cols-3">
+                      {payment.observations && (
+                        <div className="space-y-1">
+                          <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                            Observações
+                          </div>
+                          <div className="text-base font-semibold text-foreground">
+                            {payment.observations}
+                          </div>
+                        </div>
+                      )}
+                      <div className="space-y-1">
+                        <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                          Conta de recebimento
+                        </div>
+                        <div className="text-base font-semibold text-foreground">
+                          {payment.receivingAccount}
+                        </div>
+                      </div>
+                    </section>
+                  </>
+                )}
 
                 <Separator />
 
@@ -471,6 +523,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               </Button>
             </>
           )}
+          {isManualPayment && (
+            <Button
+              variant="outline"
+              className="h-10 gap-2 rounded-xl border-destructive/30 px-3.5 text-xs text-destructive hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
+              onClick={() => setShowCancelManualPaymentDialog(true)}
+            >
+              <XCircle className="h-5 w-5" />
+              Cancelar baixa manual
+            </Button>
+          )}
           <Button
             className="h-10 gap-2 rounded-xl bg-[#25d366] px-3.5 text-xs text-white hover:bg-[#20bd5a]"
             onClick={() => setShowReminderDialog(true)}
@@ -500,6 +562,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <SendReminderNotificationDialog
       payment={showReminderDialog ? payment : null}
       onClose={closeReminderDialog}
+    />
+
+    <CancelManualPaymentDialog
+      payment={showCancelManualPaymentDialog ? payment : null}
+      onClose={closeCancelManualPaymentDialog}
+      onSuccess={onClose}
     />
     </>
   );
