@@ -110,6 +110,11 @@ function NewBillingRuleDialog({
             <input type="hidden" name="type" value={messageType} />
             <input
               type="hidden"
+              name="whatsappType"
+              value={isOfficialMetaOwnNumber ? "TEMPLATE" : "NORMAL"}
+            />
+            <input
+              type="hidden"
               name="enablePix"
               value={paymentMethods.pix ? "true" : "false"}
             />

@@ -63,6 +63,7 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
         name: data.name,
         days: data.days,
         whatsapp_message: data.whatsappMessage || undefined,
+        whatsapp_type: data.whatsappType,
         account_whatsapp_template_uuid:
           data.accountWhatsappTemplateUuid || undefined,
         mail_subject: data.mailSubject || undefined,
@@ -94,6 +95,7 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
           name: data.name,
           days: data.days,
           whatsapp_message: data.whatsappMessage || undefined,
+          whatsapp_type: data.whatsappType,
           account_whatsapp_template_uuid:
             data.accountWhatsappTemplateUuid || undefined,
           mail_subject: data.mailSubject || undefined,

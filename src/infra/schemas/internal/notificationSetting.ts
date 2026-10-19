@@ -5,6 +5,7 @@ const createNotificationSettingSchema = z.object({
   type: z.string().min(1, "Tipo é obrigatório"),
   days: z.coerce.number().int().min(0),
   whatsappMessage: z.string().default(""),
+  whatsappType: z.enum(["NORMAL", "TEMPLATE"]),
   accountWhatsappTemplateUuid: z
     .string()
     .optional()
@@ -29,6 +30,7 @@ const updateNotificationSettingSchema = z.object({
   type: z.string().min(1, "Tipo é obrigatório"),
   days: z.coerce.number().int().min(0),
   whatsappMessage: z.string().default(""),
+  whatsappType: z.enum(["NORMAL", "TEMPLATE"]),
   accountWhatsappTemplateUuid: z
     .string()
     .optional()
