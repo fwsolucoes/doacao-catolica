@@ -51,8 +51,9 @@ function Trigger({
 function Content({
   className,
   children,
-  position = "item-aligned",
+  position = "popper",
   align = "center",
+  sideOffset = 2,
   ...props
 }: ComponentProps<typeof SelectPrimitive.Content>) {
   return (
@@ -67,6 +68,7 @@ function Content({
         )}
         position={position}
         align={align}
+        sideOffset={sideOffset}
         {...props}
       >
         <ScrollUpButton />
@@ -107,7 +109,7 @@ function Item({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "relative flex w-full cursor-default items-center gap-2 rounded-sm py-2 pr-8 pl-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&>span:not([data-slot])]:leading-6",
         className,
       )}
       {...props}

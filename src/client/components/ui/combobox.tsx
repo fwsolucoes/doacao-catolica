@@ -1,6 +1,5 @@
 import * as React from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { Button } from "~/client/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -51,22 +50,26 @@ function Combobox({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+        <button
+          type="button"
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
           className={cn(
-            "grid h-9 w-full grid-cols-[minmax(0,1fr)_auto] overflow-hidden px-3 font-normal",
-            !value && "text-(--text-muted)",
+            "flex w-full min-h-11 items-center justify-between gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm whitespace-nowrap outline-none",
+            "text-foreground",
+            "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
+            !value && "text-muted-foreground",
             className,
           )}
         >
           <span className="min-w-0 truncate text-left">
             {selected ? selected.label : placeholder}
           </span>
-          <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
-        </Button>
+          <ChevronsUpDownIcon className="size-4 shrink-0 opacity-50" />
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
         <Command>
