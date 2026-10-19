@@ -45,7 +45,16 @@ class AccountWhatsappSettingsGateway implements AccountWhatsappSettingsGatewayDT
     input: UpdateAccountWhatsappSettingsInput,
   ): Promise<void> {
     const headers = { "api-key": environmentVariables.API_KEY_DONATION };
-    const body = { provider: input.provider, type: input.type };
+
+    const body: Record<string, unknown> = {
+      provider: input.provider,
+      type: input.type,
+      active: input.active,
+      utility_fee: input.utilityFee,
+      marketing_fee: input.marketingFee,
+    };
+
+    if (input.token) body.token = input.token;
 
     const apiResponse = await donationApi.put(
       `/api/account_whatsapp_settings/${input.accountReference}`,

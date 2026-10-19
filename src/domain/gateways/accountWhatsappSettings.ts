@@ -12,6 +12,10 @@ type UpdateAccountWhatsappSettingsInput = {
   accountReference: string;
   provider: string;
   type: string;
+  active: boolean;
+  token?: string;
+  utilityFee: number;
+  marketingFee: number;
 };
 
 type AccountWhatsappSettingsData = {

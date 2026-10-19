@@ -1,9 +1,11 @@
 import type { AccountWhatsappSettingsGatewayDTO } from "~/domain/gateways/accountWhatsappSettings";
+import { environmentVariables } from "~/main/config/environmentVariables";
 
 type InputProps = {
   accountReference: string;
   provider: string;
   type: string;
+  token?: string;
 };
 
 class CreateAccountWhatsappSettingsUseCase {
@@ -14,9 +16,14 @@ class CreateAccountWhatsappSettingsUseCase {
       accountReference: input.accountReference,
       provider: input.provider,
       type: input.type,
+      token: input.token,
       active: true,
-      utilityFee: 0,
-      marketingFee: 0,
+      utilityFee: parseFloat(
+        environmentVariables.DEFAULT_WHATSAPP_SETTINGS_UTILITY_FEE,
+      ),
+      marketingFee: parseFloat(
+        environmentVariables.DEFAULT_WHATSAPP_SETTINGS_MARKETING_FEE,
+      ),
     });
     return { success: true };
   }

@@ -8,6 +8,7 @@ const updateAccountWhatsappSettingsSchema = z.object({
   accountReference: z.string().min(1),
   provider: z.enum(["aini", "unofficial_whaticket"]),
   type: z.literal("custom"),
+  token: z.string().optional(),
 });
 
 const createDefaultAccountWhatsappSettingsSchema = z.object({

@@ -77,11 +77,11 @@ function OwnNumberConfigDialog({
       const provider =
         connectionType === "official" ? "aini" : "unofficial_whaticket";
       saveFetcher.submit(
-        { accountReference, provider, type: "custom" },
+        { accountReference, provider, type: "custom", token },
         { method: "POST", action: "/api/whatsapp/createAccountSettings" },
       );
     }
-  }, [saveFetcher.state, saveFetcher.data, onSave, connectionType, accountReference]);
+  }, [saveFetcher.state, saveFetcher.data, onSave, connectionType, accountReference, token]);
 
   function handleOpenChange(value: boolean) {
     if (!value) {
@@ -105,7 +105,7 @@ function OwnNumberConfigDialog({
     const provider =
       connectionType === "official" ? "aini" : "unofficial_whaticket";
     saveFetcher.submit(
-      { accountReference, provider, type: "custom" },
+      { accountReference, provider, type: "custom", token },
       { method: "PUT", action: "/api/whatsapp/accountSettings" },
     );
   }
