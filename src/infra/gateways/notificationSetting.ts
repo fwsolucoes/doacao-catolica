@@ -45,6 +45,7 @@ class NotificationSettingGateway implements NotificationSettingGatewayDTO {
         webhookUrl: item.webhook_url,
         keywordFlow: item.keyword_flow,
         whatsappType: item.whatsapp_type,
+        accountWhatsappTemplateUuid: item.account_whatsapp_template_uuid,
         createdAt: item.created_at2,
         updatedAt: item.updated_at2,
         deletedAt: item.deleted_at2,

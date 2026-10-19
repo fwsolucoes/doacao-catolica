@@ -17,6 +17,7 @@ type NotificationSettingProps = {
   webhookUrl: string | null;
   keywordFlow: string | null;
   whatsappType: string | null;
+  accountWhatsappTemplateUuid: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -40,6 +41,7 @@ class NotificationSetting {
   readonly webhookUrl: string | null;
   readonly keywordFlow: string | null;
   readonly whatsappType: string | null;
+  readonly accountWhatsappTemplateUuid: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly deletedAt: string | null;
@@ -62,6 +64,7 @@ class NotificationSetting {
     this.webhookUrl = props.webhookUrl;
     this.keywordFlow = props.keywordFlow;
     this.whatsappType = props.whatsappType;
+    this.accountWhatsappTemplateUuid = props.accountWhatsappTemplateUuid;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.deletedAt = props.deletedAt;
@@ -90,6 +93,7 @@ class NotificationSetting {
       webhookUrl: this.webhookUrl,
       keywordFlow: this.keywordFlow,
       whatsappType: this.whatsappType,
+      accountWhatsappTemplateUuid: this.accountWhatsappTemplateUuid,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,

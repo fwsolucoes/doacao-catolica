@@ -260,16 +260,11 @@ function NewBillingRuleDialog({
                     forceMount
                   >
                     <WhatsAppTab
+                      uuid={rule?.uuid}
                       defaultMessage={rule?.whatsappMessage}
                       messageType={messageType}
                       templates={templates}
                       isLoadingTemplates={isLoadingTemplates}
-                      hideFreeformMessage={
-                        isOfficialMetaOwnNumber || isOfficialDoacaoCatolica
-                      }
-                      hidePreview={isOfficialMetaOwnNumber}
-                      hideTemplateSelect={isOwnNumberQrcode}
-                      isAccountOwnedTemplate={!isOfficialDoacaoCatolica}
                     />
                   </Tabs.Content>
                   <Tabs.Content

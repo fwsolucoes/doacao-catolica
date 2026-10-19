@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useLoaderData } from "react-router";
 import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
 import type { RichTextareaRef } from "~/client/components/campaignSettings/richTextarea";
 import { FormField } from "~/client/components/ui/form-field";
 import { Select } from "~/client/components/ui/select";
 import { WhatsAppIcon } from "~/client/components/ui/whatsapp-icon";
+import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { VariablePopover } from "../variable-popover";
 import {
   BILLING_RULE_TYPES,
@@ -23,34 +25,54 @@ type WhatsappTemplateJson = {
 export type { WhatsappTemplateJson };
 
 function WhatsAppTab({
+  uuid,
   defaultMessage,
   messageType = "",
   templates = [],
   isLoadingTemplates = false,
-  hideFreeformMessage = false,
-  hidePreview = false,
-  hideTemplateSelect = false,
-  isAccountOwnedTemplate = false,
 }: {
+  uuid?: string;
   defaultMessage?: string | null;
   messageType?: string;
   templates?: WhatsappTemplateJson[];
   isLoadingTemplates?: boolean;
-  hideFreeformMessage?: boolean;
-  hidePreview?: boolean;
-  hideTemplateSelect?: boolean;
-  isAccountOwnedTemplate?: boolean;
 }) {
-  const [selectedTemplateUuid, setSelectedTemplateUuid] = useState("");
+  const { whatsappSettings, notificationSettings } =
+    useLoaderData<MessageRulesLoader>();
+  const defaultTemplateUuid = notificationSettings.find(
+    (s) => s.uuid === uuid,
+  )?.accountWhatsappTemplateUuid;
 
+  const isOfficialMetaOwnNumber =
+    whatsappSettings?.type === "custom" &&
+    whatsappSettings?.hasToken === true &&
+    whatsappSettings?.provider === "aini";
+  const isOfficialDoacaoCatolica = whatsappSettings?.type !== "custom";
+  const isOwnNumberQrcode =
+    whatsappSettings?.type === "custom" &&
+    whatsappSettings?.hasToken === true &&
+    whatsappSettings?.provider === "unofficial_whaticket";
+
+  const hideFreeformMessage =
+    isOfficialMetaOwnNumber || isOfficialDoacaoCatolica;
+  const hidePreview = isOfficialMetaOwnNumber;
+  const hideTemplateSelect = isOwnNumberQrcode;
+  const isAccountOwnedTemplate = !isOfficialDoacaoCatolica;
+
+  const [selectedTemplateUuid, setSelectedTemplateUuid] = useState(
+    defaultTemplateUuid ?? "",
+  );
+
+  const previousMessageType = useRef(messageType);
   useEffect(() => {
+    if (previousMessageType.current === messageType) return;
+    previousMessageType.current = messageType;
     setSelectedTemplateUuid("");
   }, [messageType]);
 
-  const selectedTemplate =
-    selectedTemplateUuid
-      ? (templates.find((t) => t.uuid === selectedTemplateUuid) ?? null)
-      : null;
+  const selectedTemplate = selectedTemplateUuid
+    ? (templates.find((t) => t.uuid === selectedTemplateUuid) ?? null)
+    : null;
 
   const hasTemplates = templates.length > 0;
   const useTemplate = selectedTemplate !== null;
@@ -68,7 +90,8 @@ function WhatsAppTab({
 
   const variables = hideTemplateSelect
     ? QRCODE_TEMPLATE_VARIABLES.filter(
-        (v) => v.value !== "{{link_payment}}" || BILLING_RULE_TYPES.has(messageType),
+        (v) =>
+          v.value !== "{{link_payment}}" || BILLING_RULE_TYPES.has(messageType),
       )
     : undefined;
 
@@ -82,7 +105,9 @@ function WhatsAppTab({
 
       {!hideTemplateSelect && (
         <div className="mb-5 flex flex-col gap-1.5">
-          <p className="text-sm font-semibold text-foreground">Template Aprovado</p>
+          <p className="text-sm font-semibold text-foreground">
+            Template Aprovado
+          </p>
 
           {!messageType || (!isLoadingTemplates && !hasTemplates) ? (
             <p className="text-xs text-muted-foreground">
@@ -98,11 +123,16 @@ function WhatsAppTab({
             >
               <Select.Trigger>
                 <Select.Value
-                  placeholder={isLoadingTemplates ? "Carregando templates..." : "Selecione um template"}
-                />
+                  placeholder={
+                    isLoadingTemplates
+                      ? "Carregando templates..."
+                      : "Selecione um template"
+                  }
+                >
+                  {selectedTemplate && `${selectedTemplate.templateName}`}
+                </Select.Value>
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="">Escrever manualmente</Select.Item>
                 {templates.map((t) => (
                   <Select.Item key={t.uuid} value={t.uuid}>
                     {t.templateName}
@@ -135,8 +165,13 @@ function WhatsAppTab({
           {!hideFreeformMessage && (
             <div className="col-span-3 flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <p className="text-sm font-semibold text-foreground">Inserir variável</p>
-                <VariablePopover onInsert={insertVariable} variables={variables} />
+                <p className="text-sm font-semibold text-foreground">
+                  Inserir variável
+                </p>
+                <VariablePopover
+                  onInsert={insertVariable}
+                  variables={variables}
+                />
               </div>
 
               {useTemplate ? (
@@ -170,7 +205,9 @@ function WhatsAppTab({
               <div className="overflow-clip rounded-2xl border border-border">
                 <div className="flex items-center gap-2.5 bg-[#007a55] px-5 py-3">
                   <WhatsAppIcon size={16} className="text-white" />
-                  <span className="text-sm font-semibold text-white">Empresa Demo</span>
+                  <span className="text-sm font-semibold text-white">
+                    Empresa Demo
+                  </span>
                 </div>
                 <div className="bg-[#ecfdf5] p-5">
                   {useTemplate && selectedTemplate!.templatePreviewImage ? (

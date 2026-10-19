@@ -22,6 +22,7 @@ const notificationSettingsSchema = z.object({
       webhook_url: z.string().nullable(),
       keyword_flow: z.string().nullable(),
       whatsapp_type: z.string().nullable(),
+      account_whatsapp_template_uuid: z.string().nullable(),
       created_at2: z.string(),
       updated_at2: z.string(),
       deleted_at2: z.string().nullable(),
