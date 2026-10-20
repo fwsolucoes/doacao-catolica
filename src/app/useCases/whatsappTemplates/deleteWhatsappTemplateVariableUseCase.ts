@@ -1,4 +1,5 @@
 import type { WhatsappTemplateDalDTO } from "~/domain/dal/whatsappTemplate";
+import { reindexWhatsappTemplateVariables } from "./reindexWhatsappTemplateVariables";
 
 class DeleteWhatsappTemplateVariableUseCase {
   constructor(private whatsappTemplateDal: WhatsappTemplateDalDTO) {}
@@ -8,6 +9,15 @@ class DeleteWhatsappTemplateVariableUseCase {
       campaignId,
       templateUuid,
       variableUuid,
+    );
+
+    const template = await this.whatsappTemplateDal.getWhatsappTemplate(campaignId, templateUuid);
+
+    await reindexWhatsappTemplateVariables(
+      this.whatsappTemplateDal,
+      campaignId,
+      templateUuid,
+      template.variables,
     );
   }
 }
