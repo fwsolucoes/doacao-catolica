@@ -5,11 +5,17 @@ class UpdateWhatsappTemplateButtonUseCase {
   constructor(private whatsappTemplateDal: WhatsappTemplateDalDTO) {}
 
   async execute(
+    campaignId: string,
     templateUuid: string,
     buttonUuid: string,
     data: UpdateWhatsappTemplateButtonBody,
   ): Promise<void> {
-    await this.whatsappTemplateDal.updateWhatsappTemplateButton(templateUuid, buttonUuid, data);
+    await this.whatsappTemplateDal.updateWhatsappTemplateButton(
+      campaignId,
+      templateUuid,
+      buttonUuid,
+      data,
+    );
   }
 }
 

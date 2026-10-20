@@ -21,7 +21,7 @@ const SYSTEM_FIELDS: Record<string, string> = {
   "customers.phone": "Telefone do doador",
   "payments.amount": "Valor do pagamento",
   "payments.due_date": "Vencimento do pagamento",
-  "payments.gross_value": "Valor bruto do pagamento",
+  "payments.link_payment": "Link de pagamento",
   "subscriptions.start_date": "Data de início da assinatura",
   "accounts.name": "Nome da organização",
 };

@@ -9,13 +9,14 @@ class CreateWhatsappTemplateButtonController {
   constructor(private createWhatsappTemplateButtonUseCase: CreateWhatsappTemplateButtonUseCase) {}
 
   async handle(route: RouteDTO) {
-    const { templateId } = route.params;
+    const { campaignId, templateId } = route.params;
+    if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
     if (!templateId) throw HttpAdapter.badRequest("templateId is required");
 
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(createWhatsappTemplateButtonSchema).validate(body);
 
-    await this.createWhatsappTemplateButtonUseCase.execute(templateId, validated);
+    await this.createWhatsappTemplateButtonUseCase.execute(campaignId, templateId, validated);
 
     return {
       toast: {

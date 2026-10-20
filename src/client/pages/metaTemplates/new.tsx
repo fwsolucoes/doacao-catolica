@@ -37,7 +37,7 @@ const SYSTEM_FIELDS = [
   { value: "customers.phone", label: "Telefone do doador" },
   { value: "payments.amount", label: "Valor do pagamento" },
   { value: "payments.due_date", label: "Vencimento do pagamento" },
-  { value: "payments.gross_value", label: "Valor bruto do pagamento" },
+  { value: "payments.link_payment", label: "Link de pagamento" },
   { value: "subscriptions.start_date", label: "Data de início da assinatura" },
   { value: "accounts.name", label: "Nome da organização" },
 ];

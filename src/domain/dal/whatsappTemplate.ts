@@ -27,26 +27,39 @@ type WhatsappTemplateDalDTO = {
     data: UpdateWhatsappTemplateBody,
   ): Promise<void>;
   updateWhatsappTemplateHeader(
+    campaignId: string,
     templateUuid: string,
     headerUuid: string,
     data: UpdateWhatsappTemplateHeaderBody,
   ): Promise<void>;
   createWhatsappTemplateButton(
+    campaignId: string,
     templateUuid: string,
     data: CreateWhatsappTemplateButtonBody,
   ): Promise<void>;
   updateWhatsappTemplateButton(
+    campaignId: string,
     templateUuid: string,
     buttonUuid: string,
     data: UpdateWhatsappTemplateButtonBody,
   ): Promise<void>;
-  deleteWhatsappTemplateButton(templateUuid: string, buttonUuid: string): Promise<void>;
+  deleteWhatsappTemplateButton(
+    campaignId: string,
+    templateUuid: string,
+    buttonUuid: string,
+  ): Promise<void>;
   createWhatsappTemplateVariable(
+    campaignId: string,
     templateUuid: string,
     data: CreateWhatsappTemplateVariableBody,
   ): Promise<void>;
-  deleteWhatsappTemplateVariable(templateUuid: string, variableUuid: string): Promise<void>;
+  deleteWhatsappTemplateVariable(
+    campaignId: string,
+    templateUuid: string,
+    variableUuid: string,
+  ): Promise<void>;
   updateWhatsappTemplateVariable(
+    campaignId: string,
     templateUuid: string,
     variableUuid: string,
     data: UpdateWhatsappTemplateVariableBody,

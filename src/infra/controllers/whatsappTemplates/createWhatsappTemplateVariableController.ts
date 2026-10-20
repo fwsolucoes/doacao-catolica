@@ -9,13 +9,14 @@ class CreateWhatsappTemplateVariableController {
   constructor(private useCase: CreateWhatsappTemplateVariableUseCase) {}
 
   async handle(route: RouteDTO) {
-    const { templateId } = route.params;
+    const { campaignId, templateId } = route.params;
+    if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
     if (!templateId) throw HttpAdapter.badRequest("templateId is required");
 
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(createWhatsappTemplateVariableSchema).validate(body);
 
-    await this.useCase.execute(templateId, validated);
+    await this.useCase.execute(campaignId, templateId, validated);
 
     return {
       toast: {

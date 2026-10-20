@@ -9,13 +9,18 @@ class DeleteWhatsappTemplateButtonController {
   constructor(private deleteWhatsappTemplateButtonUseCase: DeleteWhatsappTemplateButtonUseCase) {}
 
   async handle(route: RouteDTO) {
-    const { templateId } = route.params;
+    const { campaignId, templateId } = route.params;
+    if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
     if (!templateId) throw HttpAdapter.badRequest("templateId is required");
 
     const body = await DecodeRequestBodyAdapter.decode(route.request);
     const validated = new SchemaValidatorAdapter(deleteWhatsappTemplateButtonSchema).validate(body);
 
-    await this.deleteWhatsappTemplateButtonUseCase.execute(templateId, validated.button_uuid);
+    await this.deleteWhatsappTemplateButtonUseCase.execute(
+      campaignId,
+      templateId,
+      validated.button_uuid,
+    );
 
     return {
       toast: {
