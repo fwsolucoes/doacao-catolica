@@ -91,29 +91,30 @@ function OwnNumberCard({
           <div className="mt-auto flex flex-col gap-3.5 pt-2.5">
             <div className="flex flex-col gap-3.5">
               <div className="flex items-center justify-between">
-                {isConfigured ? (
-                  <div className="flex items-center gap-1.5 rounded-xl bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700">
-                    <CircleCheck size={14} />
-                    Configurado
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1.5 rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-muted-foreground dark:bg-card">
-                    <CircleSlash size={14} />
-                    Não configurado
-                  </div>
-                )}
+                {selected &&
+                  (isConfigured ? (
+                    <div className="flex items-center gap-1.5 rounded-xl bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700">
+                      <CircleCheck size={14} />
+                      Configurado
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 rounded-xl bg-[#e6e6ed] px-3 py-0.5 text-xs font-semibold text-muted-foreground dark:bg-card">
+                      <CircleSlash size={14} />
+                      Não configurado
+                    </div>
+                  ))}
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="h-10 gap-2 text-xs"
+                  className="ml-auto h-10 gap-2 text-xs"
                   onClick={() => setShowConfig(true)}
                 >
                   <Settings2 size={15} />
                   Configurações
                 </Button>
               </div>
-              {isConfigured && settings?.provider && (
+              {selected && isConfigured && settings?.provider && (
                 <Badge
                   variant={connectionBadge?.variant ?? "neutral"}
                   className="w-fit"
