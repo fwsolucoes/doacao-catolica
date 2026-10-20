@@ -175,7 +175,7 @@ function CreateRecurrencePage() {
                     emptyText="Nenhum contato encontrado."
                   />
                 </FormField>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="default" asChild>
                   <a href={newContactHref}>Cadastrar novo</a>
                 </Button>
               </div>
