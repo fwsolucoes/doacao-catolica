@@ -35,7 +35,7 @@ function VariablesCard() {
             >
               <div className="flex flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="font-mono text-xs text-muted-foreground">{`{{${index + 1}}}`}</span>
+                  <span className="font-mono text-xs text-muted-foreground">{`{{${variable.position ?? index + 1}}}`}</span>
                   <span className="text-sm font-semibold text-foreground">{displayName}</span>
                 </div>
                 {variable.description && (

@@ -10,11 +10,16 @@ class UpdateWhatsappTemplateVariableUseCase {
     variableUuid: string,
     data: UpdateWhatsappTemplateVariableBody,
   ): Promise<void> {
+    const template = await this.whatsappTemplateDal.getWhatsappTemplate(campaignId, templateUuid);
+    const index = template.variables.findIndex((v) => v.uuid === variableUuid);
+    const position = index >= 0 ? index + 1 : template.variables.length + 1;
+
     await this.whatsappTemplateDal.updateWhatsappTemplateVariable(
       campaignId,
       templateUuid,
       variableUuid,
       data,
+      position,
     );
   }
 }

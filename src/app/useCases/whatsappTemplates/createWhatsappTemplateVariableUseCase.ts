@@ -9,7 +9,15 @@ class CreateWhatsappTemplateVariableUseCase {
     templateUuid: string,
     data: CreateWhatsappTemplateVariableBody,
   ): Promise<void> {
-    await this.whatsappTemplateDal.createWhatsappTemplateVariable(campaignId, templateUuid, data);
+    const template = await this.whatsappTemplateDal.getWhatsappTemplate(campaignId, templateUuid);
+    const position = template.variables.length + 1;
+
+    await this.whatsappTemplateDal.createWhatsappTemplateVariable(
+      campaignId,
+      templateUuid,
+      data,
+      position,
+    );
   }
 }
 

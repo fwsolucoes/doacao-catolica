@@ -145,11 +145,11 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   }
 
   private buildVariables(variables: CreateWhatsappTemplateBody["variables"]) {
-    return variables.map((v) => {
+    return variables.map((v, index) => {
       const dotIndex = v.systemField.indexOf(".");
       const table = v.systemField.slice(0, dotIndex);
       const field = v.systemField.slice(dotIndex + 1);
-      return { name: field, table, field, description: v.description };
+      return { name: field, table, field, position: index + 1, description: v.description };
     });
   }
 
@@ -194,6 +194,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
         uuid: v.uuid,
         systemField: v.table && v.field ? `${v.table}.${v.field}` : "",
         name: v.name ?? null,
+        position: v.position ?? null,
         description: v.description ?? null,
       })),
       button: firstButton
@@ -333,11 +334,12 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
   private buildVariableBody(
     systemField: string,
     description: string,
+    position: number,
   ): Record<string, unknown> {
     const dotIndex = systemField.indexOf(".");
     const table = systemField.slice(0, dotIndex);
     const field = systemField.slice(dotIndex + 1);
-    const body: Record<string, unknown> = { table, field, name: field };
+    const body: Record<string, unknown> = { table, field, name: field, position };
     if (description) body.description = description;
     return body;
   }
@@ -346,8 +348,9 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     campaignId: string,
     templateUuid: string,
     data: CreateWhatsappTemplateVariableBody,
+    position: number,
   ): Promise<void> {
-    const body = this.buildVariableBody(data.system_field, data.description);
+    const body = this.buildVariableBody(data.system_field, data.description, position);
 
     const apiResponse = await donationApi.post(
       `/api/account_whatsapp_templates/${campaignId}/${templateUuid}/variables`,
@@ -362,8 +365,9 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     templateUuid: string,
     variableUuid: string,
     data: UpdateWhatsappTemplateVariableBody,
+    position: number,
   ): Promise<void> {
-    const body = this.buildVariableBody(data.system_field, data.description);
+    const body = this.buildVariableBody(data.system_field, data.description, position);
 
     const apiResponse = await donationApi.put(
       `/api/account_whatsapp_templates/${campaignId}/${templateUuid}/variables/${variableUuid}`,

@@ -2,6 +2,7 @@ type WhatsappTemplateDetailVariable = {
   uuid: string;
   systemField: string;
   name: string | null;
+  position: number | null;
   description: string | null;
 };
 

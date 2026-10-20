@@ -24,6 +24,7 @@ const whatsappTemplateDetailSchema = z.object({
         name: z.string().optional().nullable(),
         table: z.string().optional().nullable(),
         field: z.string().optional().nullable(),
+        position: z.number().optional().nullable(),
         description: z.string().optional().nullable(),
       }),
     )

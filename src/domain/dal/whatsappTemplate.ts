@@ -52,6 +52,7 @@ type WhatsappTemplateDalDTO = {
     campaignId: string,
     templateUuid: string,
     data: CreateWhatsappTemplateVariableBody,
+    position: number,
   ): Promise<void>;
   deleteWhatsappTemplateVariable(
     campaignId: string,
@@ -63,6 +64,7 @@ type WhatsappTemplateDalDTO = {
     templateUuid: string,
     variableUuid: string,
     data: UpdateWhatsappTemplateVariableBody,
+    position: number,
   ): Promise<void>;
 };
 
