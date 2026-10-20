@@ -149,6 +149,7 @@ function OwnNumberCard({
         open={showConfig}
         onOpenChange={setShowConfig}
         onSave={handleSave}
+        initialProvider={settings?.provider ?? null}
       />
     </>
   );

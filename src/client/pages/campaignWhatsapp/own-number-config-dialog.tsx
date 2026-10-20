@@ -31,14 +31,25 @@ type SaveSettingsData =
   | { success: boolean }
   | { name: string; message: string };
 
+// known values: "aini" | "unofficial_whaticket"
+function mapProviderToConnectionType(
+  provider: string | null,
+): ConnectionType | null {
+  if (provider === "aini") return "official";
+  if (provider === "unofficial_whaticket") return "qrcode";
+  return null;
+}
+
 function OwnNumberConfigDialog({
   open,
   onOpenChange,
   onSave,
+  initialProvider,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: () => void;
+  initialProvider: string | null;
 }) {
   const layoutData = useRouteLoaderData<CampaignLayoutLoader>(
     "main/routes/layout.campaignLayout",
@@ -48,6 +59,10 @@ function OwnNumberConfigDialog({
   const [connectionType, setConnectionType] =
     useState<ConnectionType | null>(null);
   const [token, setToken] = useState("");
+
+  useEffect(() => {
+    if (open) setConnectionType(mapProviderToConnectionType(initialProvider));
+  }, [open, initialProvider]);
 
   const testFetcher = useFetcher<TestConnectionData>();
   const isTesting = testFetcher.state !== "idle";
