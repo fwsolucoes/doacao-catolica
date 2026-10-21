@@ -5,7 +5,7 @@ type AmbassadorProps = {
   name: string;
   email: string | null;
   phone: string | null;
-  status: string;
+  status: string | null | undefined;
   code: string;
   createdAt: string;
   periodIndications: number;

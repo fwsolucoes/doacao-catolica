@@ -7,7 +7,7 @@ const externalAmbassadorItemSchema = z.object({
   name: z.string(),
   email: z.string().nullable(),
   phone: z.string().nullable(),
-  status: z.string(),
+  status: z.string().nullish(),
   code: z.string(),
   created_at: z.string(),
   period_indications: z.number(),
