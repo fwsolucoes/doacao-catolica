@@ -47,7 +47,9 @@ export async function loader(args: Route.LoaderArgs) {
     campaign,
     overview,
     ...permissions,
+    isMonthlyType,
     bannerTotalReceived: metrics?.released ?? null,
+    bannerTotalReceivedRaw: metrics?.releasedAmount ?? null,
     whatsappSettings,
   };
 }

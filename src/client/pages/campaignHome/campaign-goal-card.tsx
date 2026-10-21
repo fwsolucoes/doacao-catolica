@@ -17,21 +17,20 @@ function CampaignGoalCard() {
     layoutData?.campaign.typeDonation === "BOTH" ||
     layoutData?.campaign.typeDonation === "MONTHLY";
 
-  const raised = isMonthly ? overview.monthRaised : overview.totalRaised;
+  const raised = isMonthly
+    ? (layoutData?.bannerTotalReceivedRaw ?? overview.monthRaised)
+    : overview.totalRaised;
 
   const goal = isMonthly
     ? (overview.monthlyGoal ?? null)
     : (layoutData?.campaign.totalGoal ?? null);
 
-  const goalProgressPercentage = isMonthly
-    ? (overview.monthlyGoalProgressPercentage ??
-        (goal && goal > 0 ? (raised / goal) * 100 : null))
-    : (overview.totalGoalProgressPercentage ??
-        (goal && goal > 0 ? (raised / goal) * 100 : null));
+  // calculados sempre a partir de `raised`/`goal` (em vez de confiar nos
+  // valores prontos do overview) para nunca divergir do valor exibido
+  const goalProgressPercentage =
+    goal && goal > 0 ? Math.min(100, (raised / goal) * 100) : null;
 
-  const goalRemaining = isMonthly
-    ? (overview.monthlyGoalRemaining ?? (goal !== null ? goal - raised : null))
-    : (overview.totalGoalRemaining ?? (goal !== null ? goal - raised : null));
+  const goalRemaining = goal !== null ? goal - raised : null;
 
   const progress = goalProgressPercentage ?? 0;
   const GrowthIcon =

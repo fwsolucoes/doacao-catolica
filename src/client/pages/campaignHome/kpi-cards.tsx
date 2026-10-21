@@ -15,17 +15,18 @@ function KpiCards() {
     layoutData?.campaign.typeDonation === "BOTH" ||
     layoutData?.campaign.typeDonation === "MONTHLY";
 
-  const raised = isMonthly ? overview.monthRaised : overview.totalRaised;
+  const raised = isMonthly
+    ? (layoutData?.bannerTotalReceivedRaw ?? overview.monthRaised)
+    : overview.totalRaised;
 
   const goal = isMonthly
     ? (overview.monthlyGoal ?? null)
     : (layoutData?.campaign.totalGoal ?? null);
 
-  const goalProgressPercentage = isMonthly
-    ? (overview.monthlyGoalProgressPercentage ??
-        (goal && goal > 0 ? (raised / goal) * 100 : null))
-    : (overview.totalGoalProgressPercentage ??
-        (goal && goal > 0 ? (raised / goal) * 100 : null));
+  // calculado sempre a partir de `raised`/`goal` (em vez de confiar no
+  // percentual pronto do overview) para nunca divergir do valor exibido
+  const goalProgressPercentage =
+    goal && goal > 0 ? Math.min(100, (raised / goal) * 100) : null;
 
   const progressLabel =
     goalProgressPercentage !== null

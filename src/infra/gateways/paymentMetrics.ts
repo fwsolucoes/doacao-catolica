@@ -42,11 +42,13 @@ class PaymentMetricsGateway implements PaymentMetricsGatewayDTO {
     const overdue = data.total_by_status.overdue;
     const canceled = data.total_by_status.canceled;
 
+    const releasedAmount =
+      received.gross_amount + confirmed.gross_amount + manual.gross_amount;
+
     return {
       receivedOnline: fmt(received.gross_amount + confirmed.gross_amount),
-      released: fmt(
-        received.gross_amount + confirmed.gross_amount + manual.gross_amount,
-      ),
+      released: fmt(releasedAmount),
+      releasedAmount,
       awaitingRelease: fmt(confirmed.amount),
       pending: fmt(awaitingPayment.amount + overdue.amount),
       receivedOffline: fmt(manual.amount),

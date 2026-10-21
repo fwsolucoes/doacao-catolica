@@ -7,6 +7,7 @@ const allDonationsMock: DonationsLoader = {
   metrics: {
     receivedOnline: "R$ 38.420,00",
     released: "R$ 52.180,00",
+    releasedAmount: 52180,
     awaitingRelease: "R$ 6.900,00",
     pending: "R$ 9.310,00",
     receivedOffline: "R$ 13.760,00",

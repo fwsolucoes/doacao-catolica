@@ -6,6 +6,7 @@ import type { Payment } from "../entities/payment";
 type PaymentMetricsData = {
   receivedOnline: string;
   released: string;
+  releasedAmount: number;
   awaitingRelease: string;
   pending: string;
   receivedOffline: string;
