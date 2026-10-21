@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Eye, Settings } from "lucide-react";
+import { Eye, Settings, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
-// import { Progress } from "~/client/components/ui/progress";
+import { Progress } from "~/client/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
@@ -18,8 +18,10 @@ type Campaign = {
   slug: string;
   image: string | null;
   status: boolean;
-  // currentRevenue: string | null;
-  // totalGoal: string | null;
+  raised: number | null;
+  goal: number | null;
+  goalProgressPercentage: number | null;
+  donorsCount: number | null;
 };
 
 const STATUS_BADGE: Record<string, { variant: "success" | "neutral"; label: string }> = {
@@ -27,28 +29,15 @@ const STATUS_BADGE: Record<string, { variant: "success" | "neutral"; label: stri
   inativo: { variant: "neutral", label: "Inativo" },
 };
 
-// function formatCurrency(value: string | null | undefined): string {
-//   if (!value) return "—";
-//   const num = parseFloat(value);
-//   if (isNaN(num)) return value;
-//   return new Intl.NumberFormat("pt-BR", {
-//     style: "currency",
-//     currency: "BRL",
-//     minimumFractionDigits: 0,
-//     maximumFractionDigits: 0,
-//   }).format(num);
-// }
-
-// function getProgress(
-//   current: string | null | undefined,
-//   goal: string | null,
-// ): number {
-//   if (!current || !goal) return 0;
-//   const c = parseFloat(current);
-//   const g = parseFloat(goal);
-//   if (isNaN(c) || isNaN(g) || g === 0) return 0;
-//   return Math.min(100, Math.round((c / g) * 100));
-// }
+function formatCurrency(value: number | null): string {
+  if (value === null) return "—";
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
   const { SANCTON_DONATION_CHECKOUT_URL, CAMPAIGN_DEFAULT_IMAGE } =
@@ -59,7 +48,6 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   const statusKey = campaign.status ? "ativo" : "inativo";
   const badge = STATUS_BADGE[statusKey];
   const [imageError, setImageError] = useState(false);
-  // const progress = getProgress(campaign.currentRevenue, campaign.totalGoal);
 
   return (
     <div
@@ -86,34 +74,45 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           {campaign.name}
         </h3>
 
-        {/* <div className="flex items-end justify-between">
+        <div className="flex items-end justify-between">
           <div className="flex flex-col gap-0.5">
             <span className="text-xs text-muted-foreground">Arrecadado</span>
             <span className="text-lg font-semibold text-foreground">
-              {formatCurrency(campaign.currentRevenue)}
+              {formatCurrency(campaign.raised)}
             </span>
           </div>
           <div className="flex flex-col items-end gap-0.5">
             <span className="text-xs text-muted-foreground">Meta</span>
             <span className="text-sm text-muted-foreground">
-              {formatCurrency(campaign.totalGoal)}
+              {formatCurrency(campaign.goal)}
             </span>
           </div>
-        </div> */}
+        </div>
 
-        {/* <div className="flex flex-col gap-1.5">
-          <Progress value={progress} className="h-2.5" />
-          <span className="text-xs text-sidebar-primary">
-            {progress}% da meta
-          </span>
-        </div> */}
+        <div className="flex flex-col gap-1.5">
+          {campaign.goalProgressPercentage !== null && (
+            <Progress
+              value={campaign.goalProgressPercentage}
+              className="h-2.5"
+            />
+          )}
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-sidebar-primary">
+              {campaign.goalProgressPercentage !== null
+                ? `${Math.round(campaign.goalProgressPercentage)}% da meta`
+                : ""}
+            </span>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Users size={14} />
+              <span>
+                {campaign.donorsCount ?? "—"} apoiador
+                {campaign.donorsCount === 1 ? "" : "es"}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <div className="flex items-center justify-between pt-1">
-          {/* <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Users size={14} />
-            <span>apoiadores</span>
-          </div> */}
-
+        <div className="pt-1">
           <div
             className="flex items-center gap-2"
             onClick={(e) => e.stopPropagation()}
@@ -144,7 +143,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
             >
               <Link to={manageUrl}>
                 <Settings size={18} />
-                Gerenciar Campanha
+                Gerenciar<span className="hidden min-[350px]:inline"> Campanha</span>
               </Link>
             </Button>
           </div>
