@@ -35,10 +35,10 @@ function AmbassadorsPage() {
             doadores.
           </p>
         </div>
-        {/* <Button className="gap-2" onClick={() => setAddOpen(true)}>
+        <Button className="gap-2" onClick={() => setAddOpen(true)}>
           <Plus size={16} />
           Adicionar embaixador
-        </Button> */}
+        </Button>
       </div>
 
       <AddAmbassadorModal open={addOpen} onClose={closeAdd} />

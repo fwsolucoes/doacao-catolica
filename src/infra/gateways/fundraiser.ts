@@ -111,8 +111,8 @@ class FundraiserGateway implements FundraiserGatewayDTO {
       token: input.token,
       project_id: input.projectId,
       inviter_id: input.inviterId,
-      invited_user_email: input.invitedUserEmail,
-      invited_user_name: input.invitedUserName,
+      email: input.invitedUserEmail,
+      name: input.invitedUserName,
       percentage_comission: input.percentageCommission,
     };
 

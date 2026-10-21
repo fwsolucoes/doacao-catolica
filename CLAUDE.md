@@ -117,6 +117,33 @@ No schema Zod, use `z.string()` em vez de `z.enum([...])` para campos exibidos e
 status: z.string(),
 ```
 
+### Paginação em tabelas
+
+Toda tabela paginada **deve** usar o componente `TablePagination` (`~/client/components/ui/table-pagination`) — nunca botões "Anterior/Próxima" feitos à mão com `useNavigate`/`useState` próprios. `TablePagination` já deriva a URL de cada página via `useLocation()` internamente.
+
+```tsx
+<Card.Footer className="...">
+  <TablePagination currentPage={pagination.currentPage} totalPages={pagination.lastPage} />
+</Card.Footer>
+```
+
+**Atenção ao padding quando `Card.Root` usa `p-0`:** cards de tabela que controlam o próprio espaçamento com divs internas (`p-6`, `px-7 pb-6`, etc.) em vez do padding padrão do `Card.Root` (`p-8`) não propagam esse espaçamento para `Card.Footer`. Nesses casos:
+
+- adicione ao `Card.Footer` o padding inferior equivalente ao usado no wrapper da tabela (ex.: `pb-6`).
+- a borda superior (`border-t`) do `Footer` é desenhada na borda do box, não na borda do padding — um `px-*` **não** desloca a linha, que continua colada na borda do card. Para alinhar a linha com o conteúdo da tabela acima, use `mx-*` (margem) no eixo horizontal, com o mesmo valor do `px-*` usado no wrapper da tabela.
+
+```tsx
+// correto — linha alinhada com o conteúdo da tabela acima (wrapper da tabela usa px-7 pb-6)
+<Card.Footer className="mx-7 pb-6 ...">
+  <TablePagination currentPage={...} totalPages={...} />
+</Card.Footer>
+
+// errado — px não desloca border-t; linha continua edge-to-edge
+<Card.Footer className="px-7 pb-6 ...">
+  <TablePagination currentPage={...} totalPages={...} />
+</Card.Footer>
+```
+
 ## Clean architecture — camadas
 
 ### DAL vs Gateway — quando usar cada um

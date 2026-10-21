@@ -27,6 +27,7 @@ import { Input } from "~/client/components/ui/input";
 import { Label } from "~/client/components/ui/label";
 import { Select } from "~/client/components/ui/select";
 import { Table } from "~/client/components/ui/table";
+import { TablePagination } from "~/client/components/ui/table-pagination";
 import type { AmbassadorsDashboardLoader } from "~/client/types/ambassadorsDashboardLoader";
 import { getMonthDates } from "~/lib/getMonthDates";
 
@@ -189,12 +190,6 @@ function AmbassadorsReportPage() {
     setLocalMin("");
     setLocalMax("");
     updateParams({ search: null, min_indications: null, max_indications: null });
-  }
-
-  function handlePageChange(page: number) {
-    const next = new URLSearchParams(location.search);
-    next.set("page", String(page));
-    navigate(`?${next.toString()}`, { preventScrollReset: true });
   }
 
   const { summary, charts, ambassadors, pagination } = dashboard;
@@ -593,29 +588,12 @@ function AmbassadorsReportPage() {
         </div>
 
         {pagination.lastPage > 1 && (
-          <div className="flex items-center justify-between border-t px-6 py-4">
-            <span className="text-sm text-muted-foreground">
-              Mostrando {pagination.from ?? 0}–{pagination.to ?? 0} de {pagination.total}
-            </span>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={pagination.currentPage <= 1}
-                onClick={() => handlePageChange(pagination.currentPage - 1)}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={pagination.currentPage >= pagination.lastPage}
-                onClick={() => handlePageChange(pagination.currentPage + 1)}
-              >
-                Próxima
-              </Button>
-            </div>
-          </div>
+          <Card.Footer className="flex-col items-center gap-3 mx-7 pb-6 sm:flex-row sm:justify-between">
+            <TablePagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.lastPage}
+            />
+          </Card.Footer>
         )}
       </Card.Root>
     </div>
