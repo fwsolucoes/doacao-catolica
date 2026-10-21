@@ -71,6 +71,9 @@ const environmentVariablesSchema = z.object({
   DEFAULT_WHATSAPP_SETTINGS_TOKEN: z.string().default(""),
   DEFAULT_WHATSAPP_SETTINGS_UTILITY_FEE: z.string().default("0"),
   DEFAULT_WHATSAPP_SETTINGS_MARKETING_FEE: z.string().default("0"),
+
+  // Produktly (product tours / onboarding)
+  PRODUKTLY_TOKEN: z.string(),
 });
 
 function formatErrorMessage(error: z.ZodError) {

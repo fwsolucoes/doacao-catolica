@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { ProgressBar } from "~/client/components/progressBar";
+import { Produktly } from "~/client/components/produktly";
 import { Toaster } from "~/client/components/ui/sonner";
 
 import { PermissionToast } from "./components/permissionToast";
@@ -19,6 +20,7 @@ function RootLayout({ children }: RootLayoutProps) {
     <RootProviders>
       <RootDocument>
         <ProgressBar />
+        <Produktly />
         <Toaster position="top-right" />
         <PermissionToast />
         {children}
