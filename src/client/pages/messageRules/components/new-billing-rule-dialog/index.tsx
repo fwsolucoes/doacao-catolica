@@ -132,9 +132,7 @@ function NewBillingRuleDialog({
 
             <DialogHeader className="shrink-0 px-7 pb-5 pt-7">
               <DialogTitle>
-                {isEditing
-                  ? "Editar régua de cobrança"
-                  : "Nova régua de cobrança"}
+                {isEditing ? "Editar régua de cobrança" : "Nova mensagem"}
               </DialogTitle>
             </DialogHeader>
 
@@ -262,6 +260,7 @@ function NewBillingRuleDialog({
                     <WhatsAppTab
                       uuid={rule?.uuid}
                       defaultMessage={rule?.whatsappMessage}
+                      defaultEnabled={rule?.enableWhatsapp ?? true}
                       messageType={messageType}
                       templates={templates}
                       isLoadingTemplates={isLoadingTemplates}
@@ -275,6 +274,7 @@ function NewBillingRuleDialog({
                     <EmailTab
                       defaultSubject={rule?.mailSubject}
                       defaultBody={rule?.mailMessage}
+                      defaultEnabled={rule?.enableMail ?? true}
                     />
                   </Tabs.Content>
                 </Tabs.Root>

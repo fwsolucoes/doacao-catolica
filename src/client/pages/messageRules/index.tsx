@@ -38,7 +38,7 @@ function MessageRulesPage() {
             )}
           >
             <Bell size={20} className="shrink-0" />
-            Réguas de cobrança
+            Régua de cobrança
             <span className="rounded-full bg-muted-foreground/15 px-2.5 py-0.5 text-xs">
               {billingRulesCount}
             </span>

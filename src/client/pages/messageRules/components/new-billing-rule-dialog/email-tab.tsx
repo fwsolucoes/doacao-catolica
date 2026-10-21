@@ -3,6 +3,7 @@ import { FormField } from "~/client/components/ui/form-field";
 import { ImageUpload } from "~/client/components/ui/image-upload";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
+import { Switch } from "~/client/components/ui/switch";
 import { Textarea } from "~/client/components/ui/textarea";
 import { VariablePopover } from "../variable-popover";
 import { EMAIL_BODY_DEFAULT } from "../../constants";
@@ -10,14 +11,17 @@ import { EMAIL_BODY_DEFAULT } from "../../constants";
 function EmailTab({
   defaultSubject,
   defaultBody,
+  defaultEnabled = true,
 }: {
   defaultSubject?: string;
   defaultBody?: string;
+  defaultEnabled?: boolean;
 }) {
   const initialSubject = defaultSubject ?? "Lembrete de Vencimento - {{nome}}";
   const initialBody = defaultBody ?? EMAIL_BODY_DEFAULT;
   const [subject, setSubject] = useState(initialSubject);
   const [body, setBody] = useState(initialBody);
+  const [enabled, setEnabled] = useState(defaultEnabled);
   const subjectCursorRef = useRef(0);
   const bodyCursorRef = useRef(initialBody.length);
 
@@ -38,12 +42,20 @@ function EmailTab({
       <input
         type="hidden"
         name="enableMail"
-        value={subject.trim() && body.trim() ? "true" : "false"}
+        value={enabled ? "true" : "false"}
       />
+
+      <div className="mb-5 flex w-full max-w-80 items-center justify-between gap-4 rounded-xl border border-border bg-muted px-4 py-2.5">
+        <span className="text-sm font-semibold text-foreground">
+          Habilitar envio por E-mail
+        </span>
+        <Switch checked={enabled} onCheckedChange={setEnabled} />
+      </div>
+
       <div className="grid grid-cols-5 gap-7">
         <div className="col-span-3 flex flex-col gap-4">
           <FormField name="emailLayout" label="Layout HTML">
-            <Select.Root defaultValue="basico">
+            <Select.Root defaultValue="basico" disabled={!enabled}>
               <Select.Trigger>
                 <Select.Value />
               </Select.Trigger>
@@ -54,7 +66,12 @@ function EmailTab({
           </FormField>
 
           <FormField name="emailImage1" label="Imagem 1 (Topo)">
-            <ImageUpload name="emailImage1" width={600} height={200} />
+            <ImageUpload
+              name="emailImage1"
+              width={600}
+              height={200}
+              disabled={!enabled}
+            />
           </FormField>
 
           <div className="flex flex-col gap-1.5">
@@ -64,6 +81,7 @@ function EmailTab({
                 <Input
                   name="mailSubject"
                   value={subject}
+                  disabled={!enabled}
                   onChange={(e) => {
                     setSubject(e.target.value);
                     subjectCursorRef.current =
@@ -71,7 +89,8 @@ function EmailTab({
                   }}
                   onSelect={(e) => {
                     subjectCursorRef.current =
-                      (e.target as HTMLInputElement).selectionStart ?? subject.length;
+                      (e.target as HTMLInputElement).selectionStart ??
+                      subject.length;
                   }}
                   onBlur={(e) => {
                     subjectCursorRef.current =
@@ -79,23 +98,34 @@ function EmailTab({
                   }}
                 />
               </div>
-              <VariablePopover onInsert={insertSubjectVariable} />
+              <VariablePopover
+                onInsert={insertSubjectVariable}
+                disabled={!enabled}
+              />
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <p className="text-sm font-semibold text-foreground">Corpo do e-mail</p>
-            <VariablePopover onInsert={insertBodyVariable} />
+            <p className="text-sm font-semibold text-foreground">
+              Corpo do e-mail
+            </p>
+            <VariablePopover
+              onInsert={insertBodyVariable}
+              disabled={!enabled}
+            />
             <Textarea
               name="mailMessage"
               className="min-h-40 text-sm"
               value={body}
+              disabled={!enabled}
               onChange={(e) => {
                 setBody(e.target.value);
                 bodyCursorRef.current = e.target.selectionStart;
               }}
               onSelect={(e) => {
-                bodyCursorRef.current = (e.target as HTMLTextAreaElement).selectionStart;
+                bodyCursorRef.current = (
+                  e.target as HTMLTextAreaElement
+                ).selectionStart;
               }}
               onBlur={(e) => {
                 bodyCursorRef.current = e.target.selectionStart;
@@ -113,14 +143,18 @@ function EmailTab({
           </div>
           <div className="overflow-clip rounded-2xl border border-border">
             <div className="border-b border-border bg-muted px-4 py-3">
-              <p className="text-xs text-muted-foreground">Para: cliente@email.com</p>
+              <p className="text-xs text-muted-foreground">
+                Para: cliente@email.com
+              </p>
               <p className="text-xs font-semibold text-foreground">{subject}</p>
             </div>
             <div className="flex h-28 items-center justify-center bg-muted/50">
               <span className="text-xs text-muted-foreground">Imagem 1</span>
             </div>
             <div className="p-5">
-              <p className="whitespace-pre-wrap text-sm text-foreground">{body}</p>
+              <p className="whitespace-pre-wrap text-sm text-foreground">
+                {body}
+              </p>
             </div>
           </div>
         </div>

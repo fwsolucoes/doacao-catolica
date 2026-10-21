@@ -106,7 +106,7 @@ function BillingRulesTab() {
         <div className="flex flex-wrap items-center justify-between gap-4 px-7 py-5">
           <div className="flex flex-col gap-0.5">
             <p className="text-base font-semibold text-foreground">
-              Réguas de cobrança
+              Mensagens
             </p>
             <p className="text-xs text-muted-foreground">
               Mensagens automáticas antes e após o vencimento.
@@ -114,7 +114,7 @@ function BillingRulesTab() {
           </div>
           <Button onClick={() => setDialogOpen(true)}>
             <Plus size={16} />
-            Nova Régua de Cobrança
+            Nova mensagem
           </Button>
         </div>
 
