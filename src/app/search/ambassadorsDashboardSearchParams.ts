@@ -11,6 +11,7 @@ type AmbassadorsDashboardFilter = {
   status?: string;
   min_indications?: string;
   max_indications?: string;
+  comments?: string;
 };
 
 class AmbassadorsDashboardSearchParams extends SearchParams<AmbassadorsDashboardFilter> {}

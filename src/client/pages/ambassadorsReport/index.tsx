@@ -80,8 +80,10 @@ function detectPeriod(startDate: string | null, endDate: string | null) {
   return "custom";
 }
 
+const ALL_REGIONS_VALUE = "all";
+
 function AmbassadorsReportPage() {
-  const { dashboard } = useLoaderData<AmbassadorsDashboardLoader>();
+  const { dashboard, regions, showRegionFilter } = useLoaderData<AmbassadorsDashboardLoader>();
   const navigate = useNavigate();
   const location = useLocation();
   const { campaignId } = useParams<{ campaignId: string }>();
@@ -92,6 +94,7 @@ function AmbassadorsReportPage() {
   const search = params.get("search") ?? "";
   const minIndications = params.get("min_indications") ?? "";
   const maxIndications = params.get("max_indications") ?? "";
+  const region = params.get("comments") ?? "";
 
   const urlPeriod = detectPeriod(startDate, endDate);
   const [isCustom, setIsCustom] = useState(urlPeriod === "custom");
@@ -133,6 +136,10 @@ function AmbassadorsReportPage() {
       const { startDate, endDate } = getLastNDays(90);
       updateParams({ start_date: startDate, end_date: endDate });
     }
+  }
+
+  function handleRegionChange(value: string) {
+    updateParams({ comments: value === ALL_REGIONS_VALUE ? null : value });
   }
 
   function handleDateBlur(field: "start_date" | "end_date", value: string) {
@@ -177,12 +184,12 @@ function AmbassadorsReportPage() {
     });
   }
 
-  const hasPeriodFilters = startDate !== null || endDate !== null;
+  const hasPeriodFilters = startDate !== null || endDate !== null || !!region;
   const hasTableFilters = !!search || !!minIndications || !!maxIndications;
 
   function clearPeriodFilters() {
     setIsCustom(false);
-    updateParams({ start_date: null, end_date: null });
+    updateParams({ start_date: null, end_date: null, comments: null });
   }
 
   function clearTableFilters() {
@@ -371,7 +378,9 @@ function AmbassadorsReportPage() {
 
       <Card.Root className="gap-4 p-6">
         <div className="flex flex-wrap items-end gap-4">
-          <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
+          <div
+            className={`grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 ${showRegionFilter ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}
+          >
             <div className="flex flex-col gap-1">
               <Label className="text-sm font-semibold">Período</Label>
               <Select.Root value={period} onValueChange={handlePeriodChange}>
@@ -408,6 +417,27 @@ function AmbassadorsReportPage() {
                 onBlur={(e) => handleDateBlur("end_date", e.target.value)}
               />
             </div>
+            {showRegionFilter && (
+              <div className="flex flex-col gap-1">
+                <Label className="text-sm font-semibold">Região</Label>
+                <Select.Root
+                  value={region || ALL_REGIONS_VALUE}
+                  onValueChange={handleRegionChange}
+                >
+                  <Select.Trigger>
+                    <Select.Value />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value={ALL_REGIONS_VALUE}>Todas as regiões</Select.Item>
+                    {regions.map((r) => (
+                      <Select.Item key={r.value} value={r.value}>
+                        {r.value}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Root>
+              </div>
+            )}
           </div>
           {hasPeriodFilters && (
             <Button

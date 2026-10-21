@@ -5,7 +5,8 @@ import { environmentVariables } from "~/main/config/environmentVariables";
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
   const { campaignId } = adaptedRoute.params;
-  const { start_date, end_date, search, min_indications, max_indications } = adaptedRoute.query;
+  const { start_date, end_date, search, min_indications, max_indications, comments } =
+    adaptedRoute.query;
 
   const params = new URLSearchParams({ project_id: campaignId });
   if (start_date) params.set("start_date", start_date);
@@ -13,6 +14,7 @@ export async function loader(args: Route.LoaderArgs) {
   if (search) params.set("search", search);
   if (min_indications) params.set("min_indications", min_indications);
   if (max_indications) params.set("max_indications", max_indications);
+  if (comments) params.set("comments", comments);
 
   const response = await fetch(
     `${environmentVariables.API_URL_WEBWORKER}/donation/ambassadors/export?${params}`,

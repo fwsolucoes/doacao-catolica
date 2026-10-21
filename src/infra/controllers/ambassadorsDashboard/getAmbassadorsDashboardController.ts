@@ -21,6 +21,7 @@ class GetAmbassadorsDashboardController {
       status: route.query.status,
       minIndications: route.query.min_indications,
       maxIndications: route.query.max_indications,
+      comments: route.query.comments,
     });
   }
 }

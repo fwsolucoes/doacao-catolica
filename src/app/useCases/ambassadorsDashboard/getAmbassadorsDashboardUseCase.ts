@@ -13,6 +13,7 @@ type InputProps = {
   status?: string;
   minIndications?: string;
   maxIndications?: string;
+  comments?: string;
 };
 
 class GetAmbassadorsDashboardUseCase {
@@ -32,6 +33,7 @@ class GetAmbassadorsDashboardUseCase {
         status: input.status,
         min_indications: input.minIndications,
         max_indications: input.maxIndications,
+        comments: input.comments,
       },
     });
 
