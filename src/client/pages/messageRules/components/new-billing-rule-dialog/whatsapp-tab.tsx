@@ -228,6 +228,7 @@ function WhatsAppTab({
                       <img
                         src={selectedTemplate!.templatePreviewImage}
                         alt={selectedTemplate!.templateName}
+                        referrerPolicy="no-referrer"
                         className="mx-auto max-w-80 rounded-lg"
                       />
                     ) : useTemplate ? (

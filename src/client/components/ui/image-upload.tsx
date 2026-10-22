@@ -189,6 +189,7 @@ function ImageUpload({
             <img
               src={filePath}
               alt=""
+              referrerPolicy="no-referrer"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-black/40 px-3 py-3">

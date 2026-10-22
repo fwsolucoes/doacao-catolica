@@ -25,6 +25,7 @@ function AmbassadorInviteCard({ invite }: AmbassadorInviteCardProps) {
         <img
           src={invite.projectImage}
           alt={invite.projectName}
+          referrerPolicy="no-referrer"
           className="h-36 w-full object-cover"
         />
       )}

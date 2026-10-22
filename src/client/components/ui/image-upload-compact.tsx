@@ -149,7 +149,12 @@ function ImageUploadCompact({
           {isLoading ? (
             <Loader2 size={22} className="animate-spin text-muted-foreground" />
           ) : filePath ? (
-            <img src={filePath} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img
+              src={filePath}
+              alt=""
+              referrerPolicy="no-referrer"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           ) : (
             <ImageIcon size={26} className="text-muted-foreground/40" />
           )}
