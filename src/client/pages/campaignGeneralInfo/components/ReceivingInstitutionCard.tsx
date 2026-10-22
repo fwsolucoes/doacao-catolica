@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useLoaderData } from "react-router";
 import { Card } from "~/client/components/ui/card";
 import { FormField } from "~/client/components/ui/form-field";
+import { ImageUploadCompact } from "~/client/components/ui/image-upload-compact";
 import { Input } from "~/client/components/ui/input";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 
@@ -24,6 +25,16 @@ function ReceivingInstitutionCard() {
   const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
   return (
     <SectionCard title="Instituição Recebedora">
+      <FormField name="image" label="Logo da instituição">
+        <ImageUploadCompact
+          name="image"
+          defaultValue={campaign.image}
+          description="Formato PNG ou JPG. Dimensão recomendada: 400x400px."
+          width={400}
+          height={400}
+        />
+      </FormField>
+
       <FormField name="institutionName" label="Nome da instituição">
         <Input
           name="institutionName"

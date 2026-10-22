@@ -18,6 +18,7 @@ type InputProps = {
   cnpj: string | null;
   address: string | null;
   category: string | null;
+  image: string | null;
 };
 
 class UpdateCampaignGeneralInfoUseCase {
@@ -49,6 +50,7 @@ class UpdateCampaignGeneralInfoUseCase {
           cnpj: input.cnpj,
           address: input.address,
           projectCategoryId: input.category,
+          image: input.image,
         },
         token,
       ),
