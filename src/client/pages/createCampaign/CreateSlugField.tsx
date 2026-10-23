@@ -8,14 +8,18 @@ import { FormField } from "~/client/components/ui/form-field";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { cn } from "~/lib/utils";
 
-function CreateSlugField() {
+type CreateSlugFieldProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function CreateSlugField({ value: currentSlug, onChange }: CreateSlugFieldProps) {
   const { SANCTON_DONATION_CHECKOUT_URL } = useRoot().environmentVariables;
   const slugPrefix = SANCTON_DONATION_CHECKOUT_URL.endsWith("/")
     ? SANCTON_DONATION_CHECKOUT_URL
     : `${SANCTON_DONATION_CHECKOUT_URL}/`;
   const slugFetcher = useFetcher<{ available: boolean }>();
   const isVerifying = slugFetcher.state === "submitting";
-  const [currentSlug, setCurrentSlug] = useState("");
   const [lastVerifiedSlug, setLastVerifiedSlug] = useState<string | null>(null);
   const slugResult =
     slugFetcher.data !== undefined && currentSlug === lastVerifiedSlug
@@ -23,7 +27,7 @@ function CreateSlugField() {
       : null;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCurrentSlug(generateSlug(e.target.value));
+    onChange(generateSlug(e.target.value));
   }
 
   function handleVerify() {

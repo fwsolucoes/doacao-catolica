@@ -10,11 +10,23 @@ import { PhoneInput } from "~/client/components/ui/phone-input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CreateCampaignLoader } from "~/client/types/createCampaignLoader";
+import { generateSlug } from "~/lib/generateSlug";
 import { CreateSlugField } from "../CreateSlugField";
 
 function CampaignDataSection() {
   const { projectCategories } = useLoaderData<CreateCampaignLoader>();
   const [phone, setPhone] = useState<Value | "">("");
+  const [slug, setSlug] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
+
+  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!slugTouched) setSlug(generateSlug(e.target.value));
+  }
+
+  function handleSlugChange(value: string) {
+    setSlugTouched(true);
+    setSlug(value);
+  }
 
   return (
     <SectionCard
@@ -22,10 +34,14 @@ function CampaignDataSection() {
       description="Informações principais que aparecem na página pública."
     >
       <FormField name="name" label="Nome da campanha" required>
-        <Input name="name" placeholder="Ex.: Reforma da Paróquia São José" />
+        <Input
+          name="name"
+          placeholder="Ex.: Reforma da Paróquia São José"
+          onChange={handleNameChange}
+        />
       </FormField>
 
-      <CreateSlugField />
+      <CreateSlugField value={slug} onChange={handleSlugChange} />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField name="category" label="Categoria">
