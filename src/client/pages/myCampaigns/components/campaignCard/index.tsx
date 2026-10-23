@@ -77,7 +77,9 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 
         <div className="flex items-end justify-between">
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">Arrecadado</span>
+            <span className="text-xs text-muted-foreground">
+              Arrecadado no mês
+            </span>
             <span className="text-lg font-semibold text-foreground">
               {formatCurrency(campaign.raised)}
             </span>

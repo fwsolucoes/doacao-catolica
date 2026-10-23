@@ -63,7 +63,7 @@ export async function loader(args: Route.LoaderArgs) {
 
     const detail = campaignDetailById.get(campaign.id);
     const goal = detail?.monthlyGoal || detail?.totalGoal || null;
-    const raised = overview.totalRaised;
+    const raised = overview.monthRaised;
     const goalProgressPercentage =
       goal && goal > 0 ? Math.min(100, (raised / goal) * 100) : null;
 
