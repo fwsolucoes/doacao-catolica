@@ -13,7 +13,7 @@ class ContactDal implements ContactDalDTO {
   ): Promise<Contact[]> {
     const params = new URLSearchParams();
     params.set("filter[account_id]", accountId);
-    if (name) params.set("name", name);
+    if (name) params.set("filter[name]", name);
 
     const url = `/contact/select?${params.toString()}`;
 
@@ -24,7 +24,9 @@ class ContactDal implements ContactDalDTO {
     const schemaValidator = new SchemaValidatorAdapter(listContactsSchema);
     const data = schemaValidator.validate(apiResponse.response);
 
-    return data.map((item) => Contact.restore({ id: item.id, name: item.name }));
+    return data.map((item) =>
+      Contact.restore({ id: item.id, name: item.name }),
+    );
   }
 }
 

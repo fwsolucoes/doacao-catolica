@@ -1,3 +1,4 @@
+import { SearchParamsMapper } from "~/app/shared/searchParamsMapper";
 import type { ListContactsUseCase } from "~/app/useCases/contacts/listContactsUseCase";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { AuthService } from "~/infra/services/authService";
@@ -13,9 +14,16 @@ class ListContactsController {
     const { campaignId } = route.params;
     if (!campaignId) throw HttpAdapter.badRequest("campaignId is required");
 
-    const name = route.query.name;
+    const scopedParams = SearchParamsMapper.toObject({
+      query: route.query,
+      params: route.params,
+      scoped: "contacts",
+    });
 
-    return await this.listContactsUseCase.execute({ campaignId, name }, user.token);
+    return await this.listContactsUseCase.execute(
+      { campaignId, name: scopedParams.name },
+      user.token,
+    );
   }
 }
 
