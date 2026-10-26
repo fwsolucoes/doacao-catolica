@@ -125,7 +125,7 @@ class CampaignGateway implements CampaignGatewayDTO {
       slug: input.slug,
       type_donation: input.typeDonation,
       type: 1,
-      subaccount_id: environmentVariables.SUB_ACCOUNT_ID,
+      subaccount_id: input.subAccountId ?? environmentVariables.SUB_ACCOUNT_ID,
       status: input.status,
       visible_in_marketplace: input.published,
       start_date: input.startDate,

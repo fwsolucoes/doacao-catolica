@@ -4,6 +4,7 @@ import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { FormErrorProvider } from "~/client/components/ui/form-field";
 import { CampaignDataSection } from "./components/CampaignDataSection";
+import { DigitalWalletSection } from "./components/DigitalWalletSection";
 import { DonationRulesSection } from "./components/DonationRulesSection";
 import { DonationTypeSection } from "./components/DonationTypeSection";
 import { FundraisingGoalsSection } from "./components/FundraisingGoalsSection";
@@ -47,6 +48,7 @@ function CreateCampaignPage() {
           <VisibilitySection />
           <FundraisingGoalsSection />
           <ReceivingInstitutionSection />
+          <DigitalWalletSection />
           <PageContentSection />
           <MediasSection />
           <WhyDonateSection />

@@ -39,6 +39,7 @@ type CreateCampaignInput = {
   minAmount: number | null;
   showProgressBar: boolean;
   progressGoalType: string | null;
+  subAccountId: string | null;
 };
 
 // Shared input for PUT /project/update-with-details/:id.

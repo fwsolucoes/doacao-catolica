@@ -42,6 +42,7 @@ const createCampaignSchema = z.object({
   monthlyGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   showProgressBar: z.string().optional().transform((v) => v === "true"),
   progressBase: z.string().optional().transform((v) => v || null),
+  subAccountId: z.string().optional().transform((v) => v || null),
 });
 const updateCampaignGeneralInfoSchema = z.object({
   name: z.string().min(3, "Mínimo de 3 caracteres"),

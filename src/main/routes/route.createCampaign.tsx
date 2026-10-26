@@ -9,15 +9,19 @@ import { AuthService } from "~/infra/services/authService";
 import { createCampaign } from "../factories/campaign/createCampaignFactory";
 import { verifySlug } from "../factories/campaign/verifySlugFactory";
 import { listProjectCategories } from "../factories/projectCategory/listProjectCategoriesFactory";
+import { listSubAccounts } from "../factories/subAccount/listSubAccountsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
   const route = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(route);
   if (!user) throw redirect("/sign-in");
 
-  const projectCategories = await listProjectCategories.handle(route);
+  const [projectCategories, subAccounts] = await Promise.all([
+    listProjectCategories.handle(route),
+    listSubAccounts.handle(route),
+  ]);
 
-  return { projectCategories };
+  return { projectCategories, subAccounts };
 }
 
 export async function action(args: Route.ActionArgs) {

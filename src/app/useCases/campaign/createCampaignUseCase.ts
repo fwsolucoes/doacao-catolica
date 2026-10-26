@@ -46,6 +46,7 @@ type InputProps = {
   monthlyGoal: number | null;
   showProgressBar: boolean;
   progressBase: string | null;
+  subAccountId: string | null;
 };
 
 class CreateCampaignUseCase {
@@ -95,6 +96,7 @@ class CreateCampaignUseCase {
         minAmount: input.minDonationAmount,
         showProgressBar: input.showProgressBar,
         progressGoalType: input.progressBase,
+        subAccountId: input.subAccountId,
       },
       input.token,
     );
