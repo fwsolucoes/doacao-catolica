@@ -7,11 +7,12 @@ import { FormField } from "~/client/components/ui/form-field";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { PhoneInput } from "~/client/components/ui/phone-input";
 import type { CampaignPageLoader } from "~/client/types/campaignPageLoader";
+import { toE164 } from "~/lib/toE164";
 
 function SupportChannelsSection() {
   const { preferences } = useLoaderData<CampaignPageLoader>();
   const [whatsapp, setWhatsapp] = useState<Value | "">(
-    (preferences.supportWhatsapp as Value) ?? "",
+    toE164(preferences.supportWhatsapp),
   );
 
   return (

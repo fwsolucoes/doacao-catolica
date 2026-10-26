@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Calendar } from "lucide-react";
-import { parsePhoneNumber, type Value } from "react-phone-number-input";
+import type { Value } from "react-phone-number-input";
 import { useLoaderData, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { Card } from "~/client/components/ui/card";
@@ -11,6 +11,7 @@ import { PhoneInput } from "~/client/components/ui/phone-input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
+import { toE164 } from "~/lib/toE164";
 import { SlugField } from "../SlugField";
 
 function SectionCard({
@@ -26,14 +27,6 @@ function SectionCard({
       {children}
     </Card.Root>
   );
-}
-
-// API may return national format ("(44) 99735-7177"); the input needs E.164.
-// Only assume BR when the result is a valid BR number — otherwise keep the raw value.
-function toE164(phone: string | null): Value | "" {
-  if (!phone) return "";
-  const parsed = parsePhoneNumber(phone, "BR");
-  return parsed?.isValid() ? parsed.number : (phone as Value);
 }
 
 function CampaignDataCard() {
