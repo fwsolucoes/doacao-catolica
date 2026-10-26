@@ -4,6 +4,7 @@ import { CreateRecurrencePage } from "~/client/pages/createRecurrence";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { getPageUrl } from "~/lib/getPageUrl";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
 import { listContacts } from "../factories/contacts/listContactsFactory";
 import { findOneContact } from "../factories/contacts/findOneContactFactory";
@@ -26,7 +27,7 @@ export async function loader(args: Route.LoaderArgs) {
       : Promise.resolve(null),
   ]);
 
-  const redirectUrl = new URL(args.request.url);
+  const redirectUrl = getPageUrl(args.request);
   redirectUrl.search = `isStudent=false&projectAccountId=${campaign.accountId}`;
 
   return { contacts, campaign, contactDetail, currentUrl: redirectUrl.toString() };

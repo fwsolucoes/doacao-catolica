@@ -7,6 +7,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { getPageUrl } from "~/lib/getPageUrl";
 import { disableRecurrence } from "../factories/disableRecurrence/disableRecurrenceFactory";
 import { enableRecurrence } from "../factories/enableRecurrence/enableRecurrenceFactory";
 import { listOneTimeDonors } from "../factories/listOneTimeDonors/listOneTimeDonorsFactory";
@@ -35,7 +36,7 @@ export async function loader(args: Route.LoaderArgs) {
     summary,
     donors,
     oneTimeDonors,
-    currentUrl: args.request.url,
+    currentUrl: getPageUrl(args.request).toString(),
   };
 }
 
