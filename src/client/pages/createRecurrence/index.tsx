@@ -111,7 +111,7 @@ function CreateRecurrencePage() {
 
   const { handleChangeFilter } = useFilter("contacts");
 
-  const newContactHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/new?redirectBack=${encodeURIComponent(currentUrl)}`;
+  const newContactHref = `${environmentVariables.SANCTON_CRM_PANEL_URL}/api/auth/token?token=${user?.token ?? ""}&redirect=/contact/new?redirectBack=${encodeURIComponent(currentUrl)}&isStudent=false&projectAccountId=${campaign.accountId}`;
 
   function handleContactChange(contactId: string) {
     setSelectedContactId(contactId);

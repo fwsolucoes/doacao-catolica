@@ -28,7 +28,6 @@ export async function loader(args: Route.LoaderArgs) {
   ]);
 
   const redirectUrl = getPageUrl(args.request);
-  redirectUrl.search = `isStudent=false&projectAccountId=${campaign.accountId}`;
 
   return { contacts, campaign, contactDetail, currentUrl: redirectUrl.toString() };
 }
