@@ -26,6 +26,7 @@ import type { CampaignPaymentSettingsLoader } from "~/client/types/campaignPayme
 import { AddSuggestedValueDialog } from "./components/addSuggestedValueDialog";
 import { EditSuggestedValueDialog } from "./components/editSuggestedValueDialog";
 import { DeleteSuggestedValueDialog } from "./components/deleteSuggestedValueDialog";
+import { WalletUpgradeNotice } from "./components/walletUpgradeNotice";
 
 type ToggleRowProps = {
   name: string;
@@ -77,17 +78,24 @@ function CampaignPaymentSettingsPage() {
   const campaignSubAccountId = layoutData?.campaign.subAccountId ?? "";
   const walletLocked = !!campaignSubAccountId;
 
-  const walletOptions = subAccounts.data.map(({ subAccountId, name, cpfCnpj }) => ({
-    value: subAccountId,
-    label: `${name} - (${formatToHiddenDigits(cpfCnpj, { hider: "•", range: [3, 6] })})`,
-  }));
+  const walletOptions = subAccounts.data.map(
+    ({ subAccountId, name, cpfCnpj }) => ({
+      value: subAccountId,
+      label: `${name} - (${formatToHiddenDigits(cpfCnpj, { hider: "•", range: [3, 6] })})`,
+    }),
+  );
 
-  const [wallet, setWallet] = useState(campaignSubAccountId);
-
-  const walletOptionsWithFallback =
-    walletLocked && !walletOptions.some((o) => o.value === wallet)
-      ? [{ value: wallet, label: "Usuário logado não tem acesso às informações da carteira" }, ...walletOptions]
-      : walletOptions;
+  const walletOptionsWithFallback = walletOptions.some(
+    (o) => o.value === campaignSubAccountId,
+  )
+    ? walletOptions
+    : [
+        {
+          value: campaignSubAccountId,
+          label: "Usuário logado não tem acesso às informações da carteira",
+        },
+        ...walletOptions,
+      ];
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<SuggestedValue | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<SuggestedValue | null>(null);
@@ -119,41 +127,46 @@ function CampaignPaymentSettingsPage() {
             className="flex min-w-0 flex-1 flex-col gap-6"
           >
             {/* Carteira digital */}
-            <SectionCard
-              title="Carteira digital"
-              description="Selecione a carteira que receberá os valores das doações desta campanha."
-            >
-              <FormField
-                name="walletId"
-                label="Carteira para recebimento"
-                required
+            {walletLocked ? (
+              <SectionCard
+                title="Carteira digital"
+                description="Selecione a carteira que receberá os valores das doações desta campanha."
               >
-                <Combobox
-                  options={walletOptionsWithFallback}
-                  value={wallet}
-                  onChange={setWallet}
-                  placeholder="Selecione uma carteira"
-                  disabled={walletLocked}
-                />
-              </FormField>
+                <FormField
+                  name="walletId"
+                  label="Carteira para recebimento"
+                  required
+                >
+                  <Combobox
+                    options={walletOptionsWithFallback}
+                    value={campaignSubAccountId}
+                    placeholder="Selecione uma carteira"
+                    disabled
+                  />
+                </FormField>
 
-              <div className="flex gap-3 rounded-xl border border-border bg-muted/40 p-4">
-                <Info
-                  size={16}
-                  className="mt-0.5 shrink-0 text-muted-foreground"
-                />
-                <p className="text-sm text-muted-foreground">
-                  Todos os pagamentos aprovados desta campanha serão creditados
-                  automaticamente na carteira digital selecionada. Você poderá
-                  transferir os valores para a conta bancária da instituição a
-                  qualquer momento na aba{" "}
-                  <strong className="font-semibold text-foreground">
-                    Financeiro
-                  </strong>
-                  .
-                </p>
-              </div>
-            </SectionCard>
+                <div className="flex gap-3 rounded-xl border border-border bg-muted/40 p-4">
+                  <Info
+                    size={16}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Todos os pagamentos aprovados desta campanha serão
+                    creditados automaticamente na carteira digital selecionada.
+                    Você poderá transferir os valores para a conta bancária da
+                    instituição a qualquer momento na aba{" "}
+                    <strong className="font-semibold text-foreground">
+                      Financeiro
+                    </strong>
+                    .
+                  </p>
+                </div>
+              </SectionCard>
+            ) : (
+              <SectionCard title="Carteira digital">
+                <WalletUpgradeNotice />
+              </SectionCard>
+            )}
 
             {/* Formas de pagamento */}
             <SectionCard
@@ -302,14 +315,8 @@ function CampaignPaymentSettingsPage() {
         </FormErrorProvider>
       </div>
 
-      <AddSuggestedValueDialog
-        open={addDialogOpen}
-        onClose={closeAddDialog}
-      />
-      <EditSuggestedValueDialog
-        target={editTarget}
-        onClose={closeEditDialog}
-      />
+      <AddSuggestedValueDialog open={addDialogOpen} onClose={closeAddDialog} />
+      <EditSuggestedValueDialog target={editTarget} onClose={closeEditDialog} />
       <DeleteSuggestedValueDialog
         target={deleteTarget}
         onClose={closeDeleteDialog}
