@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Calendar } from "lucide-react";
-import type { Value } from "react-phone-number-input";
+import { parsePhoneNumber, type Value } from "react-phone-number-input";
 import { useLoaderData, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
 import { Card } from "~/client/components/ui/card";
@@ -28,6 +28,14 @@ function SectionCard({
   );
 }
 
+// API may return national format ("(44) 99735-7177"); the input needs E.164.
+// Only assume BR when the result is a valid BR number — otherwise keep the raw value.
+function toE164(phone: string | null): Value | "" {
+  if (!phone) return "";
+  const parsed = parsePhoneNumber(phone, "BR");
+  return parsed?.isValid() ? parsed.number : (phone as Value);
+}
+
 function CampaignDataCard() {
   const { campaign, projectCategories } =
     useLoaderData<CampaignGeneralInfoLoader>();
@@ -40,7 +48,7 @@ function CampaignDataCard() {
     ? SANCTON_DONATION_CHECKOUT_URL
     : `${SANCTON_DONATION_CHECKOUT_URL}/`;
 
-  const [phone, setPhone] = useState<Value | "">(campaign.phone ?? "");
+  const [phone, setPhone] = useState<Value | "">(toE164(campaign.phone));
 
   const startDateValue = campaign.startDateInput ?? "";
 
@@ -64,7 +72,10 @@ function CampaignDataCard() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField name="category" label="Categoria">
-          <Select.Root name="category" defaultValue={campaign.projectCategoryId ?? undefined}>
+          <Select.Root
+            name="category"
+            defaultValue={campaign.projectCategoryId ?? undefined}
+          >
             <Select.Trigger>
               <Select.Value placeholder="Selecione a categoria" />
             </Select.Trigger>
