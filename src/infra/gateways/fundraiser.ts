@@ -68,7 +68,7 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     params.set("filter[invite_status]", "accepted");
     params.set("page", String(page));
     params.set("per_page", "20");
-    if (search) params.set("filter[invited_user_name]", search);
+    if (search) params.set("filter[name]", search);
 
     const url = `/project-agent-invite/list?${params.toString()}`;
 
