@@ -4,22 +4,46 @@ const oneTimePaymentSchema = z
   .object({
     contactId: z.string().min(1),
     contactName: z.string().min(1),
-    contactEmail: z.string().optional(),
-    contactPhone: z.string().optional(),
-    contactCpf: z.string().optional(),
-    contactBirthDate: z.string().optional(),
+    contactEmail: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    contactPhone: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    contactCpf: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    contactBirthDate: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    missingFields: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
     accountId: z.coerce.number(),
     category: z.enum(["donation", "tithe"]),
     paymentOption: z.enum(["onlinePayment", "receivedPayment"]),
+    amount: z.coerce.number().optional(),
     // online
     paymentType: z.enum(["pix", "bank_slip"]).optional(),
-    amount: z.coerce.number().optional(),
-    description: z.string().optional(),
     // offline
-    paymentDate: z.string().optional(),
+    paymentDate: z
+      .string()
+      .optional()
+      .transform((v) => v || new Date().toISOString().split("T")[0]),
     method: z.string().optional(),
-    bankAccount: z.string().optional(),
-    observations: z.string().optional(),
+    bankAccount: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    observations: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
   })
   .superRefine((data, ctx) => {
     if (data.paymentOption === "onlinePayment") {

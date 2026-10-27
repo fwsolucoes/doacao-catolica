@@ -13,7 +13,8 @@ class CreateOneTimePaymentController {
     private registerOfflinePaymentUseCase: RegisterOfflinePaymentUseCase,
   ) {}
 
-  async handle(route: RouteDTO) {
+  // returns the payment uuid for online payments, null for offline ones
+  async handle(route: RouteDTO): Promise<string | null> {
     const user = await AuthService.getAuthStorage(route);
     if (!user) throw HttpAdapter.unauthorized("Unauthorized");
 
@@ -24,41 +25,38 @@ class CreateOneTimePaymentController {
     const schemaValidator = new SchemaValidatorAdapter(oneTimePaymentSchema);
     const validatedBody = schemaValidator.validate(body);
 
+    const contact = {
+      contactId: validatedBody.contactId,
+      contactName: validatedBody.contactName,
+      contactEmail: validatedBody.contactEmail,
+      contactPhone: validatedBody.contactPhone,
+      contactCpf: validatedBody.contactCpf,
+      contactBirthDate: validatedBody.contactBirthDate,
+      missingFields: validatedBody.missingFields,
+      accountId: validatedBody.accountId,
+      campaignId,
+      category: validatedBody.category,
+      token: user.token,
+    };
+
     if (validatedBody.paymentOption === "onlinePayment") {
-      // await this.createOneTimePaymentUseCase.execute({
-      //   contactId: validatedBody.contactId,
-      //   contactName: validatedBody.contactName,
-      //   contactEmail: validatedBody.contactEmail,
-      //   contactPhone: validatedBody.contactPhone,
-      //   contactCpf: validatedBody.contactCpf,
-      //   contactBirthDate: validatedBody.contactBirthDate,
-      //   accountId: validatedBody.accountId,
-      //   campaignId,
-      //   category: validatedBody.category,
-      //   token: user.token,
-      //   paymentType: validatedBody.paymentType!,
-      //   amount: validatedBody.amount!,
-      //   description: validatedBody.description,
-      // });
-    } else {
-      // await this.registerOfflinePaymentUseCase.execute({
-      //   contactId: validatedBody.contactId,
-      //   contactName: validatedBody.contactName,
-      //   contactEmail: validatedBody.contactEmail,
-      //   contactPhone: validatedBody.contactPhone,
-      //   contactCpf: validatedBody.contactCpf,
-      //   contactBirthDate: validatedBody.contactBirthDate,
-      //   accountId: validatedBody.accountId,
-      //   campaignId,
-      //   category: validatedBody.category,
-      //   token: user.token,
-      //   amount: validatedBody.amount!,
-      //   paymentDate: validatedBody.paymentDate,
-      //   method: validatedBody.method!,
-      //   bankAccount: validatedBody.bankAccount,
-      //   observations: validatedBody.observations,
-      // });
+      return await this.createOneTimePaymentUseCase.execute({
+        ...contact,
+        paymentType: validatedBody.paymentType!,
+        amount: validatedBody.amount!,
+      });
     }
+
+    await this.registerOfflinePaymentUseCase.execute({
+      ...contact,
+      amount: validatedBody.amount!,
+      paymentDate: validatedBody.paymentDate,
+      method: validatedBody.method!,
+      bankAccount: validatedBody.bankAccount,
+      observations: validatedBody.observations,
+    });
+
+    return null;
   }
 }
 

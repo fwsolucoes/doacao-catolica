@@ -1,5 +1,5 @@
 import { ArrowLeft, Plus } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Link,
   useLoaderData,
@@ -23,6 +23,7 @@ import { Textarea } from "~/client/components/ui/textarea";
 import type { CreateOneTimePaymentLoader } from "~/client/types/createOneTimePaymentLoader";
 import { useFilter } from "~/client/hooks/useFilter";
 import { ContactDetailCard } from "../createRecurrence/components/ContactDetailCard";
+import { PaymentLinkDialog } from "./components/PaymentLinkDialog";
 
 const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
   1: "donation",
@@ -45,13 +46,31 @@ function CreateOneTimePaymentPage() {
     "onlinePayment" | "receivedPayment"
   >("onlinePayment");
   const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
+  const [phoneInput, setPhoneInput] = useState("");
+
+  useEffect(() => {
+    setPhoneInput("");
+  }, [contactDetail?.contactId]);
 
   useActionToast(data);
 
+  const paymentUuid: string | null = data?.paymentUuid ?? null;
+  const donationsHref = `/campaign/${campaignId}/donations`;
+  const closePaymentLinkDialog = useCallback(
+    () => navigate(donationsHref),
+    [donationsHref],
+  );
+
+  // online payments stay on the page to show the payment link
   useEffect(() => {
-    if (data?.toast?.type !== "success") return;
-    navigate(`/campaign/${campaignId}/donations`);
-  }, [data?.toast?.type]);
+    if (data?.toast?.type !== "success" || data?.paymentUuid) return;
+    navigate(donationsHref);
+  }, [data]);
+
+  // contact data the card asks for is sent back to update the contact
+  const missingFields =
+    !!contactDetail &&
+    (!contactDetail.phone || !contactDetail.email || !contactDetail.birthDate);
 
   const category = CATEGORY_MAP[campaign.type] ?? "donation";
   const contactOptions = contacts.map((c) => ({ value: c.id, label: c.name }));
@@ -97,6 +116,9 @@ function CreateOneTimePaymentPage() {
             name="contactName"
             value={contactDetail?.name ?? ""}
           />
+          {missingFields && (
+            <input type="hidden" name="missingFields" value="true" />
+          )}
 
           {/* Card 1 — Contato */}
           <Card.Root className="p-6">
@@ -115,7 +137,13 @@ function CreateOneTimePaymentPage() {
                   emptyText="Nenhum contato encontrado."
                 />
               </FormField>
-              {contactDetail && <ContactDetailCard contact={contactDetail} />}
+              {contactDetail && (
+                <ContactDetailCard
+                  contact={contactDetail}
+                  phoneInput={phoneInput}
+                  onPhoneChange={setPhoneInput}
+                />
+              )}
             </div>
           </Card.Root>
 
@@ -182,14 +210,6 @@ function CreateOneTimePaymentPage() {
                         Valor mínimo: R$ 5,00
                       </p>
                     )}
-                  </FormField>
-
-                  <FormField name="description" label="Descrição (opcional)">
-                    <Textarea
-                      name="description"
-                      rows={3}
-                      placeholder="Descreva o pagamento..."
-                    />
                   </FormField>
                 </>
               )}
@@ -274,6 +294,11 @@ function CreateOneTimePaymentPage() {
           </div>
         </Form>
       </FormErrorProvider>
+
+      <PaymentLinkDialog
+        paymentUuid={paymentUuid}
+        onClose={closePaymentLinkDialog}
+      />
     </div>
   );
 }

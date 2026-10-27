@@ -1,39 +1,43 @@
-type RegisterOfflinePaymentInput = {
-  contactId: string;
-  contactName: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  contactCpf?: string;
-  contactBirthDate?: string;
-  accountId: number;
-  campaignId: string;
-  category: "donation" | "tithe";
-  token: string;
-  amount: number;
-  paymentDate?: string;
+import type { PaymentGatewayDTO } from "~/domain/gateways/payment";
+import type {
+  CreateOneTimePaymentInput,
+  CreateOneTimePaymentUseCase,
+} from "./createOneTimePaymentUseCase";
+
+type RegisterOfflinePaymentInput = Omit<
+  CreateOneTimePaymentInput,
+  "paymentType"
+> & {
+  paymentDate: string;
   method: string;
   bankAccount?: string;
   observations?: string;
 };
 
 class RegisterOfflinePaymentUseCase {
+  constructor(
+    private createOneTimePaymentUseCase: CreateOneTimePaymentUseCase,
+    private paymentGateway: PaymentGatewayDTO,
+  ) {}
+
   async execute(input: RegisterOfflinePaymentInput): Promise<void> {
-    // await donationApi.registerOfflinePayment({
-    //   contactId: input.contactId,
-    //   contactName: input.contactName,
-    //   contactEmail: input.contactEmail,
-    //   contactPhone: input.contactPhone,
-    //   contactCpf: input.contactCpf,
-    //   contactBirthDate: input.contactBirthDate,
-    //   accountId: input.accountId,
-    //   campaignId: input.campaignId,
-    //   category: input.category,
-    //   amount: input.amount,
-    //   paymentDate: input.paymentDate,
-    //   method: input.method,
-    //   bankAccount: input.bankAccount,
-    //   observations: input.observations,
-    // });
+    const { paymentDate, method, bankAccount, observations, ...payment } =
+      input;
+
+    // the payment already happened outside the platform: create it as pix and settle it manually right away
+    const paymentId = await this.createOneTimePaymentUseCase.execute({
+      ...payment,
+      paymentType: "pix",
+    });
+
+    await this.paymentGateway.manualPayment(input.campaignId, {
+      paymentId,
+      amount: input.amount,
+      paymentDate,
+      methodId: method,
+      bankAccount,
+      observations,
+    });
   }
 }
 

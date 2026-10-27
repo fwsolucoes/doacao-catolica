@@ -4,6 +4,7 @@ import { CreateOneTimePaymentPage } from "~/client/pages/createOneTimePayment";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { getPageUrl } from "~/lib/getPageUrl";
 import { getCampaign } from "../factories/campaign/getCampaignFactory";
 import { listContacts } from "../factories/contacts/listContactsFactory";
 import { findOneContact } from "../factories/contacts/findOneContactFactory";
@@ -28,21 +29,33 @@ export async function loader(args: Route.LoaderArgs) {
     paymentMethodFactory.handleLoader(adaptedRoute),
   ]);
 
-  return { contacts, campaign, contactDetail, paymentMethods };
+  const redirectUrl = getPageUrl(args.request);
+
+  return {
+    contacts,
+    campaign,
+    contactDetail,
+    paymentMethods,
+    currentUrl: redirectUrl.toString(),
+  };
 }
 
 export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
 
+  let paymentUuid: string | null;
   try {
-    await createOneTimePayment.handle(adaptedRoute);
+    paymentUuid = await createOneTimePayment.handle(adaptedRoute);
   } catch (error) {
     return ErrorHandlerAdapter.handleAsData(error);
   }
 
   return {
+    paymentUuid,
     toast: {
-      message: "Pagamento avulso criado com sucesso!",
+      message: paymentUuid
+        ? "Pagamento avulso criado com sucesso!"
+        : "Pagamento recebido registrado com sucesso!",
       type: "success" as const,
     },
   };
