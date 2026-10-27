@@ -1,5 +1,6 @@
 import { BarChart2, LayoutDashboard, Megaphone } from "lucide-react";
 import { useRoot } from "~/client/hooks/useRoot";
+import { SidebarHelpLink } from "~/client/components/sidebarHelpLink";
 import { SidebarUserMenu } from "~/client/components/sidebarUserMenu";
 import {
   Sidebar,
@@ -42,7 +43,9 @@ function PortalSidebar() {
 
       <SidebarNav sections={sections} />
 
-      <SidebarFooter className="border-t border-sidebar-border/50 pb-3">
+      <SidebarHelpLink to="/help" />
+
+      <SidebarFooter className="pb-3">
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>

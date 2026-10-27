@@ -28,6 +28,7 @@ export default [
     route("financial-summary", "./main/routes/route.financialSummary.tsx"),
     route("defaulters-report", "./main/routes/route.defaultersReport.tsx"),
     route("monthly-donors-report", "./main/routes/route.monthlyDonorsReport.tsx"),
+    route("help", "./main/routes/route.help.tsx"),
   ]),
 
   route("campaign/:campaignId", "./main/routes/layout.campaignLayout.tsx", [
@@ -87,6 +88,7 @@ export default [
     route("api/client-whatsapp-templates", "./main/routes/api.campaign.clientWhatsappTemplates.ts"),
     route("automatic-pix", "./main/routes/route.campaign.automaticPix.tsx"),
     route("shalom-metrics", "./main/routes/route.campaign.shalomMetrics.tsx"),
+    route("help", "./main/routes/route.campaign.help.tsx"),
   ]),
 
 ] satisfies RouteConfig;

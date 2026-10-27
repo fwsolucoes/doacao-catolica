@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useMatches, useParams } from "react-router";
 import { useRoot } from "~/client/hooks/useRoot";
+import { SidebarHelpLink } from "~/client/components/sidebarHelpLink";
 import { SidebarUserMenu } from "~/client/components/sidebarUserMenu";
 import {
   Sidebar,
@@ -115,7 +116,9 @@ function AppSidebar() {
 
       <SidebarNav sections={visibleSections} basePath={basePath} />
 
-      <SidebarFooter className="border-t border-sidebar-border/50 pb-3">
+      <SidebarHelpLink to={`${basePath}/help`} />
+
+      <SidebarFooter className="pb-3">
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
