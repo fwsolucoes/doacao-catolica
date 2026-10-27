@@ -12,6 +12,10 @@ import {
   DONOR_MESSAGE_VARIABLES,
 } from "../../constants";
 
+const SUBJECT_VARIABLES = DONOR_MESSAGE_VARIABLES.filter(
+  (v) => v.value === "{{name}}",
+);
+
 function EmailTab({
   defaultSubject,
   defaultBody,
@@ -103,6 +107,7 @@ function EmailTab({
               <VariablePopover
                 onInsert={insertSubjectVariable}
                 disabled={!enabled}
+                variables={SUBJECT_VARIABLES}
               />
             </div>
           </div>

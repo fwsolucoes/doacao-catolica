@@ -35,6 +35,8 @@ const CHANNEL_TABS = [
   { value: "email", label: "E-mail", icon: <Mail size={16} /> },
 ];
 
+const HIDDEN_MESSAGE_TYPES = new Set(["payment_settled", "donate_now"]);
+
 type PaymentMethods = { pix: boolean; cartao: boolean; boleto: boolean };
 
 function NewBillingRuleDialog({
@@ -154,13 +156,17 @@ function NewBillingRuleDialog({
                       <Select.Value placeholder="Selecione o tipo" />
                     </Select.Trigger>
                     <Select.Content>
-                      {Object.entries(NOTIFICATION_TYPES).map(
-                        ([value, label]) => (
+                      {Object.entries(NOTIFICATION_TYPES)
+                        .filter(
+                          ([value]) =>
+                            !HIDDEN_MESSAGE_TYPES.has(value) ||
+                            value === rule?.type,
+                        )
+                        .map(([value, label]) => (
                           <Select.Item key={value} value={value}>
                             {label}
                           </Select.Item>
-                        ),
-                      )}
+                        ))}
                     </Select.Content>
                   </Select.Root>
                 </FormField>
