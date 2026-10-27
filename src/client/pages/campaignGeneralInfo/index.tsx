@@ -7,6 +7,7 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
+import { CampaignCategoryCard } from "./components/CampaignCategoryCard";
 import { CampaignDataCard } from "./components/CampaignDataCard";
 import { DonationTypeCard } from "./components/DonationTypeCard";
 import { FundraisingGoalsCard } from "./components/FundraisingGoalsCard";
@@ -43,6 +44,7 @@ function CampaignGeneralInfoPage() {
             action={`/campaign/${campaignId}/settings/general-info`}
             className="flex flex-1 flex-col gap-6 min-w-0"
           >
+            <CampaignCategoryCard />
             <CampaignDataCard />
             <VisibilityCard />
             <DonationTypeCard />

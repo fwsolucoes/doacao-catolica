@@ -8,7 +8,6 @@ import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { PhoneInput } from "~/client/components/ui/phone-input";
-import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import type { CampaignGeneralInfoLoader } from "~/client/types/campaignGeneralInfoLoader";
 import { toE164 } from "~/lib/toE164";
@@ -30,8 +29,7 @@ function SectionCard({
 }
 
 function CampaignDataCard() {
-  const { campaign, projectCategories } =
-    useLoaderData<CampaignGeneralInfoLoader>();
+  const { campaign } = useLoaderData<CampaignGeneralInfoLoader>();
 
   const { campaignId } = useParams<{ campaignId: string }>();
 
@@ -64,24 +62,6 @@ function CampaignDataCard() {
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormField name="category" label="Categoria">
-          <Select.Root
-            name="category"
-            defaultValue={campaign.projectCategoryId ?? undefined}
-          >
-            <Select.Trigger>
-              <Select.Value placeholder="Selecione a categoria" />
-            </Select.Trigger>
-            <Select.Content>
-              {projectCategories.map((category) => (
-                <Select.Item key={category.id} value={category.id}>
-                  {category.name}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-        </FormField>
-
         <FormField name="status" label="Status">
           <div className="flex h-10.75 items-center justify-between rounded-md border border-border bg-muted px-4">
             <Switch

@@ -15,7 +15,12 @@ class ProjectCategoryDal implements ProjectCategoryDalDTO {
     const externalCategories = schemaValidator.validate(apiResponse.response);
 
     return externalCategories.map((item) =>
-      ProjectCategory.restore({ id: item.id, name: item.name }),
+      ProjectCategory.restore({
+        id: item.id,
+        name: item.name,
+        description: item.description ?? null,
+        icon: item.icon ?? null,
+      }),
     );
   }
 }

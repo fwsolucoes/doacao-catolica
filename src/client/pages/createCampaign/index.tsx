@@ -3,6 +3,7 @@ import { Link, useFetcher } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
 import { FormErrorProvider } from "~/client/components/ui/form-field";
+import { CampaignCategorySection } from "./components/CampaignCategorySection";
 import { CampaignDataSection } from "./components/CampaignDataSection";
 import { DigitalWalletSection } from "./components/DigitalWalletSection";
 import { DonationRulesSection } from "./components/DonationRulesSection";
@@ -44,6 +45,7 @@ function CreateCampaignPage() {
       <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
         <Form method="post" className="flex flex-col gap-6">
           <DonationTypeSection />
+          <CampaignCategorySection />
           <CampaignDataSection />
           <VisibilitySection />
           <FundraisingGoalsSection />

@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { Calendar } from "lucide-react";
 import type { Value } from "react-phone-number-input";
-import { useLoaderData } from "react-router";
 import { SectionCard } from "~/client/components/campaignSettings/sectionCard";
 import { FormField } from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { InputGroup } from "~/client/components/ui/input-group";
 import { PhoneInput } from "~/client/components/ui/phone-input";
-import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
-import type { CreateCampaignLoader } from "~/client/types/createCampaignLoader";
 import { generateSlug } from "~/lib/generateSlug";
 import { CreateSlugField } from "../CreateSlugField";
 
 function CampaignDataSection() {
-  const { projectCategories } = useLoaderData<CreateCampaignLoader>();
   const [phone, setPhone] = useState<Value | "">("");
   const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
@@ -44,21 +40,6 @@ function CampaignDataSection() {
       <CreateSlugField value={slug} onChange={handleSlugChange} />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormField name="category" label="Categoria">
-          <Select.Root name="category">
-            <Select.Trigger>
-              <Select.Value placeholder="Selecione a categoria" />
-            </Select.Trigger>
-            <Select.Content>
-              {projectCategories.map((category) => (
-                <Select.Item key={category.id} value={category.id}>
-                  {category.name}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-        </FormField>
-
         <FormField name="status" label="Status">
           <div className="flex h-10.75 items-center justify-between rounded-md border border-border bg-muted px-4">
             <Switch
