@@ -27,21 +27,23 @@ class DonorGateway implements DonorGatewayDTO {
       ? new Date(input.birthDate).toISOString()
       : null;
 
-    const apiResponse = await api.post("/create-donator-contact", {
-      body: {
-        contactData: {
-          account_id: input.accountId,
-          name: input.name,
-          cpf: input.cpf ?? null,
-          birth_date: birthDate,
-          contactInfo: {
-            email: input.email,
-            phone: input.phone,
-          },
+    const body = {
+      contactData: {
+        account_id: input.accountId,
+        name: input.name,
+        cpf: input.cpf ?? null,
+        birth_date: birthDate,
+        contactInfo: {
+          email: input.email,
+          phone: input.phone,
         },
-        customForms: [],
-        project_id: input.projectId,
       },
+      customForms: [],
+      project_id: input.projectId,
+    };
+
+    const apiResponse = await api.post("/create-donator-contact", {
+      body,
       token: input.token,
     });
 

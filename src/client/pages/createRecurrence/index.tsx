@@ -104,6 +104,10 @@ function CreateRecurrencePage() {
 
   const category = CATEGORY_MAP[campaign.type] ?? "donation";
 
+  // {{mes}}/{{ano}} are placeholders filled in by the backend
+  const contactSuffix = contactDetail ? ` (${contactDetail.name})` : "";
+  const defaultDescription = `Doação mensal ({{mes}}/{{ano}}) - ${campaign.name}${contactSuffix}`;
+
   const contactOptions = contacts.map((c) => ({
     value: c.id,
     label: c.name,
@@ -182,6 +186,7 @@ function CreateRecurrencePage() {
               {contactDetail && (
                 <ContactDetailCard
                   contact={contactDetail}
+                  phoneInput={phoneInput}
                   onPhoneChange={setPhoneInput}
                   onEmailChange={setEmailInput}
                 />
@@ -258,9 +263,12 @@ function CreateRecurrencePage() {
               {valueType === "fixed" && (
                 <FormField name="amount" label="Valor:" required>
                   <CurrencyInput min={5} />
-                  <p className="text-xs text-muted-foreground">
-                    Valor mínimo: R$ 5,00
-                  </p>
+                  {/* hint gives way to the validation error, which carries the same text */}
+                  {!data?.cause?.fieldErrors?.amount && (
+                    <p className="text-xs text-muted-foreground">
+                      Valor mínimo: R$ 5,00
+                    </p>
+                  )}
                 </FormField>
               )}
 
@@ -293,10 +301,13 @@ function CreateRecurrencePage() {
                 </RadioGroup.Root>
               </FormField>
 
-              <FormField name="description" label="Descrição (opcional)">
+              <FormField name="description" label="Descrição:" required>
+                {/* key remounts the field so the default follows the selected contact */}
                 <Textarea
+                  key={contactDetail?.contactId}
                   id="description"
                   name="description"
+                  defaultValue={defaultDescription}
                   rows={3}
                   placeholder="Descreva a recorrência..."
                 />

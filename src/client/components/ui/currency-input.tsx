@@ -1,5 +1,8 @@
 import { use, useState } from "react";
-import { FormFieldContext } from "~/client/components/ui/form-field";
+import {
+  FormErrorContext,
+  FormFieldContext,
+} from "~/client/components/ui/form-field";
 import { cn } from "~/lib/utils";
 
 type CurrencyInputProps = {
@@ -35,6 +38,8 @@ function CurrencyInput({
   onValueChange,
 }: CurrencyInputProps) {
   const fieldName = use(FormFieldContext);
+  const fieldErrors = use(FormErrorContext);
+  const hasError = !!fieldErrors[fieldName]?.length;
   const resolvedName = name ?? (fieldName || undefined);
   const resolvedId = id ?? (fieldName || undefined);
 
@@ -58,6 +63,7 @@ function CurrencyInput({
       className={cn(
         "flex rounded-md border border-border bg-muted",
         "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1 ring-offset-background",
+        "group-data-invalid:border-destructive group-data-invalid:focus-within:ring-destructive",
         "has-disabled:opacity-50",
       )}
     >
@@ -67,6 +73,7 @@ function CurrencyInput({
       <input type="hidden" name={resolvedName} value={numericValue} />
       <input
         id={resolvedId}
+        aria-invalid={hasError || undefined}
         type="text"
         inputMode="numeric"
         value={displayValue}

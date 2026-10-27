@@ -23,12 +23,14 @@ type ContactDetailCardProps = {
     email: string | null;
     avatar: string | null;
   };
+  phoneInput?: string;
   onPhoneChange?: (value: string) => void;
   onEmailChange?: (value: string) => void;
 };
 
 function ContactDetailCard({
   contact,
+  phoneInput = "",
   onPhoneChange,
   onEmailChange,
 }: ContactDetailCardProps) {
@@ -81,7 +83,10 @@ function ContactDetailCard({
       </div>
 
       {email && <input type="hidden" name="contactEmail" value={email} />}
-      {phone && <input type="hidden" name="contactPhone" value={phone} />}
+      {(phone || phoneInput) && (
+        <input type="hidden" name="contactPhone" value={phone ?? phoneInput} />
+      )}
+      {cpf && <input type="hidden" name="contactCpf" value={cpf} />}
       {birthDate && (
         <input type="hidden" name="contactBirthDate" value={birthDate} />
       )}
@@ -97,7 +102,7 @@ function ContactDetailCard({
         </FormField>
       )}
       {!phone && (
-        <FormField name="contactPhone" label="Whatsapp:">
+        <FormField name="contactPhone" label="Whatsapp:" required>
           <PhoneInput
             defaultCountry="BR"
             onChange={(value) => {

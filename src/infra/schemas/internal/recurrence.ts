@@ -24,41 +24,62 @@ const updateRecurrenceSchema = z.object({
     .transform((v) => (v === "checked" ? 1 : 0)),
 });
 
-const createRecurrenceSchema = z.object({
-  contactId: z.string().min(1),
-  contactName: z.string().min(1),
-  contactEmail: z.string().optional(),
-  contactPhone: z.string().optional(),
-  contactCpf: z.string().optional(),
-  contactBirthDate: z.string().optional(),
-  accountId: z.coerce.number(),
-  category: z.enum(["donation", "tithe"]),
-  paymentDay: z.coerce
-    .number()
-    .int()
-    .min(1, "Informe o dia do pagamento")
-    .max(31),
-  paymentType: z.enum(["pix", "bank_slip"]),
-  valueType: z.enum(["fixed", "undetermined"]),
-  amount: z.coerce.number().optional(),
-  currentMonthPayment: z
-    .string()
-    .optional()
-    .transform((v) => v === "sim"),
-  activeNotification: z
-    .string()
-    .optional()
-    .transform((v) => v === "true"),
-  description: z.string().optional(),
-  discount: z.coerce.number().optional(),
-  interest: z.coerce.number().optional(),
-  fineType: z.enum(["fixed", "percentage"]).optional(),
-  fineValue: z.coerce.number().optional(),
-  missingFields: z
-    .string()
-    .optional()
-    .transform((v) => v === "true"),
-});
+const createRecurrenceSchema = z
+  .object({
+    contactId: z.string().min(1),
+    contactName: z.string().min(1),
+    contactEmail: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    contactPhone: z
+      .string({ error: "Informe o Whatsapp" })
+      .min(1, "Informe o Whatsapp"),
+    contactCpf: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    contactBirthDate: z
+      .string()
+      .optional()
+      .transform((v) => v || undefined),
+    accountId: z.coerce.number(),
+    category: z.enum(["donation", "tithe"]),
+    paymentDay: z.coerce
+      .number()
+      .int()
+      .min(1, "Informe o dia do pagamento")
+      .max(31),
+    paymentType: z.enum(["pix", "bank_slip"]),
+    valueType: z.enum(["fixed", "undetermined"]),
+    amount: z.coerce.number().optional(),
+    currentMonthPayment: z
+      .string()
+      .optional()
+      .transform((v) => v === "sim"),
+    activeNotification: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
+    description: z.string().min(1, "A descrição é obrigatória"),
+    discount: z.coerce.number().optional(),
+    interest: z.coerce.number().optional(),
+    fineType: z.enum(["fixed", "percentage"]).optional(),
+    fineValue: z.coerce.number().optional(),
+    missingFields: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.valueType === "fixed" && (!data.amount || data.amount < 5)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Valor mínimo: R$ 5,00",
+        path: ["amount"],
+      });
+    }
+  });
 
 const disableRecurrenceSchema = z.object({
   subscriptionUuid: z.uuid({ message: "UUID inválido" }),
