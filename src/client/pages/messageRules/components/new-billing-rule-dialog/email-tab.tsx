@@ -7,7 +7,10 @@ import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
 import { VariablePopover } from "../variable-popover";
-import { EMAIL_BODY_DEFAULT } from "../../constants";
+import {
+  EMAIL_BODY_DEFAULT,
+  DONOR_MESSAGE_VARIABLES,
+} from "../../constants";
 
 function EmailTab({
   defaultSubject,
@@ -108,6 +111,7 @@ function EmailTab({
             <VariablePopover
               onInsert={insertBodyVariable}
               disabled={!enabled}
+              variables={DONOR_MESSAGE_VARIABLES}
             />
             <RichTextarea
               ref={bodyRef}

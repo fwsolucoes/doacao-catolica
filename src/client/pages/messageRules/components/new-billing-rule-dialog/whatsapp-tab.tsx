@@ -11,7 +11,7 @@ import type { MessageRulesLoader } from "~/client/types/messageRulesLoader";
 import { VariablePopover } from "../variable-popover";
 import {
   BILLING_RULE_TYPES,
-  QRCODE_TEMPLATE_VARIABLES,
+  DONOR_MESSAGE_VARIABLES,
   WHATSAPP_DEFAULT,
 } from "../../constants";
 
@@ -92,7 +92,7 @@ function WhatsAppTab({
   const [enabled, setEnabled] = useState(defaultEnabled);
 
   const variables = hideTemplateSelect
-    ? QRCODE_TEMPLATE_VARIABLES.filter(
+    ? DONOR_MESSAGE_VARIABLES.filter(
         (v) =>
           v.value !== "{{link_payment}}" || BILLING_RULE_TYPES.has(messageType),
       )

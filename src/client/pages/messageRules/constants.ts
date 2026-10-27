@@ -19,7 +19,7 @@ export const TEMPLATE_VARIABLES = [
   { label: "Link WhatsApp", value: "{{link_whatsapp}}" },
 ];
 
-export const QRCODE_TEMPLATE_VARIABLES = [
+export const DONOR_MESSAGE_VARIABLES = [
   { label: "Nome do Doador", value: "{{name}}" },
   { label: "Link de Pagamento", value: "{{link_payment}}" },
 ];
