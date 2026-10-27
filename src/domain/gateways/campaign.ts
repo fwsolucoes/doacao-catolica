@@ -25,9 +25,11 @@ type CreateCampaignInput = {
   totalGoal: number | null;
   monthlyGoal: number | null;
   registrationTitle: string | null;
+  whyDonateEnabled: boolean;
   whyDonateTitle: string | null;
   whyDonateText: string | null;
   whyDonateImage: string | null;
+  aboutUsEnabled: boolean;
   aboutUsTitle: string | null;
   aboutUsText: string | null;
   aboutUsImage: string | null;

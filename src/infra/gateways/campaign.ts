@@ -145,9 +145,11 @@ class CampaignGateway implements CampaignGatewayDTO {
       monthly_goal: input.monthlyGoal,
       preferences: {
         registration_title: input.registrationTitle,
+        why_donate_enabled: input.whyDonateEnabled,
         why_donate_title: input.whyDonateTitle,
         why_donate_text: input.whyDonateText,
         why_donate_image: input.whyDonateImage,
+        about_us_enabled: input.aboutUsEnabled,
         about_us_title: input.aboutUsTitle,
         about_us_text: input.aboutUsText,
         about_us_image: input.aboutUsImage,

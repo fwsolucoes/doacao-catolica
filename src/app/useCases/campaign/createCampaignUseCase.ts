@@ -30,9 +30,11 @@ type InputProps = {
   description: string | null;
   category: string | null;
   title: string | null;
+  whyDonateEnabled: boolean;
   whyDonateTitle: string | null;
   whyDonateText: string | null;
   whyDonateImage: string | null;
+  aboutUsEnabled: boolean;
   aboutTitle: string | null;
   aboutText: string | null;
   aboutImage: string | null;
@@ -82,9 +84,11 @@ class CreateCampaignUseCase {
         totalGoal: input.totalGoal,
         monthlyGoal: input.monthlyGoal,
         registrationTitle: input.title,
+        whyDonateEnabled: input.whyDonateEnabled,
         whyDonateTitle: input.whyDonateTitle,
         whyDonateText: input.whyDonateText,
         whyDonateImage: input.whyDonateImage,
+        aboutUsEnabled: input.aboutUsEnabled,
         aboutUsTitle: input.aboutTitle,
         aboutUsText: input.aboutText,
         aboutUsImage: input.aboutImage,
