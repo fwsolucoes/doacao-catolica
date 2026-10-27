@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
+import { RichTextarea } from "~/client/components/campaignSettings/richTextarea";
+import type { RichTextareaRef } from "~/client/components/campaignSettings/richTextarea";
 import { FormField } from "~/client/components/ui/form-field";
 import { ImageUpload } from "~/client/components/ui/image-upload";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { Switch } from "~/client/components/ui/switch";
-import { Textarea } from "~/client/components/ui/textarea";
 import { VariablePopover } from "../variable-popover";
 import { EMAIL_BODY_DEFAULT } from "../../constants";
 
@@ -23,7 +24,7 @@ function EmailTab({
   const [body, setBody] = useState(initialBody);
   const [enabled, setEnabled] = useState(defaultEnabled);
   const subjectCursorRef = useRef(0);
-  const bodyCursorRef = useRef(initialBody.length);
+  const bodyRef = useRef<RichTextareaRef>(null);
 
   function insertSubjectVariable(variable: string) {
     const pos = subjectCursorRef.current;
@@ -32,9 +33,7 @@ function EmailTab({
   }
 
   function insertBodyVariable(variable: string) {
-    const pos = bodyCursorRef.current;
-    setBody((prev) => prev.slice(0, pos) + variable + prev.slice(pos));
-    bodyCursorRef.current = pos + variable.length;
+    bodyRef.current?.insertAtCursor(variable);
   }
 
   return (
@@ -105,33 +104,19 @@ function EmailTab({
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <p className="text-sm font-semibold text-foreground">
-              Corpo do e-mail
-            </p>
+          <FormField name="mailMessage" label="Corpo do e-mail">
             <VariablePopover
               onInsert={insertBodyVariable}
               disabled={!enabled}
             />
-            <Textarea
+            <RichTextarea
+              ref={bodyRef}
               name="mailMessage"
-              className="min-h-40 text-sm"
-              value={body}
+              defaultValue={initialBody}
+              onChange={setBody}
               disabled={!enabled}
-              onChange={(e) => {
-                setBody(e.target.value);
-                bodyCursorRef.current = e.target.selectionStart;
-              }}
-              onSelect={(e) => {
-                bodyCursorRef.current = (
-                  e.target as HTMLTextAreaElement
-                ).selectionStart;
-              }}
-              onBlur={(e) => {
-                bodyCursorRef.current = e.target.selectionStart;
-              }}
             />
-          </div>
+          </FormField>
         </div>
 
         <div className="col-span-2 flex flex-col gap-3">
@@ -152,9 +137,10 @@ function EmailTab({
               <span className="text-xs text-muted-foreground">Imagem 1</span>
             </div>
             <div className="p-5">
-              <p className="whitespace-pre-wrap text-sm text-foreground">
-                {body}
-              </p>
+              <div
+                className="whitespace-pre-wrap text-sm text-foreground"
+                dangerouslySetInnerHTML={{ __html: body }}
+              />
             </div>
           </div>
         </div>

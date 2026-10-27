@@ -15,10 +15,11 @@ type RichTextareaProps = {
   defaultValue?: string;
   onChange?: (html: string) => void;
   formats?: FormatKey[];
+  disabled?: boolean;
 };
 
 const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
-  function RichTextarea({ name, placeholder, defaultValue, onChange, formats = ["bold", "italic", "underline"] }, ref) {
+  function RichTextarea({ name, placeholder, defaultValue, onChange, formats = ["bold", "italic", "underline"], disabled = false }, ref) {
     const editorRef = useRef<HTMLDivElement>(null);
     const hiddenRef = useRef<HTMLInputElement>(null);
     const savedRangeRef = useRef<Range | null>(null);
@@ -82,12 +83,18 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
     }));
 
     return (
-      <div className="overflow-hidden rounded-[11px] border border-border bg-muted">
+      <div
+        className={cn(
+          "overflow-hidden rounded-[11px] border border-border bg-muted",
+          disabled && "cursor-not-allowed opacity-50",
+        )}
+      >
         <div className="flex items-center gap-1 border-b border-border px-2 py-1.5">
           <ToggleGroup.Root
             type="multiple"
             value={activeFormats}
             onValueChange={applyFormat}
+            disabled={disabled}
             className="gap-0.5"
           >
             {formats.includes("bold") && (
@@ -109,7 +116,7 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
         </div>
         <div
           ref={editorRef}
-          contentEditable
+          contentEditable={!disabled}
           suppressContentEditableWarning
           onInput={() => {
             syncHidden();
@@ -125,7 +132,7 @@ const RichTextarea = forwardRef<RichTextareaRef, RichTextareaProps>(
           onMouseUp={updateActiveFormats}
           onSelect={updateActiveFormats}
           className={cn(
-            "min-h-28 p-3 text-sm text-foreground outline-none",
+            "min-h-28 whitespace-pre-wrap p-3 text-sm text-foreground outline-none",
             "empty:before:text-muted-foreground empty:before:content-[attr(data-placeholder)]",
           )}
           data-placeholder={placeholder}

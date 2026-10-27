@@ -55,7 +55,7 @@ class CreateNotificationSettingController {
 
     return {
       toast: {
-        message: "Régua criada com sucesso!",
+        message: "Mensagem criada com sucesso!",
         type: "success" as const,
       },
     };

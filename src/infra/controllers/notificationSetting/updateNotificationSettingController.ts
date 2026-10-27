@@ -59,7 +59,7 @@ class UpdateNotificationSettingController {
 
     return {
       toast: {
-        message: "Régua atualizada com sucesso!",
+        message: "Mensagem atualizada com sucesso!",
         type: "success" as const,
       },
     };
