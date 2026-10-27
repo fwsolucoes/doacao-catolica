@@ -1,9 +1,13 @@
 import type { Route } from "+/route.myCampaigns";
 import { MyCampaignsPage } from "~/client/pages/myCampaigns";
+import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
+import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { listCampaigns } from "../factories/campaign/listCampaignsFactory";
 import { getCampaignById } from "../factories/campaign/getCampaignByIdFactory";
+import { updateCampaignStatus } from "../factories/campaign/updateCampaignStatusFactory";
+import { closeCampaign } from "../factories/campaign/closeCampaignFactory";
 import { getPortalOverview } from "../factories/campaignOverview/getPortalOverviewFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
 import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
@@ -62,10 +66,14 @@ export async function loader(args: Route.LoaderArgs) {
     if (!overview) continue;
 
     const detail = campaignDetailById.get(campaign.id);
-    const goal = detail?.monthlyGoal || detail?.totalGoal || null;
-    const raised = overview.monthRaised;
+    // campanha com data final acompanha o total arrecadado; sem data final, o mensal
+    const hasEndDate = !campaign.noEndDate && !!campaign.endDate;
+    const goal = hasEndDate
+      ? detail?.totalGoal || detail?.monthlyGoal || null
+      : detail?.monthlyGoal || detail?.totalGoal || null;
+    const raised = hasEndDate ? overview.totalRaised : overview.monthRaised;
     const goalProgressPercentage =
-      goal && goal > 0 ? Math.min(100, (raised / goal) * 100) : null;
+      goal && goal > 0 ? (raised / goal) * 100 : null;
 
     metricsByCampaignId.set(campaign.id, {
       donorsCount: overview.supporters,
@@ -108,6 +116,25 @@ export async function loader(args: Route.LoaderArgs) {
   }
 
   return { campaigns: enrichedCampaigns };
+}
+
+export async function action(args: Route.ActionArgs) {
+  const route = await RouteAdapter.adaptRoute(args);
+  const formData = await route.request.clone().formData();
+  const _action = formData.get("_action");
+
+  try {
+    switch (_action) {
+      case "updateCampaignStatus":
+        return await updateCampaignStatus.handle(route);
+      case "closeCampaign":
+        return await closeCampaign.handle(route);
+      default:
+        return HttpAdapter.badRequest("Ação não definida");
+    }
+  } catch (error) {
+    return ErrorHandlerAdapter.handleAsData(error);
+  }
 }
 
 export function ErrorBoundary() {

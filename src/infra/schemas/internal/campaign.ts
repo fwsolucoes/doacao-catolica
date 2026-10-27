@@ -89,10 +89,22 @@ const updateCampaignPageSchema = z.object({
 
 type UpdateCampaignPageType = z.infer<typeof updateCampaignPageSchema>;
 
+const updateCampaignStatusSchema = z.object({
+  campaignId: z.string().min(1, "Campanha é obrigatória"),
+  // known values: "active" | "inactive"
+  status: z.string().transform((v) => v === "active"),
+});
+
+const closeCampaignSchema = z.object({
+  campaignId: z.string().min(1, "Campanha é obrigatória"),
+});
+
 export {
+  closeCampaignSchema,
   createCampaignSchema,
   updateCampaignGeneralInfoSchema,
   updateCampaignPageSchema,
+  updateCampaignStatusSchema,
   type CreateCampaignType,
   type UpdateCampaignGeneralInfoType,
   type UpdateCampaignPageType,
