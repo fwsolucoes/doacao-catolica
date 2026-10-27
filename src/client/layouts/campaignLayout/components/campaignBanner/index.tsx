@@ -15,7 +15,7 @@ function CampaignBanner() {
   const checkoutUrl = `${SANCTON_DONATION_CHECKOUT_URL}/${campaign.slug}`;
 
   return (
-    <header className="sticky top-0 z-30 flex min-h-14 w-full items-center gap-3 border-b border-border bg-background px-7 py-4">
+    <header className="sticky top-0 z-30 flex min-h-14 w-full items-center gap-3 border-b border-border bg-sidebar px-7 py-4">
       <SidebarTrigger className="size-8 shrink-0 text-foreground" />
       <div className="h-10 w-px shrink-0 bg-border" />
       <Button
