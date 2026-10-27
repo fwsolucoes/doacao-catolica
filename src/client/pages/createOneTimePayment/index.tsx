@@ -176,9 +176,12 @@ function CreateOneTimePaymentPage() {
 
                   <FormField name="amount" label="Valor:" required>
                     <CurrencyInput min={5} />
-                    <p className="text-xs text-muted-foreground">
-                      Valor mínimo: R$ 5,00
-                    </p>
+                    {/* hint gives way to the validation error, which carries the same text */}
+                    {!data?.cause?.fieldErrors?.amount && (
+                      <p className="text-xs text-muted-foreground">
+                        Valor mínimo: R$ 5,00
+                      </p>
+                    )}
                   </FormField>
 
                   <FormField name="description" label="Descrição (opcional)">
