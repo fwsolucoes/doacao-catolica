@@ -42,9 +42,20 @@ type Campaign = {
   donorsCount: number | null;
 };
 
-const STATUS_BADGE: Record<string, { dotClassName: string; label: string }> = {
-  ativo: { dotClassName: "bg-emerald-500", label: "Ativo" },
-  inativo: { dotClassName: "bg-muted-foreground", label: "Inativo" },
+const STATUS_BADGE: Record<
+  string,
+  { className: string; dotClassName: string; label: string }
+> = {
+  ativo: {
+    className: "bg-emerald-100",
+    dotClassName: "bg-emerald-500",
+    label: "Ativo",
+  },
+  inativo: {
+    className: "bg-red-100",
+    dotClassName: "bg-red-500",
+    label: "Inativo",
+  },
 };
 
 function formatCurrency(value: number | null): string {
@@ -125,7 +136,9 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
           className="aspect-[1.91] w-full object-cover"
           onError={() => setImageError(true)}
         />
-        <Badge className="absolute top-3.5 right-3.5 gap-2 bg-muted/80 text-foreground backdrop-blur-xs">
+        <Badge
+          className={`absolute top-3.5 right-3.5 gap-2 text-foreground ${badge?.className ?? "bg-muted"}`}
+        >
           <span
             className={`size-1.75 rounded-full ${badge?.dotClassName ?? "bg-muted-foreground"}`}
           />
