@@ -52,10 +52,7 @@ function draftFromParams(sp: URLSearchParams): FilterDraft {
       : getDatesFromPeriod(sp.get("period") ?? "currentMonth");
   const dateTypeParam = sp.get("date_type");
   return {
-    dateType:
-      dateTypeParam === "due" || dateTypeParam === "donation"
-        ? dateTypeParam
-        : undefined,
+    dateType: dateTypeParam === "donation" ? "donation" : "due",
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,
     origin: sp.get("origin") ?? "",
@@ -128,7 +125,7 @@ function FilterDrawer({
   function applyFilters() {
     const nextSp = new URLSearchParams(location.search);
 
-    if (draft.dateType) nextSp.set("date_type", draft.dateType);
+    if (draft.dateType === "donation") nextSp.set("date_type", "donation");
     else nextSp.delete("date_type");
 
     const fields: [string, string][] = [
