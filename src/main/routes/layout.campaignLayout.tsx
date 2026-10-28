@@ -37,9 +37,15 @@ export async function loader(args: Route.LoaderArgs) {
     throw redirect("/my-campaigns?noPermission=true");
   }
 
+  const bannerMetricsQuery = { ...adaptedRoute.query };
+  delete bannerMetricsQuery.start_date;
+  delete bannerMetricsQuery.end_date;
+  delete bannerMetricsQuery.date_type;
+  const bannerMetricsRoute = { ...adaptedRoute, query: bannerMetricsQuery };
+
   const [overview, metrics, whatsappSettings] = await Promise.all([
     getCampaignOverview.handle(adaptedRoute),
-    isMonthlyType ? getPaymentMetrics.handle(adaptedRoute) : Promise.resolve(null),
+    isMonthlyType ? getPaymentMetrics.handle(bannerMetricsRoute) : Promise.resolve(null),
     getAccountWhatsappSettings.handle(adaptedRoute),
   ]);
 

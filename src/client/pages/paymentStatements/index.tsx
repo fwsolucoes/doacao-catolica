@@ -15,7 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useLoaderData, useLocation, useMatches, useParams } from "react-router";
+import { useLoaderData, useLocation, useParams } from "react-router";
 import type { DonationsLoader } from "~/client/types/paymentStatementsLoader";
 import { Button } from "~/client/components/ui/button";
 import { getMonthDates } from "~/lib/getMonthDates";
@@ -24,6 +24,16 @@ import type { MetricCardProps } from "./components/metricCard";
 import { PaymentsTable } from "./components/paymentsTable";
 import { PERIOD_OPTIONS, PeriodSelect } from "./components/periodSelect";
 
+function formatIsoDate(iso: string): string {
+  const [year, month, day] = iso.split("-");
+  return `${day}/${month}/${year}`;
+}
+
+function formatPeriodRange(startDate: string | null, endDate: string | null): string {
+  if (!startDate || !endDate) return "Data personalizada";
+  return `${formatIsoDate(startDate)} a ${formatIsoDate(endDate)}`;
+}
+
 function DonationsPage() {
   const { metrics, summary } = useLoaderData<DonationsLoader>();
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
@@ -31,7 +41,6 @@ function DonationsPage() {
 
   const { campaignId } = useParams<{ campaignId: string }>();
   const location = useLocation();
-  const matches = useMatches();
 
   function downloadReport() {
     const sp = new URLSearchParams(location.search);
@@ -42,14 +51,13 @@ function DonationsPage() {
     }
     window.open(`/campaign/${campaignId}/api/donations-export?${sp.toString()}`, "_blank");
   }
-  const period =
-    new URLSearchParams(location.search).get("period") ?? "currentMonth";
+
+  const searchParams = new URLSearchParams(location.search);
+  const period = searchParams.get("period") ?? "currentMonth";
   const periodLabel =
-    PERIOD_OPTIONS.find((o) => o.value === period)?.label ?? "Mês atual";
-  const campaignData = matches.find(
-    (m) => m.loaderData && typeof m.loaderData === "object" && "campaign" in m.loaderData,
-  )?.loaderData as { campaign: { name: string } } | undefined;
-  const campaignName = campaignData?.campaign?.name;
+    period === "custom"
+      ? formatPeriodRange(searchParams.get("start_date"), searchParams.get("end_date"))
+      : (PERIOD_OPTIONS.find((o) => o.value === period)?.label ?? "Mês atual");
 
   const metricCards: MetricCardProps[] = [
     {
@@ -117,9 +125,8 @@ function DonationsPage() {
             Doações
           </h1>
           <p className="text-sm text-muted-foreground">
-            Exibindo{" "}
+            Exibindo período de{" "}
             <span className="font-medium text-foreground">{periodLabel}</span>
-            {campaignName && <> · {campaignName}</>}
           </p>
         </div>
         <div className="flex items-center gap-3">
