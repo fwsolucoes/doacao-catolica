@@ -69,6 +69,7 @@ function PeriodSelect({ onCustomSelect }: PeriodSelectProps) {
     for (const [key, value] of Object.entries(updates)) {
       sp.set(key, value);
     }
+    sp.delete("page");
     navigate(`?${sp.toString()}`);
   }
 

@@ -97,7 +97,9 @@ function FilterDrawer({
   }, [open]);
 
   const sp = new URLSearchParams(location.search);
-  const filterCount = DRAWER_PARAMS.filter((p) => sp.get(p)).length;
+  const filterCount =
+    DRAWER_PARAMS.filter((p) => sp.get(p)).length +
+    (sp.get("period") === "custom" ? 1 : 0);
 
   const donorOptions = donors.map((d) => ({ value: d.id, label: d.name }));
 
@@ -119,6 +121,7 @@ function FilterDrawer({
     nextSp.delete("end_date");
     nextSp.delete("period");
     nextSp.delete("donor_search");
+    nextSp.delete("page");
     navigate(`?${nextSp.toString()}`);
   }
 
@@ -150,6 +153,7 @@ function FilterDrawer({
     }
 
     nextSp.delete("donor_search");
+    nextSp.delete("page");
     navigate(`?${nextSp.toString()}`);
     setOpen(false);
   }
