@@ -32,6 +32,8 @@ type CampaignConstructorProps = {
   apiDonationPublicId: string | null;
   projectCategoryId: string | null;
   visibleInMarketplace: boolean;
+  showProgressBar: boolean;
+  progressGoalType: string | null;
 };
 
 type CampaignRestoreProps = CampaignConstructorProps;
@@ -68,6 +70,8 @@ class Campaign {
   apiDonationPublicId: string | null;
   projectCategoryId: string | null;
   visibleInMarketplace: boolean;
+  showProgressBar: boolean;
+  progressGoalType: string | null;
 
   private constructor(props: CampaignConstructorProps) {
     this.id = props.id;
@@ -101,6 +105,8 @@ class Campaign {
     this.apiDonationPublicId = props.apiDonationPublicId;
     this.projectCategoryId = props.projectCategoryId;
     this.visibleInMarketplace = props.visibleInMarketplace;
+    this.showProgressBar = props.showProgressBar;
+    this.progressGoalType = props.progressGoalType;
   }
 
   static restore(props: CampaignRestoreProps): Campaign {
@@ -154,6 +160,8 @@ class Campaign {
       apiDonationPublicId: this.apiDonationPublicId,
       projectCategoryId: this.projectCategoryId,
       visibleInMarketplace: this.visibleInMarketplace,
+      showProgressBar: this.showProgressBar,
+      progressGoalType: this.progressGoalType,
     };
   }
 }

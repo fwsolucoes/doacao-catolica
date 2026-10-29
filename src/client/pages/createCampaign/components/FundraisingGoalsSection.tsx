@@ -6,10 +6,10 @@ import { RadioGroup } from "~/client/components/ui/radio-group";
 import { Switch } from "~/client/components/ui/switch";
 import { cn } from "~/lib/utils";
 
-type ProgressBase = "total" | "monthly";
+type ProgressBase = "TOTAL" | "MONTHLY";
 
 function FundraisingGoalsSection() {
-  const [progressBase, setProgressBase] = useState<ProgressBase>("total");
+  const [progressBase, setProgressBase] = useState<ProgressBase>("TOTAL");
 
   return (
     <SectionCard
@@ -55,8 +55,8 @@ function FundraisingGoalsSection() {
         >
           {(
             [
-              { value: "total", label: "Meta total da campanha" },
-              { value: "monthly", label: "Meta mensal" },
+              { value: "TOTAL", label: "Meta total da campanha" },
+              { value: "MONTHLY", label: "Meta mensal" },
             ] as const
           ).map(({ value, label }) => (
             <label

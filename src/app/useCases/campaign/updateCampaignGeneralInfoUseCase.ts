@@ -14,6 +14,8 @@ type InputProps = {
   typeDonation: string;
   totalGoal: number | null;
   monthlyGoal: number | null;
+  showProgressBar: boolean;
+  progressGoalType: string | null;
   institutionName: string | null;
   cnpj: string | null;
   address: string | null;
@@ -46,6 +48,8 @@ class UpdateCampaignGeneralInfoUseCase {
           typeDonation: input.typeDonation,
           totalGoal: input.totalGoal,
           monthlyGoal: input.monthlyGoal,
+          showProgressBar: input.showProgressBar,
+          progressGoalType: input.progressGoalType,
           institutionName: input.institutionName,
           cnpj: input.cnpj,
           address: input.address,

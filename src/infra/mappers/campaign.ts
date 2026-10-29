@@ -37,6 +37,8 @@ class CampaignMapper {
       subAccountId: externalCampaign.subaccount_id,
       projectCategoryId: externalCampaign.project_category_id ?? null,
       visibleInMarketplace: externalCampaign.preferences?.visible_in_marketplace ?? false,
+      showProgressBar: externalCampaign.preferences?.show_progress_bar ?? false,
+      progressGoalType: externalCampaign.preferences?.progress_goal_type ?? null,
     });
   }
 }

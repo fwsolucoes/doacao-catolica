@@ -40,7 +40,21 @@ const externalCampaignSchema = z.object({
   total_goal: z.number().nullable(),
   project_category_id: z.string().nullable().optional(),
   preferences: z
-    .object({ visible_in_marketplace: z.boolean().nullable().optional() })
+    .object({
+      visible_in_marketplace: z.boolean().nullable().optional(),
+      show_progress_bar: z.boolean().nullable().optional(),
+      // known values: "TOTAL" | "MONTHLY" — normalized to uppercase since
+      // older records may have been saved in lowercase ("total"/"monthly")
+      progress_goal_type: z
+        .string()
+        .nullable()
+        .optional()
+        .transform((v) => {
+          if (!v) return v ?? null;
+          const upper = v.toUpperCase();
+          return upper === "TOTAL" || upper === "MONTHLY" ? upper : v;
+        }),
+    })
     .nullable()
     .optional(),
 });

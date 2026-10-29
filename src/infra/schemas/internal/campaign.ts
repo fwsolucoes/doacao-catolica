@@ -43,6 +43,7 @@ const createCampaignSchema = z.object({
   totalGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   monthlyGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   showProgressBar: z.string().optional().transform((v) => v === "true"),
+  // known values: "TOTAL" | "MONTHLY"
   progressBase: z.string().optional().transform((v) => v || null),
   subAccountId: z.string().optional().transform((v) => v || null),
 });
@@ -58,6 +59,9 @@ const updateCampaignGeneralInfoSchema = z.object({
   phone: z.string().optional().transform((v) => v || null),
   totalGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
   monthlyGoal: z.string().optional().transform((v) => (v ? parseFloat(v) : null)),
+  showProgressBar: z.string().optional().transform((v) => v === "true"),
+  // known values: "TOTAL" | "MONTHLY"
+  progressGoalType: z.string().optional().transform((v) => v || null),
   institutionName: z.string().optional().transform((v) => v || null),
   cnpj: z.string().min(1, "CPF/CNPJ é obrigatório"),
   address: z.string().optional().transform((v) => v || null),

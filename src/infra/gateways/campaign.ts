@@ -206,6 +206,8 @@ class CampaignGateway implements CampaignGatewayDTO {
       nomenclature: input.nomenclature,
       support_tag_id: input.supportTagId,
       visible_in_marketplace: input.visibleInMarketplace,
+      show_progress_bar: input.showProgressBar,
+      progress_goal_type: input.progressGoalType,
       show_auto_pix_invite: input.showAutoPixInvite,
       require_login: input.requireLogin,
       payment_unique_title: input.oneTimePaymentTitle,
