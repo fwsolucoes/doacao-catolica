@@ -14,18 +14,66 @@ import { Card } from "~/client/components/ui/card";
 import { useRoot } from "~/client/hooks/useRoot";
 import { Container } from "./styles";
 
-type ErrorProps = {
+type NormalizedRouteError = {
+  status: number;
   name: string;
   message: string | null;
+  cause: unknown;
   fieldErrors?: Record<string, string> | null;
 };
 
-function ErrorBoundaryPage() {
-  const routeError = useRouteError() as any;
+/**
+ * O erro chega em dois formatos possíveis dependendo de como foi lançado:
+ * - `throw new Response(...)` nativo → React Router converte em ErrorResponseImpl
+ *   (`{ status, statusText, data }`), onde `data` é o corpo da Response.
+ * - `throw HttpAdapter.xxx(...)` (caso mais comum) → propaga a instância crua
+ *   do BadResponse do @arkyn/server (`{ status, name, message, cause }`), sem
+ *   wrapper — nunca existe um campo `.body`.
+ */
+function normalizeRouteError(routeError: unknown): NormalizedRouteError {
+  const error = routeError as Record<string, any> | null | undefined;
 
-  const errorStatus: number = routeError?.status || 500;
-  const errorCause: string = routeError?.cause || "Unknown Cause";
-  const errorData: ErrorProps = routeError?.body || "Unknown Error";
+  if (error && typeof error === "object" && "statusText" in error && "data" in error) {
+    const data = error.data;
+    const body = data && typeof data === "object" ? data : null;
+
+    return {
+      status: error.status ?? 500,
+      name: body?.name ?? error.statusText ?? "Unknown Error",
+      message: body?.message ?? (typeof data === "string" ? data : null),
+      cause: body?.cause ?? null,
+      fieldErrors: body?.cause?.fieldErrors ?? null,
+    };
+  }
+
+  if (error && typeof error === "object" && "status" in error) {
+    return {
+      status: error.status ?? 500,
+      name: error.name ?? "Unknown Error",
+      message: error.message ?? null,
+      cause: error.cause ?? null,
+      fieldErrors: error.cause?.fieldErrors ?? null,
+    };
+  }
+
+  return {
+    status: 500,
+    name: "Unknown Error",
+    message: null,
+    cause: null,
+    fieldErrors: null,
+  };
+}
+
+function ErrorBoundaryPage() {
+  const routeError = useRouteError();
+
+  const {
+    status: errorStatus,
+    name: errorName,
+    message: errorMessage,
+    cause: errorCause,
+  } = normalizeRouteError(routeError);
 
   const navigate = useNavigate();
   const handleGoBack = () => navigate(-1);
@@ -34,11 +82,11 @@ function ErrorBoundaryPage() {
   const { environmentVariables } = useRoot();
 
   function buildSupportWhatsappUrl() {
-    const jsonString = JSON.stringify(errorData);
-    const errorMessage = `Projeto: Sancton\nURL: ${location.pathname}\nStatus: ${errorStatus}\nCausa: ${errorCause}\nNome: ${errorData.name}\nMensagem: ${errorData.message || "N/A"}\nErros: ${jsonString}`;
+    const causeString = errorCause ? JSON.stringify(errorCause) : "Unknown Cause";
+    const whatsappMessage = `Projeto: Sancton\nURL: ${location.pathname}\nStatus: ${errorStatus}\nCausa: ${causeString}\nNome: ${errorName}\nMensagem: ${errorMessage || "N/A"}`;
 
     return `https://wa.me/${environmentVariables.WHATSAPP_SUPPORT_NUMBER}?text=${encodeURIComponent(
-      `Olá, estou enfrentando um problema com o sistema. Aqui estão os detalhes do erro:\n\n${errorMessage}`,
+      `Olá, estou enfrentando um problema com o sistema. Aqui estão os detalhes do erro:\n\n${whatsappMessage}`,
     )}`;
   }
 
