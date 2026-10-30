@@ -35,13 +35,15 @@ export async function loader(args: Route.LoaderArgs) {
 export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
 
+  let subscriptionUuid: string;
   try {
-    await createRecurrence.handle(adaptedRoute);
+    subscriptionUuid = await createRecurrence.handle(adaptedRoute);
   } catch (error) {
     return ErrorHandlerAdapter.handleAsData(error);
   }
 
   return {
+    subscriptionUuid,
     toast: {
       message: "Recorrência criada com sucesso!",
       type: "success" as const,

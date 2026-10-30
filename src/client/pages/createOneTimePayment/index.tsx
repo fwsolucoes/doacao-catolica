@@ -22,8 +22,8 @@ import { Select } from "~/client/components/ui/select";
 import { Textarea } from "~/client/components/ui/textarea";
 import type { CreateOneTimePaymentLoader } from "~/client/types/createOneTimePaymentLoader";
 import { useFilter } from "~/client/hooks/useFilter";
+import { PaymentLinkDialog } from "~/client/components/PaymentLinkDialog";
 import { ContactDetailCard } from "../createRecurrence/components/ContactDetailCard";
-import { PaymentLinkDialog } from "./components/PaymentLinkDialog";
 
 const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
   1: "donation",

@@ -24,10 +24,13 @@ import { Select } from "~/client/components/ui/select";
 import { Textarea } from "~/client/components/ui/textarea";
 import { Alert } from "~/client/components/ui/alert";
 import { SwitchField } from "~/client/components/ui/switch-field";
+// import { PaymentLinkDialog } from "~/client/components/PaymentLinkDialog";
 import type { CreateRecurrenceLoader } from "~/client/types/createRecurrenceLoader";
 import { useFilter } from "~/client/hooks/useFilter";
 import { useRoot } from "~/client/hooks/useRoot";
 import { ContactDetailCard } from "./components/ContactDetailCard";
+
+type PaymentType = "pix" | "bank_slip" | "credit_card";
 
 const CATEGORY_MAP: Record<number, "donation" | "tithe"> = {
   1: "donation",
@@ -47,7 +50,7 @@ function CreateRecurrencePage() {
   const [selectedContactId, setSelectedContactId] = useState(
     contactDetail?.contactId ?? "",
   );
-  const [paymentType, setPaymentType] = useState<"pix" | "bank_slip">("pix");
+  const [paymentType, setPaymentType] = useState<PaymentType>("pix");
   const [valueType, setValueType] = useState<"fixed" | "undetermined">("fixed");
   const [currentMonthPayment, setCurrentMonthPayment] = useState<"sim" | "não">(
     "sim",
@@ -63,9 +66,18 @@ function CreateRecurrencePage() {
 
   useActionToast(data);
 
+  const donationsHref = `/campaign/${campaignId}/donations`;
+  // redirecionamento ao link de pagamento desativado temporariamente
+  // const paymentLinkUuid: string | null =
+  //   paymentType === "credit_card" ? (data?.subscriptionUuid ?? null) : null;
+  // const closePaymentLinkDialog = useCallback(
+  //   () => navigate(donationsHref),
+  //   [navigate, donationsHref],
+  // );
+
   useEffect(() => {
     if (data?.toast?.type !== "success") return;
-    navigate(`/campaign/${campaignId}/donations`);
+    navigate(donationsHref);
   }, [data?.toast?.type]);
 
   const effectivePhone = contactDetail?.phone ?? (phoneInput.trim() || null);
@@ -132,7 +144,7 @@ function CreateRecurrencePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="outline" size="icon" asChild>
-          <Link to={`/campaign/${campaignId}/donations`}>
+          <Link to={donationsHref}>
             <ArrowLeft size={16} />
           </Link>
         </Button>
@@ -218,9 +230,7 @@ function CreateRecurrencePage() {
                 <Select.Root
                   name="paymentType"
                   value={paymentType}
-                  onValueChange={(v) =>
-                    setPaymentType(v as "pix" | "bank_slip")
-                  }
+                  onValueChange={(v) => setPaymentType(v as PaymentType)}
                 >
                   <Select.Trigger>
                     <Select.Value />
@@ -228,9 +238,25 @@ function CreateRecurrencePage() {
                   <Select.Content>
                     <Select.Item value="pix">Pix</Select.Item>
                     <Select.Item value="bank_slip">Boleto</Select.Item>
+                    <Select.Item value="credit_card">
+                      Cartão de crédito
+                    </Select.Item>
                   </Select.Content>
                 </Select.Root>
               </FormField>
+
+              {paymentType === "credit_card" && (
+                <Alert.Root variant="warning">
+                  <Alert.Icon>
+                    <TriangleAlert size={16} />
+                  </Alert.Icon>
+                  <Alert.Title>Atenção!</Alert.Title>
+                  <Alert.Description>
+                    O doador precisará acessar o link de pagamento para
+                    informar os dados do cartão de crédito.
+                  </Alert.Description>
+                </Alert.Root>
+              )}
 
               <FormField name="valueType" label="Tipo de valor:" required>
                 <RadioGroup.Root
@@ -336,7 +362,7 @@ function CreateRecurrencePage() {
           </Card.Root>
 
           <div className="ml-auto flex w-fit max-w-xl justify-end gap-3">
-            <Link to={`/campaign/${campaignId}/donations`}>
+            <Link to={donationsHref}>
               <Button type="button" variant="outline">
                 Cancelar
               </Button>
@@ -347,6 +373,12 @@ function CreateRecurrencePage() {
           </div>
         </Form>
       </FormErrorProvider>
+
+      {/* redirecionamento ao link de pagamento desativado temporariamente */}
+      {/* <PaymentLinkDialog
+        paymentUuid={paymentLinkUuid}
+        onClose={closePaymentLinkDialog}
+      /> */}
     </div>
   );
 }

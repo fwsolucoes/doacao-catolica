@@ -3,7 +3,7 @@ import type { SubscriptionGatewayDTO } from "~/domain/gateways/subscription";
 type UpdateRecurrenceInput = {
   paymentPublicId: string;
   payDay: number;
-  type: "pix" | "bank_slip";
+  type: "pix" | "bank_slip" | "credit_card";
   amount: number;
   undeterminedAmount: boolean;
   description: string;

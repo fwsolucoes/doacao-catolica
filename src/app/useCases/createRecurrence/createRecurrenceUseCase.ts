@@ -18,7 +18,7 @@ type CreateRecurrenceInput = {
   token: string;
   // payment
   paymentDay: number;
-  paymentType: "pix" | "bank_slip";
+  paymentType: "pix" | "bank_slip" | "credit_card";
   amount: number;
   undeterminedAmount: boolean;
   currentMonthPayment: boolean;
@@ -37,7 +37,7 @@ class CreateRecurrenceUseCase {
     private subscriptionGateway: SubscriptionGatewayDTO,
   ) {}
 
-  async execute(input: CreateRecurrenceInput): Promise<void> {
+  async execute(input: CreateRecurrenceInput): Promise<string> {
     input.missingFields &&
       (await this.contactGateway.updateContact({
         id: input.contactId,
@@ -61,7 +61,7 @@ class CreateRecurrenceUseCase {
       token: input.token,
     });
 
-    await this.subscriptionGateway.createSubscription({
+    return await this.subscriptionGateway.createSubscription({
       accountReference: input.campaignId,
       contactId: input.contactId,
       contactName: input.contactName,

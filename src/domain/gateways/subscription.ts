@@ -7,7 +7,7 @@ type CreateSubscriptionInput = {
   contactCpf?: string;
   contactBirthDate?: string;
   category: "donation" | "tithe";
-  paymentType: "pix" | "bank_slip";
+  paymentType: "pix" | "bank_slip" | "credit_card";
   paymentDay: number;
   amount: number;
   undeterminedAmount: boolean;
@@ -24,7 +24,7 @@ type CreateSubscriptionInput = {
 type UpdateSubscriptionInput = {
   paymentPublicId: string;
   payDay: number;
-  type: "pix" | "bank_slip";
+  type: "pix" | "bank_slip" | "credit_card";
   amount: number;
   undeterminedAmount: boolean;
   description: string;

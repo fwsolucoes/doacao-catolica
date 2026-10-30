@@ -6,7 +6,7 @@ type UpdateRecurrenceType = z.infer<typeof updateRecurrenceSchema>;
 const updateRecurrenceSchema = z.object({
   paymentId: z.string().min(1, "Payment ID é obrigatório"),
   payDay: z.coerce.number().int().min(1).max(31),
-  type: z.enum(["pix", "bank_slip"]),
+  type: z.enum(["pix", "bank_slip", "credit_card"]),
   valueType: z.enum(["fixed", "undetermined"]),
   amount: z.coerce.number().optional(),
   description: z.string().min(1, "A descrição é obrigatória"),
@@ -50,7 +50,7 @@ const createRecurrenceSchema = z
       .int()
       .min(1, "Informe o dia do pagamento")
       .max(31),
-    paymentType: z.enum(["pix", "bank_slip"]),
+    paymentType: z.enum(["pix", "bank_slip", "credit_card"]),
     valueType: z.enum(["fixed", "undetermined"]),
     amount: z.coerce.number().optional(),
     currentMonthPayment: z

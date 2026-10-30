@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 
 const button = tv({
   base: [
-    "inline-flex items-center justify-center gap-2",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap",
     "font-semibold text-sm",
     "transition-[filter] duration-150",
     "disabled:opacity-50 disabled:cursor-not-allowed",

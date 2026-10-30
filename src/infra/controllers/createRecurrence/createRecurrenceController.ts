@@ -25,7 +25,7 @@ class CreateRecurrenceController {
     const undeterminedAmount = validatedBody.valueType === "undetermined";
     const amount = undeterminedAmount ? 0 : (validatedBody.amount ?? 0);
 
-    await this.createRecurrenceUseCase.execute({
+    return await this.createRecurrenceUseCase.execute({
       contactId: validatedBody.contactId,
       contactName: validatedBody.contactName,
       contactEmail: validatedBody.contactEmail,
