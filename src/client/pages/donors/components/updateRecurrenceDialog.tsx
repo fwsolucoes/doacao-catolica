@@ -1,7 +1,7 @@
 import { TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
-// import { PaymentLinkDialog } from "~/client/components/PaymentLinkDialog";
+import { PaymentLinkDialog } from "~/client/components/PaymentLinkDialog";
 import { Alert } from "~/client/components/ui/alert";
 import { Button } from "~/client/components/ui/button";
 import { Checkbox } from "~/client/components/ui/checkbox";
@@ -57,8 +57,7 @@ function UpdateRecurrenceDialog({
 
   const [valueType, setValueType] = useState<"fixed" | "undetermined">("fixed");
   const [paymentType, setPaymentType] = useState<PaymentType>("pix");
-  // redirecionamento ao link de pagamento desativado temporariamente
-  // const [paymentLinkUuid, setPaymentLinkUuid] = useState<string | null>(null);
+  const [paymentLinkUuid, setPaymentLinkUuid] = useState<string | null>(null);
 
   useEffect(() => {
     if (!donor) return;
@@ -70,10 +69,9 @@ function UpdateRecurrenceDialog({
     if (fetcher.state !== "idle" || fetcher.data?.toast?.type !== "success") {
       return;
     }
-    // redirecionamento ao link de pagamento desativado temporariamente
-    // if (paymentType === "credit_card" && donor) {
-    //   setPaymentLinkUuid(donor.subscriptionUuid);
-    // }
+    if (paymentType === "credit_card" && donor) {
+      setPaymentLinkUuid(donor.subscriptionUuid);
+    }
     onClose();
   }, [fetcher.state, fetcher.data, onClose]);
 
@@ -226,11 +224,10 @@ function UpdateRecurrenceDialog({
           </FormErrorProvider>
         </DialogContent>
       </Dialog>
-      {/* redirecionamento ao link de pagamento desativado temporariamente */}
-      {/* <PaymentLinkDialog
+      <PaymentLinkDialog
         paymentUuid={paymentLinkUuid}
         onClose={() => setPaymentLinkUuid(null)}
-      /> */}
+      />
     </>
   );
 }

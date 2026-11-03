@@ -7,6 +7,7 @@ import type {
   DonorGatewayDTO,
   DonorsSummary,
 } from "~/domain/gateways/donor";
+import { FormatAdapter } from "../adapters/formatAdapter";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "../adapters/schemaValidatorAdapter";
 import { api } from "../http/api";
@@ -24,7 +25,7 @@ import { OneTimeDonor } from "~/domain/entities/oneTimeDonor";
 class DonorGateway implements DonorGatewayDTO {
   async createDonor(input: CreateDonorInput): Promise<string> {
     const birthDate = input.birthDate
-      ? new Date(input.birthDate).toISOString()
+      ? FormatAdapter.parseToDate(input.birthDate).toISOString()
       : null;
 
     const body = {
