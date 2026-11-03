@@ -74,6 +74,9 @@ const environmentVariablesSchema = z.object({
 
   // Produktly (product tours / onboarding)
   PRODUKTLY_TOKEN: z.string(),
+
+  // Session cookie signing secret (min 32 chars) — rotate per environment
+  SESSION_SECRET: z.string().min(32),
 });
 
 function formatErrorMessage(error: z.ZodError) {

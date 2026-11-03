@@ -1,5 +1,6 @@
 import { createCookieSessionStorage } from "react-router";
 import { name } from "../../../package.json";
+import { environmentVariables } from "./environmentVariables";
 
 const authStorage = createCookieSessionStorage({
   cookie: {
@@ -7,7 +8,7 @@ const authStorage = createCookieSessionStorage({
     sameSite: "lax",
     path: "/",
     httpOnly: true,
-    secrets: ["s3cr3t"],
+    secrets: [environmentVariables.SESSION_SECRET],
     secure: process.env.NODE_ENV === "production",
   },
 });
