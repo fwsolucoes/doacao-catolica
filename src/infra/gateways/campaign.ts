@@ -274,12 +274,12 @@ class CampaignGateway implements CampaignGatewayDTO {
     userId: string,
     token: string,
   ): Promise<GetProjectPermissionsOutput> {
-    if (process.env.NODE_ENV === "development") {
-      return {
-        projectRole: { name: "Administrador" },
-        projectPermissions: [...PROJECT_ALL_PERMISSIONS],
-      };
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //   return {
+    //     projectRole: { name: "Administrador" },
+    //     projectPermissions: [...PROJECT_ALL_PERMISSIONS],
+    //   };
+    // }
 
     const url = `/user/get-role/project-id/${projectId}/user-id/${userId}`;
     const apiResponse = await api.get(url, { token });
