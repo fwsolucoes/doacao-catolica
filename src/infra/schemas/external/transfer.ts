@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const externalTransferSchema = z.object({
-  uuid: z.string().uuid(),
+  uuid: z.uuid(),
   status: z.string(),
   type: z.string(),
   paid_date: z.string().nullable(),

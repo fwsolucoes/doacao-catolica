@@ -24,19 +24,6 @@ function formatCurrency(value: number | string | null | undefined): string {
   });
 }
 
-function formatDate(value: string | null | undefined): string {
-  if (!value) return "—";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value.split(" ")[0] || "—";
-
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(date);
-}
-
 function formatStatus(status: string): string {
   const normalized = status.toLowerCase();
   const statusMap: Record<string, string> = {
@@ -71,7 +58,6 @@ function getPixLabel(account: TransferAccount): string {
 
 export {
   formatCurrency,
-  formatDate,
   formatStatus,
   getPixLabel,
   getStatusVariant,

@@ -5,12 +5,7 @@ import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
 import type { TransfersLoader } from "~/client/types/transfersLoader";
-import {
-  formatCurrency,
-  formatDate,
-  formatStatus,
-  getStatusVariant,
-} from "./utils";
+import { formatCurrency, formatStatus, getStatusVariant } from "./utils";
 
 function TransfersTable() {
   const { transfers } = useLoaderData<TransfersLoader>();
@@ -37,10 +32,10 @@ function TransfersTable() {
           {transfers.data.map((transfer) => (
             <Table.Row key={transfer.id}>
               <Table.Cell className="text-sm text-muted-foreground">
-                {formatDate(transfer.createdAt)}
+                {transfer.createdAt}
               </Table.Cell>
               <Table.Cell className="text-sm text-muted-foreground">
-                {formatDate(transfer.paidDate)}
+                {transfer.paidDate ?? "—"}
               </Table.Cell>
               <Table.Cell className="font-semibold text-secondary-foreground">
                 {formatCurrency(transfer.amount)}
