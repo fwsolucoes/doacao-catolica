@@ -163,7 +163,7 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
                 {formatCurrency(campaign.raised)}
               </span>
               {!endDate && (
-                <span className="text-base text-muted-foreground">/mês</span>
+                <span className="text-base text-muted-foreground">(mês atual)</span>
               )}
             </p>
             {campaign.goal !== null && (
