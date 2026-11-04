@@ -27,7 +27,7 @@ const SESSION_OPTIONS: SessionIdStorageStrategy["cookie"] = {
   sameSite: "lax",
   path: "/",
   httpOnly: true,
-  secrets: ["s3cr3t"],
+  secrets: [environmentVariables.SESSION_SECRET],
   secure: process.env.NODE_ENV === "production",
 };
 

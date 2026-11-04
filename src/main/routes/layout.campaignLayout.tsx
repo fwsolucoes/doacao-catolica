@@ -25,19 +25,19 @@ export async function loader(args: Route.LoaderArgs) {
   }
 
   const isOwner = user.accountId === campaign.accountId;
-  // const isSuperUser = user.id === "14692";
+  const isSuperUser = user.id === "14692";
   const isMonthlyType =
     campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
 
   let permissions: Awaited<ReturnType<typeof getProjectPermissions.handle>>;
   try {
-    // permissions = isOwner || isSuperUser
-    permissions = isOwner
-      ? {
-          projectRole: { name: "Administrador" },
-          projectPermissions: [...PROJECT_ALL_PERMISSIONS] as string[],
-        }
-      : await getProjectPermissions.handle(adaptedRoute, campaign.id);
+    permissions =
+      isOwner || isSuperUser
+        ? {
+            projectRole: { name: "Administrador" },
+            projectPermissions: [...PROJECT_ALL_PERMISSIONS] as string[],
+          }
+        : await getProjectPermissions.handle(adaptedRoute, campaign.id);
   } catch {
     throw redirect("/my-campaigns?noPermission=true");
   }
