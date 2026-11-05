@@ -4,6 +4,7 @@ import { MonthlyDonorsReportPage } from "~/client/pages/monthlyDonorsReport";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { resolveGeneralReportsAccountId } from "~/lib/generalReportsAccountId.server";
 import { getMonthlyDonors } from "../factories/monthlyDonors/getMonthlyDonorsFactory";
 import { listCampaigns } from "../factories/campaign/listCampaignsFactory";
 
@@ -15,7 +16,7 @@ export async function loader(args: Route.LoaderArgs) {
 
   const [monthlyDonors, campaignsResult] = await Promise.all([
     getMonthlyDonors.handle(adaptedRoute, {
-      projectAccountId: String(user.accountId),
+      projectAccountId: String(resolveGeneralReportsAccountId(user)),
     }),
     listCampaigns.handle({
       ...adaptedRoute,

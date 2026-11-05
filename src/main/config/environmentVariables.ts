@@ -77,6 +77,16 @@ const environmentVariablesSchema = z.object({
 
   // Session cookie signing secret (min 32 chars) — rotate per environment
   SESSION_SECRET: z.string().min(32),
+
+  // Relatórios gerais — colaboradores autorizados (IDs de usuário separados por
+  // vírgula) enxergam o accountId geral (todas as campanhas) em vez do próprio
+  GENERAL_REPORTS_ALLOWED_USER_IDS: z.string().default(""),
+  GENERAL_REPORTS_MASTER_ACCOUNT_ID: z
+    .string()
+    .default("")
+    .refine((value) => value === "" || /^\d+$/.test(value), {
+      message: "GENERAL_REPORTS_MASTER_ACCOUNT_ID must be empty or a numeric string",
+    }),
 });
 
 function formatErrorMessage(error: z.ZodError) {
