@@ -24,6 +24,7 @@ const SYSTEM_FIELDS: Record<string, string> = {
   "payments.link_payment": "Link de pagamento",
   "subscriptions.start_date": "Data de início da assinatura",
   "accounts.name": "Nome da organização",
+  "raffle_numbers": "Números de sorteio",
 };
 
 type EditVariableModalProps = {
