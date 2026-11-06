@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -6,7 +6,6 @@ import {
   MousePointerClick,
   Plus,
   X,
-  Workflow,
 } from "lucide-react";
 import { Link, useNavigate, useParams, useFetcher } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
@@ -40,13 +39,13 @@ const SYSTEM_FIELDS = [
   { value: "payments.link_payment", label: "Link de pagamento" },
   { value: "subscriptions.start_date", label: "Data de início da assinatura" },
   { value: "accounts.name", label: "Nome da organização" },
+  { value: "raffle_numbers", label: "Números de sorteio" },
 ];
 
 const BUTTON_TYPES: Record<string, { label: string; icon: React.ElementType }> = {
   quick_reply: { label: "Resposta rápida", icon: MousePointerClick },
   url: { label: "URL", icon: ExternalLink },
   copy_code: { label: "Copiar código", icon: Copy },
-  flow: { label: "Flow", icon: Workflow },
 };
 
 const HEADER_TYPES = [
@@ -87,6 +86,7 @@ function NewMetaTemplatePage() {
   const [headerType, setHeaderType] = useState("none");
   const [variables, setVariables] = useState<VariableItem[]>([]);
   const [button, setButton] = useState<ButtonItem | null>(null);
+  const buttonValueCursorRef = useRef(0);
 
   useActionToast(fetcher.data);
 
@@ -117,6 +117,15 @@ function NewMetaTemplatePage() {
 
   function removeButton() {
     setButton(null);
+  }
+
+  function insertPaymentUuidVariable() {
+    if (!button) return;
+    const variable = "{{payment_uuid}}";
+    const pos = buttonValueCursorRef.current;
+    const value = button.value.slice(0, pos) + variable + button.value.slice(pos);
+    setButton({ ...button, value });
+    buttonValueCursorRef.current = pos + variable.length;
   }
 
   return (
@@ -411,12 +420,35 @@ function NewMetaTemplatePage() {
                 </FormField>
 
                 <FormField name="button_value" label="Valor">
-                  <Input
-                    name="button_value"
-                    placeholder={button.subType === "url" ? "https://exemplo.com" : "Ex: Doar Agora"}
-                    value={button.value}
-                    onChange={(e) => setButton({ ...button, value: e.target.value })}
-                  />
+                  <div className="flex flex-col gap-1.5">
+                    <Input
+                      name="button_value"
+                      placeholder={button.subType === "url" ? "https://exemplo.com" : "Ex: Doar Agora"}
+                      value={button.value}
+                      onChange={(e) => {
+                        setButton({ ...button, value: e.target.value });
+                        buttonValueCursorRef.current = e.target.selectionStart ?? e.target.value.length;
+                      }}
+                      onSelect={(e) => {
+                        buttonValueCursorRef.current = (e.target as HTMLInputElement).selectionStart ?? 0;
+                      }}
+                      onBlur={(e) => {
+                        buttonValueCursorRef.current = e.target.selectionStart ?? 0;
+                      }}
+                    />
+                    {button.subType === "url" && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-fit gap-1.5"
+                        onClick={insertPaymentUuidVariable}
+                      >
+                        <Plus size={14} />
+                        Inserir {"{{payment_uuid}}"}
+                      </Button>
+                    )}
+                  </div>
                 </FormField>
               </div>
             </div>
