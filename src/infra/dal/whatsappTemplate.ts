@@ -144,11 +144,15 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     return undefined;
   }
 
+  private splitSystemField(systemField: string): { table: string; field: string } {
+    const dotIndex = systemField.indexOf(".");
+    if (dotIndex === -1) return { table: systemField, field: systemField };
+    return { table: systemField.slice(0, dotIndex), field: systemField.slice(dotIndex + 1) };
+  }
+
   private buildVariables(variables: CreateWhatsappTemplateBody["variables"]) {
     return variables.map((v, index) => {
-      const dotIndex = v.systemField.indexOf(".");
-      const table = v.systemField.slice(0, dotIndex);
-      const field = v.systemField.slice(dotIndex + 1);
+      const { table, field } = this.splitSystemField(v.systemField);
       return { name: field, table, field, position: index + 1, description: v.description };
     });
   }
@@ -192,7 +196,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
       headerLink: item.header?.link ?? "",
       variables: (item.variables ?? []).map((v) => ({
         uuid: v.uuid,
-        systemField: v.table && v.field ? `${v.table}.${v.field}` : "",
+        systemField: v.table && v.field ? (v.table === v.field ? v.table : `${v.table}.${v.field}`) : "",
         name: v.name ?? null,
         position: v.position ?? null,
         description: v.description ?? null,
@@ -336,9 +340,7 @@ class WhatsappTemplateDal implements WhatsappTemplateDalDTO {
     description: string,
     position: number,
   ): Record<string, unknown> {
-    const dotIndex = systemField.indexOf(".");
-    const table = systemField.slice(0, dotIndex);
-    const field = systemField.slice(dotIndex + 1);
+    const { table, field } = this.splitSystemField(systemField);
     const body: Record<string, unknown> = { table, field, name: field, position };
     if (description) body.description = description;
     return body;
