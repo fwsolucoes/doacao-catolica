@@ -47,7 +47,7 @@ function VisibilitySection() {
             variant="ghost"
             onClick={() => setVisibility(value)}
             className={cn(
-              "relative h-auto items-start gap-4 rounded-xl border p-4 text-left transition-colors hover:brightness-100",
+              "relative h-auto items-start gap-4 rounded-xl border p-4 text-left whitespace-normal transition-colors hover:brightness-100",
               visibility === value
                 ? "border-primary bg-primary/5 hover:bg-primary/5"
                 : "border-border hover:bg-muted/50",
@@ -77,7 +77,7 @@ function VisibilitySection() {
                 }
               />
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 pr-6">
               <span className="text-sm font-semibold text-foreground">
                 {label}
               </span>
