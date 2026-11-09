@@ -9,7 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/client/components/ui/dialog";
-import { FormErrorProvider, FormField } from "~/client/components/ui/form-field";
+import {
+  FormErrorProvider,
+  FormField,
+} from "~/client/components/ui/form-field";
 import { Input } from "~/client/components/ui/input";
 import { Select } from "~/client/components/ui/select";
 import { useActionToast } from "~/client/hooks/useActionToast";
@@ -17,14 +20,15 @@ import type { WhatsappTemplateDetailVariable } from "~/domain/views/whatsappTemp
 
 const SYSTEM_FIELDS: Record<string, string> = {
   "customers.name": "Nome do doador",
+  "payments.description": "Descrição do pagamento",
   "customers.email": "E-mail do doador",
   "customers.phone": "Telefone do doador",
   "payments.amount": "Valor do pagamento",
-  "payments.due_date": "Vencimento do pagamento",
+  "payments.due_date": "Data de Vencimento",
   "payments.link_payment": "Link de pagamento",
   "subscriptions.start_date": "Data de início da assinatura",
   "accounts.name": "Nome da organização",
-  "raffle_numbers": "Números de sorteio",
+  raffle_numbers: "Números de sorteio",
 };
 
 type EditVariableModalProps = {
@@ -33,7 +37,11 @@ type EditVariableModalProps = {
   onClose: () => void;
 };
 
-function EditVariableModal({ open, variable, onClose }: EditVariableModalProps) {
+function EditVariableModal({
+  open,
+  variable,
+  onClose,
+}: EditVariableModalProps) {
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
