@@ -35,7 +35,7 @@ const externalSubAccountSchema = z
     site: z.string(),
     income_range: z.string(),
     gateway_id: z.string().nullable(),
-    api_key: z.string(),
+    api_key: z.string().nullable().optional(),
     wallet_id: z.string(),
     gateway_status: z.number(),
     last_sync_date: z.string(),

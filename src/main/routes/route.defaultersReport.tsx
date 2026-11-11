@@ -4,6 +4,7 @@ import { DefaultersReportPage } from "~/client/pages/defaultersReport";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { resolveGeneralReportsAccountId } from "~/lib/generalReportsAccountId.server";
 import { getDefaultingDonors } from "../factories/defaultingDonors/getDefaultingDonorsFactory";
 import { listCampaignSelect } from "../factories/campaignSelect/listCampaignSelectFactory";
 
@@ -17,7 +18,11 @@ export async function loader(args: Route.LoaderArgs) {
   const accountUuid = adaptedRoute.query.account_uuid || undefined;
 
   const [defaultingDonors, campaigns] = await Promise.all([
-    getDefaultingDonors.handle(accountUuid, months, String(user.accountId)),
+    getDefaultingDonors.handle(
+      accountUuid,
+      months,
+      String(resolveGeneralReportsAccountId(user)),
+    ),
     listCampaignSelect.handle(adaptedRoute),
   ]);
 

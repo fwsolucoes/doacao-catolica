@@ -17,6 +17,7 @@ const NOTIFICATION_TYPES: Record<string, string> = {
   donate_now: "Doe agora",
   pending_automatic_pix_authorization: "PIX automático pendente de autorização",
   inactive_donor: "Doador inativo",
+  raffle_tickets: "Confirmação de pagamento (com número de sorteio)",
 };
 
 export { NOTIFICATION_TYPES };

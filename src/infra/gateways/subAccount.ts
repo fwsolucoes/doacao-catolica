@@ -48,7 +48,7 @@ class SubAccountGateway implements SubAccountGatewayDTO {
           site: item.site,
           incomeRange: item.income_range,
           gatewayId: item.gateway_id,
-          apiKey: item.api_key,
+          apiKey: item.api_key ?? null,
           walletId: item.wallet_id,
           gatewayStatus: item.gateway_status,
           lastSyncDate: item.last_sync_date,

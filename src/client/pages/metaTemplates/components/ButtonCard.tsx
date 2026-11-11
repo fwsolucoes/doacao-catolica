@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Copy, ExternalLink, MousePointerClick, Plus, Workflow, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Copy, ExternalLink, MousePointerClick, Plus, X } from "lucide-react";
 import { useLoaderData, useFetcher } from "react-router";
 import { useActionToast } from "~/client/hooks/useActionToast";
 import { Button } from "~/client/components/ui/button";
@@ -16,7 +16,6 @@ const BUTTON_TYPES: Record<string, { label: string; icon: React.ElementType }> =
   quick_reply: { label: "Resposta rápida", icon: MousePointerClick },
   url: { label: "URL", icon: ExternalLink },
   copy_code: { label: "Copiar código", icon: Copy },
-  flow: { label: "Flow", icon: Workflow },
 };
 
 function ButtonCard() {
@@ -28,8 +27,18 @@ function ButtonCard() {
       : null,
   );
   const [deletingButton, setDeletingButton] = useState<WhatsappTemplateDetailButton | null>(null);
+  const buttonValueCursorRef = useRef(0);
 
   const closeDeleteModal = useCallback(() => setDeletingButton(null), []);
+
+  function insertPaymentUuidVariable() {
+    if (!button) return;
+    const variable = "{{payment_uuid}}";
+    const pos = buttonValueCursorRef.current;
+    const value = button.value.slice(0, pos) + variable + button.value.slice(pos);
+    setButton({ ...button, value });
+    buttonValueCursorRef.current = pos + variable.length;
+  }
 
   useEffect(() => {
     setButton(
@@ -103,14 +112,38 @@ function ButtonCard() {
                     </FormField>
 
                     <FormField name="button_value" label="Valor">
-                      <Input
-                        name="button_value"
-                        placeholder={
-                          button.subType === "url" ? "https://exemplo.com" : "Ex: Doar Agora"
-                        }
-                        value={button.value}
-                        onChange={(e) => setButton({ ...button, value: e.target.value })}
-                      />
+                      <div className="flex flex-col gap-1.5">
+                        <Input
+                          name="button_value"
+                          placeholder={
+                            button.subType === "url" ? "https://exemplo.com" : "Ex: Doar Agora"
+                          }
+                          value={button.value}
+                          onChange={(e) => {
+                            setButton({ ...button, value: e.target.value });
+                            buttonValueCursorRef.current = e.target.selectionStart ?? e.target.value.length;
+                          }}
+                          onSelect={(e) => {
+                            buttonValueCursorRef.current =
+                              (e.target as HTMLInputElement).selectionStart ?? 0;
+                          }}
+                          onBlur={(e) => {
+                            buttonValueCursorRef.current = e.target.selectionStart ?? 0;
+                          }}
+                        />
+                        {button.subType === "url" && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="w-fit gap-1.5"
+                            onClick={insertPaymentUuidVariable}
+                          >
+                            <Plus size={14} />
+                            Inserir {"{{payment_uuid}}"}
+                          </Button>
+                        )}
+                      </div>
                     </FormField>
                   </div>
                 </div>

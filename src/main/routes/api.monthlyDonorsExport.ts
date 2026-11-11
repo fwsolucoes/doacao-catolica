@@ -3,6 +3,7 @@ import { redirect } from "react-router";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { environmentVariables } from "~/main/config/environmentVariables";
+import { resolveGeneralReportsAccountId } from "~/lib/generalReportsAccountId.server";
 
 export async function loader(args: Route.LoaderArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
@@ -23,7 +24,7 @@ export async function loader(args: Route.LoaderArgs) {
   if (start_month) params.set("start_month", start_month);
   if (end_month) params.set("end_month", end_month);
   if (project_id) params.set("project_id", project_id);
-  params.set("project_account_id", String(user.accountId));
+  params.set("project_account_id", String(resolveGeneralReportsAccountId(user)));
   if (search) params.set("search", search);
   if (name) params.set("name", name);
   if (cpf) params.set("cpf", cpf);

@@ -4,6 +4,7 @@ import { DonationsPage } from "~/client/pages/paymentStatements";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { resolveGeneralReportsAccountId } from "~/lib/generalReportsAccountId.server";
 import { allDonationsMock } from "~/lib/mocks/allDonationsMock";
 import { listPaymentsByAccount } from "../factories/paymentsByAccount/listPaymentsByAccountFactory";
 import { getTotalPaymentsByAccount } from "../factories/totalPaymentsByAccount/getTotalPaymentsByAccountFactory";
@@ -15,16 +16,17 @@ export async function loader(args: Route.LoaderArgs) {
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
 
+  const accountId = resolveGeneralReportsAccountId(user);
   const customerRef = adaptedRoute.query.customer_reference;
 
   const [metrics, payments, campaigns] = await Promise.all([
     getTotalPaymentsByAccount.handle(
-      user.accountId,
+      accountId,
       undefined,
       undefined,
       adaptedRoute.query.date_type,
     ),
-    listPaymentsByAccount.handle(user.accountId, adaptedRoute.query),
+    listPaymentsByAccount.handle(accountId, adaptedRoute.query),
     listCampaignSelect.handle(adaptedRoute),
   ]);
 

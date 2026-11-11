@@ -24,7 +24,7 @@ type SubAccountProps = {
   site: string;
   incomeRange: string;
   gatewayId: string | null;
-  apiKey: string;
+  apiKey: string | null;
   walletId: string;
   gatewayStatus: number;
   lastSyncDate: string;
@@ -67,7 +67,7 @@ class SubAccount {
   readonly site: string;
   readonly incomeRange: string;
   readonly gatewayId: string | null;
-  readonly apiKey: string;
+  readonly apiKey: string | null;
   readonly walletId: string;
   readonly gatewayStatus: number;
   readonly lastSyncDate: string;
