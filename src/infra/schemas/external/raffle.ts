@@ -44,7 +44,8 @@ const externalRaffleTicketSchema = z.object({
   customer: z.object({
     name: z.string(),
     reference: z.string(),
-    email: z.string(),
+    // nulo para doadores sem e-mail cadastrado
+    email: z.string().nullable(),
   }),
   payment: z.object({
     uuid: z.uuid(),
