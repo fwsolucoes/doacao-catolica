@@ -24,6 +24,8 @@ type SidebarNavItem = {
   icon: ComponentType<{ size?: number }>;
   label: string;
   path?: string;
+  /** Mantém o item ativo também nas sub-rotas (ex.: `raffles/:id/tickets`). */
+  matchNested?: boolean;
   subItems?: SidebarNavSubItem[];
 };
 
@@ -46,10 +48,11 @@ function SimpleNavItem({
   icon: Icon,
   label,
   path,
+  matchNested = false,
   basePath,
 }: SidebarNavItem & { basePath: string }) {
   const to = resolvePath(basePath, path);
-  const match = useMatch(to ?? "/__no_route__");
+  const match = useMatch({ path: to ?? "/__no_route__", end: !matchNested });
   const isActive = !!match && !!to;
 
   return (
@@ -62,7 +65,7 @@ function SimpleNavItem({
           size="lg"
           className="rounded-xl hover:bg-accent data-[active=true]:bg-accent"
         >
-          <NavLink to={to} end>
+          <NavLink to={to} end={!matchNested}>
             <Icon size={20} />
             <span className="group-data-[collapsible=icon]:hidden">{label}</span>
           </NavLink>
@@ -165,6 +168,7 @@ function SidebarNav({ sections, basePath = "" }: SidebarNavProps) {
                   icon={item.icon}
                   label={item.label}
                   path={item.path}
+                  matchNested={item.matchNested}
                   basePath={basePath}
                 />
               ),

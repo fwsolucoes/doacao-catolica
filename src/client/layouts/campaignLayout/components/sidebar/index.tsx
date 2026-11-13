@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   MessageSquare,
   Settings,
+  Ticket,
   UserCog,
   Users,
   Wallet,
@@ -51,6 +52,7 @@ const sections: SidebarNavSection[] = [
           { label: "Mensagens enviadas", path: "notifications" },
         ],
       },
+      { icon: Ticket, label: "Sorteios", path: "raffles", matchNested: true },
       {
         icon: UserCog,
         label: "Usuários",
