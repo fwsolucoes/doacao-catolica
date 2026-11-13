@@ -2,6 +2,7 @@ import type { Route } from "+/route.campaign.donations";
 import { redirect } from "react-router";
 import { DonationsPage } from "~/client/pages/paymentStatements";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
+import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
 import { getPaymentMetrics, listPayments } from "../factories/paymentMetrics/getPaymentMetricsFactory";
@@ -29,7 +30,12 @@ export async function loader(args: Route.LoaderArgs) {
 
 export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
-  return paymentFactory.handleAction(adaptedRoute);
+
+  try {
+    return await paymentFactory.handleAction(adaptedRoute);
+  } catch (error) {
+    return ErrorHandlerAdapter.handleAsData(error);
+  }
 }
 
 export function ErrorBoundary() {
