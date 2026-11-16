@@ -36,7 +36,10 @@ const externalCampaignSchema = z.object({
   monthly_goal: z.number().nullable(), // API typo for monthly_goal
   revenue_exists: z.boolean().nullable(),
   already_has_revenue: z.boolean().optional(),
-  current_revenue: z.string().optional(),
+  current_revenue: z
+    .union([z.string(), z.number()])
+    .optional()
+    .transform((v) => (v === undefined ? v : String(v))),
   total_goal: z.number().nullable(),
   project_category_id: z.string().nullable().optional(),
   preferences: z
