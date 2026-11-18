@@ -11,6 +11,7 @@ type OneTimeDonorProps = {
   registeredAt: string;
   isRecurring: boolean;
   recurringSince: string | null;
+  affiliateReference: string | null;
   amount: number;
   paymentMethod: string;
   lastDonationAt: string | null;
@@ -27,6 +28,7 @@ class OneTimeDonor {
   readonly registeredAt: string;
   readonly isRecurring: boolean;
   readonly recurringSince: string | null;
+  readonly affiliateReference: string | null;
   readonly amount: number;
   readonly paymentMethod: string;
   readonly lastDonationAt: string | null;
@@ -42,6 +44,7 @@ class OneTimeDonor {
     this.registeredAt = props.registeredAt;
     this.isRecurring = props.isRecurring;
     this.recurringSince = props.recurringSince;
+    this.affiliateReference = props.affiliateReference;
     this.amount = props.amount;
     this.paymentMethod = props.paymentMethod;
     this.lastDonationAt = props.lastDonationAt;
@@ -63,6 +66,7 @@ class OneTimeDonor {
       registeredAt: this.registeredAt,
       isRecurring: this.isRecurring,
       recurringSince: this.recurringSince,
+      affiliateReference: this.affiliateReference,
       amount: this.amount,
       paymentMethod: this.paymentMethod,
       lastDonationAt: this.lastDonationAt,

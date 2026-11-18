@@ -12,6 +12,7 @@ type RecurringDonorProps = {
   lastDonationAt: string | null;
   status: boolean;
   activeNotification: boolean;
+  affiliateReference: string | null;
   amount: number;
   payDay: number;
   paymentMethod: string;
@@ -30,6 +31,7 @@ class RecurringDonor {
   readonly lastDonationAt: string | null;
   readonly status: boolean;
   readonly activeNotification: boolean;
+  readonly affiliateReference: string | null;
   readonly amount: number;
   readonly payDay: number;
   readonly paymentMethod: string;
@@ -47,6 +49,7 @@ class RecurringDonor {
     this.lastDonationAt = props.lastDonationAt;
     this.status = props.status;
     this.activeNotification = props.activeNotification;
+    this.affiliateReference = props.affiliateReference;
     this.amount = props.amount;
     this.payDay = props.payDay;
     this.paymentMethod = props.paymentMethod;
@@ -70,6 +73,7 @@ class RecurringDonor {
       lastDonationAt: this.lastDonationAt,
       status: this.status,
       activeNotification: this.activeNotification,
+      affiliateReference: this.affiliateReference,
       amount: this.amount,
       payDay: this.payDay,
       paymentMethod: this.paymentMethod,

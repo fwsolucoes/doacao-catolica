@@ -46,7 +46,7 @@ function LinkAmbassadorDialog({ donor, onClose }: LinkAmbassadorDialogProps) {
 
   useEffect(() => {
     if (!donor) return;
-    setSelectedAmbassadorId("");
+    setSelectedAmbassadorId(donor.affiliateReference ?? "");
     ambassadorsFetcher.load(`/campaign/${campaignId}/fundraisers`);
   }, [donor?.subscriptionUuid]);
 

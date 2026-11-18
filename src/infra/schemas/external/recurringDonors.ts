@@ -18,6 +18,7 @@ const recurringDonorsResponseSchema = z.object({
         last_donation_at: z.string().nullable(),
         status: z.boolean(),
         active_notification: z.boolean(),
+        affiliate_reference: z.string().nullable(),
         amount: z.number(),
         pay_day: z.number(),
         // known values: "automatic_pix" | "pix" | "bank_slip" | "credit_card"

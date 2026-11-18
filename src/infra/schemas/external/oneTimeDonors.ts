@@ -17,6 +17,7 @@ const oneTimeDonorsResponseSchema = z.object({
         registered_at: z.string(),
         is_recurring: z.boolean(),
         recurring_since: z.string().nullable(),
+        affiliate_reference: z.string().nullable(),
         amount: z.number(),
         // known values: "pix" | "bank_slip" | "credit_card"
         payment_method: z.string(),
