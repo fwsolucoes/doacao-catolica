@@ -12,6 +12,7 @@ type PaymentGatewayDTO = {
   manualPayment(accountUuid: string, data: ManualPaymentData): Promise<void>;
   cancelManualPayment(accountUuid: string, paymentUuid: string): Promise<string>;
   sendReminderNotification(paymentUuid: string): Promise<string>;
+  retryPayment(paymentUuid: string): Promise<string>;
 };
 
 export type { ManualPaymentData };

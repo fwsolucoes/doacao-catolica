@@ -1,4 +1,7 @@
-import type { ManualPaymentData, PaymentGatewayDTO } from "~/domain/gateways/payment";
+import type {
+  ManualPaymentData,
+  PaymentGatewayDTO,
+} from "~/domain/gateways/payment";
 import { environmentVariables } from "~/main/config/environmentVariables";
 import { HttpAdapter } from "../adapters/httpAdapter";
 import { donationApi } from "../http/donationApi";
@@ -28,7 +31,10 @@ class PaymentGateway implements PaymentGatewayDTO {
     return apiResponse.response?.message ?? "Lembrete enviado com sucesso!";
   }
 
-  async manualPayment(accountUuid: string, data: ManualPaymentData): Promise<void> {
+  async manualPayment(
+    accountUuid: string,
+    data: ManualPaymentData,
+  ): Promise<void> {
     const body: Record<string, unknown> = {
       payment_uuid: data.paymentId,
       new_amount: data.amount,
@@ -47,7 +53,10 @@ class PaymentGateway implements PaymentGatewayDTO {
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
   }
 
-  async cancelManualPayment(accountUuid: string, paymentUuid: string): Promise<string> {
+  async cancelManualPayment(
+    accountUuid: string,
+    paymentUuid: string,
+  ): Promise<string> {
     const apiResponse = await donationApi.post(
       `/api/payments/manual/${accountUuid}/cancel`,
       { body: { payment_uuid: paymentUuid }, headers: this.headers },
@@ -55,7 +64,22 @@ class PaymentGateway implements PaymentGatewayDTO {
 
     if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
 
-    return apiResponse.response?.message ?? "Baixa manual cancelada com sucesso!";
+    return (
+      apiResponse.response?.message ?? "Baixa manual cancelada com sucesso!"
+    );
+  }
+
+  async retryPayment(paymentUuid: string): Promise<string> {
+    const apiResponse = await donationApi.post(
+      `/api/payments/retry/${paymentUuid}`,
+      { body: {}, headers: this.headers },
+    );
+
+    if (!apiResponse.success) throw HttpAdapter.badGateway(apiResponse.message);
+
+    return (
+      apiResponse.response?.message ?? "Pagamento gerado novamente com sucesso!"
+    );
   }
 }
 

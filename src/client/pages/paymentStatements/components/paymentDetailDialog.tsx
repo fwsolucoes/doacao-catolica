@@ -14,6 +14,7 @@ import { useFetcher, useParams } from "react-router";
 import { CancelManualPaymentDialog } from "./cancelManualPaymentDialog";
 import { CancelPaymentDialog } from "./cancelPaymentDialog";
 import { ManualPaymentDialog } from "./manualPaymentDialog";
+import { RetryPaymentDialog } from "./retryPaymentDialog";
 import { SendReminderNotificationDialog } from "./sendReminderNotificationDialog";
 import { Alert } from "~/client/components/ui/alert";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -154,11 +155,14 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     () => setShowCancelManualPaymentDialog(false),
     [],
   );
+  const [showRetryDialog, setShowRetryDialog] = useState(false);
+  const closeRetryDialog = useCallback(() => setShowRetryDialog(false), []);
 
   const canShowPendingActions =
     payment?.status === "Aguardando pagamento" ||
     payment?.status === "Vencido";
   const isManualPayment = payment?.rawStatus === "manual";
+  const isFailedPayment = payment?.rawStatus === "failed";
 
   useEffect(() => {
     if (payment && campaignId) {
@@ -533,6 +537,16 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
               Cancelar baixa manual
             </Button>
           )}
+          {isFailedPayment && (
+            <Button
+              variant="outline"
+              className="h-10 gap-2 rounded-xl px-3.5 text-xs"
+              onClick={() => setShowRetryDialog(true)}
+            >
+              <RefreshCw className="h-5 w-5" />
+              Tentar gerar novamente
+            </Button>
+          )}
           <Button
             className="h-10 gap-2 rounded-xl bg-[#25d366] px-3.5 text-xs text-white hover:bg-[#20bd5a]"
             onClick={() => setShowReminderDialog(true)}
@@ -567,6 +581,12 @@ function PaymentDetailDialog({ payment, onClose }: PaymentDetailDialogProps) {
     <CancelManualPaymentDialog
       payment={showCancelManualPaymentDialog ? payment : null}
       onClose={closeCancelManualPaymentDialog}
+      onSuccess={onClose}
+    />
+
+    <RetryPaymentDialog
+      payment={showRetryDialog ? payment : null}
+      onClose={closeRetryDialog}
       onSuccess={onClose}
     />
     </>

@@ -25,18 +25,25 @@ const cancelManualPaymentBodySchema = z.object({
   paymentId: z.uuid({ message: "ID inválido" }),
 });
 
+const retryPaymentBodySchema = z.object({
+  paymentId: z.uuid({ message: "ID inválido" }),
+});
+
 type CancelPaymentBody = z.infer<typeof cancelPaymentBodySchema>;
 type ManualPaymentBody = z.infer<typeof manualPaymentBodySchema>;
 type SendReminderNotificationBody = z.infer<typeof sendReminderNotificationBodySchema>;
 type CancelManualPaymentBody = z.infer<typeof cancelManualPaymentBodySchema>;
+type RetryPaymentBody = z.infer<typeof retryPaymentBodySchema>;
 
 export {
   cancelPaymentBodySchema,
   manualPaymentBodySchema,
   sendReminderNotificationBodySchema,
   cancelManualPaymentBodySchema,
+  retryPaymentBodySchema,
   type CancelPaymentBody,
   type ManualPaymentBody,
   type SendReminderNotificationBody,
   type CancelManualPaymentBody,
+  type RetryPaymentBody,
 };
