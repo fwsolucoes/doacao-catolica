@@ -48,6 +48,7 @@ const REPORTS = [
       "Consolidado de todas as doações realizadas com filtros por período, método e status.",
     icon: HeartHandshake,
     tone: "green" as const,
+    navigateTo: "../donations",
   },
   {
     title: "Relatório de recorrências",
@@ -55,6 +56,7 @@ const REPORTS = [
       "Panorama completo dos doadores recorrentes ativos, previsão mensal e churn.",
     icon: Repeat2,
     tone: "violet" as const,
+    navigateTo: "../donors",
   },
   {
     title: "Doações Mês a Mês",
