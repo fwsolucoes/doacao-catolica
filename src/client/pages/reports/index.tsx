@@ -4,6 +4,7 @@ import {
   HeartHandshake,
   Repeat2,
   UserMinus,
+  UserRoundX,
   UserX,
   Users,
 } from "lucide-react";
@@ -57,6 +58,12 @@ const REPORTS = [
     icon: Repeat2,
     tone: "violet" as const,
     navigateTo: "../donors",
+  },
+  {
+    title: "Doadores sem contribuição",
+    description: "Doadores cadastrados que nunca realizaram nenhuma doação.",
+    icon: UserRoundX,
+    tone: "amber" as const,
   },
   {
     title: "Doações Mês a Mês",
