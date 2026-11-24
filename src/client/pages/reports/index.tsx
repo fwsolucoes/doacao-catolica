@@ -64,6 +64,7 @@ const REPORTS = [
     description: "Doadores cadastrados que nunca realizaram nenhuma doação.",
     icon: UserRoundX,
     tone: "amber" as const,
+    navigateTo: "../donors-without-donation-report",
   },
   {
     title: "Doações Mês a Mês",

@@ -66,6 +66,14 @@ export default [
     route("create-recurrence", "./main/routes/route.campaign.createRecurrence.tsx"),
     route("create-one-time-payment", "./main/routes/route.campaign.createOneTimePayment.tsx"),
     route("donors", "./main/routes/route.campaign.donors.tsx"),
+    route(
+      "donors-without-donation-report",
+      "./main/routes/route.campaign.donorsWithoutDonationReport.tsx",
+    ),
+    route(
+      "api/donors-without-donation-export",
+      "./main/routes/api.campaign.donorsWithoutDonationExport.ts",
+    ),
     route("payment-methods", "./main/routes/route.campaign.paymentMethodsStandalone.tsx"),
     route("settings/payment-methods", "./main/routes/route.campaign.paymentMethods.tsx"),
     route("settings/general-info", "./main/routes/route.campaign.generalInfo.tsx"),
