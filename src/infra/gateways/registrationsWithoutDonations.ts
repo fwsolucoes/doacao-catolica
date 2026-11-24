@@ -27,24 +27,27 @@ class RegistrationsWithoutDonationsGateway
       externalRegistrationsWithoutDonationsSchema,
     ).validate(apiResponse.response);
 
-    const { summary, pagination, registrations } = data.data;
+    const { filters, summary, pagination, registrations } = data.data;
 
     return RegistrationsWithoutDonations.restore({
       totalCount: summary.total_registrations,
+      periodStartDate: filters.start_date,
+      periodEndDate: filters.end_date,
       recurringCount: summary.recurring_count,
       oneTimeCount: summary.one_time_count,
       monthlyPotentialAmount: summary.monthly_potential_amount,
       registrations: registrations.map((item) => ({
+        registrationUuid: item.registration_uuid,
         customerId: item.customer_id,
         customerUuid: item.customer_uuid,
         name: item.name,
-        document: item.cpf_cnpj,
+        document: item.cpf_cnpj === null ? null : String(item.cpf_cnpj),
         phone: item.phone,
         email: item.email,
         amount: item.amount,
         paymentMethodLabel: item.payment_method_label,
         typeLabel: item.type_label,
-        createdAt: item.created_at,
+        registeredAt: item.registered_at,
       })),
       page: pagination.current_page,
       totalPages: pagination.last_page,

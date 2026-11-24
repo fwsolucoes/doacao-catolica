@@ -56,7 +56,7 @@ const PAYMENT_METHOD_BADGE: Record<string, BadgeVariant> = {
 function DonorsWithoutDonationReportPage() {
   const { registrationsWithoutDonations } =
     useLoaderData<DonorsWithoutDonationReportLoader>();
-  const { summary, registrations, meta } = registrationsWithoutDonations;
+  const { summary, registrations, meta, period } = registrationsWithoutDonations;
   const navigate = useNavigate();
   const location = useLocation();
   const { campaignId } = useParams<{ campaignId: string }>();
@@ -144,9 +144,12 @@ function DonorsWithoutDonationReportPage() {
       </div>
 
       <Card.Root className="p-6">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col items-start gap-1.5">
           <Label className="text-sm font-semibold">Período de cadastro</Label>
           <PeriodSelect />
+          <span className="text-xs text-muted-foreground">
+            Período aplicado: De {period.startDate} a {period.endDate}
+          </span>
         </div>
       </Card.Root>
 
@@ -263,7 +266,7 @@ function DonorsWithoutDonationReportPage() {
                 />
               ) : (
                 registrations.map((registration) => (
-                  <Table.Row key={registration.customerId}>
+                  <Table.Row key={registration.id}>
                     <Table.Cell className="font-semibold">
                       {registration.name}
                     </Table.Cell>

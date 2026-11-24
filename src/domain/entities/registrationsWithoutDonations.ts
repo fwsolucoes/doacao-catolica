@@ -4,6 +4,7 @@ import { formatPhone } from "~/lib/formatPhone";
 const NOT_INFORMED = "Não informado";
 
 type RegistrationProps = {
+  registrationUuid: string;
   customerId: number;
   customerUuid: string;
   name: string;
@@ -13,7 +14,7 @@ type RegistrationProps = {
   amount: number;
   paymentMethodLabel: string;
   typeLabel: string;
-  createdAt: string;
+  registeredAt: string;
 };
 
 type RegistrationsWithoutDonationsProps = {
@@ -25,9 +26,12 @@ type RegistrationsWithoutDonationsProps = {
   page: number;
   totalPages: number;
   totalItems: number;
+  periodStartDate: string;
+  periodEndDate: string;
 };
 
 type RegistrationJson = {
+  id: string;
   customerId: string;
   customerUuid: string;
   name: string;
@@ -52,6 +56,7 @@ type RegistrationsWithoutDonationsJson = {
   summary: RegistrationsWithoutDonationsSummaryJson;
   registrations: RegistrationJson[];
   meta: { page: number; totalPages: number; totalItems: number };
+  period: { startDate: string; endDate: string };
 };
 
 class RegistrationsWithoutDonations {
@@ -80,6 +85,7 @@ class RegistrationsWithoutDonations {
 
   private formatRegistration(registration: RegistrationProps): RegistrationJson {
     return {
+      id: registration.registrationUuid,
       customerId: String(registration.customerId),
       customerUuid: registration.customerUuid,
       name: registration.name,
@@ -90,7 +96,7 @@ class RegistrationsWithoutDonations {
       chosenAmount: this.formatCurrency(registration.amount),
       paymentMethod: registration.paymentMethodLabel,
       type: registration.typeLabel,
-      registeredAt: this.formatDate(registration.createdAt),
+      registeredAt: this.formatDate(registration.registeredAt),
     };
   }
 
@@ -111,6 +117,10 @@ class RegistrationsWithoutDonations {
         page: this.props.page,
         totalPages: this.props.totalPages,
         totalItems: this.props.totalItems,
+      },
+      period: {
+        startDate: this.formatDate(this.props.periodStartDate),
+        endDate: this.formatDate(this.props.periodEndDate),
       },
     };
   }

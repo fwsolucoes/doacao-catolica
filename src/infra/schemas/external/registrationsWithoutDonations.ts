@@ -1,14 +1,17 @@
 import { z } from "zod";
 
 const externalRegistrationWithoutDonationSchema = z.object({
+  registration_id: z.number(),
+  registration_uuid: z.string(),
   customer_id: z.number(),
   customer_uuid: z.string(),
   name: z.string(),
-  cpf_cnpj: z.string().nullable(),
+  // a API retorna ora number, ora string
+  cpf_cnpj: z.union([z.string(), z.number()]).nullable(),
   phone: z.string().nullable(),
   email: z.string().nullable(),
   amount: z.number(),
-  // known values: "pix" | "pix_automatico" | "cartao" | "boleto" | "manual"
+  // known values: "pix" | "credit_card" | "boleto" | "manual"
   payment_method: z.string(),
   // known values: "Pix" | "Pix automático" | "Cartão" | "Boleto" | "Manual"
   payment_method_label: z.string(),
@@ -16,7 +19,7 @@ const externalRegistrationWithoutDonationSchema = z.object({
   type: z.string(),
   // known values: "Recorrente" | "Pontual"
   type_label: z.string(),
-  created_at: z.string(),
+  registered_at: z.string(),
 });
 
 const externalRegistrationsWithoutDonationsSummarySchema = z.object({
@@ -31,14 +34,21 @@ const externalRegistrationsWithoutDonationsSummarySchema = z.object({
 const externalRegistrationsWithoutDonationsPaginationSchema = z.object({
   total: z.number(),
   current_page: z.number(),
+  per_page: z.number(),
   last_page: z.number(),
   from: z.number().nullable(),
   to: z.number().nullable(),
 });
 
+const externalRegistrationsWithoutDonationsFiltersSchema = z.object({
+  start_date: z.string(),
+  end_date: z.string(),
+});
+
 const externalRegistrationsWithoutDonationsSchema = z.object({
   success: z.boolean(),
   data: z.object({
+    filters: externalRegistrationsWithoutDonationsFiltersSchema,
     summary: externalRegistrationsWithoutDonationsSummarySchema,
     pagination: externalRegistrationsWithoutDonationsPaginationSchema,
     registrations: z.array(externalRegistrationWithoutDonationSchema),
