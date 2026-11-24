@@ -62,6 +62,7 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     token: string,
     page: number,
     search?: string,
+    id?: string,
   ): Promise<SearchResult<Fundraiser>> {
     const params = new URLSearchParams();
     params.set("filter[project_id]", campaignId);
@@ -69,6 +70,7 @@ class FundraiserGateway implements FundraiserGatewayDTO {
     params.set("page", String(page));
     params.set("per_page", "20");
     if (search) params.set("filter[name]", search);
+    if (id) params.set("filter[id]", id);
 
     const url = `/project-agent-invite/list?${params.toString()}`;
 

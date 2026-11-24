@@ -4,6 +4,7 @@ type InputProps = {
   campaignId: string;
   page: number;
   search?: string;
+  id?: string;
 };
 
 class ListActiveFundraisersUseCase {
@@ -15,6 +16,7 @@ class ListActiveFundraisersUseCase {
       token,
       input.page,
       input.search,
+      input.id,
     );
     return result.toJson();
   }

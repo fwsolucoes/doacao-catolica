@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFetcher, useParams } from "react-router";
 import type { AmbassadorsLoader } from "~/client/types/ambassadorsLoader";
 import { Avatar, AvatarFallback } from "~/client/components/ui/avatar";
@@ -38,6 +38,7 @@ function LinkAmbassadorDialog({ donor, onClose }: LinkAmbassadorDialogProps) {
   const { campaignId } = useParams<{ campaignId: string }>();
   const fetcher = useFetcher();
   const ambassadorsFetcher = useFetcher<AmbassadorsLoader>();
+  const linkedAmbassadorFetcher = useFetcher<AmbassadorsLoader>();
   useActionToast(fetcher.data);
   const isSubmitting = fetcher.state !== "idle";
   const searchRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,6 +49,11 @@ function LinkAmbassadorDialog({ donor, onClose }: LinkAmbassadorDialogProps) {
     if (!donor) return;
     setSelectedAmbassadorId(donor.affiliateReference ?? "");
     ambassadorsFetcher.load(`/campaign/${campaignId}/fundraisers`);
+    if (donor.affiliateReference) {
+      linkedAmbassadorFetcher.load(
+        `/campaign/${campaignId}/fundraisers?ambassadors:id=${donor.affiliateReference}`,
+      );
+    }
   }, [donor?.subscriptionUuid]);
 
   useEffect(() => {
@@ -67,12 +73,27 @@ function LinkAmbassadorDialog({ donor, onClose }: LinkAmbassadorDialogProps) {
     }, 500);
   }
 
-  const ambassadorOptions = (
-    ambassadorsFetcher.data?.activeFundraisers.data ?? []
-  ).map((fundraiser) => ({
-    value: fundraiser.id,
-    label: `${fundraiser.invitedUserName} (${fundraiser.invitedUserEmail})`,
-  }));
+  const ambassadorOptions = useMemo(() => {
+    const options = new Map<string, { value: string; label: string }>();
+
+    for (const fundraiser of linkedAmbassadorFetcher.data?.activeFundraisers
+      .data ?? []) {
+      options.set(fundraiser.id, {
+        value: fundraiser.id,
+        label: fundraiser.invitedUserName,
+      });
+    }
+
+    for (const fundraiser of ambassadorsFetcher.data?.activeFundraisers.data ??
+      []) {
+      options.set(fundraiser.id, {
+        value: fundraiser.id,
+        label: fundraiser.invitedUserName,
+      });
+    }
+
+    return Array.from(options.values());
+  }, [ambassadorsFetcher.data, linkedAmbassadorFetcher.data]);
 
   return (
     <Dialog open={!!donor} onOpenChange={(o) => !o && onClose()}>

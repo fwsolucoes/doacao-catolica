@@ -23,7 +23,12 @@ class ListActiveFundraisersController {
     const page = scopedParams.page ? Number(scopedParams.page) : 1;
 
     return await this.listActiveFundraisersUseCase.execute(
-      { campaignId, page, search: scopedParams.search },
+      {
+        campaignId,
+        page,
+        search: scopedParams.search,
+        id: scopedParams.id,
+      },
       user.token,
     );
   }
