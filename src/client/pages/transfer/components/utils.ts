@@ -2,7 +2,10 @@ import type { TransfersLoader } from "~/client/types/transfersLoader";
 
 type TransferAccount = TransfersLoader["transferAccounts"]["data"][number];
 
-const STATUS_BADGE: Record<string, "amber" | "emerald" | "neutral" | "info"> = {
+const STATUS_BADGE: Record<
+  string,
+  "amber" | "emerald" | "neutral" | "info" | "danger"
+> = {
   pending: "amber",
   pendent: "amber",
   pendente: "amber",
@@ -12,6 +15,14 @@ const STATUS_BADGE: Record<string, "amber" | "emerald" | "neutral" | "info"> = {
   paid: "emerald",
   received: "emerald",
   processing: "info",
+  failed: "danger",
+  falhou: "danger",
+  cancelled: "danger",
+  canceled: "danger",
+  cancelado: "danger",
+  rejected: "danger",
+  rejeitado: "danger",
+  error: "danger",
 };
 
 function formatCurrency(value: number | string | null | undefined): string {
@@ -36,6 +47,14 @@ function formatStatus(status: string): string {
     paid: "Transferido",
     received: "Transferido",
     processing: "Processando",
+    failed: "Falhou",
+    falhou: "Falhou",
+    cancelled: "Cancelado",
+    canceled: "Cancelado",
+    cancelado: "Cancelado",
+    rejected: "Rejeitado",
+    rejeitado: "Rejeitado",
+    error: "Erro",
   };
 
   return statusMap[normalized] ?? status;
