@@ -14,7 +14,7 @@ function SectionCard({
 }) {
   return (
     <Card.Root className="flex flex-col gap-0 p-0">
-      <div className="flex items-start justify-between gap-4 p-7">
+      <div className="flex items-start justify-between gap-4 p-5 sm:p-7">
         <div>
           <h2 className="text-base font-semibold text-foreground">{title}</h2>
           {description && (
@@ -23,7 +23,7 @@ function SectionCard({
         </div>
         {action}
       </div>
-      <div className="flex flex-col gap-5 px-7 pb-7">{children}</div>
+      <div className="flex flex-col gap-5 px-5 pb-5 sm:px-7 sm:pb-7">{children}</div>
     </Card.Root>
   );
 }

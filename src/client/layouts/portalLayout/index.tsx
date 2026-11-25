@@ -9,7 +9,7 @@ function PortalLayout() {
       <PortalSidebar />
       <SidebarInset>
         <PortalHeader />
-        <main className="p-6 sm:p-8">
+        <main className="p-4 sm:p-8">
           <Outlet />
         </main>
       </SidebarInset>
