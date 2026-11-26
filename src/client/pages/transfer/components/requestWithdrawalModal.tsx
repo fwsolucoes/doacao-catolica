@@ -18,6 +18,7 @@ import {
 } from "~/client/components/ui/form-field";
 import { Select } from "~/client/components/ui/select";
 import { useActionToast } from "~/client/hooks/useActionToast";
+import { useIp } from "~/client/hooks/useIp";
 import { useRoot } from "~/client/hooks/useRoot";
 import type { TransfersLoader } from "~/client/types/transfersLoader";
 import { formatCurrency, getPixLabel } from "./utils";
@@ -26,6 +27,7 @@ function RequestWithdrawalModal() {
   const { transferMetrics, transferAccounts } =
     useLoaderData<TransfersLoader>();
   const { environmentVariables, user } = useRoot();
+  const { ip } = useIp();
 
   const availableAmount = transferMetrics.balanceAvailable;
 
@@ -91,6 +93,7 @@ function RequestWithdrawalModal() {
               name="pixType"
               value={selectedAccount?.pixType ?? ""}
             />
+            <input type="hidden" name="originIp" value={ip} />
 
             <div className="flex gap-3 rounded-xl border border-[rgba(var(--spotlight-warning),0.35)] bg-[rgba(var(--spotlight-warning),0.09)] p-4">
               <AlertTriangle

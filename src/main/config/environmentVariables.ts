@@ -75,6 +75,9 @@ const environmentVariablesSchema = z.object({
   // Produktly (product tours / onboarding)
   PRODUKTLY_TOKEN: z.string(),
 
+  // ipapi.com (client-side IP lookup for withdrawal audit trail)
+  IPAPI_ACCESS_KEY: z.string().optional(),
+
   // Session cookie signing secret (min 32 chars) — rotate per environment
   SESSION_SECRET: z.string().min(32),
 

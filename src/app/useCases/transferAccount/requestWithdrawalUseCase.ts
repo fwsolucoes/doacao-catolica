@@ -8,6 +8,9 @@ type InputProps = {
     type: string;
     scheduleDate: string;
   };
+  originUserId: string;
+  originUrl: string;
+  originIp?: string;
 };
 
 class RequestWithdrawalUseCase {
