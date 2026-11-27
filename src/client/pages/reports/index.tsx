@@ -1,4 +1,5 @@
 import {
+  Activity,
   Cake,
   CalendarRange,
   HeartHandshake,
@@ -11,6 +12,14 @@ import {
 import { ReportCard } from "./components/reportCard";
 
 const REPORTS = [
+  {
+    title: "Saúde da base de doadores",
+    description:
+      "Receitas, doadores fiéis, lapsos e recuperações mês a mês da campanha.",
+    icon: Activity,
+    tone: "green" as const,
+    navigateTo: "../donor-health-report",
+  },
   {
     title: "Embaixadores",
     description:

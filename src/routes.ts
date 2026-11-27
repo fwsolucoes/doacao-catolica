@@ -41,6 +41,8 @@ export default [
     route("donations", "./main/routes/route.campaign.donations.tsx"),
     route("transfers", "./main/routes/route.campaign.transfers.tsx"),
     route("reports", "./main/routes/route.campaign.reports.tsx"),
+    route("donor-health-report", "./main/routes/route.campaign.donorHealthReport.tsx"),
+    route("api/donor-health-export", "./main/routes/api.campaign.donorHealthExport.ts"),
     route(
       "ambassadors-report",
       "./main/routes/route.campaign.ambassadorsReport.tsx",

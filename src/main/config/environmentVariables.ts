@@ -14,6 +14,8 @@ const environmentVariablesSchema = z.object({
   API_URL_DONATION: z.string(),
   API_KEY_DONATION: z.string(),
   API_URL_WEBWORKER: z.string(),
+  // Token dos relatórios do webworker (header X-Reports-Token)
+  REPORTS_API_TOKEN: z.string().default(""),
 
   // Metabase embed configuration
   METABASE_API: z.string(),
