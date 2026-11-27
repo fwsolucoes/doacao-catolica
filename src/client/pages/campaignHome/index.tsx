@@ -1,4 +1,5 @@
 import { useParams } from "react-router";
+import { Can } from "~/client/components/can";
 import { KpiCards } from "./kpi-cards";
 import { DonationEvolutionCard } from "./donation-evolution-card";
 import { CampaignGoalCard } from "./campaign-goal-card";
@@ -29,8 +30,10 @@ function CampaignHomePage() {
       <KpiCards />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
-        <DonationEvolutionCard />
-        <CampaignGoalCard />
+        <Can permission="VIEW_FINANCIAL_METRICS">
+          <DonationEvolutionCard />
+          <CampaignGoalCard />
+        </Can>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
@@ -39,13 +42,17 @@ function CampaignHomePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <PaymentMethodsCard />
+        <Can permission="VIEW_FINANCIAL_METRICS">
+          <PaymentMethodsCard />
+        </Can>
         <DonorProfileCard />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ConversionFunnelCard />
-        <DonationBracketsCard />
+        <Can permission="VIEW_FINANCIAL_METRICS">
+          <DonationBracketsCard />
+        </Can>
       </div>
 
       <MonthlyRecurrenceCard />

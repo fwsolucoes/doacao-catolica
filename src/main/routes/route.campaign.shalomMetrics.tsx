@@ -4,6 +4,7 @@ import { ShalomMetricsPage } from "~/client/pages/shalomMetrics";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { requireProjectPermission } from "~/infra/services/requireProjectPermission";
 import { getShalomMetrics } from "../factories/shalomMetrics/getShalomMetricsFactory";
 
 export async function loader(args: Route.LoaderArgs) {
@@ -11,6 +12,7 @@ export async function loader(args: Route.LoaderArgs) {
 
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
+  await requireProjectPermission(adaptedRoute, user, "VIEW_FINANCIAL_STATEMENTS");
 
   const metrics = await getShalomMetrics.handle(adaptedRoute);
 

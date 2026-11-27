@@ -18,6 +18,8 @@ import {
 type SidebarNavSubItem = {
   label: string;
   path?: string;
+  /** Nome de permissão exigido para exibir o item — checagem genérica, decidida por quem monta `sections`. */
+  permission?: string;
 };
 
 type SidebarNavItem = {

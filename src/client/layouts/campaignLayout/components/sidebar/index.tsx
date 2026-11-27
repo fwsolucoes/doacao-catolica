@@ -10,6 +10,8 @@ import {
   Wallet,
 } from "lucide-react";
 import { useMatches, useParams } from "react-router";
+import { PROJECT_ALL_PERMISSIONS } from "~/app/template/PROJECT_ALL_PERMISSIONS";
+import { useCampaignLayout } from "~/client/hooks/useCampaignLayout";
 import { useRoot } from "~/client/hooks/useRoot";
 import { SidebarHelpLink } from "~/client/components/sidebarHelpLink";
 import { SidebarUserMenu } from "~/client/components/sidebarUserMenu";
@@ -22,6 +24,8 @@ import {
   SidebarNav,
   type SidebarNavSection,
 } from "~/client/components/ui/sidebar-nav";
+
+type Permission = (typeof PROJECT_ALL_PERMISSIONS)[number];
 
 const SHALOM_ACCOUNT_ID = 94699;
 
@@ -36,10 +40,18 @@ const sections: SidebarNavSection[] = [
         icon: Wallet,
         label: "Financeiro",
         subItems: [
-          { label: "Transferências", path: "transfers" },
+          {
+            label: "Transferências",
+            path: "transfers",
+            permission: "VIEW_FINANCIAL_TRANSFERS" satisfies Permission,
+          },
           { label: "Métodos de pagamento", path: "payment-methods" },
           { label: "Pix Automático", path: "automatic-pix" },
-          { label: "Métricas Shalom", path: "shalom-metrics" },
+          {
+            label: "Métricas Shalom",
+            path: "shalom-metrics",
+            permission: "VIEW_FINANCIAL_STATEMENTS" satisfies Permission,
+          },
         ],
       },
       { icon: BarChart2, label: "Relatórios", path: "reports" },
@@ -84,6 +96,7 @@ function AppSidebar() {
   const campaignAccountId = campaignData?.campaign?.accountId ?? null;
   const showShalomMetrics = campaignAccountId === SHALOM_ACCOUNT_ID;
   const isOfficialDoacaoCatolica = campaignData?.whatsappSettings?.type !== "custom";
+  const { isPermissionGranted } = useCampaignLayout();
 
   const visibleSections: SidebarNavSection[] = sections.map((section) => ({
     ...section,
@@ -92,8 +105,9 @@ function AppSidebar() {
         ? {
             ...item,
             subItems: item.subItems.filter((sub) => {
-              if (sub.label === "Métricas Shalom") return showShalomMetrics;
+              if (sub.label === "Métricas Shalom" && !showShalomMetrics) return false;
               if (sub.label === "Templates META") return !isOfficialDoacaoCatolica;
+              if (sub.permission) return isPermissionGranted(sub.permission as Permission);
               return true;
             }),
           }
