@@ -105,12 +105,12 @@ function SuggestedValuesSection() {
     >
       <input type="hidden" name="suggestedValues" value={serialized} />
 
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
         {values.map((val) =>
           editingId === val.id ? (
             <div
               key={val.id}
-              className="flex flex-col gap-3 rounded-xl border border-primary bg-primary/5 p-4"
+              className="flex min-w-0 flex-col gap-3 rounded-xl border border-primary bg-primary/5 p-4"
             >
               <div className="flex flex-col gap-1.5">
                 <Label>Valor (R$)</Label>
@@ -133,7 +133,7 @@ function SuggestedValuesSection() {
                   rows={3}
                 />
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
                   size="sm"
@@ -147,6 +147,7 @@ function SuggestedValuesSection() {
                   size="sm"
                   variant="outline"
                   onClick={() => cancelEdit(val.id)}
+                  className="flex-1"
                 >
                   Cancelar
                 </Button>

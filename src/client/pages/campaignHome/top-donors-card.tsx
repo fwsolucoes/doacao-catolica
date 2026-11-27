@@ -3,11 +3,14 @@ import { Link, useLoaderData } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
+import { useCampaignLayout } from "~/client/hooks/useCampaignLayout";
 import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 
 function TopDonorsCard({ campaignId }: { campaignId: string }) {
   const { activity } = useLoaderData<CampaignHomeLoader>();
+  const { isPermissionGranted } = useCampaignLayout();
+  const canViewFinancial = isPermissionGranted("VIEW_FINANCIAL_METRICS");
 
   return (
     <Card.Root className="p-6">
@@ -32,7 +35,9 @@ function TopDonorsCard({ campaignId }: { campaignId: string }) {
           <Table.Row>
             <Table.Head>Doador</Table.Head>
             <Table.Head className="w-px whitespace-nowrap">Doações</Table.Head>
-            <Table.Head className="w-px whitespace-nowrap text-right">Total</Table.Head>
+            {canViewFinancial && (
+              <Table.Head className="w-px whitespace-nowrap text-right">Total</Table.Head>
+            )}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -51,9 +56,11 @@ function TopDonorsCard({ campaignId }: { campaignId: string }) {
               <Table.Cell className="w-px whitespace-nowrap text-muted-foreground">
                 {donor.donationsCount}
               </Table.Cell>
-              <Table.Cell className="w-px whitespace-nowrap text-right font-semibold text-(--text-heading)">
-                {formatCurrency(String(donor.totalAmount))}
-              </Table.Cell>
+              {canViewFinancial && (
+                <Table.Cell className="w-px whitespace-nowrap text-right font-semibold text-(--text-heading)">
+                  {formatCurrency(String(donor.totalAmount))}
+                </Table.Cell>
+              )}
             </Table.Row>
           ))}
           {!activity.topDonors.length && (

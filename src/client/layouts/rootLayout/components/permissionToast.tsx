@@ -7,9 +7,19 @@ function PermissionToast() {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    if (params.get("noPermission") !== "true") return;
-    toast.error("Você não tem permissão para acessar esta campanha.");
-    params.delete("noPermission");
+    const hasNoPermission = params.get("noPermission") === "true";
+    const hasFinancialAccessDenied = params.get("financialAccessDenied") === "true";
+    if (!hasNoPermission && !hasFinancialAccessDenied) return;
+
+    if (hasNoPermission) {
+      toast.error("Você não tem permissão para acessar esta campanha.");
+      params.delete("noPermission");
+    }
+    if (hasFinancialAccessDenied) {
+      toast.error("Você não tem permissão para acessar esta área financeira.");
+      params.delete("financialAccessDenied");
+    }
+
     const newSearch = params.toString();
     window.history.replaceState(
       null,

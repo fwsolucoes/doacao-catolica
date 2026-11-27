@@ -94,6 +94,9 @@ class TransferAccountGateway implements TransferAccountGatewayDTO {
           type: input.pix.type,
           schedule_date: input.pix.scheduleDate,
         },
+        origin_user_id: input.originUserId,
+        origin_url: input.originUrl,
+        origin_ip: input.originIp,
       },
       headers: { "api-key": environmentVariables.API_KEY_DONATION },
     });

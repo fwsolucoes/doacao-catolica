@@ -1,5 +1,6 @@
 import { ArrowLeft, Eye, Moon, Sun } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
+import { Can } from "~/client/components/can";
 import { Button } from "~/client/components/ui/button";
 import { SidebarTrigger } from "~/client/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/client/components/ui/tooltip";
@@ -38,22 +39,24 @@ function CampaignBanner() {
           >
             {campaign.status ? "Ativa" : "Inativa"}
           </span>
-          <span className="shrink-0 text-(--text-muted)/50">•</span>
-          <span className="truncate text-(--text-muted)">
-            {"Arrecadado: "}
-            <span className="font-semibold text-foreground">
-              {bannerTotalReceived ?? formatCurrency(String(overview.totalRaised))}
+          <Can permission="VIEW_FINANCIAL_METRICS">
+            <span className="shrink-0 text-(--text-muted)/50">•</span>
+            <span className="truncate text-(--text-muted)">
+              {"Arrecadado: "}
+              <span className="font-semibold text-foreground">
+                {bannerTotalReceived ?? formatCurrency(String(overview.totalRaised))}
+              </span>
+              {(() => {
+                const isMonthly = campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
+                if (isMonthly) {
+                  return overview.monthlyGoal
+                    ? ` de ${formatCurrency(String(overview.monthlyGoal))}`
+                    : " · Meta mensal não definida";
+                }
+                return campaign.totalGoal ? ` de ${formatCurrency(String(campaign.totalGoal))}` : null;
+              })()}
             </span>
-            {(() => {
-              const isMonthly = campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
-              if (isMonthly) {
-                return overview.monthlyGoal
-                  ? ` de ${formatCurrency(String(overview.monthlyGoal))}`
-                  : " · Meta mensal não definida";
-              }
-              return campaign.totalGoal ? ` de ${formatCurrency(String(campaign.totalGoal))}` : null;
-            })()}
-          </span>
+          </Can>
         </div>
       </div>
 

@@ -34,6 +34,7 @@ export async function loader(args: LoaderFunctionArgs) {
       WHATSAPP_SUPPORT_NUMBER: environmentVariables.WHATSAPP_SUPPORT_NUMBER,
       SANCTON_EVENTS_PANEL_URL: environmentVariables.SANCTON_EVENTS_PANEL_URL,
       PRODUKTLY_TOKEN: environmentVariables.PRODUKTLY_TOKEN,
+      IPAPI_ACCESS_KEY: environmentVariables.IPAPI_ACCESS_KEY,
     },
     user,
   };

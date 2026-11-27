@@ -44,7 +44,7 @@ function DonationTypeSection() {
             variant="ghost"
             onClick={() => setDonationType(value)}
             className={cn(
-              "relative h-auto flex-col items-start gap-3 rounded-xl border p-4 text-left transition-colors hover:brightness-100",
+              "relative h-auto min-w-0 flex-col items-start gap-3 whitespace-normal rounded-xl border p-4 text-left transition-colors hover:brightness-100",
               donationType === value
                 ? "border-primary bg-primary/5 hover:bg-primary/5"
                 : "border-border hover:bg-muted/50",
@@ -66,8 +66,8 @@ function DonationTypeSection() {
                 className={donationType === value ? "text-primary-foreground" : "text-foreground"}
               />
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-semibold text-foreground">{label}</span>
+            <div className="flex w-full min-w-0 flex-col gap-1">
+              <span className="pr-6 text-sm font-semibold text-foreground">{label}</span>
               <span className="text-xs text-muted-foreground">{desc}</span>
             </div>
           </Button>

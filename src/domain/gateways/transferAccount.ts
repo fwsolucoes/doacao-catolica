@@ -17,6 +17,9 @@ type RequestWithdrawalInput = {
     type: string;
     scheduleDate: string;
   };
+  originUserId: string;
+  originUrl: string;
+  originIp?: string;
 };
 
 type BulkWithdrawalInput = {

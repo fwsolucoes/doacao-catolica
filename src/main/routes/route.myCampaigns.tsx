@@ -9,6 +9,7 @@ import { getCampaignById } from "../factories/campaign/getCampaignByIdFactory";
 import { updateCampaignStatus } from "../factories/campaign/updateCampaignStatusFactory";
 import { closeCampaign } from "../factories/campaign/closeCampaignFactory";
 import { getPortalOverview } from "../factories/campaignOverview/getPortalOverviewFactory";
+import { getPaymentMetrics } from "../factories/paymentMetrics/getPaymentMetricsFactory";
 import { listPendingInvites } from "../factories/pendingInvite/listPendingInvitesFactory";
 import { listPendingAmbassadorInvites } from "../factories/pendingAmbassadorInvite/listPendingAmbassadorInvitesFactory";
 import { ErrorBoundaryPage } from "~/client/pages/errorBoundary";
@@ -31,16 +32,32 @@ export async function loader(args: Route.LoaderArgs) {
 
   // overview.monthlyGoal/totalGoal nao sao confiaveis (ficam null mesmo quando
   // a campanha tem meta configurada) - as metas vem da API principal (find-one)
-  const [overviewResults, campaignDetailResults] = await Promise.all([
-    Promise.allSettled(
-      campaigns.data.map((campaign) => getPortalOverview.handle(campaign.id)),
-    ),
-    Promise.allSettled(
-      campaigns.data.map((campaign) =>
-        getCampaignById.handle(campaign.id, user.token),
+  const [overviewResults, campaignDetailResults, paymentMetricsResults] =
+    await Promise.all([
+      Promise.allSettled(
+        campaigns.data.map((campaign) => getPortalOverview.handle(campaign.id)),
       ),
-    ),
-  ]);
+      Promise.allSettled(
+        campaigns.data.map((campaign) =>
+          getCampaignById.handle(campaign.id, user.token),
+        ),
+      ),
+      Promise.allSettled(
+        campaigns.data.map((campaign) => {
+          const isMonthlyType =
+            campaign.typeDonation === "BOTH" ||
+            campaign.typeDonation === "MONTHLY";
+          const hasEndDate = !campaign.noEndDate && !!campaign.endDate;
+          if (!isMonthlyType || hasEndDate) return Promise.resolve(null);
+
+          return getPaymentMetrics.handle({
+            ...adaptedRoute,
+            params: { ...adaptedRoute.params, campaignId: campaign.id },
+            query: {},
+          });
+        }),
+      ),
+    ]);
 
   const overviewByCampaignId = new Map<
     string,
@@ -60,6 +77,15 @@ export async function loader(args: Route.LoaderArgs) {
     campaignDetailById.set(campaigns.data[index].id, result.value);
   });
 
+  const paymentMetricsByCampaignId = new Map<
+    string,
+    Awaited<ReturnType<typeof getPaymentMetrics.handle>>
+  >();
+  paymentMetricsResults.forEach((result, index) => {
+    if (result.status !== "fulfilled" || !result.value) return;
+    paymentMetricsByCampaignId.set(campaigns.data[index].id, result.value);
+  });
+
   const metricsByCampaignId = new Map<string, CampaignMetrics>();
   for (const campaign of campaigns.data) {
     const overview = overviewByCampaignId.get(campaign.id);
@@ -68,10 +94,18 @@ export async function loader(args: Route.LoaderArgs) {
     const detail = campaignDetailById.get(campaign.id);
     // campanha com data final acompanha o total arrecadado; sem data final, o mensal
     const hasEndDate = !campaign.noEndDate && !!campaign.endDate;
+    const isMonthlyType =
+      campaign.typeDonation === "BOTH" || campaign.typeDonation === "MONTHLY";
     const goal = hasEndDate
       ? detail?.totalGoal || detail?.monthlyGoal || null
       : detail?.monthlyGoal || detail?.totalGoal || null;
-    const raised = hasEndDate ? overview.totalRaised : overview.monthRaised;
+    // mesma fonte usada no dashboard da campanha (banner/card "Arrecadado do mes")
+    const paymentMetrics = paymentMetricsByCampaignId.get(campaign.id);
+    const raised = hasEndDate
+      ? overview.totalRaised
+      : isMonthlyType
+        ? (paymentMetrics?.releasedAmount ?? overview.monthRaised)
+        : overview.monthRaised;
     const goalProgressPercentage =
       goal && goal > 0 ? (raised / goal) * 100 : null;
 

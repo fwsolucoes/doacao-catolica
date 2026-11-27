@@ -40,7 +40,7 @@ function FundraisingGoalsSection() {
         />
       </div>
 
-      <div className="flex flex-col gap-3.5 rounded-xl border border-border p-4">
+      <div className="flex flex-col gap-3.5 rounded-xl border border-border p-3.5 sm:p-4">
         <div className="flex flex-col gap-0.5">
           <span className="text-sm font-semibold text-foreground">Base da barra de progresso</span>
           <span className="text-xs text-muted-foreground">
@@ -51,7 +51,7 @@ function FundraisingGoalsSection() {
         <RadioGroup.Root
           value={progressBase}
           onValueChange={(v) => setProgressBase(v as ProgressBase)}
-          className="gap-2.5"
+          className="flex-col gap-2.5 sm:flex-row"
         >
           {(
             [
@@ -62,7 +62,7 @@ function FundraisingGoalsSection() {
             <label
               key={value}
               className={cn(
-                "flex flex-1 cursor-pointer items-center gap-2.5 rounded-xl border p-4 transition-colors",
+                "flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-xl border px-3.5 py-3 transition-colors sm:p-4",
                 progressBase === value ? "border-primary bg-primary/5" : "border-border",
               )}
             >

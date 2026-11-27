@@ -1,3 +1,9 @@
+function toBrazilianDate(dateStr: string): string {
+  if (!dateStr.includes("-")) return dateStr;
+  const [year, month, day] = dateStr.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 type TransferProps = {
   id: string;
   status: string;
@@ -41,12 +47,12 @@ class Transfer {
 
   toJson() {
     const [createdAt] = this.createdAt.split(" ");
-    const [paidDate] = this.paidDate?.split(" ") ?? [null];
+    const [rawPaidDate] = this.paidDate?.split(" ") ?? [null];
     return {
       id: this.id,
       status: this.status,
       type: this.type,
-      paidDate: paidDate ?? null,
+      paidDate: rawPaidDate ? toBrazilianDate(rawPaidDate) : null,
       amount: this.amount,
       transactionReceiptUrl: this.transactionReceiptUrl,
       createdAt: createdAt ?? "",

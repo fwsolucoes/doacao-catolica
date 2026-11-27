@@ -3,6 +3,8 @@ import { DecodeRequestBodyAdapter } from "~/infra/adapters/decodeRequestBodyAdap
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { SchemaValidatorAdapter } from "~/infra/adapters/schemaValidatorAdapter";
 import { requestWithdrawalBodySchema } from "~/infra/schemas/internal/transferAccount";
+import { AuthService } from "~/infra/services/authService";
+import { getPageUrl } from "~/lib/getPageUrl";
 import type { RouteDTO } from "~/main/types/route";
 
 function getScheduleDate(): string {
@@ -15,6 +17,9 @@ class RequestWithdrawalController {
   constructor(private requestWithdrawalUseCase: RequestWithdrawalUseCase) {}
 
   async handle(route: RouteDTO) {
+    const user = await AuthService.getAuthStorage(route);
+    if (!user) throw HttpAdapter.unauthorized("Unauthorized");
+
     const { campaignId } = route.params;
     if (!campaignId) throw HttpAdapter.badRequest("Campaign ID is required");
 
@@ -31,6 +36,9 @@ class RequestWithdrawalController {
         type: validated.pixType,
         scheduleDate: getScheduleDate(),
       },
+      originUserId: user.id,
+      originUrl: getPageUrl(route.request).toString(),
+      originIp: validated.originIp,
     });
 
     return {

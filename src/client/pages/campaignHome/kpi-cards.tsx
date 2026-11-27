@@ -1,5 +1,6 @@
 import { DollarSign, Users, Target, Receipt } from "lucide-react";
 import { useLoaderData, useRouteLoaderData } from "react-router";
+import { Can } from "~/client/components/can";
 import { Card } from "~/client/components/ui/card";
 import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import type { CampaignLayoutLoader } from "~/client/types/campaignLayoutLoader";
@@ -46,23 +47,25 @@ function KpiCards() {
 
   return (
     <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-      <Card.Root className="gap-4 p-6">
-        <Card.MetricHeader
-          label={isMonthly ? "Arrecadado no mês" : "Total arrecadado"}
-          icon={DollarSign}
-          color="success"
-        />
-        <div className="flex flex-col gap-1">
-          <Card.MetricValue>
-            {formatCurrency(String(raised))}
-          </Card.MetricValue>
-          {goal !== null && (
-            <span className="text-xs text-muted-foreground">
-              Meta: {formatCurrency(String(goal))}
-            </span>
-          )}
-        </div>
-      </Card.Root>
+      <Can permission="VIEW_FINANCIAL_METRICS">
+        <Card.Root className="gap-4 p-6">
+          <Card.MetricHeader
+            label={isMonthly ? "Arrecadado no mês" : "Total arrecadado"}
+            icon={DollarSign}
+            color="success"
+          />
+          <div className="flex flex-col gap-1">
+            <Card.MetricValue>
+              {formatCurrency(String(raised))}
+            </Card.MetricValue>
+            {goal !== null && (
+              <span className="text-xs text-muted-foreground">
+                Meta: {formatCurrency(String(goal))}
+              </span>
+            )}
+          </div>
+        </Card.Root>
+      </Can>
 
       <Card.Root className="gap-4 p-6">
         <Card.MetricHeader label="Apoiadores" icon={Users} color="info" />
@@ -77,31 +80,35 @@ function KpiCards() {
         </div>
       </Card.Root>
 
-      <Card.Root className="gap-4 p-6">
-        <Card.MetricHeader label="Progresso" icon={Target} color="primary" />
-        <div className="flex flex-col gap-1">
-          <Card.MetricValue>{progressLabel}</Card.MetricValue>
-          <span className="text-xs text-muted-foreground">
-            {goalProgressPercentage !== null
-              ? isMonthly
-                ? "da meta mensal"
-                : "da meta total"
-              : "meta não configurada"}
-          </span>
-        </div>
-      </Card.Root>
+      <Can permission="VIEW_FINANCIAL_METRICS">
+        <Card.Root className="gap-4 p-6">
+          <Card.MetricHeader label="Progresso" icon={Target} color="primary" />
+          <div className="flex flex-col gap-1">
+            <Card.MetricValue>{progressLabel}</Card.MetricValue>
+            <span className="text-xs text-muted-foreground">
+              {goalProgressPercentage !== null
+                ? isMonthly
+                  ? "da meta mensal"
+                  : "da meta total"
+                : "meta não configurada"}
+            </span>
+          </div>
+        </Card.Root>
+      </Can>
 
-      <Card.Root className="gap-4 p-6">
-        <Card.MetricHeader label="Ticket médio" icon={Receipt} color="teal" />
-        <div className="flex flex-col gap-1">
-          <Card.MetricValue>
-            {formatCurrency(String(overview.averageTicketMonth))}
-          </Card.MetricValue>
-          {variationLabel && (
-            <Card.MetricTrend value={variationLabel} direction={variationDirection} />
-          )}
-        </div>
-      </Card.Root>
+      <Can permission="VIEW_FINANCIAL_METRICS">
+        <Card.Root className="gap-4 p-6">
+          <Card.MetricHeader label="Ticket médio" icon={Receipt} color="teal" />
+          <div className="flex flex-col gap-1">
+            <Card.MetricValue>
+              {formatCurrency(String(overview.averageTicketMonth))}
+            </Card.MetricValue>
+            {variationLabel && (
+              <Card.MetricTrend value={variationLabel} direction={variationDirection} />
+            )}
+          </div>
+        </Card.Root>
+      </Can>
     </div>
   );
 }

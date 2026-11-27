@@ -140,49 +140,52 @@ function ImageUploadCompact({
 
       <div
         className={cn(
-          "flex items-center gap-5 rounded-2xl border border-dashed border-border p-5",
+          "flex flex-col gap-4 rounded-2xl border border-dashed border-border p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5",
           hasError && "border-destructive",
         )}
       >
-        {/* Preview */}
-        <div className="relative flex h-20 w-34 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted">
-          {isLoading ? (
-            <Loader2 size={22} className="animate-spin text-muted-foreground" />
-          ) : filePath ? (
-            <img
-              src={filePath}
-              alt=""
-              referrerPolicy="no-referrer"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <ImageIcon size={26} className="text-muted-foreground/40" />
-          )}
-        </div>
+        <div className="flex min-w-0 flex-1 items-center gap-4 sm:gap-5">
+          {/* Preview */}
+          <div className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted sm:h-20 sm:w-34">
+            {isLoading ? (
+              <Loader2 size={22} className="animate-spin text-muted-foreground" />
+            ) : filePath ? (
+              <img
+                src={filePath}
+                alt=""
+                referrerPolicy="no-referrer"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <ImageIcon size={26} className="text-muted-foreground/40" />
+            )}
+          </div>
 
-        {/* Info */}
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          {isLoading ? (
-            <p className="text-sm text-muted-foreground">Enviando...</p>
-          ) : uploadError ? (
-            <p className="text-sm font-medium text-destructive">{uploadError}</p>
-          ) : filePath ? (
-            <p className="text-sm font-semibold text-foreground">Imagem carregada</p>
-          ) : (
-            <p className="text-sm font-semibold text-foreground">Envie uma imagem</p>
-          )}
-          {description && !uploadError && (
-            <p className="text-xs text-muted-foreground">{description}</p>
-          )}
+          {/* Info */}
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground">Enviando...</p>
+            ) : uploadError ? (
+              <p className="text-sm font-medium text-destructive">{uploadError}</p>
+            ) : filePath ? (
+              <p className="text-sm font-semibold text-foreground">Imagem carregada</p>
+            ) : (
+              <p className="text-sm font-semibold text-foreground">Envie uma imagem</p>
+            )}
+            {description && !uploadError && (
+              <p className="text-xs text-muted-foreground">{description}</p>
+            )}
+          </div>
         </div>
 
         {/* Action */}
         {uploadError && pendingFile ? (
-          <div className="flex shrink-0 flex-col gap-1.5">
+          <div className="flex shrink-0 gap-1.5 sm:flex-col">
             <Button
               type="button"
               variant="outline"
               size="sm"
+              className="flex-1 sm:flex-none"
               disabled={disabled || isLoading}
               onClick={handleReSend}
             >
@@ -193,6 +196,7 @@ function ImageUploadCompact({
               type="button"
               variant="ghost"
               size="sm"
+              className="flex-1 sm:flex-none"
               disabled={disabled || isLoading}
               onClick={openFilePicker}
             >
@@ -205,7 +209,7 @@ function ImageUploadCompact({
             type="button"
             variant="outline"
             size="sm"
-            className="shrink-0"
+            className="w-full shrink-0 sm:w-auto"
             disabled={disabled || isLoading}
             onClick={openFilePicker}
           >

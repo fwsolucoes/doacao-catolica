@@ -5,6 +5,7 @@ import { Badge } from "~/client/components/ui/badge";
 import { Button } from "~/client/components/ui/button";
 import { Card } from "~/client/components/ui/card";
 import { Table } from "~/client/components/ui/table";
+import { useCampaignLayout } from "~/client/hooks/useCampaignLayout";
 import type { CampaignHomeLoader } from "~/client/types/campaignHomeLoader";
 import { formatCurrency } from "~/lib/formatCurrency";
 import { getInitials } from "~/lib/getInitials";
@@ -38,6 +39,8 @@ function formatPaidAt(paidAt: string): string {
 
 function RecentDonationsCard({ campaignId }: { campaignId: string }) {
   const { activity } = useLoaderData<CampaignHomeLoader>();
+  const { isPermissionGranted } = useCampaignLayout();
+  const canViewFinancial = isPermissionGranted("VIEW_FINANCIAL_METRICS");
 
   return (
     <Card.Root className="p-6">
@@ -63,7 +66,9 @@ function RecentDonationsCard({ campaignId }: { campaignId: string }) {
             <Table.Head>Doador</Table.Head>
             <Table.Head className="w-px whitespace-nowrap">Método</Table.Head>
             <Table.Head className="w-px whitespace-nowrap">Status</Table.Head>
-            <Table.Head className="w-px whitespace-nowrap text-right">Valor</Table.Head>
+            {canViewFinancial && (
+              <Table.Head className="w-px whitespace-nowrap text-right">Valor</Table.Head>
+            )}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -98,9 +103,11 @@ function RecentDonationsCard({ campaignId }: { campaignId: string }) {
                     {badge?.label ?? d.status}
                   </Badge>
                 </Table.Cell>
-                <Table.Cell className="w-px whitespace-nowrap text-right font-medium">
-                  {formatCurrency(String(d.amount))}
-                </Table.Cell>
+                {canViewFinancial && (
+                  <Table.Cell className="w-px whitespace-nowrap text-right font-medium">
+                    {formatCurrency(String(d.amount))}
+                  </Table.Cell>
+                )}
               </Table.Row>
             );
           })}

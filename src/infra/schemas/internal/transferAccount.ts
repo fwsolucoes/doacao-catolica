@@ -10,6 +10,10 @@ const requestWithdrawalBodySchema = z.object({
   amount: z.coerce.number().positive("Valor deve ser maior que zero"),
   pixKey: z.string().min(1, "Chave Pix é obrigatória"),
   pixType: z.string().min(1, "Tipo da chave Pix é obrigatório"),
+  originIp: z
+    .string()
+    .optional()
+    .transform((v) => v || undefined),
 });
 
 const bulkWithdrawalBodySchema = z.object({

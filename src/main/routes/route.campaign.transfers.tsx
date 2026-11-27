@@ -7,6 +7,7 @@ import { ErrorHandlerAdapter } from "~/infra/adapters/errorHandlerAdapter";
 import { HttpAdapter } from "~/infra/adapters/httpAdapter";
 import { RouteAdapter } from "~/infra/adapters/routeAdapter";
 import { AuthService } from "~/infra/services/authService";
+import { requireProjectPermission } from "~/infra/services/requireProjectPermission";
 import { listSubAccounts } from "../factories/subAccount/listSubAccountsFactory";
 import { getTransferMetrics } from "../factories/transfer/getTransferMetricsFactory";
 import { listTransfers } from "../factories/transfer/listTransfersFactory";
@@ -19,6 +20,7 @@ export async function loader(args: Route.LoaderArgs) {
 
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
+  await requireProjectPermission(adaptedRoute, user, "VIEW_FINANCIAL_TRANSFERS");
 
   const [transfers, transferMetrics, transferAccounts, subAccounts] =
     await Promise.all([
@@ -35,6 +37,7 @@ export async function action(args: Route.ActionArgs) {
   const adaptedRoute = await RouteAdapter.adaptRoute(args);
   const user = await AuthService.getAuthStorage(adaptedRoute);
   if (!user) throw redirect("/sign-in");
+  await requireProjectPermission(adaptedRoute, user, "VIEW_FINANCIAL_TRANSFERS");
 
   const _action = await DecodeActionAdapter.decode(adaptedRoute.request);
 
