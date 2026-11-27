@@ -1,5 +1,5 @@
-import { BarChart3, Pencil, Plus, Tag, Target, Trash2, Webhook } from "lucide-react";
-import { useState } from "react";
+import { BarChart3, Plus, Tag, Target, Webhook } from "lucide-react";
+import { useCallback, useState } from "react";
 import { useFetcher, useLoaderData, useParams } from "react-router";
 import type { ReactNode } from "react";
 import { Button } from "~/client/components/ui/button";
@@ -12,30 +12,21 @@ import {
   StepNav,
   StepTabBar,
 } from "~/client/components/campaignSettings/stepNav";
-import {
-  NewWebhookDialog,
-  WEBHOOK_EVENTS,
-} from "./components/newWebhookDialog";
 import { DeleteWebhookDialog } from "./components/deleteWebhookDialog";
+import { WebhookFormDialog } from "./components/webhookFormDialog";
+import { WebhookRow } from "./components/webhookRow";
+import type { WebhookItem } from "./types";
 import type { CampaignIntegrationsLoader } from "~/client/types/campaignIntegrationsLoader";
 
-type WebhookItem = {
-  id: string;
-  url: string;
-  events: string[]; // event IDs
-};
+// A API aceita até 10 URLs por account
+const MAX_WEBHOOKS = 10;
 
-const SAMPLE_WEBHOOKS: WebhookItem[] = [
-  {
-    id: "1",
-    url: "https://api.suainstituicao.org/webhooks/givehub",
-    events: ["payment_approved", "subscription_created"],
-  },
-];
+const INTEGRATIONS_FORM_ID = "campaign-integrations-form";
 
-function eventLabel(id: string): string {
-  return WEBHOOK_EVENTS.find((e) => e.id === id)?.label ?? id;
-}
+type DialogState =
+  | { type: "form"; webhook: WebhookItem | null }
+  | { type: "delete"; webhook: WebhookItem }
+  | null;
 
 function IntegrationCard({
   icon,
@@ -73,65 +64,28 @@ function IntegrationCard({
   );
 }
 
-function WebhookRow({
-  webhook,
-  onEdit,
-  onDelete,
-}: {
-  webhook: WebhookItem;
-  onEdit: () => void;
-  onDelete: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-border p-4">
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <p className="truncate font-mono text-sm text-foreground">{webhook.url}</p>
-        <div className="flex flex-wrap gap-1.5">
-          {webhook.events.map((id) => (
-            <span key={id} className="rounded-xl bg-muted px-3 py-0.5 text-xs text-foreground">
-              {eventLabel(id)}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="flex shrink-0 items-center gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="size-9 p-0 text-muted-foreground"
-          onClick={onEdit}
-        >
-          <Pencil size={15} />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="size-9 p-0 text-muted-foreground hover:text-destructive"
-          onClick={onDelete}
-        >
-          <Trash2 size={15} />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 function CampaignIntegrationsPage() {
   const { campaignId } = useParams<{ campaignId: string }>();
-  const { integrations } = useLoaderData<CampaignIntegrationsLoader>();
+  const { integrations, webhooks } = useLoaderData<CampaignIntegrationsLoader>();
   const { Form, state, data } = useFetcher();
   const isSubmitting = state === "submitting";
   useActionToast(data);
   const steps = buildSteps(campaignId!);
 
-  const [webhooks, setWebhooks] = useState<WebhookItem[]>(SAMPLE_WEBHOOKS);
-  const [newWebhookOpen, setNewWebhookOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<WebhookItem | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<WebhookItem | null>(null);
-
-  function deleteWebhook(id: string) {
-    setWebhooks((prev) => prev.filter((w) => w.id !== id));
-  }
+  const [dialog, setDialog] = useState<DialogState>(null);
+  // remonta o formulário a cada abertura: descarta fetcher.data e o estado dos
+  // checkboxes da abertura anterior sem cortar a animação de fechamento
+  const [formKey, setFormKey] = useState(0);
+  const closeDialog = useCallback(() => setDialog(null), []);
+  const openForm = useCallback((webhook: WebhookItem | null) => {
+    setFormKey((key) => key + 1);
+    setDialog({ type: "form", webhook });
+  }, []);
+  const openDelete = useCallback(
+    (webhook: WebhookItem) => setDialog({ type: "delete", webhook }),
+    [],
+  );
+  const reachedLimit = webhooks.length >= MAX_WEBHOOKS;
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,128 +103,136 @@ function CampaignIntegrationsPage() {
       <div className="flex items-start gap-8">
         <StepNav steps={steps} />
 
-        <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
-          <Form
-            method="post"
-            className="flex min-w-0 flex-1 flex-col gap-6"
-          >
-            {/* Google Analytics */}
-            <IntegrationCard
-              icon={<BarChart3 size={20} className="text-sidebar-primary" />}
-              title="Google Analytics"
-              description="Acompanhe o tráfego da página da campanha e o comportamento dos visitantes."
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
+          <FormErrorProvider fieldErrors={data?.cause?.fieldErrors}>
+            <Form
+              id={INTEGRATIONS_FORM_ID}
+              method="post"
+              className="flex flex-col gap-6"
             >
-              <FormField
-                name="googleAnalyticsPixel"
-                label="ID de acompanhamento (Measurement ID)"
+              {/* Google Analytics */}
+              <IntegrationCard
+                icon={<BarChart3 size={20} className="text-sidebar-primary" />}
+                title="Google Analytics"
+                description="Acompanhe o tráfego da página da campanha e o comportamento dos visitantes."
               >
-                <Input
+                <FormField
                   name="googleAnalyticsPixel"
-                  placeholder="G-XXXXXXXXXX"
-                  defaultValue={integrations.googleAnalyticsPixel ?? ""}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Encontre em Google Analytics → Administrador → Fluxos de dados.
-                </p>
-              </FormField>
-            </IntegrationCard>
+                  label="ID de acompanhamento (Measurement ID)"
+                >
+                  <Input
+                    name="googleAnalyticsPixel"
+                    placeholder="G-XXXXXXXXXX"
+                    defaultValue={integrations.googleAnalyticsPixel ?? ""}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Encontre em Google Analytics → Administrador → Fluxos de dados.
+                  </p>
+                </FormField>
+              </IntegrationCard>
 
-            {/* Google Tag Manager */}
-            <IntegrationCard
-              icon={<Tag size={20} className="text-sidebar-primary" />}
-              title="Google Tag Manager"
-              description="Gerencie tags e scripts de rastreamento sem precisar editar o código da campanha."
-            >
-              <FormField name="googleTagManagerPixel" label="ID do Contêiner">
-                <Input
-                  name="googleTagManagerPixel"
-                  placeholder="GTM-XXXXXXX"
-                  defaultValue={integrations.googleTagManagerPixel ?? ""}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Encontre em Google Tag Manager → Administrador → Contêiner.
-                </p>
-              </FormField>
-            </IntegrationCard>
-
-            {/* Meta Ads */}
-            <IntegrationCard
-              icon={<Target size={20} className="text-sidebar-primary" />}
-              title="Meta Ads (Pixel)"
-              description="Rastreie conversões e otimize campanhas no Facebook e Instagram."
-            >
-              <FormField name="facebookPixel" label="ID do Pixel">
-                <Input
-                  name="facebookPixel"
-                  placeholder="000000000000000"
-                  defaultValue={integrations.facebookPixel ?? ""}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Encontre em Gerenciador de Eventos da Meta → Fontes de Dados.
-                </p>
-              </FormField>
-            </IntegrationCard>
-
-            {/* Webhooks — desabilitado temporariamente */}
-            {/* <IntegrationCard
-              icon={<Webhook size={20} className="text-sidebar-primary" />}
-              title="Webhooks"
-              description="Receba notificações HTTP em tempo real quando eventos ocorrerem na campanha."
-              action={
-                <Button size="sm" onClick={() => setNewWebhookOpen(true)}>
-                  <Plus size={15} />
-                  Novo webhook
-                </Button>
-              }
-            >
-              {webhooks.length > 0 && (
-                <div className="flex flex-col gap-3">
-                  {webhooks.map((webhook) => (
-                    <WebhookRow
-                      key={webhook.id}
-                      webhook={webhook}
-                      onEdit={() => setEditTarget(webhook)}
-                      onDelete={() => setDeleteTarget(webhook)}
-                    />
-                  ))}
-                </div>
-              )}
-            </IntegrationCard> */}
-
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                name="_action"
-                value="updateIntegrations"
-                disabled={isSubmitting}
+              {/* Google Tag Manager */}
+              <IntegrationCard
+                icon={<Tag size={20} className="text-sidebar-primary" />}
+                title="Google Tag Manager"
+                description="Gerencie tags e scripts de rastreamento sem precisar editar o código da campanha."
               >
-                Salvar alterações
+                <FormField name="googleTagManagerPixel" label="ID do Contêiner">
+                  <Input
+                    name="googleTagManagerPixel"
+                    placeholder="GTM-XXXXXXX"
+                    defaultValue={integrations.googleTagManagerPixel ?? ""}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Encontre em Google Tag Manager → Administrador → Contêiner.
+                  </p>
+                </FormField>
+              </IntegrationCard>
+
+              {/* Meta Ads */}
+              <IntegrationCard
+                icon={<Target size={20} className="text-sidebar-primary" />}
+                title="Meta Ads (Pixel)"
+                description="Rastreie conversões e otimize campanhas no Facebook e Instagram."
+              >
+                <FormField name="facebookPixel" label="ID do Pixel">
+                  <Input
+                    name="facebookPixel"
+                    placeholder="000000000000000"
+                    defaultValue={integrations.facebookPixel ?? ""}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Encontre em Gerenciador de Eventos da Meta → Fontes de Dados.
+                  </p>
+                </FormField>
+              </IntegrationCard>
+            </Form>
+          </FormErrorProvider>
+
+          {/* Webhooks — salvos individualmente, fora do formulário de pixels */}
+          <IntegrationCard
+            icon={<Webhook size={20} className="text-sidebar-primary" />}
+            title="Webhooks"
+            description="Receba notificações HTTP em tempo real quando eventos ocorrerem na campanha."
+            action={
+              <Button
+                type="button"
+                onClick={() => openForm(null)}
+                disabled={reachedLimit}
+                title={
+                  reachedLimit
+                    ? `Limite de ${MAX_WEBHOOKS} webhooks atingido.`
+                    : undefined
+                }
+              >
+                <Plus size={19} />
+                Novo webhook
               </Button>
-            </div>
-          </Form>
-        </FormErrorProvider>
+            }
+          >
+            {webhooks.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {webhooks.map((webhook) => (
+                  <WebhookRow
+                    key={webhook.id}
+                    webhook={webhook}
+                    onEdit={openForm}
+                    onDelete={openDelete}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-[13px] border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+                Nenhum webhook cadastrado.
+              </p>
+            )}
+          </IntegrationCard>
+
+          <div className="flex justify-end">
+            {/* fora do <Form>, ligado a ele pelo atributo `form` */}
+            <Button
+              type="submit"
+              form={INTEGRATIONS_FORM_ID}
+              name="_action"
+              value="updateIntegrations"
+              disabled={isSubmitting}
+            >
+              Salvar alterações
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <NewWebhookDialog
-        open={newWebhookOpen}
-        onClose={() => setNewWebhookOpen(false)}
-      />
-
-      <NewWebhookDialog
-        key={editTarget?.id}
-        open={editTarget !== null}
-        onClose={() => setEditTarget(null)}
-        defaultValues={
-          editTarget
-            ? { url: editTarget.url, events: editTarget.events }
-            : undefined
-        }
+      <WebhookFormDialog
+        key={formKey}
+        open={dialog?.type === "form"}
+        webhook={dialog?.type === "form" ? dialog.webhook : null}
+        onClose={closeDialog}
       />
 
       <DeleteWebhookDialog
-        url={deleteTarget?.url ?? null}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={() => deleteTarget && deleteWebhook(deleteTarget.id)}
+        webhook={dialog?.type === "delete" ? dialog.webhook : null}
+        onClose={closeDialog}
       />
     </div>
   );

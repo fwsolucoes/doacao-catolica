@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useFetcher } from "react-router";
 import { Button } from "~/client/components/ui/button";
 import {
   Dialog,
@@ -9,42 +11,53 @@ import {
 } from "~/client/components/ui/dialog";
 import { Separator } from "~/client/components/ui/separator";
 import { TrashDashedBorderCircle } from "~/client/components/ui/trash-dashed-border-circle";
+import { useActionToast } from "~/client/hooks/useActionToast";
+import type { WebhookItem } from "../types";
 
 type DeleteWebhookDialogProps = {
-  url: string | null;
+  webhook: WebhookItem | null;
   onClose: () => void;
-  onConfirm: () => void;
 };
 
-function DeleteWebhookDialog({ url, onClose, onConfirm }: DeleteWebhookDialogProps) {
+function DeleteWebhookDialog({ webhook, onClose }: DeleteWebhookDialogProps) {
+  const fetcher = useFetcher();
+  useActionToast(fetcher.data);
+  const isSubmitting = fetcher.state !== "idle";
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data?.toast?.type === "success") {
+      onClose();
+    }
+  }, [fetcher.state, fetcher.data, onClose]);
+
   return (
-    <Dialog open={!!url} onOpenChange={(o) => !o && onClose()}>
+    <Dialog open={!!webhook} onOpenChange={(o) => !o && onClose()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Excluir webhook</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4">
+        <fetcher.Form method="post" className="flex flex-col gap-4">
+          <input type="hidden" name="id" value={webhook?.id ?? ""} />
           <TrashDashedBorderCircle />
           <DialogDescription className="px-6 text-center">
             Tem certeza que deseja excluir o webhook{" "}
-            <strong className="break-all font-mono">{url}</strong>? Esta ação
-            não pode ser desfeita.
+            <strong className="break-all font-mono">{webhook?.url}</strong>? As
+            entregas pendentes serão canceladas e esta ação não pode ser desfeita.
           </DialogDescription>
           <Separator />
           <DialogFooter showCloseButton>
             <Button
-              type="button"
+              type="submit"
               variant="danger"
-              onClick={() => {
-                onConfirm();
-                onClose();
-              }}
+              name="_action"
+              value="deleteWebhook"
+              disabled={isSubmitting}
             >
-              Excluir
+              {isSubmitting ? "Excluindo..." : "Excluir"}
             </Button>
           </DialogFooter>
-        </div>
+        </fetcher.Form>
       </DialogContent>
     </Dialog>
   );
